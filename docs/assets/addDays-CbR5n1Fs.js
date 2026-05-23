@@ -1,0 +1,2 @@
+import{c}from"./index-BhEGeKK6.js";import{t as r,c as s}from"./format-CKc41nbE.js";const n=[["path",{d:"M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z",key:"1dfntj"}],["path",{d:"M15 3v5a1 1 0 0 0 1 1h5",key:"6s6qgf"}]],f=c("sticky-note",n);function N(e,a,o){const t=r(e,o?.in);return isNaN(a)?s(e,NaN):(a&&t.setDate(t.getDate()+a),t)}export{f as S,N as a};
+//# sourceMappingURL=addDays-CbR5n1Fs.js.map
