@@ -26,6 +26,7 @@ const NutritionPage = lazy(() => import('@/pages/NutritionPage'));
 const ProgramWizardPage = lazy(() => import('@/pages/ProgramWizardPage'));
 const ProgramLibraryPage = lazy(() => import('@/pages/ProgramLibraryPage'));
 const ExerciseLibraryPage = lazy(() => import('@/pages/ExerciseLibraryPage'));
+const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 
 const publicRoutes = ['/', '/login', '/signup', '/onboarding', '/forgot-password', '/brand-story', '/subscribe', '/invitation'];
 
@@ -72,6 +73,10 @@ export default function App() {
             <Route path="/trainer/nutrition" element={<NutritionPage />} />
             <Route path="/exercises" element={<ExerciseLibraryPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+
+            {/* Settings */}
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/trainer/settings" element={<SettingsPage />} />
 
             {/* Program Design Wizard routes */}
             <Route path="/programs/design" element={<ProgramWizardPage />} />
