@@ -1,7 +1,7 @@
 /**
- * ClientProfile — Full client profile page with 7 sub-tabs.
+ * ClientProfile — Full client profile page with 8 sub-tabs.
  * Route: /trainer/client/:id
- * Tabs: Dashboard | BioPrint | Body Stats | Lifestyle | Notes | Sessions | Calendar
+ * Tabs: Dashboard | BioPrint | Body Stats | Lifestyle | Notes | Sessions | Calendar | Progress Photos
  */
 
 import { useState } from 'react';
@@ -9,7 +9,8 @@ import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Mail, Edit, MessageCircle, CalendarPlus, TrendingUp,
-  Activity, ClipboardList, PieChart, LineChart, StickyNote, CalendarDays
+  Activity, ClipboardList, PieChart, LineChart, StickyNote, CalendarDays,
+  Camera
 } from 'lucide-react';
 import DashboardTab from './client-profile/DashboardTab';
 import BioPrintTab from './client-profile/BioPrintTab';
@@ -18,6 +19,7 @@ import LifestyleTab from './client-profile/LifestyleTab';
 import NotesTab from './client-profile/NotesTab';
 import SessionsTab from './client-profile/SessionsTab';
 import CalendarTab from './client-profile/CalendarTab';
+import { ProgressPhotosTab } from '@/components/ProgressPhotos';
 import { type FullClientProfile, generateClientProfile } from '@/lib/client-data';
 
 const TABS = [
@@ -28,6 +30,7 @@ const TABS = [
   { id: 'notes', label: 'Notes', icon: StickyNote },
   { id: 'sessions', label: 'Sessions', icon: TrendingUp },
   { id: 'calendar', label: 'Calendar', icon: CalendarDays },
+  { id: 'progress-photos', label: 'Progress Photos', icon: Camera },
 ];
 
 /** Get client profile — from store or generate demo data */
@@ -149,6 +152,13 @@ export default function ClientProfile() {
           {activeTab === 'notes' && <NotesTab client={client} />}
           {activeTab === 'sessions' && <SessionsTab client={client} />}
           {activeTab === 'calendar' && <CalendarTab client={client} />}
+          {activeTab === 'progress-photos' && (
+            <ProgressPhotosTab
+              clientId={id || '0'}
+              clientName={client.name}
+              isTrainer={true}
+            />
+          )}
         </motion.div>
       </div>
     </div>
