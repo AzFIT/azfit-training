@@ -1,14 +1,17 @@
 /**
  * Layout - App layout wrapper
  * Conditionally renders Navbar/Footer for public pages, AppSidebar for dashboard pages.
+ * Includes AI Chat bubble on all pages when enabled.
  */
 import { useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useUIStore } from '@/stores/useUIStore';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import AppSidebar from './AppSidebar';
 import PortalNavbar from './PortalNavbar';
 import MultiClientBar from './MultiClientBar';
+import AIChat from './ai-chat/AIChat';
 
 const publicRoutes = ['/', '/login', '/signup', '/onboarding', '/forgot-password', '/brand-story', '/subscribe', '/invitation'];
 
@@ -19,6 +22,7 @@ function isPublicRoute(path: string): boolean {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { isAuthenticated } = useAuthStore();
+  const { display } = useUIStore();
   const publicPage = isPublicRoute(location.pathname);
   const showDashboard = isAuthenticated && !publicPage;
 
@@ -47,6 +51,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Multi-Client Tab Bar */}
         {showDashboard && <MultiClientBar />}
       </div>
+
+      {/* AI Chat Bubble — appears on all pages when enabled */}
+      {display?.showAIChatBubble !== false && <AIChat />}
     </div>
   );
 }
