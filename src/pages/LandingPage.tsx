@@ -112,7 +112,7 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-caption uppercase tracking-[0.15em] text-[#00AEEF] font-semibold mb-4"
           >
-            AzTechFit Singapore
+            AzTechFit Hong Kong
           </motion.p>
 
           <motion.h1
