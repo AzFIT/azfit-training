@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthStore, type UserRole } from '@/stores/useAuthStore';
+import { syncAllDemoData } from '@/lib/sync-demo-data';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password, role);
+      syncAllDemoData();
       navigate('/trainer/dashboard');
     } catch (err: unknown) {
       const errorStr = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
@@ -65,6 +67,7 @@ export default function LoginPage() {
     toggleDemoMode();
     try {
       await login('demo@azfit.com', 'demo123', role);
+      syncAllDemoData();
       navigate('/trainer/dashboard');
     } catch {
       setError('Demo mode failed. Please try again.');
@@ -275,7 +278,7 @@ export default function LoginPage() {
           className="text-center mt-6 space-y-2"
         >
           <p className="text-body-sm text-gray-500">
-            Don&apos;t have an account?{' '}
+            Don't have an account?{' '}
             <Link to="/signup" className="text-[#00AEEF] font-semibold hover:underline">Sign up</Link>
           </p>
           <Link to="/" className="text-body-sm text-gray-400 hover:text-gray-600 transition-colors">
