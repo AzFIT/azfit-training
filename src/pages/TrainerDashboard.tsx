@@ -850,7 +850,7 @@ export default function TrainerDashboard() {
       activeClientsTrend: 3,
       sessionsThisWeek: 24,
       sessionsTrend: 5,
-      revenueSGD: 3600,
+      revenueHKD: 3600,
       revenueTrend: 12,
       complianceScore: 87,
       complianceTrend: -2,
@@ -924,7 +924,7 @@ export default function TrainerDashboard() {
           linkText="View calendar"
         />
         <KPICard
-          label="Revenue (SGD)"
+          label="Revenue (HKD)"
           value={kpis.revenueSGD}
           prefix="$"
           trend={kpis.revenueTrend}
