@@ -36,6 +36,9 @@ import type {
 // ── Programs ───────────────────────────────────────────────────────
 
 export async function getPrograms(filters?: ProgramFilters): Promise<Program[]> {
+  const offset = filters?.offset ?? 0
+  const limit = filters?.limit ?? 50
+
   if (!isSupabaseConfigured) {
     let result = [...MOCK_PROGRAMS]
     if (filters?.category_id) result = result.filter((p) => p.category_id === filters.category_id)
@@ -45,7 +48,7 @@ export async function getPrograms(filters?: ProgramFilters): Promise<Program[]> 
       const q = filters.searchQuery.toLowerCase()
       result = result.filter((p) => p.program_name.toLowerCase().includes(q))
     }
-    return result
+    return result.slice(offset, offset + limit)
   }
 
   let query = supabase
@@ -86,7 +89,7 @@ export async function getPrograms(filters?: ProgramFilters): Promise<Program[]> 
   if (filters?.periodization_phase_id) query = query.eq('periodization_phase_id', filters.periodization_phase_id)
   if (filters?.duration_weeks) query = query.eq('program_weeks', filters.duration_weeks)
 
-  const { data, error } = await query.order('program_name')
+  const { data, error } = await query.order('program_name').range(offset, offset + limit - 1)
 
   if (error) throw error
   return (data as Program[]) || []

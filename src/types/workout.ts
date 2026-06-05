@@ -201,6 +201,8 @@ export interface ProgramFilters {
   periodization_phase_id?: number
   duration_weeks?: number
   searchQuery?: string
+  offset?: number
+  limit?: number
 }
 
 export interface ExerciseFilters {

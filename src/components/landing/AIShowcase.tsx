@@ -88,7 +88,7 @@ export default function AIShowcase() {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center relative"
           >
-            <div className="relative w-[280px] h-[280px] sm:w-[360px] sm:h-[360px]">
+            <div className="relative w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] flex items-center justify-center">
               {/* Pedestal shadow */}
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-8 w-[200px] h-[30px] bg-[radial-gradient(ellipse,rgba(0,174,239,0.08)_0%,transparent_70%)] rounded-[50%]" />
 
@@ -107,7 +107,7 @@ export default function AIShowcase() {
               </div>
 
               {/* Outer rotating ring with orbiting skill icons */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] rounded-full border border-cyan/15 animate-spin-slow pointer-events-none">
+              <div className="absolute w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] rounded-full border border-cyan/15 animate-spin-slow pointer-events-none">
                 {SKILLS.map((Icon, i) => {
                   const angle = (i * 360) / SKILLS.length
                   const rad = (angle * Math.PI) / 180
@@ -130,7 +130,7 @@ export default function AIShowcase() {
               </div>
 
               {/* Central breathing orb */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-full bg-[radial-gradient(circle,rgba(0,174,239,0.2)_0%,transparent_70%)] border-2 border-cyan/30 flex items-center justify-center animate-orb-breathe">
+              <div className="relative w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-full bg-[radial-gradient(circle,rgba(0,174,239,0.2)_0%,transparent_70%)] border-2 border-cyan/30 flex items-center justify-center animate-orb-breathe">
                 <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_40%_40%,rgba(0,174,239,0.3)_0%,transparent_60%)]" />
                 <Brain className="text-cyan relative z-10 w-8 h-8 sm:w-10 sm:h-10" />
               </div>
