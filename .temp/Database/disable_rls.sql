@@ -1,0 +1,4 @@
+-- Temporarily disable RLS for bulk data import
+ALTER TABLE programs DISABLE ROW LEVEL SECURITY;
+ALTER TABLE exercises DISABLE ROW LEVEL SECURITY;
+ALTER TABLE program_exercises DISABLE ROW LEVEL SECURITY;

@@ -1,0 +1,70 @@
+{
+  "totalPrograms": 1366,
+  "totalNewExercises": 1869,
+  "totalPrescriptions": 305397,
+  "nextProgramId": 1687,
+  "nextExerciseId": 16869,
+  "nextPrescriptionId": 325397,
+  "topPrograms": [
+    {
+      "id": 321,
+      "name": "PPL",
+      "category_id": 4,
+      "level_id": 2
+    },
+    {
+      "id": 322,
+      "name": "Upper Lower",
+      "category_id": 4,
+      "level_id": 2
+    },
+    {
+      "id": 323,
+      "name": "My split",
+      "category_id": 4,
+      "level_id": 3
+    },
+    {
+      "id": 324,
+      "name": "Uncommon Among Uncommon Men .",
+      "category_id": 4,
+      "level_id": 3
+    },
+    {
+      "id": 325,
+      "name": "Full body strength building program",
+      "category_id": 2,
+      "level_id": 1
+    },
+    {
+      "id": 326,
+      "name": "Bodybuilding program",
+      "category_id": 4,
+      "level_id": 2
+    },
+    {
+      "id": 327,
+      "name": "Hypertrophy PPL",
+      "category_id": 8,
+      "level_id": 2
+    },
+    {
+      "id": 328,
+      "name": "SLEEPER PHYSIQUE(BEAST-MODE)",
+      "category_id": 4,
+      "level_id": 2
+    },
+    {
+      "id": 329,
+      "name": "AESTHETIC BEAST: The Laid Split",
+      "category_id": 8,
+      "level_id": 2
+    },
+    {
+      "id": 330,
+      "name": "Baki Mode",
+      "category_id": 4,
+      "level_id": 1
+    }
+  ]
+}
