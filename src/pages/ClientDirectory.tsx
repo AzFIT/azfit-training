@@ -24,13 +24,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-import { useClientStore } from '@/stores/useClientStore';
+import { useAppDataStore } from '@/stores/useAppDataStore';
+import { useClientList } from '@/stores/useAppDataStore.selectors';
 import { useNotificationStore } from '@/stores/useNotificationStore';
-import {
-  generateClients,
-  formatRelativeTime,
-} from '@/lib/demo-data';
-import type { DemoClient } from '@/lib/demo-data';
+import { formatRelativeTime } from '@/lib/demo-data';
+import type { Client } from '@/types/entities';
 
 /* ------------------------------------------------------------------ */
 /*  Type definitions                                                   */
@@ -90,7 +88,10 @@ function programColors(program: string): { bg: string; text: string } {
     case 'Endurance': return { bg: 'rgba(34,197,94,0.1)', text: '#22C55E' };
     case 'Hypertrophy': return { bg: 'rgba(168,85,247,0.1)', text: '#A855F7' };
     case 'Rehabilitation': return { bg: 'rgba(239,68,68,0.1)', text: '#EF4444' };
+    case 'Build Muscle': return { bg: 'rgba(168,85,247,0.1)', text: '#A855F7' };
+    case 'Fat Loss': return { bg: 'rgba(234,179,8,0.1)', text: '#EAB308' };
     case 'General Fitness': return { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6' };
+    case 'Sports Performance': return { bg: 'rgba(0,174,239,0.1)', text: '#00AEEF' };
     default: return { bg: 'rgba(107,114,128,0.1)', text: '#6B7280' };
   }
 }
@@ -136,7 +137,7 @@ function useCountUp(target: number, duration = 1000) {
 /*  Stats Bar                                                          */
 /* ------------------------------------------------------------------ */
 
-function StatsBar({ clients }: { clients: DemoClient[] }) {
+function StatsBar({ clients }: { clients: Client[] }) {
   const reduceMotion = useReducedMotion();
   const activeCount = clients.filter((c) => c.status === 'active').length;
   const inactiveCount = clients.filter((c) => c.status === 'inactive').length;
@@ -197,52 +198,20 @@ function StatsBar({ clients }: { clients: DemoClient[] }) {
 
 export default function ClientDirectory() {
   const reduceMotion = useReducedMotion();
-  const { clients: storeClients, setClients } = useClientStore();
-  const { addNotification } = useNotificationStore();
   const navigate = useNavigate();
+  const { addNotification } = useNotificationStore();
 
-  /* ---- Demo data ---- */
-  const [demoClients, setDemoClients] = useState<DemoClient[]>([]);
-
+  /* ---- Seed demo data if store is empty ---- */
+  const seedDemoData = useAppDataStore((s) => s.seedDemoData);
+  const clientIds = useAppDataStore((s) => s.clientIds);
   useEffect(() => {
-    // Seed demo clients on first load if the store is empty (fresh session or incognito)
-    if (storeClients.length === 0 && demoClients.length === 0) {
-      const clients = generateClients();
-      setDemoClients(clients);
-      setClients(
-        clients.map((c) => ({
-          id: c.id,
-          name: c.name,
-          email: c.email,
-          status: c.status,
-          joinDate: c.joinDate,
-          lastSession: c.lastActive,
-          progress: c.programProgress,
-        }))
-      );
+    if (clientIds.length === 0) {
+      seedDemoData();
     }
-  }, [storeClients.length, demoClients.length, setClients]);
+  }, [clientIds.length, seedDemoData]);
 
-  const clients: DemoClient[] = demoClients.length > 0
-    ? demoClients
-    : storeClients.map((c) => ({
-        id: c.id,
-        name: c.name,
-        email: c.email,
-        initials: c.name.split(' ').map((n) => n[0]).join(''),
-        status: c.status,
-        program: 'Strength' as const,
-        programProgress: c.progress,
-        complianceScore: c.progress,
-        sessionsCompleted: 10,
-        lastActive: c.lastSession,
-        joinDate: c.joinDate,
-        age: 30,
-        weight: 70,
-        height: 170,
-        bodyFat: 18,
-        goal: 'General fitness',
-      }));
+  /* ---- Data from central store ---- */
+  const allClients = useClientList();
 
   /* ---- Toolbar state ---- */
   const [search, setSearch] = useState('');
@@ -254,7 +223,7 @@ export default function ClientDirectory() {
   const [pageSize, setPageSize] = useState(10);
 
   /* ---- Unique programs ---- */
-  const programs = useMemo(() => [...new Set(clients.map((c) => c.program))], [clients]);
+  const programs = useMemo(() => [...new Set(allClients.map((c) => c.programName))], [allClients]);
 
   /* ---- Sort handler ---- */
   const handleSort = (field: SortField) => {
@@ -277,12 +246,12 @@ export default function ClientDirectory() {
 
   /* ---- Filtered & sorted data ---- */
   const filtered = useMemo(() => {
-    let result = [...clients];
+    let result = [...allClients];
 
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
-        (c) => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.program.toLowerCase().includes(q)
+        (c) => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.programName.toLowerCase().includes(q)
       );
     }
 
@@ -291,7 +260,7 @@ export default function ClientDirectory() {
     }
 
     if (programFilter !== 'all') {
-      result = result.filter((c) => c.program === programFilter);
+      result = result.filter((c) => c.programName === programFilter);
     }
 
     if (complianceFilter !== 'all') {
@@ -311,7 +280,7 @@ export default function ClientDirectory() {
           cmp = a.name.localeCompare(b.name);
           break;
         case 'program':
-          cmp = a.program.localeCompare(b.program);
+          cmp = a.programName.localeCompare(b.programName);
           break;
         case 'compliance':
           cmp = a.complianceScore - b.complianceScore;
@@ -324,7 +293,7 @@ export default function ClientDirectory() {
     });
 
     return result;
-  }, [clients, search, statusFilter, programFilter, complianceFilter, sort]);
+  }, [allClients, search, statusFilter, programFilter, complianceFilter, sort]);
 
   /* ---- Pagination ---- */
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -334,7 +303,7 @@ export default function ClientDirectory() {
   /* ---- Export CSV ---- */
   const handleExport = () => {
     const headers = ['Name', 'Email', 'Program', 'Progress', 'Compliance', 'Status', 'Last Active'];
-    const rows = filtered.map((c) => [c.name, c.email, c.program, `${c.programProgress}%`, `${c.complianceScore}%`, c.status, c.lastActive]);
+    const rows = filtered.map((c) => [c.name, c.email, c.programName, `${c.programProgress}%`, `${c.complianceScore}%`, c.status, c.lastActive]);
     const csv = [headers, ...rows].map((r) => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -364,7 +333,7 @@ export default function ClientDirectory() {
       </motion.div>
 
       {/* Stats Bar */}
-      <StatsBar clients={clients} />
+      <StatsBar clients={allClients} />
 
       {/* Toolbar */}
       <motion.div
@@ -393,7 +362,7 @@ export default function ClientDirectory() {
           <option value="all">All Status</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
-          <option value="onboarding">Onboarding</option>
+          <option value="on-hold">On Hold</option>
         </select>
 
         <select
@@ -497,7 +466,7 @@ export default function ClientDirectory() {
                 </tr>
               ) : (
                 paginated.map((client, idx) => {
-                  const progColors = programColors(client.program);
+                  const progColors = programColors(client.programName);
                   const compColor = complianceColor(client.complianceScore);
                   const isStale = new Date().getTime() - new Date(client.lastActive).getTime() > 7 * 86400000;
 
@@ -530,7 +499,7 @@ export default function ClientDirectory() {
                           className="inline-block text-caption px-2.5 py-1 rounded-full font-semibold"
                           style={{ backgroundColor: progColors.bg, color: progColors.text }}
                         >
-                          {client.program}
+                          {client.programName}
                         </span>
                       </td>
 

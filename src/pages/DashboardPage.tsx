@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
@@ -20,6 +20,15 @@ import {
 import { Link } from 'react-router-dom'
 import MetricCard from '../components/dashboard/MetricCard'
 import type { MetricCardData } from '../components/dashboard/MetricCard'
+import { useAppDataStore } from '../stores/useAppDataStore'
+import {
+  useClientList,
+  useTodaySessions,
+  useUnresolvedAlerts,
+  useDashboardKPIs,
+} from '../stores/useAppDataStore.selectors'
+import type { CalendarSession, ClientAlert, Client } from '../types/entities'
+import { format, formatDistanceToNow } from 'date-fns'
 
 /* ------------------------------------------------------------------ */
 /*  Motion helpers (respect reduced motion)                            */
@@ -61,7 +70,7 @@ interface AlertItem {
 }
 
 interface ClientData {
-  id: number
+  id: string
   name: string
   weight: string
   bodyFat: string
@@ -71,46 +80,100 @@ interface ClientData {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Sample Data                                                        */
+/*  Mappers: Store entities → UI shapes                                */
 /* ------------------------------------------------------------------ */
-const todaySessions: SessionItem[] = [
-  { time: '07:00', client: 'Michael T.', type: 'Strength', duration: '60 min', status: 'completed', color: '#00AEEF' },
-  { time: '09:00', client: 'Sarah L.', type: 'Hypertrophy', duration: '90 min', status: 'in-progress', color: '#8B5CF6' },
-  { time: '11:00', client: 'David K.', type: 'Fat Loss', duration: '60 min', status: 'upcoming', color: '#22C55E' },
-  { time: '14:00', client: 'Emma W.', type: 'Rehabilitation', duration: '45 min', status: 'upcoming', color: '#EAB308' },
-  { time: '16:00', client: 'James C.', type: 'Strength', duration: '60 min', status: 'upcoming', color: '#00AEEF' },
-  { time: '18:00', client: 'Lisa M.', type: 'Endurance', duration: '45 min', status: 'upcoming', color: '#F97316' },
-]
 
-const followupAlerts: AlertItem[] = [
-  { type: 'danger', message: 'Missed check-in for 3 days', client: 'Michael T.', time: '2h ago' },
-  { type: 'warning', message: 'Program expires in 2 days', client: 'Sarah L.', time: '5h ago' },
-  { type: 'info', message: 'New body stats uploaded', client: 'David K.', time: '1d ago' },
-  { type: 'success', message: 'Goal achieved: -5kg weight loss', client: 'Emma W.', time: '1d ago' },
-  { type: 'warning', message: 'Low adherence this week (65%)', client: 'James C.', time: '2d ago' },
-]
+const SESSION_TYPE_COLORS: Record<string, string> = {
+  'Strength Training': '#00AEEF',
+  'Upper Body Focus': '#8B5CF6',
+  'Lower Body Power': '#00AEEF',
+  'Cardio & Core': '#22C55E',
+  'HIIT Circuit': '#F97316',
+  'Mobility & Stretch': '#EAB308',
+  'BioPrint Assessment': '#EC4899',
+  'Program Review': '#3B82F6',
+  'Nutrition Check-in': '#10B981',
+  'Personal Training': '#00AEEF',
+}
 
-const clientList: ClientData[] = [
-  { id: 1, name: 'Sarah Johnson', weight: '62.3 kg', bodyFat: '22.1%', sessions: 18, status: 'active', lastSession: '15/01/2025' },
-  { id: 2, name: 'Mike Chen', weight: '78.5 kg', bodyFat: '14.2%', sessions: 24, status: 'active', lastSession: '14/01/2025' },
-  { id: 3, name: 'Emily Wong', weight: '55.8 kg', bodyFat: '21.4%', sessions: 15, status: 'active', lastSession: '11/01/2025' },
-  { id: 4, name: 'David Lau', weight: '85.0 kg', bodyFat: '18.5%', sessions: 31, status: 'warning', lastSession: '10/01/2025' },
-  { id: 5, name: 'Jessica Park', weight: '58.7 kg', bodyFat: '19.8%', sessions: 12, status: 'active', lastSession: '13/01/2025' },
-  { id: 6, name: 'Ryan Tan', weight: '91.2 kg', bodyFat: '24.3%', sessions: 8, status: 'alert', lastSession: '05/01/2025' },
-  { id: 7, name: 'Amanda Lee', weight: '65.4 kg', bodyFat: '16.1%', sessions: 27, status: 'active', lastSession: '15/01/2025' },
-  { id: 8, name: 'Kevin Ho', weight: '76.4 kg', bodyFat: '13.9%', sessions: 35, status: 'active', lastSession: '15/01/2025' },
-  { id: 9, name: 'Michelle Tsang', weight: '60.2 kg', bodyFat: '17.8%', sessions: 22, status: 'active', lastSession: '14/01/2025' },
-  { id: 10, name: 'Jason Wong', weight: '80.1 kg', bodyFat: '15.5%', sessions: 20, status: 'active', lastSession: '12/01/2025' },
-  { id: 11, name: 'Stephanie Yau', weight: '68.9 kg', bodyFat: '23.5%', sessions: 10, status: 'warning', lastSession: '08/01/2025' },
-  { id: 12, name: 'Chris Chan', weight: '88.6 kg', bodyFat: '20.2%', sessions: 6, status: 'alert', lastSession: '03/01/2025' },
-]
+function mapSessionToItem(s: CalendarSession): SessionItem {
+  const startH = parseInt(s.startTime.split(':')[0])
+  const endH = parseInt(s.endTime.split(':')[0])
+  const durationMin = (endH - startH) * 60
+  const duration = durationMin >= 60 ? `${Math.floor(durationMin / 60)} hr` : `${durationMin} min`
 
-const metricData: MetricCardData[] = [
-  { kind: 'sessions', percent: 70, booked: 14, total: 20, delta: 4 },
-  { kind: 'clients', total: 24, engaged: 18, moderate: 4, atRisk: 2, delta: 3 },
-  { kind: 'adherence', percent: 87, label: 'Avg compliance', delta: 5 },
-  { kind: 'revenue', value: 3240, percent: 81, delta: 12 },
-]
+  let status: SessionItem['status']
+  if (s.status === 'completed') status = 'completed'
+  else if (s.status === 'in-progress') status = 'in-progress'
+  else status = 'upcoming'
+
+  return {
+    time: s.startTime,
+    client: s.clientName,
+    type: s.title,
+    duration,
+    status,
+    color: SESSION_TYPE_COLORS[s.title] || '#00AEEF',
+  }
+}
+
+function mapAlertToItem(a: ClientAlert): AlertItem {
+  let type: AlertItem['type']
+  switch (a.priority) {
+    case 'high': type = 'danger'; break
+    case 'medium': type = 'warning'; break
+    default: type = 'info'; break
+  }
+  // If the message contains celebratory words, make it success
+  if (a.message.toLowerCase().includes('goal achieved') || a.message.toLowerCase().includes('milestone') || a.message.toLowerCase().includes('completed')) {
+    type = 'success'
+  }
+
+  const time = formatDistanceToNow(new Date(a.createdAt), { addSuffix: false })
+    .replace('about ', '')
+    .replace(/s$/, '')
+
+  return {
+    type,
+    message: a.message,
+    client: a.clientName,
+    time: time.includes('hour') || time.includes('minute') ? time.replace(' ', '') + ' ago' : time,
+  }
+}
+
+function mapClientToData(c: Client): ClientData {
+  // Derive dashboard status from compliance + recency
+  let status: ClientData['status'] = 'active'
+  const daysSinceActive = (Date.now() - new Date(c.lastActive).getTime()) / 86400000
+  if (c.complianceScore < 60 || daysSinceActive > 14) status = 'alert'
+  else if (c.complianceScore < 75 || daysSinceActive > 7) status = 'warning'
+
+  return {
+    id: c.id,
+    name: c.name,
+    weight: `${c.weight} kg`,
+    bodyFat: `${c.bodyFat}%`,
+    sessions: c.sessionsCompleted,
+    status,
+    lastSession: format(new Date(c.lastActive), 'dd/MM/yyyy'),
+  }
+}
+
+function buildMetricCards(kpis: ReturnType<typeof useDashboardKPIs>, clients: Client[]): MetricCardData[] {
+  const { activeClients, sessionsThisWeek, complianceScore, revenue, activeClientsTrend, sessionsTrend, revenueTrend, complianceTrend } = kpis
+
+  // Segment clients by compliance for the "engaged / moderate / atRisk" breakdown
+  const engaged = clients.filter((c) => c.complianceScore >= 80).length
+  const moderate = clients.filter((c) => c.complianceScore >= 60 && c.complianceScore < 80).length
+  const atRisk = clients.filter((c) => c.complianceScore < 60).length
+
+  return [
+    { kind: 'sessions', percent: Math.round((sessionsThisWeek / 20) * 100), booked: sessionsThisWeek, total: 20, delta: sessionsTrend },
+    { kind: 'clients', total: activeClients, engaged, moderate, atRisk, delta: activeClientsTrend },
+    { kind: 'adherence', percent: complianceScore, label: 'Avg compliance', delta: complianceTrend },
+    { kind: 'revenue', value: revenue, percent: 81, delta: revenueTrend },
+  ]
+}
 
 /* ------------------------------------------------------------------ */
 /*  Status Badge                                                       */
@@ -192,10 +255,30 @@ export default function DashboardPage() {
   const [fabOpen, setFabOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState('All')
-  const [filteredClients, setFilteredClients] = useState(clientList)
+
+  /* Seed demo data if store is empty */
+  const seedDemoData = useAppDataStore((s) => s.seedDemoData)
+  const clientIds = useAppDataStore((s) => s.clientIds)
+  useEffect(() => {
+    if (clientIds.length === 0) {
+      seedDemoData()
+    }
+  }, [clientIds.length, seedDemoData])
+
+  /* Data from central store */
+  const kpis = useDashboardKPIs()
+  const allClients = useClientList()
+  const todayStoreSessions = useTodaySessions()
+  const unresolvedAlerts = useUnresolvedAlerts()
+
+  /* Map to UI shapes */
+  const metricData = useMemo(() => buildMetricCards(kpis, allClients), [kpis, allClients])
+  const todaySessions = useMemo(() => todayStoreSessions.map(mapSessionToItem), [todayStoreSessions])
+  const followupAlerts = useMemo(() => unresolvedAlerts.map(mapAlertToItem), [unresolvedAlerts])
+  const clientList = useMemo(() => allClients.map(mapClientToData), [allClients])
 
   /* Filter clients */
-  useEffect(() => {
+  const filteredClients = useMemo(() => {
     let filtered = clientList
     if (searchQuery.trim()) {
       filtered = filtered.filter((c) =>
@@ -210,8 +293,8 @@ export default function DashboardPage() {
         return true
       })
     }
-    setFilteredClients(filtered)
-  }, [searchQuery, filterStatus])
+    return filtered
+  }, [searchQuery, filterStatus, clientList])
 
   /* Close FAB on Escape */
   useEffect(() => {
@@ -229,15 +312,15 @@ export default function DashboardPage() {
     { label: 'Send Message', icon: MessageSquare, action: () => setFabOpen(false) },
   ]
 
+  const todayDate = format(new Date(), "EEEE, d MMMM yyyy")
+
   return (
     <motion.div
       {...motionEnter(reduceMotion, { opacity: 0 }, { duration: 0.3 })}
       animate={{ opacity: 1 }}
       className="space-y-8 bg-[#F8FAFC] min-h-[calc(100dvh-64px)]"
     >
-      
-      
-      
+      {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6 max-w-[1200px] mx-auto">
         {metricData.map((data, idx) => (
           <motion.div
@@ -250,20 +333,19 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      
-      
+      {/* Schedule + Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        
+        {/* Today's Schedule */}
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, x: -30 }, { duration: 0.5, delay: 0.3, ease: easeOut })}
           animate={{ opacity: 1, x: 0 }}
           className="lg:col-span-3 bg-white border border-[#E2E8F0] rounded-xl p-5 lg:p-6 shadow-sm"
         >
-          
+          {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div>
               <h2 className="text-[#0F172A] text-lg font-semibold">Today&apos;s Schedule</h2>
-              <p className="text-[#94A3B8] text-xs mt-0.5">Wednesday, 15 January 2025</p>
+              <p className="text-[#94A3B8] text-xs mt-0.5">{todayDate}</p>
             </div>
             <Link
               to="/calendar"
@@ -274,24 +356,24 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          
+          {/* Timeline */}
           <div className="relative space-y-3 max-h-[480px] overflow-y-auto pr-1 custom-scrollbar">
-            
+            {/* Vertical line */}
             <div className="absolute left-[29px] top-0 bottom-0 w-[2px] bg-[#E2E8F0]" />
 
             {todaySessions.map((session, idx) => (
               <motion.div
-                key={session.time}
+                key={session.time + session.client + idx}
                 {...motionEnter(reduceMotion, { opacity: 0, scale: 0.95 }, { duration: 0.3, delay: 0.4 + idx * 0.08, ease: easeSpring })}
                 animate={{ opacity: 1, scale: 1 }}
                 className="relative flex items-start gap-4 group"
               >
-                
+                {/* Time label */}
                 <div className="w-[50px] text-right text-xs text-[#94A3B8] pt-3" style={{ fontFamily: '"Space Mono", monospace' }}>
                   {session.time}
                 </div>
 
-                
+                {/* Dot */}
                 <div
                   className="relative z-10 w-[10px] h-[10px] rounded-full mt-3.5 flex-shrink-0"
                   style={{
@@ -307,7 +389,7 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                
+                {/* Card */}
                 <div
                   className="flex-1 bg-[#F8FAFC] rounded-lg p-3.5 border-l-4 transition-all duration-150 group-hover:bg-[#F1F5F9] group-hover:scale-[1.01]"
                   style={{ borderLeftColor: session.color }}
@@ -330,13 +412,13 @@ export default function DashboardPage() {
           </div>
         </motion.div>
 
-        
+        {/* Follow-ups & Alerts */}
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, x: 30 }, { duration: 0.5, delay: 0.4, ease: easeOut })}
           animate={{ opacity: 1, x: 0 }}
           className="lg:col-span-2 bg-white border border-[#E2E8F0] rounded-xl p-5 lg:p-6 shadow-sm"
         >
-          
+          {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-[#0F172A] text-lg font-semibold">Follow-ups &amp; Alerts</h2>
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[rgba(239,68,68,0.1)] text-[#EF4444] text-xs font-bold">
@@ -344,7 +426,7 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          
+          {/* Alert list */}
           <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-1 custom-scrollbar">
             {followupAlerts.map((alert, idx) => (
               <motion.div
@@ -372,20 +454,19 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      
-      
+      {/* Your Clients */}
       <motion.div
         {...motionEnter(reduceMotion, { opacity: 0, y: 20 }, { duration: 0.5, delay: 0.5, ease: easeOut })}
         animate={{ opacity: 1, y: 0 }}
       >
-        
+        {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
           <div className="flex items-center gap-3">
             <h2 className="text-[#0F172A] text-lg font-semibold">Your Clients</h2>
-            <span className="text-[#94A3B8] text-sm">(24)</span>
+            <span className="text-[#94A3B8] text-sm">({allClients.length})</span>
           </div>
           <div className="flex items-center gap-3">
-            
+            {/* Search */}
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
               <input
@@ -396,7 +477,7 @@ export default function DashboardPage() {
                 className="w-48 bg-white border border-[#E2E8F0] rounded-lg pl-8 pr-3 py-2 text-xs text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#00AEEF] transition-colors shadow-sm"
               />
             </div>
-            
+            {/* Filter */}
             <div className="relative">
               <select
                 value={filterStatus}
@@ -420,7 +501,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        
+        {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5">
           <AnimatePresence mode="popLayout">
             {filteredClients.map((client, idx) => (
@@ -438,7 +519,7 @@ export default function DashboardPage() {
               >
                 <StatusDot status={client.status} />
 
-                
+                {/* Avatar + Name */}
                 <div className="flex items-center gap-3 mb-4">
                   <img
                     src="/avatar-placeholder.png"
@@ -451,7 +532,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                
+                {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 mb-3">
                   <div className="bg-[#F8FAFC] rounded-lg p-2 text-center">
                     <p className="text-[#0F172A] text-xs font-semibold">{client.weight}</p>
@@ -467,7 +548,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                
+                {/* Progress bar */}
                 <div className="mt-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[#94A3B8] text-[10px]">Program Progress</span>
@@ -503,8 +584,7 @@ export default function DashboardPage() {
         )}
       </motion.div>
 
-      
-      
+      {/* FAB */}
       <div className="fixed bottom-6 right-6 z-40">
         <AnimatePresence>
           {fabOpen && (
