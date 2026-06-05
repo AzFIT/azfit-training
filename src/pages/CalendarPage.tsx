@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
   ChevronLeft,
   ChevronRight,
@@ -35,6 +35,9 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { useAppDataStore } from '@/stores/useAppDataStore'
+import { useSessionList, useClientList } from '@/stores/useAppDataStore.selectors'
+import type { CalendarSession as StoreSession } from '@/types/entities'
 
 type ViewMode = 'week' | 'day' | 'month' | 'agenda'
 
@@ -47,6 +50,16 @@ interface CalendarSession {
   startTime: Date
   duration: number // minutes
   notes?: string
+}
+
+/* ─── Motion helper ─── */
+function motionEnter<T extends Record<string, unknown>>(
+  reduce: boolean | null,
+  initial: T,
+  transition?: import('framer-motion').Transition
+): { initial: T | false; transition?: import('framer-motion').Transition } {
+  if (reduce) return { initial: false }
+  return { initial, transition }
 }
 
 const SESSION_COLORS: Record<SessionType, { bg: string; border: string; text: string }> = {
@@ -64,8 +77,6 @@ const SESSION_TYPE_LABELS: SessionType[] = [
   'Online',
   'Consultation',
 ]
-
-const CLIENT_NAMES = ['Sarah', 'Mike', 'Emily', 'David', 'Jessica', 'Ryan', 'Amanda']
 
 const HK_TIME_SLOTS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 
@@ -87,50 +98,58 @@ function getSessionPosition(session: CalendarSession, minHeight: number) {
   return { top, height }
 }
 
-function generateDemoSessions(): CalendarSession[] {
-  const sessions: CalendarSession[] = []
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
-  let idCounter = 1
+/* ─── Store ↔ Page session adapters ─── */
+const STORE_TO_PAGE_TYPE: Record<string, SessionType> = {
+  session: 'Personal Training',
+  group: 'Group Class',
+  assessment: 'Assessment',
+  personal: 'Online',
+  'follow-up': 'Consultation',
+}
 
-  const sessionTemplates: { time: [number, number]; type: SessionType; duration: number }[] = [
-    { time: [7, 0], type: 'Personal Training', duration: 60 },
-    { time: [8, 0], type: 'Group Class', duration: 60 },
-    { time: [9, 30], type: 'Personal Training', duration: 60 },
-    { time: [11, 0], type: 'Assessment', duration: 45 },
-    { time: [14, 0], type: 'Online', duration: 30 },
-    { time: [15, 30], type: 'Personal Training', duration: 60 },
-    { time: [17, 0], type: 'Group Class', duration: 60 },
-    { time: [18, 30], type: 'Personal Training', duration: 60 },
-    { time: [20, 0], type: 'Consultation', duration: 30 },
-  ]
+const PAGE_TO_STORE_TYPE: Record<SessionType, string> = {
+  'Personal Training': 'session',
+  'Group Class': 'group',
+  Assessment: 'assessment',
+  Online: 'personal',
+  Consultation: 'follow-up',
+}
 
-  for (let d = 0; d < 7; d++) {
-    const day = addDays(weekStart, d)
-    const dayName = format(day, 'EEE')
+function parseTimeToDate(dateStr: string, timeStr: string): Date {
+  return new Date(`${dateStr}T${timeStr}`)
+}
 
-    // Skip some sessions on weekends
-    const isWeekend = dayName === 'Sat' || dayName === 'Sun'
-    const sessionsPerDay = isWeekend ? 3 : 6 + Math.floor(Math.random() * 3)
-
-    const shuffled = [...sessionTemplates]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, sessionsPerDay)
-
-    shuffled.forEach((tmpl) => {
-      const clientName = CLIENT_NAMES[Math.floor(Math.random() * CLIENT_NAMES.length)]
-      const startTime = setMinutes(setHours(day, tmpl.time[0]), tmpl.time[1])
-      sessions.push({
-        id: `session-${idCounter++}`,
-        clientName,
-        type: tmpl.type,
-        startTime,
-        duration: tmpl.duration,
-        notes: '',
-      })
-    })
+function storeSessionToPage(s: StoreSession): CalendarSession {
+  const startTime = parseTimeToDate(s.date, s.startTime)
+  const endTime = parseTimeToDate(s.date, s.endTime)
+  const duration = Math.round((endTime.getTime() - startTime.getTime()) / MS_PER_MINUTE)
+  return {
+    id: s.id,
+    clientName: s.clientName,
+    type: (STORE_TO_PAGE_TYPE[s.type] ?? 'Personal Training') as SessionType,
+    startTime,
+    duration: Math.max(duration, 15),
+    notes: s.notes,
   }
+}
 
-  return sessions.sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+function pageSessionToStore(s: CalendarSession, clientId?: string): StoreSession {
+  const date = format(s.startTime, 'yyyy-MM-dd')
+  const startTime = format(s.startTime, 'HH:mm')
+  const end = addMinutes(s.startTime, s.duration)
+  const endTime = format(end, 'HH:mm')
+  return {
+    id: s.id,
+    clientId: clientId ?? '',
+    clientName: s.clientName,
+    title: s.type,
+    date,
+    startTime,
+    endTime,
+    type: (PAGE_TO_STORE_TYPE[s.type] ?? 'session') as import('@/types/entities').SessionType,
+    status: 'confirmed',
+    notes: s.notes,
+  }
 }
 
 /* ─── Time indicator hook ─── */
@@ -558,7 +577,7 @@ function MonthView({
             return (
               <motion.div
                 key={day.toISOString()}
-                initial={{ opacity: 0 }}
+                initial={false}
                 animate={{ opacity: 1 }}
                 transition={{ delay: idx * 0.005 }}
                 className={`min-h-[110px] rounded-lg p-2 cursor-pointer transition-colors border ${
@@ -740,6 +759,7 @@ function NewSessionModal({
   selectedSlot?: Date
   onSubmit?: (session: CalendarSession) => void
 }) {
+  const clients = useClientList()
   const [client, setClient] = useState('')
   const [type, setType] = useState<SessionType>('Personal Training')
   const [duration, setDuration] = useState('60')
@@ -788,9 +808,9 @@ function NewSessionModal({
                 <SelectValue placeholder="Select client" />
               </SelectTrigger>
               <SelectContent className="bg-[#F8FAFC] border-[#E2E8F0]">
-                {CLIENT_NAMES.map((c) => (
-                  <SelectItem key={c} value={c} className="text-[#0F172A]">
-                    {c}
+                {clients.map((c) => (
+                  <SelectItem key={c.id} value={c.name} className="text-[#0F172A]">
+                    {c.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -1031,7 +1051,24 @@ export default function CalendarPage() {
   const [view, setView] = useState<ViewMode>('week')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [filterType, setFilterType] = useState<SessionType | 'All'>('All')
-  const [sessions, setSessions] = useState(() => generateDemoSessions())
+  const reduceMotion = useReducedMotion()
+
+  const storeSessions = useSessionList()
+  const clients = useClientList()
+  const addSession = useAppDataStore((s) => s.addSession)
+
+  // Seed demo data if store is empty
+  useEffect(() => {
+    const seed = useAppDataStore.getState().seedDemoData
+    if (storeSessions.length === 0) {
+      seed()
+    }
+  }, [storeSessions.length])
+
+  const sessions = useMemo(
+    () => storeSessions.map(storeSessionToPage).sort((a, b) => a.startTime.getTime() - b.startTime.getTime()),
+    [storeSessions]
+  )
   const [showNewSession, setShowNewSession] = useState(false)
   const [newSessionDate, setNewSessionDate] = useState<Date | undefined>()
   const [selectedSession, setSelectedSession] = useState<CalendarSession | null>(null)
@@ -1100,9 +1137,13 @@ export default function CalendarPage() {
     []
   )
 
-  const handleCreateSession = useCallback((session: CalendarSession) => {
-    setSessions((prev) => [...prev, session])
-  }, [])
+  const handleCreateSession = useCallback(
+    (session: CalendarSession) => {
+      const client = clients.find((c) => c.name === session.clientName)
+      addSession(pageSessionToStore(session, client?.id))
+    },
+    [addSession, clients]
+  )
 
   const dateDisplay = useMemo(() => {
     switch (view) {
@@ -1124,9 +1165,8 @@ export default function CalendarPage() {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      {...motionEnter(reduceMotion, { opacity: 0 }, { duration: 0.3 })}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
       className="flex flex-col h-[calc(100dvh-64px)] bg-[#F8FAFC]"
     >
       <CalendarToolbar
@@ -1149,9 +1189,9 @@ export default function CalendarPage() {
         <AnimatePresence mode="wait">
           <motion.div
             key={`${view}-${currentDate.toISOString()}`}
-            initial={{ opacity: 0, x: 20 }}
+            {...motionEnter(reduceMotion, { opacity: 0, x: 20 }, { duration: 0.2 })}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
             className="h-full"
           >

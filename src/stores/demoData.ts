@@ -418,22 +418,22 @@ function generateNotifications(clients: Client[]): AppNotification[] {
   const notifications: AppNotification[] = []
   const now = Date.now()
 
-  const templates = [
-    { type: 'info' as const, title: 'New session scheduled', message: 'Session with {name} on Monday at 10:00 AM' },
-    { type: 'success' as const, title: 'Client milestone reached', message: '{name} completed 20 sessions!' },
-    { type: 'warning' as const, title: 'Body stats overdue', message: '{name} has not logged body stats in 7 days' },
-    { type: 'info' as const, title: 'AzFIT updated', message: 'New features available in v2.1' },
-    { type: 'info' as const, title: 'New message', message: '{name}: "Can we reschedule Thursday?"' },
-    { type: 'success' as const, title: 'Goal achieved!', message: '{name} hit their weight loss target!' },
-    { type: 'warning' as const, title: 'Session cancelled', message: '{name} cancelled tomorrow\'s session' },
-    { type: 'success' as const, title: 'New client onboarded', message: '{name} completed PAR-Q assessment' },
-    { type: 'error' as const, title: 'Compliance warning', message: '{name}\'s weekly compliance dropped to 45%' },
-    { type: 'info' as const, title: 'Weekly report ready', message: 'Your weekly summary is now available' },
-    { type: 'info' as const, title: 'Nutrition log updated', message: '{name} submitted 3 days of nutrition logs' },
-    { type: 'success' as const, title: 'Strength PR!', message: '{name} hit a new deadlift PR of 140kg' },
-    { type: 'info' as const, title: 'Assessment completed', message: 'BioPrint assessment done with {name}' },
-    { type: 'success' as const, title: 'Program updated', message: '{name} moved to Phase 2 of Strength program' },
-    { type: 'warning' as const, title: 'Payment due', message: 'Invoice for {name} is due in 3 days' },
+  const templates: { type: AppNotification['type']; title: string; message: string }[] = [
+    { type: 'session', title: 'New session scheduled', message: 'Session with {name} on Monday at 10:00 AM' },
+    { type: 'milestone', title: 'Client milestone reached', message: '{name} completed 20 sessions!' },
+    { type: 'alert', title: 'Body stats overdue', message: '{name} has not logged body stats in 7 days' },
+    { type: 'system', title: 'AzFIT updated', message: 'New features available in v2.1' },
+    { type: 'message', title: 'New message', message: '{name}: "Can we reschedule Thursday?"' },
+    { type: 'milestone', title: 'Goal achieved!', message: '{name} hit their weight loss target!' },
+    { type: 'session', title: 'Session cancelled', message: '{name} cancelled tomorrow\'s session' },
+    { type: 'client', title: 'New client onboarded', message: '{name} completed PAR-Q assessment' },
+    { type: 'alert', title: 'Compliance warning', message: '{name}\'s weekly compliance dropped to 45%' },
+    { type: 'system', title: 'Weekly report ready', message: 'Your weekly summary is now available' },
+    { type: 'message', title: 'Nutrition log updated', message: '{name} submitted 3 days of nutrition logs' },
+    { type: 'milestone', title: 'Strength PR!', message: '{name} hit a new deadlift PR of 140kg' },
+    { type: 'session', title: 'Assessment completed', message: 'BioPrint assessment done with {name}' },
+    { type: 'client', title: 'Program updated', message: '{name} moved to Phase 2 of Strength program' },
+    { type: 'alert', title: 'Payment due', message: 'Invoice for {name} is due in 3 days' },
   ]
 
   templates.forEach((tmpl, i) => {
@@ -448,6 +448,7 @@ function generateNotifications(clients: Client[]): AppNotification[] {
       timestamp: now - hoursAgo * 3600_000,
       clientId: client.id,
       clientName: client.name,
+      clientInitials: client.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
     })
   })
 

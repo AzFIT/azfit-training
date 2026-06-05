@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { X, Users, Check, Loader2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
-import { useAuthStore } from '../../stores/useAuthStore'
+import { useClientList } from '../../stores/useAppDataStore.selectors'
 import { useAssignProgram } from '../../hooks/useClientPrograms'
 import type { Program } from '../../types/workout'
 
@@ -14,7 +14,7 @@ interface AssignClientModalProps {
 
 export default function AssignClientModal({ program, isOpen, onClose, onAssigned }: AssignClientModalProps) {
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null)
-  const { clients } = useAuthStore()
+  const clients = useClientList()
   const assignMutation = useAssignProgram()
 
   if (!isOpen) return null

@@ -146,7 +146,17 @@ export interface ClientAlert {
 
 // ── Notification ───────────────────────────────────────────────────
 
-export type NotificationType = 'success' | 'error' | 'warning' | 'info'
+export type NotificationType =
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'alert'
+  | 'message'
+  | 'system'
+  | 'session'
+  | 'client'
+  | 'milestone'
 
 export interface AppNotification {
   id: string
@@ -157,6 +167,7 @@ export interface AppNotification {
   timestamp: number
   clientId?: string
   clientName?: string
+  clientInitials?: string
 }
 
 // ── Reference Data (from workout DB) ───────────────────────────────

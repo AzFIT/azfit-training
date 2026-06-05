@@ -5,7 +5,7 @@
  * Route: /notifications
  */
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import {
   Bell,
   CheckCircle,
@@ -20,10 +20,10 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { useNotificationStore } from '@/stores/useNotificationStore';
-import { generateNotifications, generateClients, formatTimestamp } from '@/lib/demo-data';
-import type { DemoNotification } from '@/lib/demo-data';
+import { useAppDataStore } from '@/stores/useAppDataStore';
+import { useNotificationList, useUnreadCount } from '@/stores/useAppDataStore.selectors';
+import { formatTimestamp } from '@/lib/demo-data';
+import type { AppNotification } from '@/types/entities';
 
 /* ------------------------------------------------------------------ */
 /*  Category configuration                                             */
@@ -107,7 +107,7 @@ function NotificationItem({
   index,
   onMarkRead,
 }: {
-  notification: DemoNotification;
+  notification: AppNotification;
   index: number;
   onMarkRead: (id: string) => void;
 }) {
@@ -178,54 +178,47 @@ function NotificationItem({
 /* ================================================================== */
 
 export default function NotificationsPage() {
-  const { isDemoMode } = useAuthStore();
-  const { markRead, markAllRead } = useNotificationStore();
+  const reduceMotion = useReducedMotion();
+  const notifications = useNotificationList();
+  const unreadCount = useUnreadCount();
+  const markNotificationRead = useAppDataStore((s) => s.markNotificationRead);
+  const markAllNotificationsRead = useAppDataStore((s) => s.markAllNotificationsRead);
+  const dismissNotification = useAppDataStore((s) => s.dismissNotification);
+  const seedDemoData = useAppDataStore((s) => s.seedDemoData);
 
-  /* ---- Demo notifications ---- */
-  const [demoNotifications, setDemoNotifications] = useState<DemoNotification[]>([]);
-
+  /* Seed demo data if empty */
   useEffect(() => {
-    if (isDemoMode) {
-      const clients = generateClients();
-      const notifs = generateNotifications(clients);
-      setDemoNotifications(notifs);
+    if (notifications.length === 0) {
+      seedDemoData();
     }
-  }, [isDemoMode]);
-
-  /* ---- Combined notifications ---- */
-  const allNotifications: DemoNotification[] = demoNotifications;
+  }, [notifications.length, seedDemoData]);
 
   /* ---- Filter state ---- */
   const [activeFilter, setActiveFilter] = useState<string>('all');
 
   /* ---- Filtered list ---- */
   const filtered = useMemo(() => {
-    if (activeFilter === 'all') return allNotifications;
-    if (activeFilter === 'unread') return allNotifications.filter((n) => !n.read);
-    return allNotifications.filter((n) => n.type === activeFilter);
-  }, [allNotifications, activeFilter]);
-
-  /* ---- Unread count ---- */
-  const unreadCount = allNotifications.filter((n) => !n.read).length;
+    if (activeFilter === 'all') return notifications;
+    if (activeFilter === 'unread') return notifications.filter((n) => !n.read);
+    return notifications.filter((n) => n.type === activeFilter);
+  }, [notifications, activeFilter]);
 
   /* ---- Mark read ---- */
   const handleMarkRead = useCallback((id: string) => {
-    markRead(id);
-    setDemoNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
-  }, [markRead]);
+    markNotificationRead(id);
+  }, [markNotificationRead]);
 
   /* ---- Mark all read ---- */
   const handleMarkAllRead = useCallback(() => {
-    markAllRead();
-    setDemoNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    markAllNotificationsRead();
     showToast('All notifications marked as read', 'success');
-  }, [markAllRead]);
+  }, [markAllNotificationsRead]);
 
   /* ---- Clear all ---- */
   const handleClearAll = useCallback(() => {
-    setDemoNotifications([]);
+    notifications.forEach((n) => dismissNotification(n.id));
     showToast('All notifications cleared', 'info');
-  }, []);
+  }, [notifications, dismissNotification]);
 
   /* ---- Available filters ---- */
   const filters = ['all', 'unread', 'alert', 'message', 'system'];
@@ -248,7 +241,7 @@ export default function NotificationsPage() {
 
       {/* Page title */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
         className="mb-6"
@@ -277,7 +270,7 @@ export default function NotificationsPage() {
                 <CheckCheck size={16} /> Mark all read
               </button>
             )}
-            {allNotifications.length > 0 && (
+            {notifications.length > 0 && (
               <button
                 onClick={handleClearAll}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-200 dark:border-white/10 rounded-xl hover:bg-danger-light hover:text-danger dark:hover:bg-danger-light/20 text-gray-700 dark:text-gray-300 transition-colors"
@@ -291,7 +284,7 @@ export default function NotificationsPage() {
 
       {/* Filter tabs */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={reduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15, duration: 0.3 }}
         className="flex flex-wrap gap-2 mb-4"
@@ -299,10 +292,10 @@ export default function NotificationsPage() {
         {filters.map((filter) => {
           const cfg = categoryConfig[filter];
           const count = filter === 'all'
-            ? allNotifications.length
+            ? notifications.length
             : filter === 'unread'
-              ? allNotifications.filter((n) => !n.read).length
-              : allNotifications.filter((n) => n.type === filter).length;
+              ? notifications.filter((n: AppNotification) => !n.read).length
+              : notifications.filter((n: AppNotification) => n.type === filter).length;
 
           return (
             <button
@@ -330,7 +323,7 @@ export default function NotificationsPage() {
 
       {/* Notification list card */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 0.35 }}
         className="bg-white dark:bg-[#141414] rounded-2xl border border-gray-200 dark:border-white/[0.06] shadow-card overflow-hidden"
