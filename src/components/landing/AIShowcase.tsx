@@ -118,8 +118,8 @@ export default function AIShowcase() {
                       key={i}
                       className="absolute flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-cyan/[0.08] animate-spin-slow"
                       style={{
-                        left: `calc(50% + ${x}px - 20px)`,
-                        top: `calc(50% + ${y}px - 20px)`,
+                        left: `calc(50% + ${x}px - 24px)`,
+                        top: `calc(50% + ${y}px - 24px)`,
                         animationDirection: 'reverse',
                       }}
                     >
