@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 
 const SKILLS = [Dumbbell, Activity, Brain, HeartPulse, TrendingUp, MessageCircle, Calendar, BarChart3]
-const RADIUS_PX = 140
+const RADIUS_PX = 160
 const CUES = [
   "Client's squat depth improved 12% this week",
   'Recommend deload for Client 247 — HRV down 15%',
@@ -81,7 +81,9 @@ export default function AIShowcase() {
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center relative"
           >
-            <div className="relative w-[360px] h-[360px] sm:w-[360px] sm:h-[360px]">
+            <div className="relative w-[400px] h-[400px] sm:w-[400px] sm:h-[400px]">
+              {/* Overflow guard — prevents icon clipping */}
+              <div className="absolute inset-[-20px]" />
               {/* Pedestal */}
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-8 w-[200px] h-[30px] bg-[radial-gradient(ellipse,rgba(0,174,239,0.08)_0%,transparent_70%)] rounded-[50%]" />
 
@@ -89,13 +91,13 @@ export default function AIShowcase() {
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full border border-cyan/15 animate-pulse-ring pointer-events-none"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] rounded-full border border-cyan/15 animate-pulse-ring pointer-events-none"
                   style={{ animationDelay: `${i}s` }}
                 />
               ))}
 
               {/* Outer ring with icons */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] rounded-full border border-cyan/15 animate-spin-slow pointer-events-none">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full border border-cyan/15 animate-spin-slow pointer-events-none">
                 {SKILLS.map((Icon, i) => {
                   const angle = (i * 360) / SKILLS.length
                   const rad = (angle * Math.PI) / 180
@@ -118,13 +120,13 @@ export default function AIShowcase() {
               </div>
 
               {/* Central orb */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] rounded-full bg-[radial-gradient(circle,rgba(0,174,239,0.2)_0%,transparent_70%)] border-2 border-cyan/30 flex items-center justify-center animate-orb-breathe">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[170px] h-[170px] rounded-full bg-[radial-gradient(circle,rgba(0,174,239,0.2)_0%,transparent_70%)] border-2 border-cyan/30 flex items-center justify-center animate-orb-breathe">
                 <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_40%_40%,rgba(0,174,239,0.3)_0%,transparent_60%)]" />
                 <Brain size={40} className="text-cyan relative z-10" />
               </div>
 
               {/* Cue card */}
-              <div className="absolute top-[10%] right-[-5%] max-w-[200px] p-3 rounded-lg bg-gradient-to-br from-gray-900/80 to-gray-800/60 border border-cyan/15 animate-[cue-fade_4s_ease-in-out_infinite]">
+              <div className="absolute top-[5%] right-[0%] max-w-[200px] p-3 rounded-lg bg-gradient-to-br from-gray-900/80 to-gray-800/60 border border-cyan/15 animate-[cue-fade_4s_ease-in-out_infinite]">
                 <p className="text-[#D1D5DB] text-xs leading-relaxed">{CUES[cueIdx]}</p>
               </div>
             </div>

@@ -150,8 +150,8 @@ module.exports = {
           "50%": { transform: "translateY(-6px)" },
         },
         "ken-burns": {
-          "0%": { transform: "scale(1.02) translate(0, 0)" },
-          "100%": { transform: "scale(1.05) translate(-1%, -0.5%)" },
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.02)" },
         },
         "orb-breathe": {
           "0%, 100%": { transform: "scale(1)", opacity: "1" },
