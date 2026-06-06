@@ -217,6 +217,38 @@ export interface BodyStatsEntry {
   notes?: string
 }
 
+// ── Workout Session Log ────────────────────────────────────────────
+
+export interface WorkoutSet {
+  setNumber: number
+  prescribedSets: number
+  prescribedReps: string
+  prescribedLoad?: number
+  prescribedRpe?: number
+  actualLoad?: number
+  actualReps?: number
+  actualRpe?: number
+  completed: boolean
+}
+
+export interface WorkoutSessionLog {
+  id: string
+  clientId: string
+  programId: string
+  programName: string
+  dayNumber: number
+  weekNumber: number
+  date: string
+  durationSeconds: number
+  exercises: {
+    exerciseId: string
+    exerciseName: string
+    notation: string
+    sets: WorkoutSet[]
+  }[]
+  notes?: string
+}
+
 // ── Progress Entry ─────────────────────────────────────────────────
 
 export interface ProgressEntry {

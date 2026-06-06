@@ -25,6 +25,7 @@ import type {
   BioPrintEntry,
   BodyStatsEntry,
   NutritionEntry,
+  WorkoutSessionLog,
   ClientAlert,
   AppNotification,
   WorkoutCategory,
@@ -51,6 +52,7 @@ interface AppDataState {
   bioPrintEntries: Record<string, BioPrintEntry>
   bodyStatsEntries: Record<string, BodyStatsEntry>
   nutritionEntries: Record<string, NutritionEntry>
+  workoutSessions: Record<string, WorkoutSessionLog>
   alerts: Record<string, ClientAlert>
   notifications: Record<string, AppNotification>
 
@@ -125,6 +127,10 @@ interface AppDataState {
   addNutritionEntry: (entry: NutritionEntry) => void
   deleteNutritionEntry: (id: string) => void
 
+  // ── Workout Session CRUD ───────────────────────────────────────
+  addWorkoutSession: (session: WorkoutSessionLog) => void
+  deleteWorkoutSession: (id: string) => void
+
   // ── Alert CRUD ─────────────────────────────────────────────────
   addAlert: (alert: ClientAlert) => void
   resolveAlert: (id: string) => void
@@ -166,6 +172,7 @@ const emptyState = () => ({
   bioPrintEntries: {} as Record<string, BioPrintEntry>,
   bodyStatsEntries: {} as Record<string, BodyStatsEntry>,
   nutritionEntries: {} as Record<string, NutritionEntry>,
+  workoutSessions: {} as Record<string, WorkoutSessionLog>,
   alerts: {} as Record<string, ClientAlert>,
   notifications: {} as Record<string, AppNotification>,
 
@@ -435,6 +442,17 @@ export const useAppDataStore = create<AppDataState>()(
         set((s) => {
           const { [id]: _, ...rest } = s.nutritionEntries
           return { nutritionEntries: rest }
+        }),
+
+      // ── Workout Session CRUD ───────────────────────────────────
+      addWorkoutSession: (session) =>
+        set((s) => ({
+          workoutSessions: { ...s.workoutSessions, [session.id]: session },
+        })),
+      deleteWorkoutSession: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.workoutSessions
+          return { workoutSessions: rest }
         }),
 
       // ── Alert CRUD ─────────────────────────────────────────────
