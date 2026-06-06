@@ -61,6 +61,20 @@ export interface Program {
   levelId?: number
   difficultyRating?: number // 1-10
 
+  // Workout-module aligned fields
+  totalWorkouts?: number
+  totalExercises?: number
+  targetAudience?: string
+  expectedOutcomes?: string
+  categoryName?: string
+  levelName?: string
+  isActive?: boolean
+  isPublic?: boolean
+  isFeatured?: boolean
+  isPremium?: boolean
+  metadata?: Record<string, unknown>
+  authorName?: string
+
   // Tracking
   timesUsed: number
   lastAssigned: string | null // ISO date
@@ -78,6 +92,20 @@ export interface Exercise {
   difficulty: Difficulty
   description: string
   videoUrl?: string
+
+  // Workout-module aligned fields
+  exerciseCategory?: string
+  equipmentPrimary?: string
+  equipmentSecondary?: string
+  movementPattern?: string
+  mechanics?: string
+  forceType?: string
+  exerciseType?: string
+  instructionsBrief?: string
+  difficultyBeginner?: boolean
+  difficultyIntermediate?: boolean
+  difficultyAdvanced?: boolean
+  difficultyElite?: boolean
 }
 
 // ── Calendar Session ───────────────────────────────────────────────

@@ -25,7 +25,9 @@ import type {
   WorkoutCategory,
   WorkoutLevel,
   TrainingMethod,
+  Difficulty,
 } from '../types/entities'
+import exercisesJson from '../data/exercises_db.json'
 
 // ── Helpers ────────────────────────────────────────────────────────
 
@@ -145,6 +147,15 @@ const PROGRAM_TEMPLATES: Omit<Program, 'id' | 'timesUsed' | 'lastAssigned' | 'cr
     difficultyRating: 7,
     trainingSplit: 'Upper/Lower',
     periodizationPhase: 'General Preparation',
+    totalWorkouts: 24,
+    totalExercises: 16,
+    targetAudience: 'Intermediate trainees seeking metabolic conditioning',
+    expectedOutcomes: 'Lose 4-6% body fat while maintaining strength',
+    categoryName: 'Lose Weight',
+    levelName: 'Intermediate',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
   },
   {
     name: '5x5 Strength Foundation',
@@ -160,6 +171,15 @@ const PROGRAM_TEMPLATES: Omit<Program, 'id' | 'timesUsed' | 'lastAssigned' | 'cr
     difficultyRating: 5,
     trainingSplit: 'Full Body',
     periodizationPhase: 'Linear Progression',
+    totalWorkouts: 36,
+    totalExercises: 8,
+    targetAudience: 'Beginners new to barbell training',
+    expectedOutcomes: 'Build foundational strength in all major lifts',
+    categoryName: 'Strength',
+    levelName: 'Beginner',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
   },
   {
     name: 'PPL Hypertrophy Block',
@@ -175,6 +195,15 @@ const PROGRAM_TEMPLATES: Omit<Program, 'id' | 'timesUsed' | 'lastAssigned' | 'cr
     difficultyRating: 8,
     trainingSplit: 'Push/Pull/Legs',
     periodizationPhase: 'Accumulation',
+    totalWorkouts: 48,
+    totalExercises: 24,
+    targetAudience: 'Intermediate lifters focused on muscle growth',
+    expectedOutcomes: 'Visible muscle hypertrophy and increased work capacity',
+    categoryName: 'Hypertrophy',
+    levelName: 'Intermediate',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
   },
   {
     name: 'DUP Advanced Strength',
@@ -190,6 +219,15 @@ const PROGRAM_TEMPLATES: Omit<Program, 'id' | 'timesUsed' | 'lastAssigned' | 'cr
     difficultyRating: 9,
     trainingSplit: 'Upper/Lower',
     periodizationPhase: 'Daily Undulation',
+    totalWorkouts: 32,
+    totalExercises: 20,
+    targetAudience: 'Advanced trainees with 2+ years experience',
+    expectedOutcomes: 'Break strength plateaus and build work capacity',
+    categoryName: 'Strength',
+    levelName: 'Advanced',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
   },
   {
     name: 'HIIT Metabolic Burn',
@@ -205,6 +243,15 @@ const PROGRAM_TEMPLATES: Omit<Program, 'id' | 'timesUsed' | 'lastAssigned' | 'cr
     difficultyRating: 6,
     trainingSplit: 'Full Body',
     periodizationPhase: 'Metabolic Conditioning',
+    totalWorkouts: 12,
+    totalExercises: 12,
+    targetAudience: 'Time-pressed clients seeking maximum calorie burn',
+    expectedOutcomes: 'Improved conditioning and 2-4kg fat loss',
+    categoryName: 'Fat Loss',
+    levelName: 'Intermediate',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
   },
   {
     name: 'Body Recomposition Basics',
@@ -220,6 +267,111 @@ const PROGRAM_TEMPLATES: Omit<Program, 'id' | 'timesUsed' | 'lastAssigned' | 'cr
     difficultyRating: 4,
     trainingSplit: 'Upper/Lower',
     periodizationPhase: 'Base Building',
+    totalWorkouts: 32,
+    totalExercises: 14,
+    targetAudience: 'Beginners wanting balanced fitness improvements',
+    expectedOutcomes: 'Simultaneous strength gain and body fat reduction',
+    categoryName: 'General Fitness',
+    levelName: 'Beginner',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
+  },
+  {
+    name: 'Elite Power Peak',
+    description: 'Peaking protocol for competitive powerlifters and strength athletes preparing for competition.',
+    tags: ['power', 'peaking', 'competition'],
+    goal: 'strength',
+    difficulty: 'elite',
+    durationWeeks: 4,
+    daysPerWeek: 4,
+    sessionDurationMinutes: 120,
+    categoryId: 3,
+    levelId: 4,
+    difficultyRating: 10,
+    trainingSplit: 'Upper/Lower',
+    periodizationPhase: 'Peaking',
+    totalWorkouts: 16,
+    totalExercises: 12,
+    targetAudience: 'Competitive powerlifters and strength athletes',
+    expectedOutcomes: 'Peak strength expression for competition day',
+    categoryName: 'Strength',
+    levelName: 'Elite',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
+  },
+  {
+    name: 'Endurance Engine',
+    description: 'Build a powerful aerobic base with progressive running, rowing, and conditioning circuits.',
+    tags: ['endurance', 'cardio', 'conditioning'],
+    goal: 'endurance',
+    difficulty: 'intermediate',
+    durationWeeks: 8,
+    daysPerWeek: 4,
+    sessionDurationMinutes: 60,
+    categoryId: 5,
+    levelId: 2,
+    difficultyRating: 6,
+    trainingSplit: 'Full Body',
+    periodizationPhase: 'Aerobic Base',
+    totalWorkouts: 32,
+    totalExercises: 18,
+    targetAudience: 'Runners, triathletes, and fitness enthusiasts',
+    expectedOutcomes: 'Improved VO2 max and aerobic capacity',
+    categoryName: 'Endurance',
+    levelName: 'Intermediate',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
+  },
+  {
+    name: 'Bro Split Classic',
+    description: 'Old-school bodybuilding split hitting one muscle group per day for maximum isolation and pump.',
+    tags: ['bodybuilding', 'isolation', 'classic'],
+    goal: 'build-muscle',
+    difficulty: 'intermediate',
+    durationWeeks: 8,
+    daysPerWeek: 5,
+    sessionDurationMinutes: 70,
+    categoryId: 4,
+    levelId: 2,
+    difficultyRating: 7,
+    trainingSplit: 'Bro Split',
+    periodizationPhase: 'Hypertrophy',
+    totalWorkouts: 40,
+    totalExercises: 30,
+    targetAudience: 'Bodybuilders and physique athletes',
+    expectedOutcomes: 'Maximum muscle isolation and pump',
+    categoryName: 'Hypertrophy',
+    levelName: 'Intermediate',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
+  },
+  {
+    name: 'Athletic Performance Pro',
+    description: 'Sport-specific training combining strength, power, agility, and conditioning for competitive athletes.',
+    tags: ['sports', 'power', 'agility', 'athletic'],
+    goal: 'build-muscle',
+    difficulty: 'advanced',
+    durationWeeks: 12,
+    daysPerWeek: 5,
+    sessionDurationMinutes: 90,
+    categoryId: 8,
+    levelId: 3,
+    difficultyRating: 9,
+    trainingSplit: 'Upper/Lower',
+    periodizationPhase: 'Power Development',
+    totalWorkouts: 60,
+    totalExercises: 28,
+    targetAudience: 'Competitive athletes across all sports',
+    expectedOutcomes: 'Enhanced power output, agility, and sport performance',
+    categoryName: 'Sports Performance',
+    levelName: 'Advanced',
+    isActive: true,
+    isPublic: true,
+    authorName: 'AzFIT Team',
   },
 ]
 
@@ -471,31 +623,50 @@ function generatePrograms(): Program[] {
 
 // ── Demo Exercises ─────────────────────────────────────────────────
 
-function generateExercises(): Exercise[] {
-  const defs = [
-    { name: 'Barbell Back Squat', muscleGroup: 'Quads', equipment: 'Barbell', difficulty: 'intermediate' as const, description: 'The king of leg exercises. Place bar on upper traps, squat to parallel or below.' },
-    { name: 'Barbell Bench Press', muscleGroup: 'Chest', equipment: 'Barbell', difficulty: 'intermediate' as const, description: 'Classic horizontal press. Retract scapula, slight arch, controlled touch to chest.' },
-    { name: 'Conventional Deadlift', muscleGroup: 'Back', equipment: 'Barbell', difficulty: 'advanced' as const, description: 'Full-body posterior chain pull. Keep neutral spine, drive through heels.' },
-    { name: 'Overhead Press', muscleGroup: 'Shoulders', equipment: 'Barbell', difficulty: 'intermediate' as const, description: 'Standing strict press. Brace core, drive bar vertically over mid-foot.' },
-    { name: 'Barbell Row', muscleGroup: 'Back', equipment: 'Barbell', difficulty: 'intermediate' as const, description: 'Hip-hinge row. Pull to lower chest, control eccentric.' },
-    { name: 'Dumbbell Lunge', muscleGroup: 'Quads', equipment: 'Dumbbells', difficulty: 'beginner' as const, description: 'Walking or stationary lunge. Keep torso upright, controlled step.' },
-    { name: 'Dumbbell Shoulder Press', muscleGroup: 'Shoulders', equipment: 'Dumbbells', difficulty: 'beginner' as const, description: 'Seated or standing. Full ROM, control the negative.' },
-    { name: 'Lat Pulldown', muscleGroup: 'Back', equipment: 'Cable', difficulty: 'beginner' as const, description: 'Wide grip pull to upper chest. Drive elbows down and back.' },
-    { name: 'Cable Flye', muscleGroup: 'Chest', equipment: 'Cable', difficulty: 'beginner' as const, description: 'Standing or bench flye. Squeeze pecs at peak contraction.' },
-    { name: 'Leg Press', muscleGroup: 'Quads', equipment: 'Machine', difficulty: 'beginner' as const, description: 'Machine-based quad dominant press. Full ROM without locking knees.' },
-    { name: 'Pull-Up', muscleGroup: 'Back', equipment: 'Bodyweight', difficulty: 'intermediate' as const, description: 'Bodyweight vertical pull. Dead hang to chin over bar.' },
-    { name: 'Dips', muscleGroup: 'Chest', equipment: 'Bodyweight', difficulty: 'intermediate' as const, description: 'Parallel bar dips. Lean forward for chest, upright for triceps.' },
-    { name: 'Romanian Deadlift', muscleGroup: 'Hamstrings', equipment: 'Barbell', difficulty: 'intermediate' as const, description: 'Hip hinge with slight knee bend. Feel hamstring stretch at bottom.' },
-    { name: 'Leg Curl', muscleGroup: 'Hamstrings', equipment: 'Machine', difficulty: 'beginner' as const, description: 'Lying or seated hamstring curl. Control the negative fully.' },
-    { name: 'Calf Raise', muscleGroup: 'Calves', equipment: 'Machine', difficulty: 'beginner' as const, description: 'Standing or seated calf raise. Full stretch and squeeze.' },
-    { name: 'Plank', muscleGroup: 'Core', equipment: 'Bodyweight', difficulty: 'beginner' as const, description: 'Static core hold. Neutral spine, squeeze glutes.' },
-    { name: 'Kettlebell Swing', muscleGroup: 'Posterior Chain', equipment: 'Kettlebell', difficulty: 'intermediate' as const, description: 'Hip-power swing. Snap hips forward, float the bell.' },
-    { name: 'Box Jump', muscleGroup: 'Quads', equipment: 'Bodyweight', difficulty: 'intermediate' as const, description: 'Explosive jump to box. Soft landing, full extension.' },
-  ]
+const DIFFICULTY_MAP: Record<string, Difficulty> = {
+  Beginner: 'beginner',
+  Intermediate: 'intermediate',
+  Advanced: 'advanced',
+  Elite: 'elite',
+}
 
-  return defs.map((d, i) => ({
-    id: `ex-${String(i + 1).padStart(3, '0')}`,
-    ...d,
+function generateExercises(): Exercise[] {
+  return (exercisesJson as Array<{
+    ExerciseID: string
+    Name: string
+    MuscleGroup: string
+    Equipment: string
+    Difficulty: string
+    Type: string
+    VideoURL: string
+    Description: string
+  }>).map((j) => ({
+    id: j.ExerciseID,
+    name: j.Name,
+    muscleGroup: j.MuscleGroup,
+    equipment: j.Equipment,
+    difficulty: DIFFICULTY_MAP[j.Difficulty] ?? 'intermediate',
+    description: j.Description,
+    videoUrl: j.VideoURL,
+    exerciseCategory: j.Type,
+    equipmentPrimary: j.Equipment,
+    movementPattern: j.MuscleGroup.includes('Push') || j.MuscleGroup.includes('Chest')
+      ? 'Push (Horizontal)'
+      : j.MuscleGroup.includes('Pull') || j.MuscleGroup.includes('Back')
+        ? 'Pull (Vertical)'
+        : j.MuscleGroup.includes('Quads') || j.MuscleGroup.includes('Legs')
+          ? 'Squat'
+          : j.MuscleGroup.includes('Hamstrings') || j.MuscleGroup.includes('Glutes')
+            ? 'Hinge'
+            : 'Other',
+    mechanics: j.Type === 'Compound' ? 'Compound' : 'Isolation',
+    forceType: j.MuscleGroup.includes('Pull') || j.MuscleGroup.includes('Back') ? 'Pull' : 'Push',
+    exerciseType: j.Type === 'Compound' ? 'Strength' : 'Hypertrophy',
+    instructionsBrief: j.Description.slice(0, 120) + (j.Description.length > 120 ? '...' : ''),
+    difficultyBeginner: j.Difficulty === 'Beginner',
+    difficultyIntermediate: j.Difficulty === 'Intermediate',
+    difficultyAdvanced: j.Difficulty === 'Advanced',
+    difficultyElite: j.Difficulty === 'Elite',
   }))
 }
 

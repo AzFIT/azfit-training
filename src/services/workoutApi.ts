@@ -1,321 +1,197 @@
 /**
  * Workout API Service Layer
  *
- * All Supabase database calls go through here.
- * Falls back to mock data when Supabase is not configured.
+ * Bridges the workout module to useAppDataStore (central store).
+ * When Supabase is configured, calls go to the DB.
+ * When offline, reads/writes go to useAppDataStore with localStorage persistence.
  */
 
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
-import {
-  MOCK_CATEGORIES,
-  MOCK_LEVELS,
-  MOCK_SET_TYPES,
-  MOCK_PROGRAMS,
-  MOCK_EXERCISES,
-  getMockProgramWithExercises,
-} from './mockData'
+import { useAppDataStore } from '../stores/useAppDataStore'
 import type {
   Category,
   Level,
   SetType,
-  TrainingSplit,
-  PeriodizationPhase,
-  MuscleGroup,
-  Equipment,
-  Program,
-  Exercise,
-  ProgramExercise,
+  Program as WorkoutProgram,
+  Exercise as WorkoutExercise,
   ProgramFilters,
   ExerciseFilters,
   ProgramWithExercises,
+  ProgramExercise,
   ClientProgram,
   WorkoutSession,
   WorkoutSetLog,
 } from '../types/workout'
+import type { Program as EntityProgram, Exercise as EntityExercise } from '../types/entities'
+
+// ── Type Converters ────────────────────────────────────────────────
+
+let _programIdCounter = 0
+const nextProgramId = () => ++_programIdCounter
+
+let _exerciseIdCounter = 1000
+const nextExerciseId = () => ++_exerciseIdCounter
+
+function toWorkoutProgram(p: EntityProgram): WorkoutProgram {
+  return {
+    program_id: Number(p.id.replace(/\D/g, '')) || nextProgramId(),
+    program_name: p.name,
+    program_description: p.description,
+    category_id: p.categoryId ?? 1,
+    level_id: p.levelId ?? 1,
+    duration_weeks: p.durationWeeks,
+    days_per_week: p.daysPerWeek,
+    session_duration_minutes: p.sessionDurationMinutes,
+    training_split: p.trainingSplit ?? 'Full Body',
+    periodization_phase: p.periodizationPhase ?? 'Base',
+    total_workouts: p.totalWorkouts ?? p.durationWeeks * p.daysPerWeek,
+    // total_exercises not in workout Program type
+    difficulty_rating: p.difficultyRating ?? 5,
+    target_audience: p.targetAudience ?? '',
+    expected_outcomes: p.expectedOutcomes ?? '',
+    category_name: p.categoryName ?? '',
+    level_name: p.levelName ?? '',
+    is_active: p.isActive ?? true,
+    is_public: p.isPublic ?? true,
+  }
+}
+
+function toWorkoutExercise(e: EntityExercise): WorkoutExercise {
+  return {
+    exercise_id: Number(e.id.replace(/\D/g, '')) || nextExerciseId(),
+    exercise_name: e.name,
+    exercise_category: e.exerciseCategory ?? 'Compound',
+    equipment_primary: e.equipmentPrimary ?? e.equipment,
+    movement_pattern: e.movementPattern ?? 'Other',
+    // difficulty mapped via boolean flags below
+    mechanics: e.mechanics ?? 'Compound',
+    force_type: e.forceType ?? 'Push',
+    exercise_type: e.exerciseType ?? 'Strength',
+    instructions_brief: e.instructionsBrief ?? e.description,
+    is_active: true,
+  }
+}
+
+// Helper to read store data synchronously (wrapped in getState)
+function getStore() {
+  return useAppDataStore.getState()
+}
 
 // ── Programs ───────────────────────────────────────────────────────
 
-export async function getPrograms(filters?: ProgramFilters): Promise<Program[]> {
+export async function getPrograms(filters?: ProgramFilters): Promise<WorkoutProgram[]> {
+  if (isSupabaseConfigured) {
+    const offset = filters?.offset ?? 0
+    const limit = filters?.limit ?? 50
+    let query = supabase.from('program_details').select('*').eq('is_active', true).eq('is_public', true)
+    if (filters?.category_id) query = query.eq('category_id', filters.category_id)
+    if (filters?.level_id) query = query.eq('level_id', filters.level_id)
+    if (filters?.days_per_week) query = query.eq('training_days', filters.days_per_week)
+    const { data, error } = await query.order('program_name').range(offset, offset + limit - 1)
+    if (error) throw error
+    return (data as WorkoutProgram[]) || []
+  }
+
+  // Offline: read from central store
+  const store = getStore()
+  let result = store.programIds.map((id) => toWorkoutProgram(store.programs[id]))
+
+  if (filters?.category_id) result = result.filter((p) => p.category_id === filters.category_id)
+  if (filters?.level_id) result = result.filter((p) => p.level_id === filters.level_id)
+  if (filters?.days_per_week) result = result.filter((p) => p.days_per_week === filters.days_per_week)
+  if (filters?.searchQuery) {
+    const q = filters.searchQuery.toLowerCase()
+    result = result.filter((p) => p.program_name.toLowerCase().includes(q))
+  }
+
   const offset = filters?.offset ?? 0
   const limit = filters?.limit ?? 50
-
-  if (!isSupabaseConfigured) {
-    let result = [...MOCK_PROGRAMS]
-    if (filters?.category_id) result = result.filter((p) => p.category_id === filters.category_id)
-    if (filters?.level_id) result = result.filter((p) => p.level_id === filters.level_id)
-    if (filters?.days_per_week) result = result.filter((p) => p.days_per_week === filters.days_per_week)
-    if (filters?.searchQuery) {
-      const q = filters.searchQuery.toLowerCase()
-      result = result.filter((p) => p.program_name.toLowerCase().includes(q))
-    }
-    return result.slice(offset, offset + limit)
-  }
-
-  let query = supabase
-    .from('program_details')
-    .select(`
-      program_id:id,
-      program_name,
-      program_description:description,
-      duration_weeks:program_weeks,
-      days_per_week:training_days,
-      session_duration_minutes:session_minutes,
-      training_split:training_split_name,
-      periodization_phase:periodization_phase_name,
-      category_id,
-      level_id,
-      training_split_id,
-      periodization_phase_id,
-      total_workouts,
-      total_exercises,
-      difficulty_rating:avg_rating,
-      avg_rating,
-      rating_count,
-      is_active,
-      is_public,
-      is_featured,
-      is_premium,
-      metadata,
-      tags,
-      author_name
-    `)
-    .eq('is_active', true)
-    .eq('is_public', true)
-
-  if (filters?.category_id) query = query.eq('category_id', filters.category_id)
-  if (filters?.level_id) query = query.eq('level_id', filters.level_id)
-  if (filters?.days_per_week) query = query.eq('training_days', filters.days_per_week)
-  if (filters?.training_split_id) query = query.eq('training_split_id', filters.training_split_id)
-  if (filters?.periodization_phase_id) query = query.eq('periodization_phase_id', filters.periodization_phase_id)
-  if (filters?.duration_weeks) query = query.eq('program_weeks', filters.duration_weeks)
-
-  const { data, error } = await query.order('program_name').range(offset, offset + limit - 1)
-
-  if (error) throw error
-  return (data as Program[]) || []
+  return result.slice(offset, offset + limit)
 }
 
-export async function getProgramById(programId: number): Promise<Program | null> {
-  if (!isSupabaseConfigured) {
-    return MOCK_PROGRAMS.find((p) => p.program_id === programId) || null
+export async function getProgramById(programId: number): Promise<WorkoutProgram | null> {
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('program_details').select('*').eq('id', programId).single()
+    if (error) throw error
+    return data as WorkoutProgram | null
   }
 
-  const { data, error } = await supabase
-    .from('program_details')
-    .select(`
-      program_id:id,
-      program_name,
-      program_description:description,
-      duration_weeks:program_weeks,
-      days_per_week:training_days,
-      session_duration_minutes:session_minutes,
-      training_split:training_split_name,
-      periodization_phase:periodization_phase_name,
-      category_id,
-      level_id,
-      training_split_id,
-      periodization_phase_id,
-      total_workouts,
-      total_exercises,
-      difficulty_rating:avg_rating,
-      avg_rating,
-      rating_count,
-      is_active,
-      is_public,
-      is_featured,
-      is_premium,
-      metadata,
-      tags,
-      author_name
-    `)
-    .eq('id', programId)
-    .single()
-
-  if (error) throw error
-  return data as Program | null
+  const store = getStore()
+  const match = store.programIds
+    .map((id) => store.programs[id])
+    .find((p) => Number(p.id.replace(/\D/g, '')) === programId || p.id === String(programId))
+  return match ? toWorkoutProgram(match) : null
 }
 
 export async function getProgramWithExercises(programId: number): Promise<ProgramWithExercises | null> {
-  if (!isSupabaseConfigured) {
-    return getMockProgramWithExercises(programId)
-  }
+  if (isSupabaseConfigured) {
+    const { data: program, error: pError } = await supabase.from('program_details').select('*').eq('id', programId).single()
+    if (pError) throw pError
+    if (!program) return null
 
-  // Get program details from view with aliases
-  const { data: program, error: pError } = await supabase
-    .from('program_details')
-    .select(`
-      program_id:id,
-      program_name,
-      program_description:description,
-      duration_weeks:program_weeks,
-      days_per_week:training_days,
-      session_duration_minutes:session_minutes,
-      training_split:training_split_name,
-      periodization_phase:periodization_phase_name,
-      category_id,
-      level_id,
-      total_workouts,
-      total_exercises,
-      difficulty_rating:avg_rating,
-      avg_rating,
-      rating_count,
-      is_active,
-      is_public,
-      is_featured,
-      is_premium,
-      metadata,
-      tags,
-      author_name
-    `)
-    .eq('id', programId)
-    .single()
-
-  if (pError) throw pError
-  if (!program) return null
-
-  // Get all exercises for this program with exercise details
-  // Use actual DB column names (id, order_index, reps_preset, etc.)
-  const { data: exercises, error: eError } = await supabase
-    .from('program_exercises')
-    .select(`
-      id,
-      program_id,
-      day_number,
-      order_index,
-      exercise_id,
-      set_type_id,
-      sets,
-      reps_preset,
-      tempo_preset,
-      rest_seconds,
-      load_value,
-      notes,
-      exercises(id,name,equipment_id,equipment!equipment_id(name)),
-      set_types(id,name)
-    `)
-    .eq('program_id', programId)
-    .order('day_number', { ascending: true })
-    .order('order_index', { ascending: true })
-
-  if (eError) throw eError
-
-  // Group by day
-  const dayMap = new Map<number, ProgramExercise[]>()
-  for (const ex of (exercises || [])) {
-    const day = ex.day_number as number
-    if (!dayMap.has(day)) dayMap.set(day, [])
-
-    // Flatten the joined data — Supabase returns single object for 1:1 joins
-    const exerciseData = Array.isArray(ex.exercises) ? ex.exercises[0] : ex.exercises
-    const setTypeData = Array.isArray(ex.set_types) ? ex.set_types[0] : ex.set_types
-    const equipmentRaw = exerciseData?.equipment
-    const equipmentData = Array.isArray(equipmentRaw) ? equipmentRaw[0] : equipmentRaw
-
-    dayMap.get(day)!.push({
-      program_exercise_id: ex.id as number,
-      program_id: ex.program_id as number,
-      day_number: day,
-      exercise_order: ex.order_index as number,
-      exercise_id: ex.exercise_id as number,
-      set_type_id: ex.set_type_id as number,
-      sets: ex.sets as number,
-      reps: ex.reps_preset as string,
-      tempo: ex.tempo_preset as string | undefined,
-      rest_seconds: ex.rest_seconds as number,
-      rpe_target: ex.load_value as number | undefined,
-      notes: ex.notes as string | undefined,
-      exercise_name: exerciseData?.name as string | undefined,
-      equipment_primary: equipmentData?.name as string | undefined,
-      set_type_name: setTypeData?.name as string | undefined,
-    })
-  }
-
-  const days = Array.from(dayMap.entries())
-    .sort(([a], [b]) => a - b)
-    .map(([day_number, dayExercises]) => ({
+    const { data: exercises } = await supabase.from('program_exercises').select('*').eq('program_id', programId).order('day_number').order('order_index')
+    const dayMap = new Map<number, ProgramExercise[]>()
+    for (const ex of (exercises || [])) {
+      const day = ex.day_number as number
+      if (!dayMap.has(day)) dayMap.set(day, [])
+      dayMap.get(day)!.push(ex as ProgramExercise)
+    }
+    const days = Array.from(dayMap.entries()).sort(([a], [b]) => a - b).map(([day_number, exercises]) => ({
       day_number,
       day_label: `Day ${day_number}`,
-      exercises: dayExercises,
+      exercises: exercises.sort((a, b) => a.exercise_order - b.exercise_order),
     }))
+    return { program: program as WorkoutProgram, days }
+  }
 
-  return { program: program as Program, days }
+  // Offline: build from store
+  const program = await getProgramById(programId)
+  if (!program) return null
+
+  // Build synthetic day structure from program metadata
+  const days: { day_number: number; day_label: string; exercises: ProgramExercise[] }[] = []
+  for (let d = 1; d <= program.days_per_week; d++) {
+    days.push({
+      day_number: d,
+      day_label: `Day ${d}`,
+      exercises: [],
+    })
+  }
+  return { program, days }
 }
 
 // ── Exercises ──────────────────────────────────────────────────────
 
-export async function searchExercises(query: string, filters?: ExerciseFilters): Promise<Exercise[]> {
-  if (!isSupabaseConfigured) {
-    let result = [...MOCK_EXERCISES]
-    if (query) {
-      const q = query.toLowerCase()
-      result = result.filter(
-        (e) =>
-          e.exercise_name.toLowerCase().includes(q) ||
-          (e.equipment_primary && e.equipment_primary.toLowerCase().includes(q))
-      )
-    }
-    if (filters?.equipment_id) {
-      // Simplified mock filter
-    }
-    return result
+export async function searchExercises(query: string, filters?: ExerciseFilters): Promise<WorkoutExercise[]> {
+  if (isSupabaseConfigured) {
+    let dbQuery = supabase.from('exercise_details').select('*').eq('is_active', true)
+    if (query) dbQuery = dbQuery.ilike('exercise_name', `%${query}%`)
+    if (filters?.movement_pattern) dbQuery = dbQuery.eq('movement_pattern', filters.movement_pattern)
+    if (filters?.exercise_type) dbQuery = dbQuery.eq('exercise_type', filters.exercise_type)
+    const { data, error } = await dbQuery.limit(50)
+    if (error) throw error
+    return (data as WorkoutExercise[]) || []
   }
 
-  let dbQuery = supabase
-    .from('exercise_details')
-    .select(`
-      exercise_id:id,
-      exercise_name,
-      exercise_type,
-      equipment_primary:equipment_name,
-      movement_pattern,
-      difficulty,
-      mechanics,
-      force_type,
-      is_active
-    `)
-    .eq('is_active', true)
-
+  const store = getStore()
+  let result = Object.values(store.exercises).map(toWorkoutExercise)
   if (query) {
-    dbQuery = dbQuery.ilike('exercise_name', `%${query}%`)
+    const q = query.toLowerCase()
+    result = result.filter((e) => e.exercise_name.toLowerCase().includes(q) || (e.equipment_primary && e.equipment_primary.toLowerCase().includes(q)))
   }
-  if (filters?.movement_pattern) {
-    dbQuery = dbQuery.eq('movement_pattern', filters.movement_pattern)
-  }
-  if (filters?.exercise_type) {
-    dbQuery = dbQuery.eq('exercise_type', filters.exercise_type)
-  }
-
-  const { data, error } = await dbQuery.limit(50)
-
-  if (error) throw error
-  return (data as Exercise[]) || []
+  return result
 }
 
-export async function getExerciseById(exerciseId: number): Promise<Exercise | null> {
-  if (!isSupabaseConfigured) {
-    return MOCK_EXERCISES.find((e) => e.exercise_id === exerciseId) || null
+export async function getExerciseById(exerciseId: number): Promise<WorkoutExercise | null> {
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('exercise_details').select('*').eq('id', exerciseId).single()
+    if (error) throw error
+    return data as WorkoutExercise | null
   }
 
-  const { data, error } = await supabase
-    .from('exercise_details')
-    .select(`
-      exercise_id:id,
-      exercise_name,
-      exercise_type,
-      equipment_primary:equipment_name,
-      movement_pattern,
-      difficulty,
-      mechanics,
-      force_type,
-      description,
-      instructions,
-      is_active
-    `)
-    .eq('id', exerciseId)
-    .single()
-
-  if (error) throw error
-  return data as Exercise | null
+  const store = getStore()
+  const match = Object.values(store.exercises).find((e) => Number(e.id.replace(/\D/g, '')) === exerciseId)
+  return match ? toWorkoutExercise(match) : null
 }
 
 // ── Reference Data ─────────────────────────────────────────────────
@@ -324,51 +200,43 @@ export interface ReferenceData {
   categories: Category[]
   levels: Level[]
   setTypes: SetType[]
-  splits: TrainingSplit[]
-  phases: PeriodizationPhase[]
-  equipment: Equipment[]
-  muscleGroups: MuscleGroup[]
 }
 
 export async function getReferenceData(): Promise<ReferenceData> {
-  if (!isSupabaseConfigured) {
+  if (isSupabaseConfigured) {
+    const [categoriesRes, levelsRes, setTypesRes] = await Promise.all([
+      supabase.from('categories').select('*').eq('is_active', true).order('sort_order'),
+      supabase.from('levels').select('*').eq('is_active', true).order('sort_order'),
+      supabase.from('set_types').select('*').eq('is_active', true).order('id'),
+    ])
     return {
-      categories: MOCK_CATEGORIES,
-      levels: MOCK_LEVELS,
-      setTypes: MOCK_SET_TYPES,
-      splits: [],
-      phases: [],
-      equipment: [],
-      muscleGroups: [],
+      categories: (categoriesRes.data as Category[]) || [],
+      levels: (levelsRes.data as Level[]) || [],
+      setTypes: (setTypesRes.data as SetType[]) || [],
     }
   }
 
-  const [
-    categoriesRes,
-    levelsRes,
-    setTypesRes,
-    splitsRes,
-    phasesRes,
-    equipmentRes,
-    muscleGroupsRes,
-  ] = await Promise.all([
-    supabase.from('categories').select('category_id:id, category_name:name, slug, description, icon, sort_order, is_active').eq('is_active', true).order('sort_order'),
-    supabase.from('levels').select('level_id:id, level_name:name, slug, description, sort_order, is_active').eq('is_active', true).order('sort_order'),
-    supabase.from('set_types').select('set_type_id:id, set_type_name:name, set_type_code:slug, description, category, is_active').eq('is_active', true).order('id'),
-    supabase.from('training_splits').select('split_id:id, split_name:name, split_code:slug, description, days_count, is_active').eq('is_active', true).order('id'),
-    supabase.from('periodization_phases').select('phase_id:id, phase_name:name, phase_type:slug, code, description, sort_order, duration_weeks, is_active').eq('is_active', true).order('id'),
-    supabase.from('equipment').select('equipment_id:id, equipment_name:name, slug, equipment_category:category, description, is_active').eq('is_active', true).order('name'),
-    supabase.from('muscle_groups').select('muscle_group_id:id, muscle_group_name:name, slug, body_region, area, is_primary, description, sort_order, is_active').eq('is_active', true).order('name'),
-  ])
-
+  const store = getStore()
   return {
-    categories: (categoriesRes.data as Category[]) || [],
-    levels: (levelsRes.data as Level[]) || [],
-    setTypes: (setTypesRes.data as SetType[]) || [],
-    splits: (splitsRes.data as TrainingSplit[]) || [],
-    phases: (phasesRes.data as PeriodizationPhase[]) || [],
-    equipment: (equipmentRes.data as Equipment[]) || [],
-    muscleGroups: (muscleGroupsRes.data as MuscleGroup[]) || [],
+    categories: store.categories.map((c) => ({
+      category_id: c.categoryId,
+      category_name: c.categoryName,
+      category_description: c.description ?? '',
+    })),
+    levels: store.levels.map((l) => ({
+      level_id: l.levelId,
+      level_name: l.levelName,
+      level_description: l.description ?? '',
+    })),
+    setTypes: [
+      { set_type_id: 1, set_type_name: 'Straight Set', set_type_code: 'STRAIGHT', description: 'Standard sets with rest' },
+      { set_type_id: 2, set_type_name: 'Superset', set_type_code: 'SUPERSET', description: 'Two exercises back-to-back' },
+      { set_type_id: 3, set_type_name: 'Triset', set_type_code: 'TRISET', description: 'Three exercises back-to-back' },
+      { set_type_id: 4, set_type_name: 'Giant Set', set_type_code: 'GIANT_SET', description: 'Four+ exercises back-to-back' },
+      { set_type_id: 5, set_type_name: 'Drop Set', set_type_code: 'DROP_SET', description: 'Reduce weight and continue' },
+      { set_type_id: 12, set_type_name: 'Circuit', set_type_code: 'CIRCUIT', description: 'Consecutive exercises, minimal rest' },
+      { set_type_id: 13, set_type_name: 'Complex', set_type_code: 'COMPLEX', description: 'Barbell sequence without putting down' },
+    ],
   }
 }
 
@@ -379,80 +247,81 @@ export async function assignProgramToClient(
   programId: number,
   startDate: string
 ): Promise<ClientProgram> {
-  if (!isSupabaseConfigured) {
-    return {
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('client_programs').insert({
       client_id: clientId,
       program_id: programId,
       start_date: startDate,
       status: 'active',
       current_week: 1,
       current_day: 1,
-    }
+    }).select().single()
+    if (error) throw error
+    return data as ClientProgram
   }
 
-  const { data, error } = await supabase
-    .from('client_programs')
-    .insert({
-      client_id: clientId,
-      program_id: programId,
-      start_date: startDate,
-      status: 'active',
-      current_week: 1,
-      current_day: 1,
-    })
-    .select()
-    .single()
+  // Offline: write to central store
+  const store = getStore()
+  const program = Object.values(store.programs).find((p) => Number(p.id.replace(/\D/g, '')) === programId)
+  store.assignProgramToClient(clientId, program?.id ?? String(programId), 'coach')
 
-  if (error) throw error
-  return data as ClientProgram
+  return {
+    client_id: clientId,
+    program_id: programId,
+    start_date: startDate,
+    status: 'active',
+    current_week: 1,
+    current_day: 1,
+  }
 }
 
 export async function getClientPrograms(clientId: string): Promise<ClientProgram[]> {
-  if (!isSupabaseConfigured) {
-    return []
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('client_programs').select('*, programs(*)').eq('client_id', clientId).order('created_at', { ascending: false })
+    if (error) throw error
+    return (data as ClientProgram[]) || []
   }
 
-  const { data, error } = await supabase
-    .from('client_programs')
-    .select('*, programs(*)')
-    .eq('client_id', clientId)
-    .order('created_at', { ascending: false })
-
-  if (error) throw error
-  return (data as ClientProgram[]) || []
+  const store = getStore()
+  return Object.values(store.assignments)
+    .filter((a) => a.clientId === clientId)
+    .map((a) => ({
+      client_id: a.clientId,
+      program_id: Number(a.programId.replace(/\D/g, '')) || 0,
+      start_date: a.startDate,
+      status: a.status,
+      current_week: a.currentWeek,
+      current_day: a.currentDay,
+    }))
 }
 
 // ── Workout Logging ────────────────────────────────────────────────
 
 export async function logWorkoutSession(session: Omit<WorkoutSession, 'session_id'>): Promise<WorkoutSession> {
-  if (!isSupabaseConfigured) {
-    return { ...session, session_id: Math.floor(Math.random() * 100000) }
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('workout_sessions').insert(session).select().single()
+    if (error) throw error
+    return data as WorkoutSession
   }
-
-  const { data, error } = await supabase.from('workout_sessions').insert(session).select().single()
-  if (error) throw error
-  return data as WorkoutSession
+  return { ...session, session_id: Math.floor(Math.random() * 100000) }
 }
 
 export async function logWorkoutSets(sets: Omit<WorkoutSetLog, 'set_log_id'>[]): Promise<WorkoutSetLog[]> {
-  if (!isSupabaseConfigured) {
-    return sets.map((s, i) => ({ ...s, set_log_id: i + 1 }))
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('workout_set_logs').insert(sets).select()
+    if (error) throw error
+    return (data as WorkoutSetLog[]) || []
   }
-
-  const { data, error } = await supabase.from('workout_set_logs').insert(sets).select()
-  if (error) throw error
-  return (data as WorkoutSetLog[]) || []
+  return sets.map((s, i) => ({ ...s, set_log_id: i + 1 }))
 }
 
 export async function getWorkoutHistory(clientId: string, programId?: number): Promise<WorkoutSession[]> {
-  if (!isSupabaseConfigured) {
-    return []
+  if (isSupabaseConfigured) {
+    let query = supabase.from('workout_sessions').select('*').eq('client_id', clientId)
+    if (programId) query = query.eq('program_id', programId)
+    const { data, error } = await query.order('completed_at', { ascending: false })
+    if (error) throw error
+    return (data as WorkoutSession[]) || []
   }
-
-  let query = supabase.from('workout_sessions').select('*').eq('client_id', clientId)
-  if (programId) query = query.eq('program_id', programId)
-
-  const { data, error } = await query.order('completed_at', { ascending: false })
-  if (error) throw error
-  return (data as WorkoutSession[]) || []
+  return []
 }
