@@ -31,8 +31,8 @@ import exercisesJson from '../data/exercises_db.json'
 
 // ── Helpers ────────────────────────────────────────────────────────
 
-let _idCounter = 0
-const genId = () => `demo_${++_idCounter}_${Math.random().toString(36).slice(2, 6)}`
+import { v4 as uuidv4 } from 'uuid'
+const genId = () => `demo_${uuidv4().slice(0, 8)}_${Math.random().toString(36).slice(2, 6)}`
 
 const randomDateWithin = (days: number): string => {
   const d = subDays(new Date(), Math.floor(Math.random() * days))

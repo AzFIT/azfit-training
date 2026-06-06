@@ -33,11 +33,11 @@ import type {
   TrainingMethod,
 } from '../types/entities'
 import { generateDemoData } from './demoData'
+import { v4 as uuidv4 } from 'uuid'
 
 // ── Internal ID helpers ────────────────────────────────────────────
 
-let _idCounter = 0
-const genId = () => `az_${++_idCounter}_${Math.random().toString(36).slice(2, 6)}`
+const genId = () => `az_${uuidv4().slice(0, 8)}_${Math.random().toString(36).slice(2, 6)}`
 
 // ── State Interface ────────────────────────────────────────────────
 

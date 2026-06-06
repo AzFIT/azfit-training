@@ -5,6 +5,7 @@
  */
 
 import { format, subDays, startOfWeek } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 /** Program types available in the system */
 export type ProgramType = 'Strength' | 'Weight Loss' | 'Endurance' | 'Hypertrophy' | 'Rehabilitation' | 'General Fitness';
@@ -91,8 +92,7 @@ export interface KPIData {
   complianceTrend: number;
 }
 
-let _idCounter = 0;
-const genId = () => `demo_${++_idCounter}_${Math.random().toString(36).slice(2, 6)}`;
+const genId = () => `demo_${uuidv4().slice(0, 8)}_${Math.random().toString(36).slice(2, 6)}`;
 
 const FIRST_NAMES = [
   'Sarah', 'Marcus', 'David', 'Jane', 'Michael', 'Emma', 'James', 'Lisa',

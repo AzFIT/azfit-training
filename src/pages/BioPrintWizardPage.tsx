@@ -48,8 +48,8 @@ function bodyFatCategory(pct: number): string {
   return 'Above Average'
 }
 
-let _idCounter = 0
-const genId = () => `bp_${++_idCounter}_${Date.now()}`
+import { v4 as uuidv4 } from 'uuid'
+const genId = () => `bp_${uuidv4().slice(0, 8)}_${Date.now()}`
 
 // ── Page ───────────────────────────────────────────────────────────
 

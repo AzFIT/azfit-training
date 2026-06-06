@@ -26,11 +26,8 @@ import type { Program as EntityProgram, Exercise as EntityExercise, WorkoutSessi
 
 // ── Type Converters ────────────────────────────────────────────────
 
-let _programIdCounter = 0
-const nextProgramId = () => ++_programIdCounter
-
-let _exerciseIdCounter = 1000
-const nextExerciseId = () => ++_exerciseIdCounter
+const nextProgramId = () => Math.floor(Math.random() * 900000) + 100000
+const nextExerciseId = () => Math.floor(Math.random() * 900000) + 100000
 
 function toWorkoutProgram(p: EntityProgram): WorkoutProgram {
   return {
