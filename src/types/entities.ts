@@ -143,6 +143,30 @@ export interface ClientProgramAssignment {
   assignedBy?: string
 }
 
+// ── TDEE / Nutrition Entry ─────────────────────────────────────────
+
+export type DietPreset = 'balanced' | 'low-carb' | 'high-carb' | 'high-protein'
+
+export interface NutritionEntry {
+  id: string
+  clientId: string
+  date: string
+  gender: 'male' | 'female'
+  age: number
+  weight: number
+  height: number
+  activityLevel: string
+  goal: string
+  bmr: number
+  tdee: number
+  targetCalories: number
+  dietPreset: DietPreset
+  proteinGrams: number
+  carbGrams: number
+  fatGrams: number
+  notes?: string
+}
+
 // ── BioPrint Entry (12-site skinfold) ──────────────────────────────
 
 export interface BioPrintEntry {

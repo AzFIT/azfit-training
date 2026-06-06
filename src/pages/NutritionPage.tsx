@@ -11,7 +11,10 @@ import {
   X,
   Check,
   Info,
+  Save,
 } from 'lucide-react'
+import { useAppDataStore } from '../stores/useAppDataStore'
+import type { NutritionEntry } from '../types/entities'
 import {
   format,
   addDays,
@@ -222,6 +225,24 @@ const GOAL_LABELS: Record<Goal, { label: string; adjustment: number }> = {
   maintain: { label: 'Maintain', adjustment: 0 },
   lose: { label: 'Lose Weight', adjustment: -500 },
   gain: { label: 'Gain Muscle', adjustment: 300 },
+}
+
+/* ─── Diet Presets ─── */
+type DietPreset = 'balanced' | 'low-carb' | 'high-carb' | 'high-protein'
+
+const DIET_PRESETS: Record<DietPreset, { label: string; proteinPct: number; carbPct: number; fatPct: number; desc: string }> = {
+  balanced: { label: 'Balanced', proteinPct: 30, carbPct: 35, fatPct: 35, desc: 'Even distribution for general health' },
+  'low-carb': { label: 'Low Carb', proteinPct: 35, carbPct: 15, fatPct: 50, desc: 'Higher fat for fat loss and keto' },
+  'high-carb': { label: 'High Carb', proteinPct: 25, carbPct: 55, fatPct: 20, desc: 'High energy for endurance athletes' },
+  'high-protein': { label: 'High Protein', proteinPct: 40, carbPct: 30, fatPct: 30, desc: 'Max muscle retention and growth' },
+}
+
+function calcMacros(targetCalories: number, weight: number, preset: DietPreset) {
+  const p = DIET_PRESETS[preset]
+  const proteinGrams = Math.round(Math.max(weight * 1.6, (targetCalories * p.proteinPct) / 100 / 4))
+  const fatGrams = Math.round((targetCalories * p.fatPct) / 100 / 9)
+  const carbGrams = Math.round((targetCalories - proteinGrams * 4 - fatGrams * 9) / 4)
+  return { proteinGrams, carbGrams, fatGrams }
 }
 
 /* ═══════════════════════════════════════════
@@ -985,12 +1006,14 @@ function SupplementsTab() {
    MAIN NUTRITION PAGE
    ═══════════════════════════════════════════ */
 export default function NutritionPage() {
+  const { addNutritionEntry } = useAppDataStore()
   const [gender, setGender] = useState<Gender>('male')
   const [age, setAge] = useState(32)
   const [weight, setWeight] = useState(78.5)
   const [height, setHeight] = useState(183)
   const [activity, setActivity] = useState<ActivityLevel>('moderate')
   const [goal, setGoal] = useState<Goal>('maintain')
+  const [dietPreset, setDietPreset] = useState<DietPreset>('balanced')
   const [mealDate, setMealDate] = useState(new Date())
   const [meals, setMeals] = useState<MealEntry[]>([
     // Breakfast demo items
@@ -1026,10 +1049,8 @@ export default function NutritionPage() {
     return tdee + GOAL_LABELS[goal].adjustment
   }, [tdee, goal])
 
-  // Macro targets (based on typical bodybuilding ratios)
-  const proteinTarget = Math.round(weight * 2) // 2g per kg
-  const fatTarget = Math.round((targetCalories * 0.25) / 9) // 25% of calories
-  const carbTarget = Math.round((targetCalories - proteinTarget * 4 - fatTarget * 9) / 4)
+  // Macro targets based on selected diet preset
+  const { proteinGrams: proteinTarget, carbGrams: carbTarget, fatGrams: fatTarget } = calcMacros(targetCalories, weight, dietPreset)
 
   // Calculate current macros from meals
   const currentMacros = useMemo(() => {
@@ -1196,6 +1217,29 @@ export default function NutritionPage() {
               )}
             </div>
 
+            {/* Diet Preset */}
+            <div className="space-y-2">
+              <p className="text-xs text-[#6B6B6B]">Diet Preset</p>
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.entries(DIET_PRESETS) as [DietPreset, { label: string; desc: string }][]).map(
+                  ([key, { label, desc }]) => (
+                    <button
+                      key={key}
+                      onClick={() => setDietPreset(key)}
+                      className={`text-left px-3 py-2 rounded-lg border text-xs transition-all ${
+                        dietPreset === key
+                          ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.1)] text-[#F0F0F0]'
+                          : 'border-[#2A2A2A] bg-[#1A1A1A] text-[#6B6B6B] hover:text-[#A0A0A0]'
+                      }`}
+                    >
+                      <span className="font-medium block">{label}</span>
+                      <span className="text-[10px] opacity-70">{desc}</span>
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+
             {/* TDEE Display */}
             <div className="bg-[#1A1A1A] rounded-xl p-4 border border-[#2A2A2A] space-y-2">
               <div className="flex items-center justify-between">
@@ -1237,6 +1281,33 @@ export default function NutritionPage() {
                   {gender === 'male' ? '+ 5' : '− 161'} = {Math.round(bmr)} kcal
                 </p>
               </div>
+              {/* Save */}
+              <button
+                onClick={() => {
+                  const entry: NutritionEntry = {
+                    id: `nut_${Date.now()}`,
+                    clientId: 'demo-client',
+                    date: new Date().toISOString().split('T')[0],
+                    gender,
+                    age,
+                    weight,
+                    height,
+                    activityLevel: activity,
+                    goal,
+                    bmr: Math.round(bmr),
+                    tdee,
+                    targetCalories,
+                    dietPreset,
+                    proteinGrams: proteinTarget,
+                    carbGrams: carbTarget,
+                    fatGrams: fatTarget,
+                  }
+                  addNutritionEntry(entry)
+                }}
+                className="w-full flex items-center justify-center gap-2 bg-[#00AEEF] hover:bg-[#009BD6] text-white font-medium py-2 rounded-lg text-sm transition-all hover:scale-[1.02]"
+              >
+                <Save size={14} /> Save to Client
+              </button>
             </div>
           </motion.div>
 

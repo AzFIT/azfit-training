@@ -24,6 +24,7 @@ import type {
   ProgressEntry,
   BioPrintEntry,
   BodyStatsEntry,
+  NutritionEntry,
   ClientAlert,
   AppNotification,
   WorkoutCategory,
@@ -49,6 +50,7 @@ interface AppDataState {
   progressEntries: Record<string, ProgressEntry>
   bioPrintEntries: Record<string, BioPrintEntry>
   bodyStatsEntries: Record<string, BodyStatsEntry>
+  nutritionEntries: Record<string, NutritionEntry>
   alerts: Record<string, ClientAlert>
   notifications: Record<string, AppNotification>
 
@@ -119,6 +121,10 @@ interface AppDataState {
   addBodyStatsEntry: (entry: BodyStatsEntry) => void
   deleteBodyStatsEntry: (id: string) => void
 
+  // ── Nutrition CRUD ─────────────────────────────────────────────
+  addNutritionEntry: (entry: NutritionEntry) => void
+  deleteNutritionEntry: (id: string) => void
+
   // ── Alert CRUD ─────────────────────────────────────────────────
   addAlert: (alert: ClientAlert) => void
   resolveAlert: (id: string) => void
@@ -159,6 +165,7 @@ const emptyState = () => ({
   progressEntries: {} as Record<string, ProgressEntry>,
   bioPrintEntries: {} as Record<string, BioPrintEntry>,
   bodyStatsEntries: {} as Record<string, BodyStatsEntry>,
+  nutritionEntries: {} as Record<string, NutritionEntry>,
   alerts: {} as Record<string, ClientAlert>,
   notifications: {} as Record<string, AppNotification>,
 
@@ -417,6 +424,17 @@ export const useAppDataStore = create<AppDataState>()(
         set((s) => {
           const { [id]: _, ...rest } = s.bodyStatsEntries
           return { bodyStatsEntries: rest }
+        }),
+
+      // ── Nutrition CRUD ─────────────────────────────────────────
+      addNutritionEntry: (entry) =>
+        set((s) => ({
+          nutritionEntries: { ...s.nutritionEntries, [entry.id]: entry },
+        })),
+      deleteNutritionEntry: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.nutritionEntries
+          return { nutritionEntries: rest }
         }),
 
       // ── Alert CRUD ─────────────────────────────────────────────
