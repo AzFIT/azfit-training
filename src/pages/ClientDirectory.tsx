@@ -14,7 +14,6 @@ import {
   ChevronDown,
   Eye,
   Pencil,
-  MessageSquare,
   Download,
   UserPlus,
   Users,
@@ -22,6 +21,7 @@ import {
   TrendingUp,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
 } from 'lucide-react';
 
 import { useAppDataStore } from '@/stores/useAppDataStore';
@@ -551,18 +551,18 @@ export default function ClientDirectory() {
                             <Eye size={16} />
                           </button>
                           <button
+                            onClick={() => navigate(`/programs?assignTo=${client.id}`)}
+                            className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-emerald-500 transition-colors"
+                            title="Assign program"
+                          >
+                            <ClipboardList size={16} />
+                          </button>
+                          <button
                             onClick={() => addNotification({ title: 'Coming soon', message: 'Quick edit will be available soon.', type: 'info' })}
                             className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-warning transition-colors"
                             title="Quick edit"
                           >
                             <Pencil size={16} />
-                          </button>
-                          <button
-                            onClick={() => addNotification({ title: 'Message', message: `Opening chat with ${client.name}...`, type: 'info' })}
-                            className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-info transition-colors"
-                            title="Send message"
-                          >
-                            <MessageSquare size={16} />
                           </button>
                         </div>
                       </td>
