@@ -60,6 +60,7 @@ interface AppDataState {
   clientIds: string[]
   programIds: string[]
   sessionIds: string[] // chronological order
+  workoutSessionIds: string[] // chronological order
 
   // ── Reference data (transient — re-seeded on load) ─────────────
   categories: WorkoutCategory[]
@@ -179,6 +180,7 @@ const emptyState = () => ({
   clientIds: [] as string[],
   programIds: [] as string[],
   sessionIds: [] as string[],
+  workoutSessionIds: [] as string[],
 
   categories: [] as WorkoutCategory[],
   levels: [] as WorkoutLevel[],
@@ -448,11 +450,17 @@ export const useAppDataStore = create<AppDataState>()(
       addWorkoutSession: (session) =>
         set((s) => ({
           workoutSessions: { ...s.workoutSessions, [session.id]: session },
+          workoutSessionIds: s.workoutSessionIds.includes(session.id)
+            ? s.workoutSessionIds
+            : [...s.workoutSessionIds, session.id],
         })),
       deleteWorkoutSession: (id) =>
         set((s) => {
           const { [id]: _, ...rest } = s.workoutSessions
-          return { workoutSessions: rest }
+          return {
+            workoutSessions: rest,
+            workoutSessionIds: s.workoutSessionIds.filter((sid) => sid !== id),
+          }
         }),
 
       // ── Alert CRUD ─────────────────────────────────────────────
@@ -579,6 +587,8 @@ export const useAppDataStore = create<AppDataState>()(
         clientIds: state.clientIds,
         programIds: state.programIds,
         sessionIds: state.sessionIds,
+        workoutSessionIds: state.workoutSessionIds,
+        workoutSessions: state.workoutSessions,
         selectedClientId: state.selectedClientId,
         selectedDate: state.selectedDate,
         isDemoMode: state.isDemoMode,

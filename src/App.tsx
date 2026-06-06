@@ -19,6 +19,8 @@ import ExerciseLibraryPage from './pages/ExerciseLibraryPage'
 import SmartProgramFinderPage from './pages/SmartProgramFinderPage'
 import OneRMCalculatorPage from './pages/OneRMCalculatorPage'
 import WorkoutSessionPage from './pages/WorkoutSessionPage'
+import WorkoutHistoryPage from './pages/WorkoutHistoryPage'
+import ExerciseDetailPage from './pages/ExerciseDetailPage'
 import BioPrintWizardPage from './pages/BioPrintWizardPage'
 
 export default function App() {
@@ -37,6 +39,8 @@ export default function App() {
       <Route path="/smart-finder" element={<Layout><SmartProgramFinderPage /></Layout>} />
       <Route path="/tools/1rm-calculator" element={<Layout><OneRMCalculatorPage /></Layout>} />
       <Route path="/clients/:clientId/workout/:programId" element={<Layout><WorkoutSessionPage /></Layout>} />
+      <Route path="/clients/:clientId/workouts" element={<Layout><WorkoutHistoryPage /></Layout>} />
+      <Route path="/clients/:clientId/exercises/:exerciseId" element={<Layout><ExerciseDetailPage /></Layout>} />
       <Route path="/clients/:id/bioprint" element={<Layout><BioPrintWizardPage /></Layout>} />
       <Route path="/clients/:id" element={<Layout><ClientProfilePage /></Layout>} />
       <Route path="/clients" element={<Layout><ClientDirectory /></Layout>} />

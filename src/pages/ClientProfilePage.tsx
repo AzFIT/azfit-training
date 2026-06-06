@@ -16,6 +16,18 @@ import {
   Legend, ReferenceLine, ComposedChart,
 } from 'recharts';
 import type { PhotoCategory, ProgressPhoto } from '@/types';
+import { useAppDataStore } from '../stores/useAppDataStore';
+import {
+  getPRs,
+  getAllExerciseHistories,
+  getSessionsByClient,
+  getSessionVolume,
+  getSessionCompletedSets,
+  getSessionTotalSets,
+  formatDate,
+  formatShortDate,
+  formatDuration,
+} from '../lib/workoutAnalytics';
 
 /* ═══════════════════════════════════════════
    DEMO DATA — Sarah Johnson
@@ -72,39 +84,12 @@ const measurements = [
   { name: 'Calf (R)', current: 35.4, prev30d: 35.0, prev90d: 34.2, change: 0.4 },
 ];
 
-const prData = [
-  { exercise: 'Back Squat', weight: 85, reps: 5, date: '18/11/2025', held: 12, previous: 80 },
-  { exercise: 'Deadlift', weight: 110, reps: 3, date: '15/11/2025', held: 15, previous: 105 },
-  { exercise: 'Bench Press', weight: 55, reps: 6, date: '20/11/2025', held: 10, previous: 50 },
-  { exercise: 'Overhead Press', weight: 35, reps: 8, date: '10/11/2025', held: 20, previous: 32.5 },
-  { exercise: 'Barbell Row', weight: 50, reps: 8, date: '12/11/2025', held: 18, previous: 45 },
-  { exercise: 'Hip Thrust', weight: 100, reps: 10, date: '08/11/2025', held: 22, previous: 90 },
-];
-
-const rmEstimates = [
-  { exercise: 'Back Squat', weight1RM: 98, repsAt85: 5 },
-  { exercise: 'Deadlift', weight1RM: 120, repsAt110: 3 },
-  { exercise: 'Bench Press', weight1RM: 64, repsAt55: 6 },
-  { exercise: 'Overhead Press', weight1RM: 43, repsAt35: 8 },
-];
-
 const notesData = [
   { id: '1', title: 'Form Check — Deadlift', content: 'Sarah\'s hip hinge pattern has improved significantly. Still need to cue shoulder blade retraction at the top. Consider adding paused deadlifts next phase.', author: 'Trainer', date: '22/11/2025', category: 'Form Check', important: true },
   { id: '2', title: 'Weekly Check-in', content: 'Weight down 0.5kg this week. Sleep has been consistent 7+ hours. Stress levels moderate due to work project. Macro adherence at 88%.', author: 'Trainer', date: '20/11/2025', category: 'General', important: false },
   { id: '3', title: 'Nutrition Adjustment', content: 'Dropped carbs by 20g to 220g, increased protein to 145g. Sarah reports feeling good, no energy crashes during workouts.', author: 'Trainer', date: '15/11/2025', category: 'Nutrition', important: true },
   { id: '4', title: 'Client Update', content: 'Feeling stronger on squats! Hip mobility drills are helping. Requested more core work in warm-ups.', author: 'Sarah', date: '18/11/2025', category: 'Goals', important: false },
   { id: '5', title: 'Phase 2 Review', content: 'Completed Phase 2 with 94% session adherence. All strength metrics improved. Ready to progress to power-focused Phase 3.', author: 'Trainer', date: '01/11/2025', category: 'General', important: true },
-];
-
-const sessionsData = [
-  { id: '1', date: '25/11/2025', time: '09:00', type: 'Lower Body Power', duration: 65, exercises: 6, status: 'Completed' as const, notes: true },
-  { id: '2', date: '23/11/2025', time: '09:00', type: 'Upper Body Strength', duration: 70, exercises: 7, status: 'Completed' as const, notes: true },
-  { id: '3', date: '21/11/2025', time: '09:00', type: 'Full Body', duration: 60, exercises: 8, status: 'Completed' as const, notes: false },
-  { id: '4', date: '19/11/2025', time: '09:00', type: 'Lower Body Strength', duration: 75, exercises: 6, status: 'Completed' as const, notes: true },
-  { id: '5', date: '18/11/2025', time: '09:00', type: 'Upper Body Hypertrophy', duration: 68, exercises: 7, status: 'Completed' as const, notes: false },
-  { id: '6', date: '16/11/2025', time: '09:00', type: 'Active Recovery', duration: 45, exercises: 4, status: 'Completed' as const, notes: false },
-  { id: '7', date: '14/11/2025', time: '09:00', type: 'Lower Body Strength', duration: 72, exercises: 6, status: 'Completed' as const, notes: true },
-  { id: '8', date: '12/11/2025', time: '09:00', type: 'Upper Body Strength', duration: 70, exercises: 7, status: 'No-show' as const, notes: false },
 ];
 
 const calendarSessions = [
@@ -166,26 +151,6 @@ const habits = [
   { name: 'Water 2.5L', week: [true, true, false, true, true, false, true] },
   { name: 'Steps 10k', week: [false, true, true, true, false, true, true] },
   { name: 'Stretch/Mobility', week: [true, true, true, true, true, false, false] },
-];
-
-const exerciseDb = [
-  { name: 'Back Squat', muscle: 'Quadriceps', equipment: 'Barbell', timesDone: 42, maxWeight: 85, lastDate: '25/11/2025' },
-  { name: 'Deadlift', muscle: 'Posterior Chain', equipment: 'Barbell', timesDone: 38, maxWeight: 110, lastDate: '23/11/2025' },
-  { name: 'Bench Press', muscle: 'Chest', equipment: 'Barbell', timesDone: 40, maxWeight: 55, lastDate: '25/11/2025' },
-  { name: 'Overhead Press', muscle: 'Shoulders', equipment: 'Barbell', timesDone: 35, maxWeight: 35, lastDate: '23/11/2025' },
-  { name: 'Barbell Row', muscle: 'Back', equipment: 'Barbell', timesDone: 36, maxWeight: 50, lastDate: '21/11/2025' },
-  { name: 'Hip Thrust', muscle: 'Glutes', equipment: 'Barbell', timesDone: 30, maxWeight: 100, lastDate: '19/11/2025' },
-  { name: 'Romanian Deadlift', muscle: 'Hamstrings', equipment: 'Barbell', timesDone: 28, maxWeight: 70, lastDate: '25/11/2025' },
-  { name: 'Lat Pulldown', muscle: 'Back', equipment: 'Cable', timesDone: 32, maxWeight: 55, lastDate: '23/11/2025' },
-  { name: 'Leg Press', muscle: 'Quadriceps', equipment: 'Machine', timesDone: 25, maxWeight: 140, lastDate: '21/11/2025' },
-  { name: 'Dumbbell Lunges', muscle: 'Quadriceps', equipment: 'Dumbbell', timesDone: 22, maxWeight: 20, lastDate: '19/11/2025' },
-];
-
-const muscleDistribution = [
-  { name: 'Quadriceps', value: 22 }, { name: 'Back', value: 18 },
-  { name: 'Chest', value: 15 }, { name: 'Shoulders', value: 12 },
-  { name: 'Glutes', value: 10 }, { name: 'Hamstrings', value: 8 },
-  { name: 'Arms', value: 8 }, { name: 'Core', value: 7 },
 ];
 
 const goalsData = [
@@ -659,7 +624,33 @@ function BodyStatsTab() {
    ═══════════════════════════════════════════ */
 
 function RecordsTab() {
+  const { id: clientId } = useParams<{ id: string }>();
+  const { workoutSessions } = useAppDataStore();
   const [filter, setFilter] = useState<'all' | 'prs' | 'recent'>('all');
+  const navigate = useNavigate();
+
+  const prs = clientId ? getPRs(workoutSessions, clientId) : [];
+  const histories = clientId ? getAllExerciseHistories(workoutSessions, clientId) : [];
+
+  const recentLifts = (clientId ? getSessionsByClient(workoutSessions, clientId) : [])
+    .flatMap((s) =>
+      s.exercises.flatMap((e) =>
+        e.sets
+          .filter((set) => set.completed && set.actualLoad && set.actualReps)
+          .map((set) => ({
+            date: formatShortDate(s.date),
+            exercise: e.exerciseName,
+            weight: set.actualLoad!,
+            reps: set.actualReps!,
+            rpe: set.actualRpe || 0,
+            exerciseId: e.exerciseId,
+          }))
+      )
+    )
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10);
+
+  const displayedPRs = filter === 'recent' ? prs.slice(0, 6) : filter === 'prs' ? prs.filter((p) => p.previousBest > 0) : prs;
 
   return (
     <div className="space-y-5">
@@ -679,50 +670,59 @@ function RecordsTab() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {prData.map((pr, i) => (
-          <motion.div
-            key={pr.exercise} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            className="bg-gradient-to-br from-[rgba(234,179,8,0.08)] to-[rgba(249,115,22,0.04)] bg-[#141414] border border-[#2A2A2A] rounded-xl p-5 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(234,179,8,0.1)] transition-all duration-200"
-          >
-            <div className="absolute top-3 right-3">
-              <Trophy size={20} className="text-[#EAB308]" />
-            </div>
-            <p className="text-sm text-[#A0A0A0] mb-1">{pr.exercise}</p>
-            <p className="text-2xl font-bold text-[#F0F0F0] font-mono">{pr.weight} <span className="text-sm text-[#A0A0A0]">kg</span></p>
-            <p className="text-xs text-[#6B6B6B] mt-1">{pr.reps} reps · {pr.date}</p>
-            <div className="mt-3 pt-3 border-t border-[#2A2A2A] flex items-center justify-between">
-              <span className="text-xs text-[#6B6B6B]">Previous: {pr.previous}kg</span>
-              <ChangePill value={+((pr.weight - pr.previous)).toFixed(1)} />
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      {prs.length === 0 ? (
+        <div className="text-center py-12 border border-dashed border-[#2A2A2A] rounded-xl">
+          <Trophy size={32} className="mx-auto text-[#6B6B6B] mb-3" />
+          <p className="text-sm text-[#A0A0A0]">No records yet.</p>
+          <p className="text-xs text-[#6B6B6B] mt-1">Complete workouts to see PRs here.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {displayedPRs.slice(0, 6).map((pr, i) => (
+            <motion.div
+              key={pr.exerciseId} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              onClick={() => navigate(`/clients/${clientId}/exercises/${pr.exerciseId}`)}
+              className="cursor-pointer bg-gradient-to-br from-[rgba(234,179,8,0.08)] to-[rgba(249,115,22,0.04)] bg-[#141414] border border-[#2A2A2A] rounded-xl p-5 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(234,179,8,0.1)] transition-all duration-200"
+            >
+              <div className="absolute top-3 right-3">
+                <Trophy size={20} className="text-[#EAB308]" />
+              </div>
+              <p className="text-sm text-[#A0A0A0] mb-1">{pr.exerciseName}</p>
+              <p className="text-2xl font-bold text-[#F0F0F0] font-mono">{pr.load} <span className="text-sm text-[#A0A0A0]">kg</span></p>
+              <p className="text-xs text-[#6B6B6B] mt-1">{pr.reps} reps · {formatDate(pr.date)}</p>
+              <div className="mt-3 pt-3 border-t border-[#2A2A2A] flex items-center justify-between">
+                <span className="text-xs text-[#6B6B6B]">Previous: {pr.previousBest}kg</span>
+                <ChangePill value={+((pr.load - pr.previousBest)).toFixed(1)} />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       <SectionCard title="1RM Estimates (Epley Formula)">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#2A2A2A]">
-                {['Exercise', 'Estimated 1RM', 'Weight Used', 'Reps'].map((h) => (
+                {['Exercise', 'Estimated 1RM', 'Best Load', 'Best Reps'].map((h) => (
                   <th key={h} className="text-left text-xs text-[#6B6B6B] font-semibold uppercase py-2 px-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {rmEstimates.map((rm) => (
-                <tr key={rm.exercise} className="border-b border-[#1F1F1F] hover:bg-[#1A1A1A] transition-colors">
-                  <td className="py-2.5 px-3 text-sm text-[#F0F0F0] font-medium">{rm.exercise}</td>
-                  <td className="py-2.5 px-3 text-sm text-[#F0F0F0] font-mono font-bold">{rm.weight1RM} kg</td>
-                  <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">
-                    {rm.exercise === 'Back Squat' ? '85' : rm.exercise === 'Deadlift' ? '110' : rm.exercise === 'Bench Press' ? '55' : '35'} kg
-                  </td>
-                  <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">
-                    {rm.exercise === 'Back Squat' ? '5' : rm.exercise === 'Deadlift' ? '3' : rm.exercise === 'Bench Press' ? '6' : '8'}
-                  </td>
+              {histories.slice(0, 8).map((h) => (
+                <tr key={h.exerciseId} className="border-b border-[#1F1F1F] hover:bg-[#1A1A1A] transition-colors cursor-pointer"
+                  onClick={() => navigate(`/clients/${clientId}/exercises/${h.exerciseId}`)}>
+                  <td className="py-2.5 px-3 text-sm text-[#F0F0F0] font-medium">{h.exerciseName}</td>
+                  <td className="py-2.5 px-3 text-sm text-[#F0F0F0] font-mono font-bold">{h.bestEstimated1RM} kg</td>
+                  <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">{h.prLoad} kg</td>
+                  <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">{h.prReps}</td>
                 </tr>
               ))}
+              {histories.length === 0 && (
+                <tr><td colSpan={4} className="py-6 text-center text-xs text-[#6B6B6B]">No data yet</td></tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -733,26 +733,19 @@ function RecordsTab() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#2A2A2A]">
-                {['Date', 'Exercise', 'Weight', 'Reps', 'Sets', 'RPE'].map((h) => (
+                {['Date', 'Exercise', 'Weight', 'Reps', 'RPE'].map((h) => (
                   <th key={h} className="text-left text-xs text-[#6B6B6B] font-semibold uppercase py-2 px-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {[
-                { date: '25/11', exercise: 'Back Squat', weight: 85, reps: 5, sets: 3, rpe: 8 },
-                { date: '25/11', exercise: 'Romanian Deadlift', weight: 70, reps: 8, sets: 3, rpe: 7 },
-                { date: '23/11', exercise: 'Bench Press', weight: 55, reps: 6, sets: 4, rpe: 8 },
-                { date: '23/11', exercise: 'Overhead Press', weight: 35, reps: 8, sets: 3, rpe: 7 },
-                { date: '21/11', exercise: 'Barbell Row', weight: 50, reps: 8, sets: 4, rpe: 8 },
-                { date: '21/11', exercise: 'Lat Pulldown', weight: 55, reps: 10, sets: 3, rpe: 7 },
-              ].map((lift, i) => (
-                <tr key={i} className="border-b border-[#1F1F1F] hover:bg-[#1A1A1A] transition-colors">
+              {recentLifts.map((lift, i) => (
+                <tr key={i} className="border-b border-[#1F1F1F] hover:bg-[#1A1A1A] transition-colors cursor-pointer"
+                  onClick={() => navigate(`/clients/${clientId}/exercises/${lift.exerciseId}`)}>
                   <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">{lift.date}</td>
                   <td className="py-2.5 px-3 text-sm text-[#F0F0F0]">{lift.exercise}</td>
                   <td className="py-2.5 px-3 text-sm text-[#F0F0F0] font-mono font-semibold">{lift.weight}kg</td>
                   <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">{lift.reps}</td>
-                  <td className="py-2.5 px-3 text-sm text-[#A0A0A0] font-mono">{lift.sets}</td>
                   <td className="py-2.5 px-3">
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${lift.rpe >= 9 ? 'text-[#EF4444] bg-[rgba(239,68,68,0.1)]' : lift.rpe >= 7 ? 'text-[#EAB308] bg-[rgba(234,179,8,0.1)]' : 'text-[#22C55E] bg-[rgba(34,197,94,0.1)]'}`}>
                       {lift.rpe}/10
@@ -760,6 +753,9 @@ function RecordsTab() {
                   </td>
                 </tr>
               ))}
+              {recentLifts.length === 0 && (
+                <tr><td colSpan={5} className="py-6 text-center text-xs text-[#6B6B6B]">No lifts logged yet</td></tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -904,74 +900,118 @@ function NotesTab() {
    ═══════════════════════════════════════════ */
 
 function SessionsTab() {
+  const { id: clientId } = useParams<{ id: string }>();
+  const { workoutSessions } = useAppDataStore();
+  const navigate = useNavigate();
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [monthFilter, setMonthFilter] = useState('All');
 
-  const completed = sessionsData.filter((s) => s.status === 'Completed').length;
-  const noShow = sessionsData.filter((s) => s.status === 'No-show').length;
-  const avgDuration = Math.round(sessionsData.reduce((a, s) => a + s.duration, 0) / sessionsData.length);
+  const sessions = clientId ? getSessionsByClient(workoutSessions, clientId) : [];
+  const completed = sessions.length;
+  const totalDuration = sessions.reduce((a, s) => a + (s.durationSeconds || 0), 0);
+  const avgDuration = completed > 0 ? Math.round(totalDuration / completed / 60) : 0;
+
+  const filtered = monthFilter === 'All'
+    ? sessions
+    : sessions.filter((s) => {
+        const d = new Date(s.date);
+        return d.toLocaleString('en-GB', { month: 'long' }) === monthFilter;
+      });
+
+  const months = Array.from(new Set(sessions.map((s) => new Date(s.date).toLocaleString('en-GB', { month: 'long' }))));
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-lg font-semibold text-[#F0F0F0]">Session History</h2>
-        <div className="flex gap-1 bg-[#1A1A1A] rounded-lg p-1">
-          {([
-            { key: 'list' as const, label: 'List View' },
-            { key: 'calendar' as const, label: 'Calendar View' },
-          ]).map((v) => (
-            <button key={v.key} onClick={() => setView(v.key)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${view === v.key ? 'bg-[#242424] text-[#00AEEF]' : 'text-[#A0A0A0] hover:text-[#F0F0F0]'}`}>
-              {v.label}
-            </button>
-          ))}
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate(`/clients/${clientId}/workouts`)}
+            className="flex items-center gap-1.5 text-xs font-medium text-[#00AEEF] hover:text-white border border-[#00AEEF]/30 hover:bg-[#00AEEF] px-3 py-1.5 rounded-lg transition-all"
+          >
+            View All <ChevronRight size={14} />
+          </button>
+          <div className="flex gap-1 bg-[#1A1A1A] rounded-lg p-1">
+            {([
+              { key: 'list' as const, label: 'List View' },
+              { key: 'calendar' as const, label: 'Calendar View' },
+            ]).map((v) => (
+              <button key={v.key} onClick={() => setView(v.key)}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${view === v.key ? 'bg-[#242424] text-[#00AEEF]' : 'text-[#A0A0A0] hover:text-[#F0F0F0]'}`}>
+                {v.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Total Sessions" value={sessionsData.length} icon={Calendar} />
+        <KpiCard label="Total Sessions" value={sessions.length} icon={Calendar} />
         <KpiCard label="Completed" value={completed} icon={CheckCircle2} />
-        <KpiCard label="No-shows" value={noShow} icon={XCircle} inverse />
+        <KpiCard label="Total Volume" value={`${Math.round(sessions.reduce((a, s) => a + getSessionVolume(s), 0) / 1000)}k`} icon={Dumbbell} />
         <KpiCard label="Avg Duration" value={`${avgDuration}m`} icon={Clock} />
       </div>
 
       {view === 'list' ? (
         <div className="space-y-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Filter size={14} className="text-[#6B6B6B]" />
             <span className="text-xs text-[#6B6B6B]">Filter:</span>
-            {['All', 'November', 'October'].map((m) => (
+            <button
+              onClick={() => setMonthFilter('All')}
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${monthFilter === 'All' ? 'bg-[#242424] text-[#00AEEF]' : 'text-[#6B6B6B] hover:text-[#A0A0A0]'}`}>
+              All
+            </button>
+            {months.slice(0, 6).map((m) => (
               <button key={m} onClick={() => setMonthFilter(m)}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${monthFilter === m ? 'bg-[#242424] text-[#00AEEF]' : 'text-[#6B6B6B] hover:text-[#A0A0A0]'}`}>
                 {m}
               </button>
             ))}
           </div>
-          <div className="space-y-2">
-            {sessionsData.map((s, i) => (
-              <motion.div
-                key={s.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="bg-[#141414] border border-[#2A2A2A] rounded-xl p-4 flex items-center gap-4 hover:bg-[#1A1A1A] transition-colors"
-              >
-                <div className="flex-shrink-0 w-14 text-center">
-                  <p className="text-xs text-[#6B6B6B] font-mono">{s.date.split('/')[0]}/{s.date.split('/')[1]}</p>
-                  <p className="text-xs text-[#A0A0A0] font-mono">{s.time}</p>
-                </div>
-                <div className="w-px h-10 bg-[#2A2A2A] flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm text-[#F0F0F0] font-medium truncate">{s.type}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${s.status === 'Completed' ? 'text-[#22C55E] bg-[rgba(34,197,94,0.1)]' : s.status === 'No-show' ? 'text-[#EF4444] bg-[rgba(239,68,68,0.1)]' : 'text-[#EAB308] bg-[rgba(234,179,8,0.1)]'}`}>
-                      {s.status}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#6B6B6B]">{s.exercises} exercises · {s.duration} min{s.notes && ' · Has notes'}</p>
-                </div>
-                <ChevronRight size={16} className="text-[#6B6B6B] flex-shrink-0" />
-              </motion.div>
-            ))}
-          </div>
+
+          {filtered.length === 0 ? (
+            <div className="text-center py-12 border border-dashed border-[#2A2A2A] rounded-xl">
+              <Calendar size={32} className="mx-auto text-[#6B6B6B] mb-3" />
+              <p className="text-sm text-[#A0A0A0]">No sessions logged yet.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {filtered.map((s, i) => {
+                const completedSets = getSessionCompletedSets(s);
+                const totalSets = getSessionTotalSets(s);
+                const volume = getSessionVolume(s);
+                const d = new Date(s.date);
+                return (
+                  <motion.div
+                    key={s.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="bg-[#141414] border border-[#2A2A2A] rounded-xl p-4 flex items-center gap-4 hover:bg-[#1A1A1A] transition-colors cursor-pointer"
+                    onClick={() => navigate(`/clients/${clientId}/workouts`)}
+                  >
+                    <div className="flex-shrink-0 w-14 text-center">
+                      <p className="text-xs text-[#6B6B6B] font-mono">{d.getDate().toString().padStart(2, '0')}/{(d.getMonth() + 1).toString().padStart(2, '0')}</p>
+                      <p className="text-xs text-[#A0A0A0] font-mono">{d.getFullYear()}</p>
+                    </div>
+                    <div className="w-px h-10 bg-[#2A2A2A] flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm text-[#F0F0F0] font-medium truncate">{s.programName || 'Workout'}</p>
+                        <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 text-[#22C55E] bg-[rgba(34,197,94,0.1)]">
+                          Completed
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#6B6B6B]">
+                        {s.exercises.length} exercises · {completedSets}/{totalSets} sets · {formatDuration(s.durationSeconds || 0)} · {volume.toLocaleString()} kg vol
+                        {s.notes ? ' · Has notes' : ''}
+                      </p>
+                    </div>
+                    <ChevronRight size={16} className="text-[#6B6B6B] flex-shrink-0" />
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       ) : (
         <CalendarView />
@@ -1371,16 +1411,41 @@ function LifestyleTab() {
    ═══════════════════════════════════════════ */
 
 function DatabaseTab() {
+  const { id: clientId } = useParams<{ id: string }>();
+  const { workoutSessions, exercises } = useAppDataStore();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'times' | 'weight'>('times');
 
-  const filtered = exerciseDb
+  const histories = clientId ? getAllExerciseHistories(workoutSessions, clientId) : [];
+
+  const enriched = histories.map((h) => {
+    const ex = exercises[h.exerciseId];
+    return {
+      exerciseId: h.exerciseId,
+      name: h.exerciseName || 'Unknown',
+      muscle: ex?.muscleGroup || 'General',
+      equipment: ex?.equipment || 'Bodyweight',
+      timesDone: h.totalSets,
+      maxWeight: h.prLoad,
+      lastDate: h.lastDate ? formatShortDate(h.lastDate) : '-',
+    };
+  });
+
+  const filtered = enriched
     .filter((e) => e.name.toLowerCase().includes(search.toLowerCase()) || e.muscle.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       if (sortBy === 'times') return b.timesDone - a.timesDone;
       if (sortBy === 'weight') return b.maxWeight - a.maxWeight;
       return a.name.localeCompare(b.name);
     });
+
+  const muscleDistribution = Object.entries(
+    enriched.reduce((acc, e) => {
+      acc[e.muscle] = (acc[e.muscle] || 0) + e.timesDone;
+      return acc;
+    }, {} as Record<string, number>)
+  ).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
 
   return (
     <div className="space-y-5">
@@ -1404,29 +1469,37 @@ function DatabaseTab() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <SectionCard title="Muscle Group Distribution">
           <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={muscleDistribution} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
-                  {muscleDistribution.map((_, i) => (<Cell key={i} fill={COLORS[i % COLORS.length]} />))}
-                </Pie>
-                <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                <Legend wrapperStyle={{ fontSize: 11, color: '#A0A0A0' }} />
-              </PieChart>
-            </ResponsiveContainer>
+            {muscleDistribution.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-xs text-[#6B6B6B]">No data yet</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={muscleDistribution} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
+                    {muscleDistribution.map((_, i) => (<Cell key={i} fill={COLORS[i % COLORS.length]} />))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: '#A0A0A0' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </SectionCard>
 
         <SectionCard title="Most Frequent Exercises">
           <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={exerciseDb.slice(0, 6)} layout="vertical">
-                <CartesianGrid stroke="rgba(255,255,255,0.04)" />
-                <XAxis type="number" tick={{ fill: '#6B6B6B', fontSize: 11 }} />
-                <YAxis dataKey="name" type="category" tick={{ fill: '#A0A0A0', fontSize: 10 }} width={100} />
-                <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                <Bar dataKey="timesDone" fill="#00AEEF" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {filtered.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-xs text-[#6B6B6B]">No data yet</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={filtered.slice(0, 6)} layout="vertical">
+                  <CartesianGrid stroke="rgba(255,255,255,0.04)" />
+                  <XAxis type="number" tick={{ fill: '#6B6B6B', fontSize: 11 }} />
+                  <YAxis dataKey="name" type="category" tick={{ fill: '#A0A0A0', fontSize: 10 }} width={100} />
+                  <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
+                  <Bar dataKey="timesDone" fill="#00AEEF" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </SectionCard>
       </div>
@@ -1436,15 +1509,16 @@ function DatabaseTab() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#2A2A2A]">
-                {['Exercise', 'Muscle Group', 'Equipment', 'Times Done', 'Max Weight', 'Last Date'].map((h) => (
+                {['Exercise', 'Muscle Group', 'Equipment', 'Sets Logged', 'Max Weight', 'Last Date'].map((h) => (
                   <th key={h} className="text-left text-xs text-[#6B6B6B] font-semibold uppercase py-2 px-3 cursor-pointer hover:text-[#00AEEF] transition-colors">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filtered.map((ex, i) => (
-                <motion.tr key={ex.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
-                  className="border-b border-[#1F1F1F] hover:bg-[#1A1A1A] transition-colors">
+                <motion.tr key={ex.exerciseId} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
+                  className="border-b border-[#1F1F1F] hover:bg-[#1A1A1A] transition-colors cursor-pointer"
+                  onClick={() => navigate(`/clients/${clientId}/exercises/${ex.exerciseId}`)}>
                   <td className="py-2.5 px-3 text-sm text-[#F0F0F0] font-medium">{ex.name}</td>
                   <td className="py-2.5 px-3"><span className="text-xs px-2 py-0.5 rounded-full bg-[rgba(0,174,239,0.1)] text-[#00AEEF]">{ex.muscle}</span></td>
                   <td className="py-2.5 px-3"><span className="text-xs px-2 py-0.5 rounded-full bg-[rgba(139,92,246,0.1)] text-[#8B5CF6]">{ex.equipment}</span></td>
@@ -1453,6 +1527,9 @@ function DatabaseTab() {
                   <td className="py-2.5 px-3 text-sm text-[#6B6B6B] font-mono">{ex.lastDate}</td>
                 </motion.tr>
               ))}
+              {filtered.length === 0 && (
+                <tr><td colSpan={6} className="py-6 text-center text-xs text-[#6B6B6B]">No exercises logged yet</td></tr>
+              )}
             </tbody>
           </table>
         </div>
