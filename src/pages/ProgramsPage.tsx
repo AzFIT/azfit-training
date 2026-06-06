@@ -28,27 +28,14 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Trash2,
 } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { useAppDataStore } from '../stores/useAppDataStore'
+import type { Program as EntityProgram } from '../types/entities'
 
 // ── Types ──────────────────────────────────────────────
-interface TrainingMethod {
-  Name: string
-  Goal: string
-  Duration: string
-  Frequency: string
-  TargetAudience: string
-  Equipment: string
-  Structure: string
-  Progression: string
-  NutritionNotes: string
-  TrackingMetrics: string
-  SafetyNotes: string
-  MediaAssets?: string
-  Category: string
-}
-
-interface Program {
+interface DisplayProgram {
   id: string
   name: string
   goal: string
@@ -65,6 +52,52 @@ interface Program {
   archived: boolean
   createdAt: string
   colorBanner: string
+}
+
+function toDisplayProgram(p: EntityProgram): DisplayProgram {
+  const goalMap: Record<string, string> = {
+    'lose-fat': 'Lose Fat',
+    'build-muscle': 'Build Muscle',
+    'strength': 'Strength',
+    'endurance': 'Endurance',
+    'maintenance': 'General Fitness',
+  }
+  const methodMap: Record<string, string> = {
+    'Upper/Lower': 'Upper/Lower',
+    'Push/Pull/Legs': 'Push/Pull/Legs',
+    'Full Body': 'Full Body',
+    'Bro Split': 'Bro Split',
+  }
+  const diffMap: Record<string, string> = {
+    beginner: 'Beginner',
+    intermediate: 'Intermediate',
+    advanced: 'Advanced',
+    elite: 'Elite',
+  }
+  const goalKey = normalizeGoal(p.goal)
+  const goalColor = GOAL_COLOR_MAP[goalKey] || GOAL_COLOR_MAP['general']
+  const daysAgo = p.lastAssigned
+    ? Math.floor((Date.now() - new Date(p.lastAssigned).getTime()) / 86400000)
+    : 30
+
+  return {
+    id: p.id,
+    name: p.name,
+    goal: goalMap[p.goal] || p.goal,
+    method: methodMap[p.trainingSplit || ''] || p.trainingSplit || 'Other',
+    category: p.categoryName || p.goal,
+    difficulty: diffMap[p.difficulty] || p.difficulty,
+    duration: `${p.durationWeeks} wk`,
+    frequency: `${p.daysPerWeek}x/wk`,
+    equipment: p.tags?.join(', ') || 'Various',
+    structure: p.trainingSplit || 'Full Body',
+    timesAssigned: p.timesUsed,
+    activeClients: Math.floor(p.timesUsed * 0.4),
+    lastAssigned: daysAgo <= 1 ? '1 day ago' : `${daysAgo} days ago`,
+    archived: !p.isActive,
+    createdAt: p.createdAt,
+    colorBanner: goalColor,
+  }
 }
 
 // ── Constants ──────────────────────────────────────────
@@ -128,10 +161,6 @@ function normalizeGoal(goal: string): string {
   return 'general'
 }
 
-function getGoalColor(goal: string): string {
-  return GOAL_COLOR_MAP[normalizeGoal(goal)] || GOAL_COLOR_MAP['general']
-}
-
 function getGoalBg(goal: string): string {
   return GOAL_BG_MAP[normalizeGoal(goal)] || GOAL_BG_MAP['general']
 }
@@ -152,59 +181,8 @@ function getGoalIcon(goal: string) {
   }
 }
 
-function getMethodFromName(name: string): string {
-  if (name.includes('Upper') || name.includes('Lower')) return 'Upper/Lower'
-  if (name.includes('PPL') || name.includes('Push') || name.includes('Pull')) return 'Push/Pull/Legs'
-  if (name.includes('5x5') || name.includes('5/3/1') || name.includes('StrongLifts')) return 'Full Body'
-  if (name.includes('Bro')) return 'Bro Split'
-  if (name.includes('Circuit') || name.includes('HIIT')) return 'Circuit/HIIT'
-  if (name.includes('Full Body')) return 'Full Body'
-  return 'Other'
-}
-
-function generateSamplePrograms(methods: TrainingMethod[]): Program[] {
-  const now = new Date()
-  return methods.map((m, i) => {
-    const diffKeywords: Record<string, string> = {
-      beginner: 'Beginner',
-      intermediate: 'Intermediate',
-      advanced: 'Advanced',
-      elite: 'Elite',
-    }
-    let difficulty = 'Intermediate'
-    for (const [key, val] of Object.entries(diffKeywords)) {
-      if (m.TargetAudience.toLowerCase().includes(key)) {
-        difficulty = val
-        break
-      }
-    }
-    const timesAssigned = [18, 24, 15, 9, 7, 11, 6, 13, 20, 4, 8, 12, 5, 3, 10, 14, 2, 16, 6, 9][i % 20]
-    const daysAgo = [1, 3, 7, 14, 2, 5, 21, 10, 4, 30, 6, 8, 12, 25, 9, 3, 15, 7, 11, 2][i % 20]
-    const lastAssigned = new Date(now)
-    lastAssigned.setDate(lastAssigned.getDate() - daysAgo)
-    const createdDaysAgo = [30, 60, 14, 90, 45, 120, 7, 200, 55, 80][i % 10]
-    const createdAt = new Date(now)
-    createdAt.setDate(createdAt.getDate() - createdDaysAgo)
-
-    return {
-      id: `prog-${i + 1}`,
-      name: m.Name,
-      goal: m.Goal,
-      method: getMethodFromName(m.Name),
-      category: m.Category,
-      difficulty,
-      duration: `${m.Duration} wk`,
-      frequency: `${m.Frequency}x/wk`,
-      equipment: m.Equipment,
-      structure: m.Structure,
-      timesAssigned,
-      activeClients: Math.floor(timesAssigned * 0.4),
-      lastAssigned: daysAgo === 1 ? '1 day ago' : `${daysAgo} days ago`,
-      archived: i >= methods.length - 9,
-      createdAt: createdAt.toISOString(),
-      colorBanner: getGoalColor(m.Goal),
-    }
-  })
+function toDisplayPrograms(programs: Record<string, EntityProgram>): DisplayProgram[] {
+  return Object.values(programs).map(toDisplayProgram)
 }
 
 // ── Components ─────────────────────────────────────────
@@ -252,9 +230,9 @@ function ProgramCard({
   index,
   onAction,
 }: {
-  program: Program
+  program: DisplayProgram
   index: number
-  onAction: (action: string, program: Program) => void
+  onAction: (action: string, program: DisplayProgram) => void
 }) {
   const [hovered, setHovered] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -319,6 +297,7 @@ function ProgramCard({
                       { label: 'Duplicate', icon: Copy, action: 'duplicate' },
                       { label: 'Assign to Client', icon: UserPlus, action: 'assign' },
                       { label: program.archived ? 'Restore' : 'Archive', icon: ArchiveIcon, action: 'archive' },
+                      { label: 'Delete', icon: Trash2, action: 'delete' },
                     ].map((item) => (
                       <button
                         key={item.action}
@@ -394,6 +373,7 @@ function ProgramCard({
               { icon: Copy, label: 'Dup', action: 'duplicate', primary: false },
               { icon: UserPlus, label: 'Assign', action: 'assign', primary: true },
               { icon: ArchiveIcon, label: 'Archive', action: 'archive', primary: false },
+              { icon: Trash2, label: 'Del', action: 'delete', primary: false },
             ].map((btn, i) => (
               <motion.button
                 key={btn.action}
@@ -425,9 +405,9 @@ function ProgramListRow({
   index,
   onAction,
 }: {
-  program: Program
+  program: DisplayProgram
   index: number
-  onAction: (action: string, program: Program) => void
+  onAction: (action: string, program: DisplayProgram) => void
 }) {
   const [hovered, setHovered] = useState(false)
   const diffColor = getDifficultyColor(program.difficulty)
@@ -480,6 +460,7 @@ function ProgramListRow({
             { icon: Copy, action: 'duplicate' },
             { icon: UserPlus, action: 'assign' },
             { icon: ArchiveIcon, action: 'archive' },
+            { icon: Trash2, action: 'delete' },
           ].map((btn) => (
             <button
               key={btn.action}
@@ -562,7 +543,8 @@ function Pagination({
 // ── Main Page ──────────────────────────────────────────
 export default function ProgramsPage() {
   const navigate = useNavigate()
-  const [programs, setPrograms] = useState<Program[]>([])
+  const { programs: entityPrograms, programIds, deleteProgram, seedDemoData } = useAppDataStore()
+  const [programs, setPrograms] = useState<DisplayProgram[]>([])
   const [loading, setLoading] = useState(true)
 
   // Filter state
@@ -580,17 +562,15 @@ export default function ProgramsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 12
 
-  // Fetch data
+  // Seed demo data if empty, then load from store
   useEffect(() => {
-    fetch('/training_methods.json')
-      .then((r) => r.json())
-      .then((data: TrainingMethod[]) => {
-        const progs = generateSamplePrograms(data)
-        setPrograms(progs)
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
+    if (programIds.length === 0) {
+      seedDemoData()
+    }
+    const progs = toDisplayPrograms(entityPrograms)
+    setPrograms(progs)
+    setLoading(false)
+  }, [entityPrograms, programIds, seedDemoData])
 
   // Derive filter options from data
   const methodOptions = useMemo(() => {
@@ -669,10 +649,10 @@ export default function ProgramsPage() {
   useEffect(() => { setCurrentPage(1) }, [searchQuery, selectedGoals, selectedMethod, selectedDifficulties, showArchived, sortBy])
 
   // Actions
-  const handleAction = useCallback((action: string, program: Program) => {
+  const handleAction = useCallback((action: string, program: DisplayProgram) => {
     switch (action) {
       case 'edit':
-        navigate(`/programs/${program.id}/edit`)
+        navigate(`/program-builder`)
         break
       case 'duplicate':
         alert(`Duplicated: ${program.name} (Copy)`)
@@ -683,8 +663,13 @@ export default function ProgramsPage() {
       case 'archive':
         setPrograms(prev => prev.map(p => p.id === program.id ? { ...p, archived: !p.archived } : p))
         break
+      case 'delete':
+        if (confirm(`Delete "${program.name}"? This cannot be undone.`)) {
+          deleteProgram(program.id)
+        }
+        break
     }
-  }, [navigate])
+  }, [navigate, deleteProgram])
 
   // Active filter count
   const activeFilterCount = selectedGoals.length + (selectedMethod ? 1 : 0) + selectedDifficulties.length + (showArchived ? 1 : 0)

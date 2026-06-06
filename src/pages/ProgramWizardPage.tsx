@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAppDataStore } from '../stores/useAppDataStore'
+import type { Program } from '../types/entities'
 import {
   Dumbbell,
   Flame,
@@ -2190,7 +2192,47 @@ export default function ProgramWizardPage() {
     setShowDraftDialog(false)
   }
 
+  const { addProgram } = useAppDataStore()
+
   const handleFinish = () => {
+    // Build program from wizard state and save to central store
+    const now = new Date().toISOString()
+    const totalWeeks = phases.reduce((s, p) => s + p.durationWeeks, 0)
+    const activeDays = weeklySplit.filter(d => !d.isRest).length
+    const methodName = typeof selectedMethod === 'string' ? selectedMethod : selectedMethod?.Name || 'Custom'
+    const experience = clientContext.experience || 'intermediate'
+
+    const newProgram: Program = {
+      id: `prog-${Date.now()}`,
+      name: programName.trim() || 'Untitled Program',
+      description: description.trim() || `${methodName} program for ${selectedGoal}`,
+      tags: [selectedGoal, methodName, experience].filter(Boolean),
+      goal: selectedGoal,
+      difficulty: experience as Program['difficulty'] || 'intermediate',
+      durationWeeks: totalWeeks || 4,
+      daysPerWeek: activeDays || 3,
+      sessionDurationMinutes: Number(clientContext.sessionDuration) || 60,
+      trainingSplit: weeklySplit.filter(d => !d.isRest).map(d => d.day).join('/') || 'Full Body',
+      periodizationPhase: phases[0]?.name || 'Base',
+      categoryId: 1,
+      levelId: experience === 'beginner' ? 1 : experience === 'intermediate' ? 2 : experience === 'advanced' ? 3 : 2,
+      difficultyRating: experience === 'beginner' ? 3 : experience === 'intermediate' ? 6 : experience === 'advanced' ? 9 : 6,
+      totalWorkouts: totalWeeks * activeDays,
+      totalExercises: 0,
+      targetAudience: clientContext.limitations.join(', ') || 'General fitness',
+      expectedOutcomes: selectedGoal || 'Improved fitness',
+      categoryName: selectedGoal,
+      levelName: experience || 'Intermediate',
+      isActive: true,
+      isPublic: true,
+      authorName: 'Coach',
+      timesUsed: 0,
+      lastAssigned: null,
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    addProgram(newProgram)
     localStorage.removeItem(DRAFT_KEY)
     navigate('/programs')
   }
