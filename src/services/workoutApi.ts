@@ -22,7 +22,7 @@ import type {
   WorkoutSession,
   WorkoutSetLog,
 } from '../types/workout'
-import type { Program as EntityProgram, Exercise as EntityExercise } from '../types/entities'
+import type { Program as EntityProgram, Exercise as EntityExercise, WorkoutSessionLog } from '../types/entities'
 
 // ── Type Converters ────────────────────────────────────────────────
 
@@ -297,6 +297,61 @@ export async function getClientPrograms(clientId: string): Promise<ClientProgram
 
 // ── Workout Logging ────────────────────────────────────────────────
 
+function getExerciseNameMap(): Record<number, string> {
+  const store = getStore()
+  const map: Record<number, string> = {}
+  for (const ex of Object.values(store.exercises)) {
+    const numId = Number(ex.id.replace(/\D/g, ''))
+    if (numId) map[numId] = ex.name
+  }
+  return map
+}
+
+function dbSessionToLog(session: WorkoutSession, sets: WorkoutSetLog[], nameMap: Record<number, string>): WorkoutSessionLog {
+  // Group sets by exercise_id
+  const byExercise = new Map<number, WorkoutSetLog[]>()
+  for (const s of sets) {
+    if (!byExercise.has(s.exercise_id)) byExercise.set(s.exercise_id, [])
+    byExercise.get(s.exercise_id)!.push(s)
+  }
+
+  const exercises: WorkoutSessionLog['exercises'] = []
+  let notationIdx = 0
+  for (const [exerciseId, exSets] of byExercise.entries()) {
+    const sorted = exSets.sort((a, b) => a.set_number - b.set_number)
+    exercises.push({
+      exerciseId: String(exerciseId),
+      exerciseName: nameMap[exerciseId] || `Exercise ${exerciseId}`,
+      notation: String.fromCharCode(65 + notationIdx),
+      sets: sorted.map((s) => ({
+        setNumber: s.set_number,
+        prescribedSets: s.prescribed_sets,
+        prescribedReps: s.prescribed_reps,
+        prescribedLoad: undefined,
+        prescribedRpe: s.prescribed_rpe_target,
+        actualLoad: s.actual_load,
+        actualReps: s.actual_reps,
+        actualRpe: s.actual_rpe,
+        completed: s.is_completed,
+      })),
+    })
+    notationIdx++
+  }
+
+  return {
+    id: `ws_db_${session.session_id}_${Date.now()}`,
+    clientId: session.client_id,
+    programId: String(session.program_id),
+    programName: `Program ${session.program_id}`,
+    dayNumber: session.day_number,
+    weekNumber: session.week_number,
+    date: session.completed_at || new Date().toISOString(),
+    durationSeconds: session.duration_seconds || 0,
+    exercises,
+    notes: session.notes,
+  }
+}
+
 export async function logWorkoutSession(session: Omit<WorkoutSession, 'session_id'>): Promise<WorkoutSession> {
   if (isSupabaseConfigured) {
     const { data, error } = await supabase.from('workout_sessions').insert(session).select().single()
@@ -315,13 +370,82 @@ export async function logWorkoutSets(sets: Omit<WorkoutSetLog, 'set_log_id'>[]):
   return sets.map((s, i) => ({ ...s, set_log_id: i + 1 }))
 }
 
-export async function getWorkoutHistory(clientId: string, programId?: number): Promise<WorkoutSession[]> {
+export async function saveWorkoutSessionLog(log: WorkoutSessionLog): Promise<WorkoutSessionLog> {
+  if (!isSupabaseConfigured) return log
+
+  const session: Omit<WorkoutSession, 'session_id'> = {
+    client_id: log.clientId,
+    client_program_id: 1, // placeholder
+    program_id: Number(log.programId) || 0,
+    day_number: log.dayNumber,
+    week_number: log.weekNumber,
+    completed_at: log.date,
+    duration_seconds: log.durationSeconds,
+    notes: log.notes,
+  }
+
+  const savedSession = await logWorkoutSession(session)
+  const sessionId = savedSession.session_id!
+
+  const dbSets: Omit<WorkoutSetLog, 'set_log_id'>[] = []
+  for (const ex of log.exercises) {
+    const exerciseIdNum = Number(ex.exerciseId) || 0
+    for (const set of ex.sets) {
+      dbSets.push({
+        session_id: sessionId,
+        program_exercise_id: 0,
+        exercise_id: exerciseIdNum,
+        set_number: set.setNumber,
+        prescribed_sets: set.prescribedSets,
+        prescribed_reps: set.prescribedReps,
+        prescribed_rest_seconds: 60,
+        prescribed_rpe_target: set.prescribedRpe,
+        actual_load: set.actualLoad,
+        actual_reps: set.actualReps,
+        actual_rpe: set.actualRpe,
+        is_completed: set.completed,
+      })
+    }
+  }
+
+  if (dbSets.length > 0) {
+    await logWorkoutSets(dbSets)
+  }
+
+  return {
+    ...log,
+    id: `ws_db_${sessionId}_${Date.now()}`,
+  }
+}
+
+export async function getWorkoutHistory(clientId: string, programId?: number): Promise<WorkoutSessionLog[]> {
+  const store = getStore()
+  const nameMap = getExerciseNameMap()
+
   if (isSupabaseConfigured) {
     let query = supabase.from('workout_sessions').select('*').eq('client_id', clientId)
     if (programId) query = query.eq('program_id', programId)
-    const { data, error } = await query.order('completed_at', { ascending: false })
+    const { data: sessions, error } = await query.order('completed_at', { ascending: false })
     if (error) throw error
-    return (data as WorkoutSession[]) || []
+    if (!sessions || sessions.length === 0) return []
+
+    const sessionIds = sessions.map((s) => s.session_id).filter(Boolean) as number[]
+    const { data: sets } = await supabase
+      .from('workout_set_logs')
+      .select('*')
+      .in('session_id', sessionIds)
+
+    const setsBySession = new Map<number, WorkoutSetLog[]>()
+    for (const s of sets || []) {
+      if (!setsBySession.has(s.session_id)) setsBySession.set(s.session_id, [])
+      setsBySession.get(s.session_id)!.push(s)
+    }
+
+    return sessions.map((s) => dbSessionToLog(s as WorkoutSession, setsBySession.get(s.session_id!) || [], nameMap))
   }
-  return []
+
+  // Offline: read from central store
+  return Object.values(store.workoutSessions)
+    .filter((s) => s.clientId === clientId && (programId === undefined || Number(s.programId) === programId))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }

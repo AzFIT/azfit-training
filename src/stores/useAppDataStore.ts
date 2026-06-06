@@ -130,6 +130,7 @@ interface AppDataState {
 
   // ── Workout Session CRUD ───────────────────────────────────────
   addWorkoutSession: (session: WorkoutSessionLog) => void
+  setWorkoutSessions: (sessions: WorkoutSessionLog[]) => void
   deleteWorkoutSession: (id: string) => void
 
   // ── Alert CRUD ─────────────────────────────────────────────────
@@ -155,6 +156,7 @@ interface AppDataState {
     sessions?: CalendarSession[]
     assignments?: ClientProgramAssignment[]
     exercises?: Exercise[]
+    workoutSessions?: WorkoutSessionLog[]
   }) => void
 
   // ── Sync flag ──────────────────────────────────────────────────
@@ -454,6 +456,21 @@ export const useAppDataStore = create<AppDataState>()(
             ? s.workoutSessionIds
             : [...s.workoutSessionIds, session.id],
         })),
+      setWorkoutSessions: (sessions) =>
+        set((s) => {
+          const map: Record<string, WorkoutSessionLog> = { ...s.workoutSessions }
+          const ids = new Set(s.workoutSessionIds)
+          for (const session of sessions) {
+            map[session.id] = session
+            ids.add(session.id)
+          }
+          const sortedIds = Array.from(ids).sort((a, b) => {
+            const da = new Date(map[a]?.date || 0).getTime()
+            const db = new Date(map[b]?.date || 0).getTime()
+            return db - da
+          })
+          return { workoutSessions: map, workoutSessionIds: sortedIds }
+        }),
       deleteWorkoutSession: (id) =>
         set((s) => {
           const { [id]: _, ...rest } = s.workoutSessions
@@ -567,6 +584,21 @@ export const useAppDataStore = create<AppDataState>()(
           const map: Record<string, Exercise> = {}
           for (const e of payload.exercises) map[e.id] = e
           next.exercises = map
+        }
+        if (payload.workoutSessions) {
+          const map: Record<string, WorkoutSessionLog> = { ...get().workoutSessions }
+          const ids = new Set(get().workoutSessionIds)
+          for (const s of payload.workoutSessions) {
+            map[s.id] = s
+            ids.add(s.id)
+          }
+          const sortedIds = Array.from(ids).sort((a, b) => {
+            const da = new Date(map[a]?.date || 0).getTime()
+            const db = new Date(map[b]?.date || 0).getTime()
+            return db - da
+          })
+          next.workoutSessions = map
+          next.workoutSessionIds = sortedIds
         }
         set(next)
       },

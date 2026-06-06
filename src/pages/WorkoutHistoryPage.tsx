@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Calendar, Clock, Dumbbell, ChevronLeft, ChevronRight, Search, X } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
+import { useSyncWorkoutSessions } from '../hooks/useWorkoutSync'
 import {
   getSessionsByClient,
   getSessionVolume,
@@ -18,6 +19,8 @@ export default function WorkoutHistoryPage() {
   const { workoutSessions, clients } = useAppDataStore()
   const [search, setSearch] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  useSyncWorkoutSessions(clientId)
 
   const client = clientId ? clients[clientId] : null
   const sessions = clientId ? getSessionsByClient(workoutSessions, clientId) : []

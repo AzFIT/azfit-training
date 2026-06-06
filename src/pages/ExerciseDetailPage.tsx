@@ -22,6 +22,7 @@ import {
   Area,
 } from 'recharts'
 import { useAppDataStore } from '../stores/useAppDataStore'
+import { useSyncWorkoutSessions } from '../hooks/useWorkoutSync'
 import {
   getExerciseHistory,
   getProgressiveOverloadSuggestion,
@@ -33,6 +34,8 @@ export default function ExerciseDetailPage() {
   const navigate = useNavigate()
   const { workoutSessions, exercises } = useAppDataStore()
   const [activeChart, setActiveChart] = useState<'load' | 'volume' | '1rm'>('load')
+
+  useSyncWorkoutSessions(clientId)
 
   const history = useMemo(() => {
     if (!clientId || !exerciseId) return null

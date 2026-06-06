@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { cn } from '../lib/utils'
 import { useAppDataStore } from '../stores/useAppDataStore'
 import { useProgramDetails } from '../hooks/usePrograms'
+import { saveWorkoutSessionLog } from '../services/workoutApi'
 import { computeLetterNotation } from '../utils/notation'
 import WorkoutExerciseLog from '../components/workout/WorkoutExerciseLog'
 import type { WorkoutSessionLog } from '../types/entities'
@@ -88,7 +89,7 @@ export default function WorkoutSessionPage() {
     return map
   }, [previousSession])
 
-  const handleSaveWorkout = () => {
+  const handleSaveWorkout = async () => {
     if (!clientId || !programId || !programData) return
     setIsSaving(true)
 
@@ -123,9 +124,19 @@ export default function WorkoutSessionPage() {
       })),
     }
 
-    addWorkoutSession(session)
-    toast.success('Workout saved!')
-    setIsSaving(false)
+    try {
+      const saved = await saveWorkoutSessionLog(session)
+      addWorkoutSession(saved)
+      toast.success('Workout saved!')
+    } catch (err) {
+      // If Supabase fails, still save locally so data isn't lost
+      addWorkoutSession(session)
+      toast.success('Workout saved locally')
+      // eslint-disable-next-line no-console
+      console.warn('Supabase save failed, kept local copy:', err)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const completedExercises = currentDayExercises.filter((ex) => {

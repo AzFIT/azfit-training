@@ -17,6 +17,7 @@ import {
 } from 'recharts';
 import type { PhotoCategory, ProgressPhoto } from '@/types';
 import { useAppDataStore } from '../stores/useAppDataStore';
+import { useSyncWorkoutSessions } from '../hooks/useWorkoutSync';
 import {
   getPRs,
   getAllExerciseHistories,
@@ -1802,10 +1803,13 @@ function PhotosTab() {
    ═══════════════════════════════════════════ */
 
 export default function ClientProfilePage() {
+  const { id: clientId } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<TabKey>('dashboard');
   const tabBarRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
+
+  useSyncWorkoutSessions(clientId);
 
   const checkOverflow = useCallback(() => {
     const el = tabBarRef.current;
