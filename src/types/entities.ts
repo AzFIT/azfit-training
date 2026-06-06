@@ -143,6 +143,56 @@ export interface ClientProgramAssignment {
   assignedBy?: string
 }
 
+// ── BioPrint Entry (12-site skinfold) ──────────────────────────────
+
+export interface BioPrintEntry {
+  id: string
+  clientId: string
+  date: string
+  assessor: string
+  // 12 Poliquin sites
+  chin: number
+  cheek: number
+  pec: number
+  tricep: number
+  subscapular: number
+  midaxillary: number
+  suprailiac: number
+  umbilical: number
+  knee: number
+  patellar: number
+  hamstring: number
+  medialCalf: number
+  // Computed
+  sum12: number
+  bodyFatPercent: number
+  leanMass: number
+  fatMass: number
+  weight: number
+  notes?: string
+}
+
+// ── Body Stats Entry ───────────────────────────────────────────────
+
+export interface BodyStatsEntry {
+  id: string
+  clientId: string
+  date: string
+  weight: number
+  neck: number
+  shoulder: number
+  chest: number
+  waist: number
+  hips: number
+  thigh: number
+  calf: number
+  arm: number
+  bodyFatPercent: number
+  bmi: number
+  whr: number
+  notes?: string
+}
+
 // ── Progress Entry ─────────────────────────────────────────────────
 
 export interface ProgressEntry {

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Scan, Scale, FileText, StickyNote, Calendar, CalendarDays,
@@ -447,6 +448,8 @@ function DashboardTab() {
    ═══════════════════════════════════════════ */
 
 function BioPrintTab() {
+  const navigate = useNavigate();
+  const { id: clientId } = useParams();
   const bodyFatPct = 18.2;
   const circumference = 2 * Math.PI * 50;
   const offset = circumference - (bodyFatPct / 40) * circumference;
@@ -458,7 +461,10 @@ function BioPrintTab() {
           <h2 className="text-lg font-semibold text-[#F0F0F0]">BioPrint Assessment</h2>
           <p className="text-sm text-[#6B6B6B]">Last assessment: 15/11/2025 · Jackson-Pollock 7-site method</p>
         </div>
-        <button className="flex items-center gap-2 bg-[#00AEEF] hover:bg-[#009BD6] text-white font-medium px-4 py-2 rounded-lg text-sm transition-all hover:scale-[1.02]">
+        <button
+          onClick={() => navigate(`/clients/${clientId}/bioprint`)}
+          className="flex items-center gap-2 bg-[#00AEEF] hover:bg-[#009BD6] text-white font-medium px-4 py-2 rounded-lg text-sm transition-all hover:scale-[1.02]"
+        >
           <Plus size={16} /> New Assessment
         </button>
       </div>

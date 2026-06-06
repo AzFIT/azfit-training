@@ -22,6 +22,8 @@ import type {
   CalendarSession,
   ClientProgramAssignment,
   ProgressEntry,
+  BioPrintEntry,
+  BodyStatsEntry,
   ClientAlert,
   AppNotification,
   WorkoutCategory,
@@ -45,6 +47,8 @@ interface AppDataState {
   sessions: Record<string, CalendarSession>
   assignments: Record<string, ClientProgramAssignment>
   progressEntries: Record<string, ProgressEntry>
+  bioPrintEntries: Record<string, BioPrintEntry>
+  bodyStatsEntries: Record<string, BodyStatsEntry>
   alerts: Record<string, ClientAlert>
   notifications: Record<string, AppNotification>
 
@@ -107,6 +111,14 @@ interface AppDataState {
   // ── Progress CRUD ──────────────────────────────────────────────
   addProgressEntry: (entry: ProgressEntry) => void
 
+  // ── BioPrint CRUD ──────────────────────────────────────────────
+  addBioPrintEntry: (entry: BioPrintEntry) => void
+  deleteBioPrintEntry: (id: string) => void
+
+  // ── BodyStats CRUD ─────────────────────────────────────────────
+  addBodyStatsEntry: (entry: BodyStatsEntry) => void
+  deleteBodyStatsEntry: (id: string) => void
+
   // ── Alert CRUD ─────────────────────────────────────────────────
   addAlert: (alert: ClientAlert) => void
   resolveAlert: (id: string) => void
@@ -145,6 +157,8 @@ const emptyState = () => ({
   sessions: {} as Record<string, CalendarSession>,
   assignments: {} as Record<string, ClientProgramAssignment>,
   progressEntries: {} as Record<string, ProgressEntry>,
+  bioPrintEntries: {} as Record<string, BioPrintEntry>,
+  bodyStatsEntries: {} as Record<string, BodyStatsEntry>,
   alerts: {} as Record<string, ClientAlert>,
   notifications: {} as Record<string, AppNotification>,
 
@@ -382,6 +396,28 @@ export const useAppDataStore = create<AppDataState>()(
         set((s) => ({
           progressEntries: { ...s.progressEntries, [entry.id]: entry },
         })),
+
+      // ── BioPrint CRUD ──────────────────────────────────────────
+      addBioPrintEntry: (entry) =>
+        set((s) => ({
+          bioPrintEntries: { ...s.bioPrintEntries, [entry.id]: entry },
+        })),
+      deleteBioPrintEntry: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.bioPrintEntries
+          return { bioPrintEntries: rest }
+        }),
+
+      // ── BodyStats CRUD ─────────────────────────────────────────
+      addBodyStatsEntry: (entry) =>
+        set((s) => ({
+          bodyStatsEntries: { ...s.bodyStatsEntries, [entry.id]: entry },
+        })),
+      deleteBodyStatsEntry: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.bodyStatsEntries
+          return { bodyStatsEntries: rest }
+        }),
 
       // ── Alert CRUD ─────────────────────────────────────────────
       addAlert: (alert) =>
