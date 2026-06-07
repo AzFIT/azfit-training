@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import { Menu, X, ArrowRight, Sparkles } from 'lucide-react'
+import { useAuthStore } from '../../stores/authStore'
 
 const NAV_LINKS = [
   { label: 'Features', href: '#features' },
@@ -16,6 +17,13 @@ interface LandingNavbarProps {
 export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const { enableDemoMode } = useAuthStore()
+
+  const handleTryDemo = () => {
+    enableDemoMode()
+    navigate('/dashboard')
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100)
@@ -58,6 +66,13 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={handleTryDemo}
+              className="text-cyan hover:text-cyan-light text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles size={14} />
+              Try Demo
+            </button>
             <Link
               to="/login"
               className="text-[#A0A0A0] hover:text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
@@ -122,6 +137,13 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
                 ))}
               </div>
               <div className="mt-auto p-4 border-t border-white/10 flex flex-col gap-3">
+                <button
+                  onClick={() => { setOpen(false); handleTryDemo(); }}
+                  className="text-center text-cyan hover:text-cyan-light text-sm font-medium px-4 py-3 rounded-lg border border-cyan/20 hover:bg-cyan/5 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Sparkles size={14} />
+                  Try Demo
+                </button>
                 <Link
                   to="/login"
                   onClick={() => setOpen(false)}

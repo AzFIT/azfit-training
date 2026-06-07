@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Play, ChevronDown } from 'lucide-react'
+import { ArrowRight, Sparkles, ChevronDown } from 'lucide-react'
+import { useAuthStore } from '../../stores/authStore'
 import HeroOrb from './HeroOrb'
 import AIShowcase from './AIShowcase'
 
@@ -13,6 +14,14 @@ interface HeroSectionProps {
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 export default function HeroSection({ logoSrc, headline, subheadline }: HeroSectionProps) {
+  const navigate = useNavigate()
+  const { enableDemoMode } = useAuthStore()
+
+  const handleTryDemo = () => {
+    enableDemoMode()
+    navigate('/dashboard')
+  }
+
   return (
     <section className="relative min-h-[100dvh] flex flex-col overflow-hidden">
       {/* Hero content */}
@@ -62,11 +71,11 @@ export default function HeroSection({ logoSrc, headline, subheadline }: HeroSect
                   <ArrowRight size={16} />
                 </Link>
                 <button
-                  onClick={() => alert('Demo video coming soon!')}
+                  onClick={handleTryDemo}
                   className="inline-flex items-center gap-2 text-[#A0A0A0] hover:text-white font-medium px-7 py-3.5 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm"
                 >
-                  <Play size={16} className="fill-current" />
-                  Watch Demo
+                  <Sparkles size={16} />
+                  Try Demo
                 </button>
               </motion.div>
 
