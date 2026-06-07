@@ -23,6 +23,11 @@ import WorkoutHistoryPage from './pages/WorkoutHistoryPage'
 import ExerciseDetailPage from './pages/ExerciseDetailPage'
 import ProgressTrackingPage from './pages/ProgressTrackingPage'
 import BioPrintWizardPage from './pages/BioPrintWizardPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import InvitationPage from './pages/InvitationPage'
+import NotificationsPage from './pages/NotificationsPage'
+import SubscriptionPage from './pages/SubscriptionPage'
+import ProgramLibraryPage from './pages/ProgramLibraryPage'
 
 export default function App() {
   return (
@@ -50,6 +55,11 @@ export default function App() {
       <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
       <Route path="/photos" element={<Layout><PhotosPage /></Layout>} />
       <Route path="/roadmap" element={<Layout><PlannedFeaturesPage /></Layout>} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/invitation/:token" element={<InvitationPage />} />
+      <Route path="/notifications" element={<Layout><NotificationsPage /></Layout>} />
+      <Route path="/subscription" element={<Layout><SubscriptionPage /></Layout>} />
+      <Route path="/programs/library" element={<Layout><ProgramLibraryPage /></Layout>} />
     </Routes>
   )
 }

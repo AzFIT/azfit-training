@@ -31,6 +31,9 @@ import type {
   WorkoutCategory,
   WorkoutLevel,
   TrainingMethod,
+  ClientGoal,
+  ClientNote,
+  ClientPhoto,
 } from '../types/entities'
 import { generateDemoData } from './demoData'
 import { v4 as uuidv4 } from 'uuid'
@@ -55,12 +58,18 @@ interface AppDataState {
   workoutSessions: Record<string, WorkoutSessionLog>
   alerts: Record<string, ClientAlert>
   notifications: Record<string, AppNotification>
+  goals: Record<string, ClientGoal>
+  notes: Record<string, ClientNote>
+  photos: Record<string, ClientPhoto>
 
   // ── Ordering / indexing ────────────────────────────────────────
   clientIds: string[]
   programIds: string[]
   sessionIds: string[] // chronological order
   workoutSessionIds: string[] // chronological order
+  goalIds: string[]
+  noteIds: string[]
+  photoIds: string[]
 
   // ── Reference data (transient — re-seeded on load) ─────────────
   categories: WorkoutCategory[]
@@ -128,6 +137,20 @@ interface AppDataState {
   addNutritionEntry: (entry: NutritionEntry) => void
   deleteNutritionEntry: (id: string) => void
 
+  // ── Goal CRUD ──────────────────────────────────────────────────
+  addGoal: (goal: ClientGoal) => void
+  updateGoal: (id: string, data: Partial<ClientGoal>) => void
+  deleteGoal: (id: string) => void
+
+  // ── Note CRUD ────────────────────────────────────────────────────
+  addNote: (note: ClientNote) => void
+  updateNote: (id: string, data: Partial<ClientNote>) => void
+  deleteNote: (id: string) => void
+
+  // ── Photo CRUD ───────────────────────────────────────────────────
+  addPhoto: (photo: ClientPhoto) => void
+  deletePhoto: (id: string) => void
+
   // ── Workout Session CRUD ───────────────────────────────────────
   addWorkoutSession: (session: WorkoutSessionLog) => void
   setWorkoutSessions: (sessions: WorkoutSessionLog[]) => void
@@ -178,11 +201,17 @@ const emptyState = () => ({
   workoutSessions: {} as Record<string, WorkoutSessionLog>,
   alerts: {} as Record<string, ClientAlert>,
   notifications: {} as Record<string, AppNotification>,
+  goals: {} as Record<string, ClientGoal>,
+  notes: {} as Record<string, ClientNote>,
+  photos: {} as Record<string, ClientPhoto>,
 
   clientIds: [] as string[],
   programIds: [] as string[],
   sessionIds: [] as string[],
   workoutSessionIds: [] as string[],
+  goalIds: [] as string[],
+  noteIds: [] as string[],
+  photoIds: [] as string[],
 
   categories: [] as WorkoutCategory[],
   levels: [] as WorkoutLevel[],
@@ -448,6 +477,54 @@ export const useAppDataStore = create<AppDataState>()(
           return { nutritionEntries: rest }
         }),
 
+      // ── Goal CRUD ──────────────────────────────────────────────
+      addGoal: (goal) =>
+        set((s) => ({
+          goals: { ...s.goals, [goal.id]: goal },
+          goalIds: s.goalIds.includes(goal.id) ? s.goalIds : [...s.goalIds, goal.id],
+        })),
+      updateGoal: (id, data) =>
+        set((s) => {
+          const existing = s.goals[id]
+          if (!existing) return s
+          return { goals: { ...s.goals, [id]: { ...existing, ...data } } }
+        }),
+      deleteGoal: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.goals
+          return { goals: rest, goalIds: s.goalIds.filter((gid) => gid !== id) }
+        }),
+
+      // ── Note CRUD ────────────────────────────────────────────────
+      addNote: (note) =>
+        set((s) => ({
+          notes: { ...s.notes, [note.id]: note },
+          noteIds: s.noteIds.includes(note.id) ? s.noteIds : [...s.noteIds, note.id],
+        })),
+      updateNote: (id, data) =>
+        set((s) => {
+          const existing = s.notes[id]
+          if (!existing) return s
+          return { notes: { ...s.notes, [id]: { ...existing, ...data } } }
+        }),
+      deleteNote: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.notes
+          return { notes: rest, noteIds: s.noteIds.filter((nid) => nid !== id) }
+        }),
+
+      // ── Photo CRUD ─────────────────────────────────────────────────
+      addPhoto: (photo) =>
+        set((s) => ({
+          photos: { ...s.photos, [photo.id]: photo },
+          photoIds: s.photoIds.includes(photo.id) ? s.photoIds : [...s.photoIds, photo.id],
+        })),
+      deletePhoto: (id) =>
+        set((s) => {
+          const { [id]: _, ...rest } = s.photos
+          return { photos: rest, photoIds: s.photoIds.filter((pid) => pid !== id) }
+        }),
+
       // ── Workout Session CRUD ───────────────────────────────────
       addWorkoutSession: (session) =>
         set((s) => ({
@@ -621,6 +698,12 @@ export const useAppDataStore = create<AppDataState>()(
         sessionIds: state.sessionIds,
         workoutSessionIds: state.workoutSessionIds,
         workoutSessions: state.workoutSessions,
+        goals: state.goals,
+        notes: state.notes,
+        photos: state.photos,
+        goalIds: state.goalIds,
+        noteIds: state.noteIds,
+        photoIds: state.photoIds,
         selectedClientId: state.selectedClientId,
         selectedDate: state.selectedDate,
         isDemoMode: state.isDemoMode,

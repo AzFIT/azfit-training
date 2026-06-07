@@ -26,6 +26,11 @@ import type {
   WorkoutLevel,
   TrainingMethod,
   Difficulty,
+  ClientGoal,
+  ClientNote,
+  ClientPhoto,
+  GoalStatus,
+  PhotoCategory,
 } from '../types/entities'
 import exercisesJson from '../data/exercises_db.json'
 
@@ -129,6 +134,111 @@ const METHODS: TrainingMethod[] = [
     equipment: ['Barbell', 'Dumbbells', 'Cable', 'Machine'],
   },
 ]
+
+// ── Demo Goals ─────────────────────────────────────────────────────
+
+function generateGoals(clients: Client[]): ClientGoal[] {
+  const goalTemplates = [
+    { title: 'Reach 16% body fat', category: 'Body Composition', target: '16%', start: '24%' },
+    { title: 'Back Squat 100kg x1', category: 'Strength', target: '100 kg', start: '60 kg' },
+    { title: 'Deadlift 130kg x1', category: 'Strength', target: '130 kg', start: '80 kg' },
+    { title: '4 sessions per week', category: 'Habit', target: '4/week', start: '2/week' },
+    { title: 'Sleep 7.5+ hrs avg', category: 'Lifestyle', target: '7.5h', start: '6.0h' },
+    { title: 'Lose 5kg bodyweight', category: 'Body Composition', target: '-5 kg', start: '0 kg' },
+    { title: 'First pull-up unassisted', category: 'Strength', target: '1 rep', start: '0 reps' },
+    { title: 'Bench Press 80kg', category: 'Strength', target: '80 kg', start: '50 kg' },
+  ]
+
+  const goals: ClientGoal[] = []
+  clients.forEach((client, ci) => {
+    // Each client gets 2-4 goals
+    const count = 2 + (ci % 3)
+    for (let i = 0; i < count; i++) {
+      const tmpl = goalTemplates[(ci + i) % goalTemplates.length]
+      const progress = Math.floor(Math.random() * 60) + 20
+      const status: GoalStatus = progress > 80 ? 'On Track' : progress > 50 ? 'On Track' : 'At Risk'
+      goals.push({
+        id: genId(),
+        clientId: client.id,
+        title: tmpl.title,
+        category: tmpl.category,
+        target: tmpl.target,
+        current: `${Math.round(parseFloat(tmpl.start) + (parseFloat(tmpl.target) - parseFloat(tmpl.start)) * (progress / 100))}${tmpl.target.replace(/[0-9.]/g, '')}`,
+        start: tmpl.start,
+        deadline: format(subDays(new Date(), -60 - i * 15), 'dd/MM/yyyy'),
+        status,
+        progress,
+        createdAt: randomDateWithin(90),
+      })
+    }
+  })
+  return goals
+}
+
+// ── Demo Notes ─────────────────────────────────────────────────────
+
+function generateNotes(clients: Client[]): ClientNote[] {
+  const noteTemplates = [
+    { title: 'Form Check — Deadlift', content: 'Hip hinge pattern has improved significantly. Still need to cue shoulder blade retraction at the top. Consider adding paused deadlifts next phase.', category: 'Form Check', important: true },
+    { title: 'Weekly Check-in', content: 'Weight down 0.5kg this week. Sleep has been consistent 7+ hours. Stress levels moderate due to work project. Macro adherence at 88%.', category: 'General', important: false },
+    { title: 'Nutrition Adjustment', content: 'Dropped carbs by 20g to 220g, increased protein to 145g. Reports feeling good, no energy crashes during workouts.', category: 'Nutrition', important: true },
+    { title: 'Client Update', content: 'Feeling stronger on squats! Hip mobility drills are helping. Requested more core work in warm-ups.', category: 'Goals', important: false },
+    { title: 'Phase 2 Review', content: 'Completed Phase 2 with 94% session adherence. All strength metrics improved. Ready to progress to power-focused Phase 3.', category: 'General', important: true },
+    { title: 'Mobility Assessment', content: 'Ankle dorsiflexion improved by 2cm. Hip flexor tightness persists — continue couch stretch daily.', category: 'Form Check', important: false },
+    { title: 'Macro Check', content: 'Protein consistently hitting 140g+. Carbs slightly low on rest days. Recommend increasing fruit intake.', category: 'Nutrition', important: false },
+  ]
+
+  const notes: ClientNote[] = []
+  clients.forEach((client, ci) => {
+    const count = 2 + (ci % 4)
+    for (let i = 0; i < count; i++) {
+      const tmpl = noteTemplates[(ci + i) % noteTemplates.length]
+      notes.push({
+        id: genId(),
+        clientId: client.id,
+        title: tmpl.title,
+        content: tmpl.content,
+        author: i % 3 === 0 ? client.name : 'Trainer',
+        date: format(subDays(new Date(), i * 5 + ci), 'dd/MM/yyyy'),
+        category: tmpl.category,
+        important: tmpl.important,
+      })
+    }
+  })
+  return notes
+}
+
+// ── Demo Photos ────────────────────────────────────────────────────
+
+function generatePhotos(clients: Client[]): ClientPhoto[] {
+  const categories: PhotoCategory[] = ['Front', 'Back', 'Side', 'Other']
+  const photos: ClientPhoto[] = []
+
+  clients.forEach((client) => {
+    // Generate 3-6 photos per client over time
+    const count = 3 + Math.floor(Math.random() * 4)
+    for (let i = 0; i < count; i++) {
+      const weight = client.weight + (count - i - 1) * 0.5 // Earlier photos = heavier
+      const bf = Math.max(12, client.bodyFat + (count - i - 1) * 0.8)
+      photos.push({
+        id: genId(),
+        clientId: client.id,
+        url: '/avatar-placeholder.jpg',
+        thumbnailUrl: '/avatar-placeholder.jpg',
+        date: format(subDays(new Date(), i * 30), 'yyyy-MM-dd'),
+        category: categories[i % categories.length],
+        notes: i === count - 1 ? 'Starting point' : i === 0 ? 'Latest check-in' : `${i * 4} week progress`,
+        weight: +weight.toFixed(1),
+        bodyFatPercentage: +bf.toFixed(1),
+        trainerNotes: i === 0 ? 'Approaching goal body fat. Maintain strength.' : undefined,
+        isMilestone: i === 0 || i === count - 1,
+        isGoalAchieved: i === 0 && client.bodyFat < 20,
+        createdAt: format(subDays(new Date(), i * 30), 'yyyy-MM-dd'),
+      })
+    }
+  })
+  return photos
+}
 
 // ── Demo Programs ──────────────────────────────────────────────────
 
@@ -700,9 +810,15 @@ export interface DemoDataPayload {
   assignments: Record<string, ClientProgramAssignment>
   alerts: Record<string, ClientAlert>
   notifications: Record<string, AppNotification>
+  goals: Record<string, ClientGoal>
+  notes: Record<string, ClientNote>
+  photos: Record<string, ClientPhoto>
   clientIds: string[]
   programIds: string[]
   sessionIds: string[]
+  goalIds: string[]
+  noteIds: string[]
+  photoIds: string[]
   categories: WorkoutCategory[]
   levels: WorkoutLevel[]
   trainingMethods: TrainingMethod[]
@@ -716,6 +832,9 @@ export function generateDemoData(): DemoDataPayload {
   const assignments = generateAssignments(clients, programs)
   const alerts = generateAlerts(clients)
   const notifications = generateNotifications(clients)
+  const goals = generateGoals(clients)
+  const notes = generateNotes(clients)
+  const photos = generatePhotos(clients)
 
   // Build normalized maps
   const clientMap: Record<string, Client> = {}
@@ -775,6 +894,27 @@ export function generateDemoData(): DemoDataPayload {
     notificationMap[n.id] = n
   }
 
+  const goalMap: Record<string, ClientGoal> = {}
+  const goalIds: string[] = []
+  for (const g of goals) {
+    goalMap[g.id] = g
+    goalIds.push(g.id)
+  }
+
+  const noteMap: Record<string, ClientNote> = {}
+  const noteIds: string[] = []
+  for (const n of notes) {
+    noteMap[n.id] = n
+    noteIds.push(n.id)
+  }
+
+  const photoMap: Record<string, ClientPhoto> = {}
+  const photoIds: string[] = []
+  for (const p of photos) {
+    photoMap[p.id] = p
+    photoIds.push(p.id)
+  }
+
   return {
     clients: clientMap,
     programs: programMap,
@@ -783,9 +923,15 @@ export function generateDemoData(): DemoDataPayload {
     assignments: assignmentMap,
     alerts: alertMap,
     notifications: notificationMap,
+    goals: goalMap,
+    notes: noteMap,
+    photos: photoMap,
     clientIds,
     programIds,
     sessionIds,
+    goalIds,
+    noteIds,
+    photoIds,
     categories: CATEGORIES,
     levels: LEVELS,
     trainingMethods: METHODS,

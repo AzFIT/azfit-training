@@ -304,6 +304,58 @@ export interface AppNotification {
   clientInitials?: string
 }
 
+// ── Client Goal ────────────────────────────────────────────────────
+
+export type GoalStatus = 'On Track' | 'At Risk' | 'Completed'
+
+export interface ClientGoal {
+  id: string
+  clientId: string
+  title: string
+  category: string
+  target: string
+  current: string
+  start: string
+  deadline: string
+  status: GoalStatus
+  progress: number // 0-100
+  createdAt: string
+  completedAt?: string
+}
+
+// ── Client Note ────────────────────────────────────────────────────
+
+export interface ClientNote {
+  id: string
+  clientId: string
+  title: string
+  content: string
+  author: string
+  date: string
+  category: string
+  important: boolean
+}
+
+// ── Progress Photo ─────────────────────────────────────────────────
+
+export type PhotoCategory = 'Front' | 'Back' | 'Side' | 'Other'
+
+export interface ClientPhoto {
+  id: string
+  clientId: string
+  url: string
+  thumbnailUrl: string
+  date: string
+  category: PhotoCategory
+  notes?: string
+  weight?: number
+  bodyFatPercentage?: number
+  trainerNotes?: string
+  isMilestone?: boolean
+  isGoalAchieved?: boolean
+  createdAt: string
+}
+
 // ── Reference Data (from workout DB) ───────────────────────────────
 
 export interface WorkoutCategory {

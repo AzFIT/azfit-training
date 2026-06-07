@@ -32,6 +32,7 @@ const navItems = [
   { label: 'Nutrition', path: '/nutrition', icon: Apple },
   { label: 'Clients', path: '/clients', icon: Users },
   { label: 'Photos', path: '/photos', icon: Camera },
+  { label: 'Notifications', path: '/notifications', icon: Bell },
   { label: 'Settings', path: '/settings', icon: Settings },
 ]
 
