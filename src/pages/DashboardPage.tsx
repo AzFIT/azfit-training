@@ -29,6 +29,7 @@ import {
 } from '../stores/useAppDataStore.selectors'
 import type { CalendarSession, ClientAlert, Client } from '../types/entities'
 import { format, formatDistanceToNow } from 'date-fns'
+import ClientIntakeWizard from '../components/ClientIntakeWizard'
 
 /* ------------------------------------------------------------------ */
 /*  Motion helpers (respect reduced motion)                            */
@@ -253,6 +254,7 @@ export default function DashboardPage() {
   const reduceMotion = useReducedMotion()
   const navigate = useNavigate()
   const [fabOpen, setFabOpen] = useState(false)
+  const [wizardOpen, setWizardOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState('All')
 
@@ -307,7 +309,7 @@ export default function DashboardPage() {
 
   const fabActions = [
     { label: 'New Session', icon: CalendarPlus, action: () => navigate('/calendar') },
-    { label: 'Add Client', icon: UserPlus, action: () => navigate('/clients/0') },
+    { label: 'Add Client', icon: UserPlus, action: () => { setFabOpen(false); setWizardOpen(true) } },
     { label: 'Create Program', icon: Dumbbell, action: () => navigate('/programs/new') },
     { label: 'Send Message', icon: MessageSquare, action: () => setFabOpen(false) },
   ]
@@ -621,6 +623,8 @@ export default function DashboardPage() {
           </motion.div>
         </motion.button>
       </div>
+
+      <ClientIntakeWizard open={wizardOpen} onClose={() => setWizardOpen(false)} />
     </motion.div>
   )
 }

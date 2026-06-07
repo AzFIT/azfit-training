@@ -20,6 +20,7 @@ import {
   Moon,
   Sparkles,
   BookOpen,
+  Shield,
 } from 'lucide-react'
 import AiChat from './AiChat'
 
@@ -34,6 +35,7 @@ const navItems = [
   { label: 'Photos', path: '/photos', icon: Camera },
   { label: 'Notifications', path: '/notifications', icon: Bell },
   { label: 'Settings', path: '/settings', icon: Settings },
+  { label: 'Admin', path: '/admin', icon: Shield },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {

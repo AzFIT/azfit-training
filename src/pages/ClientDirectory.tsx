@@ -29,6 +29,7 @@ import { useClientList } from '@/stores/useAppDataStore.selectors';
 import { useNotificationStore } from '@/stores/useNotificationStore';
 import { formatRelativeTime } from '@/lib/demo-data';
 import type { Client } from '@/types/entities';
+import ClientIntakeWizard from '@/components/ClientIntakeWizard';
 
 /* ------------------------------------------------------------------ */
 /*  Type definitions                                                   */
@@ -221,6 +222,7 @@ export default function ClientDirectory() {
   const [sort, setSort] = useState<SortConfig>({ field: 'name', dir: 'asc' });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   /* ---- Unique programs ---- */
   const programs = useMemo(() => [...new Set(allClients.map((c) => c.programName))], [allClients]);
@@ -398,7 +400,7 @@ export default function ClientDirectory() {
           <Download size={16} /> Export
         </button>
         <button
-          onClick={() => addNotification({ title: 'Coming soon', message: 'Client creation will be available in the next update.', type: 'info' })}
+          onClick={() => setWizardOpen(true)}
           className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-gradient-cyan text-white rounded-xl shadow-cyan hover:shadow-cyan-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
           <UserPlus size={16} /> Add Client
@@ -624,6 +626,8 @@ export default function ClientDirectory() {
           </div>
         )}
       </motion.div>
+
+      <ClientIntakeWizard open={wizardOpen} onClose={() => setWizardOpen(false)} />
     </div>
   );
 }

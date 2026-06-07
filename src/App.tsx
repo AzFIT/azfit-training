@@ -17,6 +17,7 @@ import WorkoutProgramBuilderPage from './pages/WorkoutProgramBuilderPage'
 import ProgramCardPage from './pages/ProgramCardPage'
 import ExerciseLibraryPage from './pages/ExerciseLibraryPage'
 import SmartProgramFinderPage from './pages/SmartProgramFinderPage'
+import ProgramMatcherPage from './pages/ProgramMatcherPage'
 import OneRMCalculatorPage from './pages/OneRMCalculatorPage'
 import WorkoutSessionPage from './pages/WorkoutSessionPage'
 import WorkoutHistoryPage from './pages/WorkoutHistoryPage'
@@ -28,6 +29,7 @@ import InvitationPage from './pages/InvitationPage'
 import NotificationsPage from './pages/NotificationsPage'
 import SubscriptionPage from './pages/SubscriptionPage'
 import ProgramLibraryPage from './pages/ProgramLibraryPage'
+import AdminDashboardPage from './pages/AdminDashboardPage'
 
 export default function App() {
   return (
@@ -43,6 +45,7 @@ export default function App() {
       <Route path="/program-builder/card/:programId" element={<Layout><ProgramCardPage /></Layout>} />
       <Route path="/exercise-library" element={<Layout><ExerciseLibraryPage /></Layout>} />
       <Route path="/smart-finder" element={<Layout><SmartProgramFinderPage /></Layout>} />
+      <Route path="/program-matcher" element={<Layout><ProgramMatcherPage /></Layout>} />
       <Route path="/tools/1rm-calculator" element={<Layout><OneRMCalculatorPage /></Layout>} />
       <Route path="/clients/:clientId/workout/:programId" element={<Layout><WorkoutSessionPage /></Layout>} />
       <Route path="/clients/:clientId/workouts" element={<Layout><WorkoutHistoryPage /></Layout>} />
@@ -60,6 +63,7 @@ export default function App() {
       <Route path="/notifications" element={<Layout><NotificationsPage /></Layout>} />
       <Route path="/subscription" element={<Layout><SubscriptionPage /></Layout>} />
       <Route path="/programs/library" element={<Layout><ProgramLibraryPage /></Layout>} />
+      <Route path="/admin" element={<Layout><AdminDashboardPage /></Layout>} />
     </Routes>
   )
 }
