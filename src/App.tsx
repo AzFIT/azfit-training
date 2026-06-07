@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import AuthGuard from './components/AuthGuard'
 import AdminGuard from './components/AdminGuard'
 import PageLoader from './components/PageLoader'
+import ErrorBoundary from './components/ErrorBoundary'
 
 /* ── Public pages (eagerly loaded — small, needed immediately) ── */
 import LandingPage from './pages/LandingPage'
@@ -43,27 +44,27 @@ const ProgramLibraryPage = lazy(() => import('./pages/ProgramLibraryPage'))
 /* ── Admin pages ── */
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'))
 
-/** Wrapper for protected routes: AuthGuard → Layout → Suspense */
+/** Wrapper for protected routes: AuthGuard → Layout → Suspense → ErrorBoundary */
 function Protected({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
       <Layout>
         <Suspense fallback={<PageLoader />}>
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
         </Suspense>
       </Layout>
     </AuthGuard>
   )
 }
 
-/** Wrapper for admin routes: AuthGuard → AdminGuard → Layout → Suspense */
+/** Wrapper for admin routes: AuthGuard → AdminGuard → Layout → Suspense → ErrorBoundary */
 function AdminRoute({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
       <AdminGuard>
         <Layout>
           <Suspense fallback={<PageLoader />}>
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </Suspense>
         </Layout>
       </AdminGuard>
@@ -76,10 +77,10 @@ export default function App() {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<Suspense fallback={<PageLoader />}><LoginPage /></Suspense>} />
-      <Route path="/signup" element={<Suspense fallback={<PageLoader />}><SignupPage /></Suspense>} />
-      <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ForgotPasswordPage /></Suspense>} />
-      <Route path="/invitation/:token" element={<Suspense fallback={<PageLoader />}><InvitationPage /></Suspense>} />
+      <Route path="/login" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><LoginPage /></ErrorBoundary></Suspense>} />
+      <Route path="/signup" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><SignupPage /></ErrorBoundary></Suspense>} />
+      <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><ForgotPasswordPage /></ErrorBoundary></Suspense>} />
+      <Route path="/invitation/:token" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><InvitationPage /></ErrorBoundary></Suspense>} />
 
       {/* Protected routes */}
       <Route path="/dashboard" element={<Protected><DashboardPage /></Protected>} />

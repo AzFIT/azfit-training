@@ -6,6 +6,7 @@ import './index.css'
 import App from './App.tsx'
 import { queryClient } from './lib/queryClient'
 import { useAuthStore, initAuthListener } from './stores/authStore'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Initialize auth state on app load
 useAuthStore.getState().loadSession()
@@ -14,10 +15,12 @@ useAuthStore.getState().loadSession()
 initAuthListener()
 
 createRoot(document.getElementById('root')!).render(
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-    <ReactQueryDevtools initialIsOpen={false} />
-  </QueryClientProvider>,
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </ErrorBoundary>,
 )
