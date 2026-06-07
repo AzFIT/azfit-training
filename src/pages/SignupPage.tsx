@@ -1,31 +1,48 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { UserPlus, Eye, EyeOff } from 'lucide-react'
+import { UserPlus, Eye, EyeOff, Mail } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number]
-
-type Role = 'trainer' | 'client'
 
 export default function SignupPage() {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [role, setRole] = useState<Role>('trainer')
   const [agreeTerms, setAgreeTerms] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [showVerificationMessage, setShowVerificationMessage] = useState(false)
 
   const { register } = useAuthStore()
   const [error, setError] = useState('')
 
+  const validatePassword = (pwd: string): string | null => {
+    if (pwd.length < 8) return 'Password must be at least 8 characters'
+    if (!/[A-Z]/.test(pwd)) return 'Password must contain at least one uppercase letter'
+    if (!/[0-9]/.test(pwd)) return 'Password must contain at least one number'
+    return null
+  }
+
   const handleCreateAccount = async () => {
     setError('')
+    if (!fullName.trim()) {
+      setError('Please enter your full name')
+      return
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+    const pwdError = validatePassword(password)
+    if (pwdError) {
+      setError(pwdError)
+      return
+    }
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
@@ -42,12 +59,61 @@ export default function SignupPage() {
     if (registerError) {
       setError(registerError)
     } else {
-      navigate('/dashboard')
+      setShowVerificationMessage(true)
     }
   }
 
   const inputClasses =
     'w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all'
+
+  if (showVerificationMessage) {
+    return (
+      <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-[rgba(0,174,239,0.04)] blur-[120px]" />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: easeOut }}
+          className="w-full max-w-[440px] relative z-10 text-center"
+        >
+          <div className="bg-[#141414] border border-dark-border rounded-2xl p-8 sm:p-10">
+            <div className="w-16 h-16 rounded-full bg-cyan/10 flex items-center justify-center mx-auto mb-6">
+              <Mail size={28} className="text-cyan" />
+            </div>
+            <h1 className="font-playfair text-2xl font-bold text-dark-primary mb-3">
+              Check your email
+            </h1>
+            <p className="text-dark-secondary text-sm mb-2">
+              We&apos;ve sent a verification link to{' '}
+              <span className="text-cyan font-medium">{email}</span>
+            </p>
+            <p className="text-dark-muted text-sm mb-8">
+              Click the link in the email to activate your account, then sign in.
+            </p>
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full flex items-center justify-center gap-2 bg-cyan hover:bg-cyan-hover text-white font-semibold py-3 rounded-xl transition-all duration-200 text-sm"
+            >
+              Go to Sign In
+            </button>
+            <div className="mt-6 text-center">
+              <p className="text-dark-muted text-xs">
+                Didn&apos;t receive it?{' '}
+                <button
+                  onClick={() => setShowVerificationMessage(false)}
+                  className="text-cyan hover:text-[#33BFF2] transition-colors"
+                >
+                  Try again
+                </button>
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
@@ -93,32 +159,6 @@ export default function SignupPage() {
           className="bg-[#141414] border border-dark-border rounded-2xl p-6 sm:p-8"
         >
           <div className="space-y-4">
-            {/* Role Selection */}
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setRole('trainer')}
-                className={`py-2.5 px-4 rounded-xl border text-sm font-medium transition-all duration-200 ${
-                  role === 'trainer'
-                    ? 'border-cyan bg-[rgba(0,174,239,0.15)] text-cyan'
-                    : 'border-dark-border text-dark-secondary hover:bg-[#1A1A1A] hover:text-dark-primary'
-                }`}
-              >
-                Trainer
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('client')}
-                className={`py-2.5 px-4 rounded-xl border text-sm font-medium transition-all duration-200 ${
-                  role === 'client'
-                    ? 'border-cyan bg-[rgba(0,174,239,0.15)] text-cyan'
-                    : 'border-dark-border text-dark-secondary hover:bg-[#1A1A1A] hover:text-dark-primary'
-                }`}
-              >
-                Client
-              </button>
-            </div>
-
             {/* Full Name */}
             <div>
               <label className="block text-dark-secondary text-sm mb-2">Full Name</label>
@@ -143,30 +183,13 @@ export default function SignupPage() {
               />
             </div>
 
-            {/* Phone */}
-            <div>
-              <label className="block text-dark-secondary text-sm mb-2">Phone</label>
-              <div className="flex">
-                <div className="flex-shrink-0 flex items-center bg-[#1A1A1A] border border-r-0 border-dark-border rounded-l-xl px-3 py-3 text-sm text-dark-muted">
-                  +852
-                </div>
-                <input
-                  type="tel"
-                  placeholder="XXXX XXXX"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className={`${inputClasses} rounded-l-none`}
-                />
-              </div>
-            </div>
-
             {/* Password */}
             <div>
               <label className="block text-dark-secondary text-sm mb-2">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Create a password"
+                  placeholder="Min 8 chars, 1 uppercase, 1 number"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`${inputClasses} pr-11`}
@@ -260,7 +283,7 @@ export default function SignupPage() {
             {/* Create Account Button */}
             <button
               onClick={handleCreateAccount}
-              disabled={isLoading || !agreeTerms}
+              disabled={isLoading}
               className="w-full flex items-center justify-center gap-2 bg-cyan hover:bg-cyan-hover disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-sm mt-2"
             >
               {isLoading ? (

@@ -17,7 +17,7 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', to: '/trainer/dashboard' },
@@ -31,7 +31,7 @@ const navItems = [
 
 export default function AppSidebar() {
   const location = useLocation();
-  const { user } = useAuthStore();
+  const { user, profile, role } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -87,15 +87,15 @@ export default function AppSidebar() {
       <div className="p-4 border-t border-gray-200 dark:border-white/5">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full bg-gradient-cyan flex items-center justify-center text-white text-sm font-semibold shrink-0">
-            {user?.name?.[0] ?? 'U'}
+            {(profile?.full_name?.[0] || user?.email?.[0] || 'U').toUpperCase()}
           </div>
           {!collapsed && (
             <div className="min-w-0">
               <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                {user?.name ?? 'User'}
+                {profile?.full_name || user?.email?.split('@')[0] || 'User'}
               </p>
               <span className="text-caption text-cyan capitalize">
-                {user?.role ?? 'Trainer'}
+                {role ?? 'Coach'}
               </span>
             </div>
           )}

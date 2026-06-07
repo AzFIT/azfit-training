@@ -18,24 +18,34 @@ import {
   onAuthStateChange,
 } from '../lib/auth'
 
+export type UserRole = 'admin' | 'coach'
+
+interface DemoUser {
+  id: string
+  email: string
+  user_metadata: { full_name: string }
+}
+
 interface AuthState {
   // ── State ──────────────────────────────────────────────────────
-  user: User | null
+  user: User | DemoUser | null
   session: Session | null
   profile: CoachProfile | null
   isAuthenticated: boolean
   isLoading: boolean
-  role: 'admin' | 'coach' | null
+  role: UserRole | null
+  isDemoMode: boolean
 
   // ── Actions ────────────────────────────────────────────────────
   login: (email: string, password: string) => Promise<{ error: string | null }>
   register: (email: string, password: string, metadata: { full_name: string; business_name?: string; specialty?: string }) => Promise<{ error: string | null }>
   logout: () => Promise<void>
   loadSession: () => Promise<void>
+  enableDemoMode: () => void
   setUser: (user: User | null) => void
   setSession: (session: Session | null) => void
   setProfile: (profile: CoachProfile | null) => void
-  setRole: (role: 'admin' | 'coach' | null) => void
+  setRole: (role: UserRole | null) => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -46,6 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isLoading: true,
   role: null,
+  isDemoMode: false,
 
   // ── Login ──────────────────────────────────────────────────────
   login: async (email, password) => {
@@ -67,6 +78,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: true,
       isLoading: false,
       role: coachProfile?.role ?? 'coach',
+      isDemoMode: false,
     })
 
     return { error: null }
@@ -83,13 +95,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
 
     // After signup, user needs to verify email before signing in
-    // For now, auto-login may fail if email confirmation is required
-    // Try auto-login anyway
+    // Try auto-login anyway (works if email confirmation is disabled)
     const { session, error: signInError } = await signIn(email, password)
 
     if (signInError || !session) {
       set({ isLoading: false })
-      return { error: signInError?.message || 'Account created! Please check your email to verify your account, then sign in.' }
+      return { error: null } // Success but needs email verification
     }
 
     const { profile: coachProfile } = await getCoachProfile(session.user.id)
@@ -101,6 +112,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: true,
       isLoading: false,
       role: coachProfile?.role ?? 'coach',
+      isDemoMode: false,
     })
 
     return { error: null }
@@ -116,6 +128,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: false,
       isLoading: false,
       role: null,
+      isDemoMode: false,
     })
   },
 
@@ -138,6 +151,25 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: true,
       isLoading: false,
       role: coachProfile?.role ?? 'coach',
+      isDemoMode: false,
+    })
+  },
+
+  // ── Demo Mode ──────────────────────────────────────────────────
+  enableDemoMode: () => {
+    const demoUser: DemoUser = {
+      id: 'demo-user-' + crypto.randomUUID(),
+      email: 'demo@azfit.fit',
+      user_metadata: { full_name: 'Demo Trainer' },
+    }
+    set({
+      user: demoUser as unknown as User,
+      session: null,
+      profile: { id: demoUser.id, full_name: 'Demo Trainer', email: demoUser.email, role: 'coach', created_at: new Date().toISOString() },
+      isAuthenticated: true,
+      isLoading: false,
+      role: 'coach',
+      isDemoMode: true,
     })
   },
 

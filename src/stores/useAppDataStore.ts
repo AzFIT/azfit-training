@@ -2,7 +2,7 @@
  * useAppDataStore — Central Data Store (Single Source of Truth)
  *
  * Replaces the fragmented store ecosystem:
- *   useAuthStore (clients/events) + useClientStore + useCalendarStore
+ *   App data store (clients, programs, workouts, etc.)
  *   + useProgramStore (library) + useWorkoutBuilderStore
  *
  * Design principles:

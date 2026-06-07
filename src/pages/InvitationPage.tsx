@@ -14,7 +14,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuthStore } from '@/stores/authStore';
 
 function getPasswordStrength(pwd: string): number {
   let s = 0;
@@ -29,7 +29,7 @@ const strengthColors = ['bg-danger', 'bg-warning', 'bg-info', 'bg-success'];
 export default function InvitationPage() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const { enableDemoMode } = useAuthStore();
 
   /* Mock: check if token is valid (demo: any non-empty token is valid) */
   const isValidToken = !!token && token.length > 0 && !token.startsWith('invalid');
@@ -53,7 +53,7 @@ export default function InvitationPage() {
         setRedirectCountdown((c) => {
           if (c <= 1) {
             clearInterval(t);
-            navigate('/trainer/dashboard');
+            navigate('/dashboard');
             return 0;
           }
           return c - 1;
@@ -74,7 +74,9 @@ export default function InvitationPage() {
     if (password.length < 8) { setError('Password must be at least 8 characters'); return; }
     if (password !== confirmPassword) { setError('Passwords do not match'); return; }
     setError('');
-    login('admin@azfit.com', password, 'admin');
+    // In a real flow, this would call Supabase to accept the invitation
+    // For demo, we enable demo mode and redirect
+    enableDemoMode();
     setStep(3);
   };
 

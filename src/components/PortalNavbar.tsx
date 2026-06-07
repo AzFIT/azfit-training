@@ -13,7 +13,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useNotificationStore } from '@/stores/useNotificationStore';
 import DarkModeToggle from './DarkModeToggle';
 
@@ -30,7 +30,7 @@ const routeTitles: Record<string, string> = {
 
 export default function PortalNavbar() {
   const location = useLocation();
-  const { user, logout } = useAuthStore();
+  const { user, profile, logout } = useAuthStore();
   const { unreadCount } = useNotificationStore();
   const [avatarOpen, setAvatarOpen] = useState(false);
 
@@ -89,7 +89,7 @@ export default function PortalNavbar() {
             className="flex items-center gap-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
           >
             <div className="h-8 w-8 rounded-full bg-gradient-cyan flex items-center justify-center text-white text-xs font-semibold">
-              {user?.name?.[0] ?? 'U'}
+              {(profile?.full_name?.[0] || user?.email?.[0] || 'U').toUpperCase()}
             </div>
           </button>
 
@@ -105,7 +105,7 @@ export default function PortalNavbar() {
                   className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#1A1A1A] rounded-xl border border-gray-200 dark:border-white/8 shadow-modal z-50 py-1"
                 >
                   <div className="px-3 py-2 border-b border-gray-100 dark:border-white/5">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.name}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{profile?.full_name || user?.email?.split('@')[0] || 'User'}</p>
                     <p className="text-xs text-gray-500">{user?.email}</p>
                   </div>
                   <Link

@@ -6,7 +6,7 @@
  *   - generateSessions() from lib/demo-data.ts
  *   - generateAlerts() from lib/demo-data.ts
  *   - generateNotifications() from lib/demo-data.ts
- *   - useAuthStore.generateSyntheticData()
+ *   - Demo data generation for local testing
  *   - useProgramStore DEMO_PROGRAMS
  *   - useCalendarStore default events
  *

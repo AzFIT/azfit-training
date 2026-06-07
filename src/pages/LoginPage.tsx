@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
-import { LogIn, Eye, EyeOff } from 'lucide-react'
+import { LogIn, Eye, EyeOff, AlertTriangle } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number]
@@ -18,13 +18,13 @@ function motionEnter<T extends Record<string, unknown>>(
 export default function LoginPage() {
   const reduceMotion = useReducedMotion()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('trainer@azfit.com')
-  const [password, setPassword] = useState('password')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const { login } = useAuthStore()
+  const { login, enableDemoMode } = useAuthStore()
   const [error, setError] = useState('')
 
   const handleSignIn = async () => {
@@ -40,6 +40,7 @@ export default function LoginPage() {
   }
 
   const handleDemoMode = () => {
+    enableDemoMode()
     navigate('/dashboard')
   }
 
@@ -96,7 +97,7 @@ export default function LoginPage() {
               <label className="block text-dark-secondary text-sm mb-2">Email</label>
               <input
                 type="email"
-                placeholder="trainer@azfit.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
@@ -109,7 +110,7 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 pr-11 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
@@ -192,8 +193,16 @@ export default function LoginPage() {
               onClick={handleDemoMode}
               className="w-full bg-transparent border border-dark-border hover:border-cyan/50 text-dark-secondary hover:text-dark-primary font-medium py-3 rounded-xl transition-all duration-200 text-sm"
             >
-              Demo Mode — Skip Authentication
+              Try Demo Mode
             </button>
+
+            {/* Demo Warning */}
+            <div className="flex items-start gap-2 rounded-lg bg-warning/10 border border-warning/20 p-3">
+              <AlertTriangle size={14} className="text-warning flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-warning/90 leading-relaxed">
+                Demo mode is for development only. All data is local and will be cleared when you log out.
+              </p>
+            </div>
           </div>
 
           {/* Sign Up Link */}
