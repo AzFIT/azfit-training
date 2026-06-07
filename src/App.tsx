@@ -1,53 +1,71 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import AuthGuard from './components/AuthGuard'
 import AdminGuard from './components/AdminGuard'
-import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
-import DashboardPage from './pages/DashboardPage'
-import CalendarPage from './pages/CalendarPage'
-import ProgramsPage from './pages/ProgramsPage'
-import ProgramWizardPage from './pages/ProgramWizard'
-import ClientProfilePage from './pages/ClientProfilePage'
-import ClientDirectory from './pages/ClientDirectory'
-import NutritionPage from './pages/NutritionPage'
-import SettingsPage from './pages/SettingsPage'
-import PhotosPage from './pages/PhotosPage'
-import PlannedFeaturesPage from './pages/PlannedFeaturesPage'
-import WorkoutProgramBuilderPage from './pages/WorkoutProgramBuilderPage'
-import ProgramCardPage from './pages/ProgramCardPage'
-import ExerciseLibraryPage from './pages/ExerciseLibraryPage'
-import SmartProgramFinderPage from './pages/SmartProgramFinderPage'
-import ProgramMatcherPage from './pages/ProgramMatcherPage'
-import OneRMCalculatorPage from './pages/OneRMCalculatorPage'
-import WorkoutSessionPage from './pages/WorkoutSessionPage'
-import WorkoutHistoryPage from './pages/WorkoutHistoryPage'
-import ExerciseDetailPage from './pages/ExerciseDetailPage'
-import ProgressTrackingPage from './pages/ProgressTrackingPage'
-import BioPrintWizardPage from './pages/BioPrintWizardPage'
-import ForgotPasswordPage from './pages/ForgotPasswordPage'
-import InvitationPage from './pages/InvitationPage'
-import NotificationsPage from './pages/NotificationsPage'
-import SubscriptionPage from './pages/SubscriptionPage'
-import ProgramLibraryPage from './pages/ProgramLibraryPage'
-import AdminDashboardPage from './pages/AdminDashboardPage'
+import PageLoader from './components/PageLoader'
 
-/** Wrapper for protected routes: AuthGuard → Layout */
+/* ── Public pages (eagerly loaded — small, needed immediately) ── */
+import LandingPage from './pages/LandingPage'
+
+/* ── Auth pages ── */
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const SignupPage = lazy(() => import('./pages/SignupPage'))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
+const InvitationPage = lazy(() => import('./pages/InvitationPage'))
+
+/* ── Protected app pages ── */
+const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const CalendarPage = lazy(() => import('./pages/CalendarPage'))
+const ProgramsPage = lazy(() => import('./pages/ProgramsPage'))
+const ProgramWizardPage = lazy(() => import('./pages/ProgramWizard'))
+const WorkoutProgramBuilderPage = lazy(() => import('./pages/WorkoutProgramBuilderPage'))
+const ProgramCardPage = lazy(() => import('./pages/ProgramCardPage'))
+const ExerciseLibraryPage = lazy(() => import('./pages/ExerciseLibraryPage'))
+const SmartProgramFinderPage = lazy(() => import('./pages/SmartProgramFinderPage'))
+const ProgramMatcherPage = lazy(() => import('./pages/ProgramMatcherPage'))
+const OneRMCalculatorPage = lazy(() => import('./pages/OneRMCalculatorPage'))
+const WorkoutSessionPage = lazy(() => import('./pages/WorkoutSessionPage'))
+const WorkoutHistoryPage = lazy(() => import('./pages/WorkoutHistoryPage'))
+const ExerciseDetailPage = lazy(() => import('./pages/ExerciseDetailPage'))
+const ProgressTrackingPage = lazy(() => import('./pages/ProgressTrackingPage'))
+const BioPrintWizardPage = lazy(() => import('./pages/BioPrintWizardPage'))
+const ClientProfilePage = lazy(() => import('./pages/ClientProfilePage'))
+const ClientDirectory = lazy(() => import('./pages/ClientDirectory'))
+const NutritionPage = lazy(() => import('./pages/NutritionPage'))
+const SettingsPage = lazy(() => import('./pages/SettingsPage'))
+const PhotosPage = lazy(() => import('./pages/PhotosPage'))
+const PlannedFeaturesPage = lazy(() => import('./pages/PlannedFeaturesPage'))
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage'))
+const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'))
+const ProgramLibraryPage = lazy(() => import('./pages/ProgramLibraryPage'))
+
+/* ── Admin pages ── */
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'))
+
+/** Wrapper for protected routes: AuthGuard → Layout → Suspense */
 function Protected({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
-      <Layout>{children}</Layout>
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          {children}
+        </Suspense>
+      </Layout>
     </AuthGuard>
   )
 }
 
-/** Wrapper for admin routes: AuthGuard → AdminGuard → Layout */
+/** Wrapper for admin routes: AuthGuard → AdminGuard → Layout → Suspense */
 function AdminRoute({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
       <AdminGuard>
-        <Layout>{children}</Layout>
+        <Layout>
+          <Suspense fallback={<PageLoader />}>
+            {children}
+          </Suspense>
+        </Layout>
       </AdminGuard>
     </AuthGuard>
   )
@@ -58,10 +76,10 @@ export default function App() {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/invitation/:token" element={<InvitationPage />} />
+      <Route path="/login" element={<Suspense fallback={<PageLoader />}><LoginPage /></Suspense>} />
+      <Route path="/signup" element={<Suspense fallback={<PageLoader />}><SignupPage /></Suspense>} />
+      <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ForgotPasswordPage /></Suspense>} />
+      <Route path="/invitation/:token" element={<Suspense fallback={<PageLoader />}><InvitationPage /></Suspense>} />
 
       {/* Protected routes */}
       <Route path="/dashboard" element={<Protected><DashboardPage /></Protected>} />

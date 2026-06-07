@@ -15,4 +15,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('node_modules/recharts')) return 'vendor-recharts'
+          if (id.includes('node_modules/framer-motion')) return 'vendor-framer-motion'
+          if (id.includes('node_modules/lucide-react')) return 'vendor-ui'
+          if (id.includes('node_modules/@radix-ui')) return 'vendor-ui'
+          if (id.includes('node_modules/class-variance-authority') || id.includes('node_modules/clsx') || id.includes('node_modules/tailwind-merge')) return 'vendor-ui'
+        },
+      },
+    },
+  },
 });
