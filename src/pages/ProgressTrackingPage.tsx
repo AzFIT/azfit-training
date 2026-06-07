@@ -41,7 +41,7 @@ export default function ProgressTrackingPage() {
   }))
 
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[az-black]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -72,7 +72,7 @@ export default function ProgressTrackingPage() {
         {/* Charts */}
         {entries.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+            <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
               <h2 className="text-sm font-semibold text-dark-primary mb-4 flex items-center gap-2">
                 <Scale size={16} className="text-cyan" /> Weight
               </h2>
@@ -81,21 +81,21 @@ export default function ProgressTrackingPage() {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="wGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#00AEEF" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#00AEEF" stopOpacity={0} />
+                        <stop offset="5%" stopColor="cyan" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="cyan" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="date" tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                     <YAxis tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} domain={['auto', 'auto']} />
-                    <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                    <Area type="monotone" dataKey="weight" stroke="#00AEEF" fill="url(#wGrad)" strokeWidth={2} />
+                    <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                    <Area type="monotone" dataKey="weight" stroke="cyan" fill="url(#wGrad)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+            <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
               <h2 className="text-sm font-semibold text-dark-primary mb-4 flex items-center gap-2">
                 <TrendingDown size={16} className="text-success" /> Body Fat %
               </h2>
@@ -104,15 +104,15 @@ export default function ProgressTrackingPage() {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="bfGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
+                        <stop offset="5%" stopColor="success" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="success" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="date" tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                     <YAxis tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} domain={['auto', 'auto']} />
-                    <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                    <Area type="monotone" dataKey="bodyFat" stroke="#22C55E" fill="url(#bfGrad)" strokeWidth={2} />
+                    <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                    <Area type="monotone" dataKey="bodyFat" stroke="success" fill="url(#bfGrad)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -121,7 +121,7 @@ export default function ProgressTrackingPage() {
         )}
 
         {/* History Table */}
-        <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
           <h2 className="text-sm font-semibold text-dark-primary mb-4">History</h2>
           {entries.length === 0 ? (
             <div className="text-center py-12">
@@ -146,7 +146,7 @@ export default function ProgressTrackingPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.03 }}
-                      className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors"
+                      className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors"
                     >
                       <td className="py-2.5 px-3 text-sm text-dark-secondary font-mono whitespace-nowrap">
                         <Calendar size={12} className="inline mr-1" />
@@ -207,7 +207,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#141414] border border-dark-border rounded-xl p-5 space-y-4"
+      className="bg-[az-black-card] border border-dark-border rounded-xl p-5 space-y-4"
     >
       <h3 className="text-sm font-semibold text-dark-primary">Log New Entry</h3>
 
@@ -218,7 +218,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+            className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
           />
         </div>
         <div>
@@ -229,7 +229,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             placeholder="e.g. 70.5"
-            className="w-full bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+            className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
           />
         </div>
         <div>
@@ -240,7 +240,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
             value={bodyFat}
             onChange={(e) => setBodyFat(e.target.value)}
             placeholder="e.g. 18.5"
-            className="w-full bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+            className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
           />
         </div>
       </div>
@@ -259,7 +259,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
                 value={val}
                 onChange={(e) => setMeasurements((m) => ({ ...m, [key]: e.target.value }))}
                 placeholder="cm"
-                className="w-full bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+                className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
               />
             </div>
           ))}
@@ -273,7 +273,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Optional notes..."
           rows={2}
-          className="w-full bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan resize-none"
+          className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan resize-none"
         />
       </div>
 

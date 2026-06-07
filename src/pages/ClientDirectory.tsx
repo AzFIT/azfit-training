@@ -84,16 +84,16 @@ function motionEnter<T extends Record<string, unknown>>(
 
 function programColors(program: string): { bg: string; text: string } {
   switch (program) {
-    case 'Strength': return { bg: 'rgba(0,174,239,0.1)', text: '#00AEEF' };
-    case 'Weight Loss': return { bg: 'rgba(234,179,8,0.1)', text: '#EAB308' };
-    case 'Endurance': return { bg: 'rgba(34,197,94,0.1)', text: '#22C55E' };
-    case 'Hypertrophy': return { bg: 'rgba(168,85,247,0.1)', text: '#A855F7' };
-    case 'Rehabilitation': return { bg: 'rgba(239,68,68,0.1)', text: '#EF4444' };
-    case 'Build Muscle': return { bg: 'rgba(168,85,247,0.1)', text: '#A855F7' };
-    case 'Fat Loss': return { bg: 'rgba(234,179,8,0.1)', text: '#EAB308' };
-    case 'General Fitness': return { bg: 'rgba(59,130,246,0.1)', text: '#3B82F6' };
-    case 'Sports Performance': return { bg: 'rgba(0,174,239,0.1)', text: '#00AEEF' };
-    default: return { bg: 'rgba(107,114,128,0.1)', text: '#6B7280' };
+    case 'Strength': return { bg: 'rgba(0,174,239,0.1)', text: 'cyan' };
+    case 'Weight Loss': return { bg: 'rgba(234,179,8,0.1)', text: 'warning' };
+    case 'Endurance': return { bg: 'rgba(34,197,94,0.1)', text: 'success' };
+    case 'Hypertrophy': return { bg: 'rgba(168,85,247,0.1)', text: 'admin-accent' };
+    case 'Rehabilitation': return { bg: 'rgba(239,68,68,0.1)', text: 'danger' };
+    case 'Build Muscle': return { bg: 'rgba(168,85,247,0.1)', text: 'admin-accent' };
+    case 'Fat Loss': return { bg: 'rgba(234,179,8,0.1)', text: 'warning' };
+    case 'General Fitness': return { bg: 'rgba(59,130,246,0.1)', text: 'info' };
+    case 'Sports Performance': return { bg: 'rgba(0,174,239,0.1)', text: 'cyan' };
+    default: return { bg: 'rgba(107,114,128,0.1)', text: 'gray-550' };
   }
 }
 
@@ -102,9 +102,9 @@ function programColors(program: string): { bg: string; text: string } {
 /* ------------------------------------------------------------------ */
 
 function complianceColor(score: number): string {
-  if (score >= 90) return '#22C55E';
-  if (score >= 70) return '#EAB308';
-  return '#EF4444';
+  if (score >= 90) return 'success';
+  if (score >= 70) return 'warning';
+  return 'danger';
 }
 
 function complianceLabel(score: number): string {
@@ -323,7 +323,7 @@ export default function ClientDirectory() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-[1440px] mx-auto bg-[#F8FAFC] min-h-[calc(100dvh-64px)]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-[1440px] mx-auto bg-[light-surface] min-h-[calc(100dvh-64px)]">
       {/* Page title */}
       <motion.div
         {...motionEnter(reduceMotion, { opacity: 0, y: 10 }, { duration: 0.35 })}

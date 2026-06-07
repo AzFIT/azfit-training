@@ -18,7 +18,7 @@ export default function ProgramCardHeader({ program, clientName, progressPercent
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
-          className="p-2.5 rounded-xl bg-[#141414] border border-dark-border/50 text-dark-secondary hover:text-cyan hover:border-cyan/30 transition-all"
+          className="p-2.5 rounded-xl bg-[az-black-card] border border-dark-border/50 text-dark-secondary hover:text-cyan hover:border-cyan/30 transition-all"
         >
           <ArrowLeft size={20} />
         </button>
@@ -29,13 +29,13 @@ export default function ProgramCardHeader({ program, clientName, progressPercent
           </h1>
         </div>
 
-        <button className="p-2.5 rounded-xl bg-[#141414] border border-dark-border/50 text-dark-secondary hover:text-cyan hover:border-cyan/30 transition-all">
+        <button className="p-2.5 rounded-xl bg-[az-black-card] border border-dark-border/50 text-dark-secondary hover:text-cyan hover:border-cyan/30 transition-all">
           <Share2 size={18} />
         </button>
       </div>
 
       {/* Meta info bar */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 rounded-lg bg-[#141414] border border-dark-border/30">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 rounded-lg bg-[az-black-card] border border-dark-border/30">
         {clientName && (
           <div className="flex items-center gap-1.5 text-xs text-dark-secondary">
             <span className="text-dark-primary font-medium">{clientName}</span>
@@ -71,9 +71,9 @@ export default function ProgramCardHeader({ program, clientName, progressPercent
             <span className="text-dark-muted">Progress</span>
             <span className="font-semibold text-cyan">{progressPercent}%</span>
           </div>
-          <div className="h-2 bg-[#1F2937] rounded-full overflow-hidden">
+          <div className="h-2 bg-[gray-850] rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#00AEEF] to-[#A855F7] rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-[cyan] to-[admin-accent] rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
           </div>

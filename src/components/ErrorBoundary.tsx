@@ -64,7 +64,7 @@ function ErrorFallback({
   onReset: () => void
 }) {
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center">
         <div className="w-16 h-16 rounded-2xl bg-danger/10 border border-danger/20 flex items-center justify-center mx-auto mb-6">
           <AlertTriangle size={28} className="text-danger" />
@@ -73,14 +73,14 @@ function ErrorFallback({
         <h1 className="font-playfair text-2xl font-bold text-white mb-3">
           Something went wrong
         </h1>
-        <p className="text-[#A0A0A0] text-sm mb-6 leading-relaxed">
+        <p className="text-[dark-secondary] text-sm mb-6 leading-relaxed">
           We&apos;re sorry — an unexpected error occurred. Try refreshing the page or go back to the dashboard.
         </p>
 
         {error && (
-          <div className="bg-[#141414] border border-dark-border rounded-xl p-4 mb-6 text-left overflow-hidden">
+          <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4 mb-6 text-left overflow-hidden">
             <p className="text-danger text-xs font-mono mb-1">Error:</p>
-            <p className="text-[#A0A0A0] text-xs font-mono break-words">
+            <p className="text-[dark-secondary] text-xs font-mono break-words">
               {error.message}
             </p>
           </div>
@@ -96,7 +96,7 @@ function ErrorFallback({
           </button>
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-[#A0A0A0] hover:text-white font-medium px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm"
+            className="inline-flex items-center gap-2 text-[dark-secondary] hover:text-white font-medium px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm"
           >
             <Home size={16} />
             Go to Dashboard

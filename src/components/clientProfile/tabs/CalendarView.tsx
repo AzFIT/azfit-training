@@ -30,15 +30,15 @@ export function CalendarView() {
   const hasSession = (d: number) => sessionDates.has(`${String(d).padStart(2, '0')}/${String(currentMonth + 1).padStart(2, '0')}/${currentYear}`);
 
   return (
-    <div className="bg-[#141414] border border-dark-border rounded-xl p-5">
+    <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
       <div className="flex items-center justify-between mb-4">
         <button onClick={() => { if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(currentYear - 1); } else setCurrentMonth(currentMonth - 1); }}
-          className="w-8 h-8 rounded-lg bg-[#1A1A1A] hover:bg-dark-hover flex items-center justify-center text-dark-secondary transition-colors">
+          className="w-8 h-8 rounded-lg bg-[az-black-elevated] hover:bg-dark-hover flex items-center justify-center text-dark-secondary transition-colors">
           <ChevronLeft size={16} />
         </button>
         <h3 className="text-base font-semibold text-dark-primary">{monthNames[currentMonth]} {currentYear}</h3>
         <button onClick={() => { if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(currentYear + 1); } else setCurrentMonth(currentMonth + 1); }}
-          className="w-8 h-8 rounded-lg bg-[#1A1A1A] hover:bg-dark-hover flex items-center justify-center text-dark-secondary transition-colors">
+          className="w-8 h-8 rounded-lg bg-[az-black-elevated] hover:bg-dark-hover flex items-center justify-center text-dark-secondary transition-colors">
           <ChevronRight size={16} />
         </button>
       </div>
@@ -50,10 +50,10 @@ export function CalendarView() {
           const t = isToday(d);
           const s = hasSession(d);
           const cls = t
-            ? 'bg-[rgba(0,174,239,0.15)] text-cyan border border-cyan'
+            ? 'bg-cyan-glow text-cyan border border-cyan'
             : s
-              ? 'bg-[#1A1A1A] text-dark-primary hover:bg-dark-hover'
-              : 'text-dark-secondary hover:bg-[#1A1A1A]';
+              ? 'bg-[az-black-elevated] text-dark-primary hover:bg-dark-hover'
+              : 'text-dark-secondary hover:bg-[az-black-elevated]';
           return (
             <div key={d} className={'aspect-square rounded-lg flex flex-col items-center justify-center relative text-sm font-medium transition-colors cursor-pointer ' + cls}>
               {d}

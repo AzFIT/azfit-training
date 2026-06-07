@@ -113,18 +113,18 @@ const GOAL_OPTIONS = [
 const DIFFICULTY_OPTIONS = ['Beginner', 'Intermediate', 'Advanced', 'Elite']
 
 const GOAL_COLOR_MAP: Record<string, string> = {
-  'fat loss': 'linear-gradient(135deg, #22C55E, #16A34A)',
-  'lose fat': 'linear-gradient(135deg, #22C55E, #16A34A)',
-  'weight loss': 'linear-gradient(135deg, #22C55E, #16A34A)',
-  'muscle': 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
-  'hypertrophy': 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
-  'build muscle': 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
-  'strength': 'linear-gradient(135deg, #00AEEF, #0077B6)',
-  'endurance': 'linear-gradient(135deg, #F97316, #EA580C)',
-  'rehab': 'linear-gradient(135deg, #EAB308, #CA8A04)',
-  'rehabilitation': 'linear-gradient(135deg, #EAB308, #CA8A04)',
-  'general': 'linear-gradient(135deg, #C0C0C0, #9CA3AF)',
-  'athletic': 'linear-gradient(135deg, #EC4899, #DB2777)',
+  'fat loss': 'linear-gradient(135deg, success, emerald)',
+  'lose fat': 'linear-gradient(135deg, success, emerald)',
+  'weight loss': 'linear-gradient(135deg, success, emerald)',
+  'muscle': 'linear-gradient(135deg, violet, violet-dark)',
+  'hypertrophy': 'linear-gradient(135deg, violet, violet-dark)',
+  'build muscle': 'linear-gradient(135deg, violet, violet-dark)',
+  'strength': 'linear-gradient(135deg, cyan, blue-ocean)',
+  'endurance': 'linear-gradient(135deg, orange, rose)',
+  'rehab': 'linear-gradient(135deg, warning, amber)',
+  'rehabilitation': 'linear-gradient(135deg, warning, amber)',
+  'general': 'linear-gradient(135deg, silver, gray-400)',
+  'athletic': 'linear-gradient(135deg, trainer-accent, pink)',
 }
 
 const GOAL_BG_MAP: Record<string, string> = {
@@ -143,10 +143,10 @@ const GOAL_BG_MAP: Record<string, string> = {
 }
 
 const DIFFICULTY_COLOR: Record<string, { text: string; bg: string }> = {
-  Beginner: { text: '#22C55E', bg: 'rgba(34,197,94,0.15)' },
-  Intermediate: { text: '#EAB308', bg: 'rgba(234,179,8,0.15)' },
-  Advanced: { text: '#F97316', bg: 'rgba(249,115,22,0.15)' },
-  Elite: { text: '#EF4444', bg: 'rgba(239,68,68,0.15)' },
+  Beginner: { text: 'success', bg: 'rgba(34,197,94,0.15)' },
+  Intermediate: { text: 'warning', bg: 'rgba(234,179,8,0.15)' },
+  Advanced: { text: 'orange', bg: 'rgba(249,115,22,0.15)' },
+  Elite: { text: 'danger', bg: 'rgba(239,68,68,0.15)' },
 }
 
 // ── Helpers ────────────────────────────────────────────
@@ -215,10 +215,10 @@ function StatCard({
         <Icon size={20} style={{ color }} />
       </div>
       <div className="min-w-0">
-        <p className="text-[#0F172A] font-semibold text-lg leading-tight truncate" style={{ fontFamily: 'Space Mono, monospace' }}>
+        <p className="text-[light-primary] font-semibold text-lg leading-tight truncate" style={{ fontFamily: 'Space Mono, monospace' }}>
           {value}
         </p>
-        <p className="text-[#94A3B8] text-xs truncate">{label}</p>
+        <p className="text-[light-muted] text-xs truncate">{label}</p>
       </div>
     </motion.div>
   )
@@ -246,7 +246,7 @@ function ProgramCard({
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.35, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
       layout
-      className="relative bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl overflow-hidden min-h-[280px] flex flex-col group cursor-pointer transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(0,174,239,0.1)]"
+      className="relative bg-[white] border border-[light-border] rounded-xl overflow-hidden min-h-[280px] flex flex-col group cursor-pointer transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(0,174,239,0.1)]"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setMenuOpen(false) }}
     >
@@ -270,13 +270,13 @@ function ProgramCard({
       <div className="p-5 flex flex-col flex-1">
         {/* Title Row */}
         <div className="flex items-start justify-between gap-2 mb-3">
-          <h3 className="text-[#0F172A] font-semibold text-base leading-snug flex-1 min-w-0">
+          <h3 className="text-[light-primary] font-semibold text-base leading-snug flex-1 min-w-0">
             {program.name}
           </h3>
           <div className="relative">
             <button
               onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen) }}
-              className="text-[#94A3B8] hover:text-[#0F172A] p-1 rounded transition-colors"
+              className="text-[light-muted] hover:text-[light-primary] p-1 rounded transition-colors"
               aria-label="More actions"
             >
               <MoreVertical size={18} />
@@ -290,7 +290,7 @@ function ProgramCard({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-8 w-48 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.4)] z-50 py-1"
+                    className="absolute right-0 top-8 w-48 bg-[light-surface] border border-[light-border] rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.4)] z-50 py-1"
                   >
                     {[
                       { label: 'Edit Program', icon: Edit, action: 'edit' },
@@ -302,7 +302,7 @@ function ProgramCard({
                       <button
                         key={item.action}
                         onClick={(e) => { e.stopPropagation(); setMenuOpen(false); onAction(item.action, program) }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] text-sm transition-colors"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover] text-sm transition-colors"
                       >
                         <item.icon size={14} />
                         {item.label}
@@ -319,11 +319,11 @@ function ProgramCard({
         <div className="flex flex-wrap gap-2 mb-4">
           <span
             className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
-            style={{ backgroundColor: getGoalBg(program.goal), color: '#0F172A' }}
+            style={{ backgroundColor: getGoalBg(program.goal), color: 'light-primary' }}
           >
             {goalLabel}
           </span>
-          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[rgba(192,192,192,0.1)] text-[#C0C0C0]">
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[rgba(192,192,192,0.1)] text-[silver]">
             {program.method}
           </span>
           <span
@@ -336,24 +336,24 @@ function ProgramCard({
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="flex items-center gap-1.5 text-[#64748B]">
+          <div className="flex items-center gap-1.5 text-[light-secondary]">
             <Clock size={13} className="flex-shrink-0" />
             <span className="text-xs font-medium">{program.duration}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[#64748B]">
+          <div className="flex items-center gap-1.5 text-[light-secondary]">
             <Calendar size={13} className="flex-shrink-0" />
             <span className="text-xs font-medium">{program.frequency}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-[#64748B]">
+          <div className="flex items-center gap-1.5 text-[light-secondary]">
             <Users size={13} className="flex-shrink-0" />
             <span className="text-xs font-medium">{program.timesAssigned}x</span>
           </div>
         </div>
 
         {/* Bottom Row */}
-        <div className="mt-auto pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#94A3B8]">
+        <div className="mt-auto pt-3 border-t border-[light-border] flex items-center justify-between text-xs text-[light-muted]">
           <span>Last: {program.lastAssigned}</span>
-          <span className="text-[#64748B]">{program.activeClients} active</span>
+          <span className="text-[light-secondary]">{program.activeClients} active</span>
         </div>
       </div>
 
@@ -365,7 +365,7 @@ function ProgramCard({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-            className="absolute inset-x-0 bottom-0 bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border-t border-[#E2E8F0] p-4 flex items-center justify-center gap-2 z-10"
+            className="absolute inset-x-0 bottom-0 bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border-t border-[light-border] p-4 flex items-center justify-center gap-2 z-10"
             onClick={(e) => e.stopPropagation()}
           >
             {[
@@ -385,7 +385,7 @@ function ProgramCard({
                   'flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200',
                   btn.primary
                     ? 'bg-cyan text-white hover:bg-cyan-hover'
-                    : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                    : 'text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]'
                 )}
               >
                 <btn.icon size={16} />
@@ -420,9 +420,9 @@ function ProgramListRow({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2, delay: index * 0.03 }}
       className={cn(
-        'border-b border-[#E2E8F0] transition-colors duration-150',
-        index % 2 === 0 ? 'bg-[#F8FAFC]' : 'bg-[#FFFFFF]',
-        hovered && 'bg-[#F1F5F9]'
+        'border-b border-[light-border] transition-colors duration-150',
+        index % 2 === 0 ? 'bg-[light-surface]' : 'bg-[white]',
+        hovered && 'bg-[light-hover]'
       )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -431,7 +431,7 @@ function ProgramListRow({
         <div className="flex items-center gap-3">
           <div className="w-2 h-8 rounded-full flex-shrink-0" style={{ background: program.colorBanner }} />
           <div>
-            <p className="text-[#0F172A] text-sm font-medium">{program.name}</p>
+            <p className="text-[light-primary] text-sm font-medium">{program.name}</p>
             {program.timesAssigned >= 15 && (
               <span className="inline-flex items-center gap-1 text-[10px] text-warning font-semibold">
                 <Star size={10} /> Most Used
@@ -441,18 +441,18 @@ function ProgramListRow({
         </div>
       </td>
       <td className="px-4 py-3.5">
-        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: getGoalBg(program.goal), color: '#0F172A' }}>
+        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: getGoalBg(program.goal), color: 'light-primary' }}>
           {goalLabel}
         </span>
       </td>
-      <td className="px-4 py-3.5 text-[#64748B] text-xs">{program.method}</td>
+      <td className="px-4 py-3.5 text-[light-secondary] text-xs">{program.method}</td>
       <td className="px-4 py-3.5">
         <span className="text-xs font-semibold" style={{ color: diffColor.text }}>{program.difficulty}</span>
       </td>
-      <td className="px-4 py-3.5 text-[#64748B] text-xs">{program.duration}</td>
-      <td className="px-4 py-3.5 text-[#64748B] text-xs">{program.frequency}</td>
-      <td className="px-4 py-3.5 text-[#64748B] text-xs">{program.timesAssigned}x</td>
-      <td className="px-4 py-3.5 text-[#94A3B8] text-xs">{program.lastAssigned}</td>
+      <td className="px-4 py-3.5 text-[light-secondary] text-xs">{program.duration}</td>
+      <td className="px-4 py-3.5 text-[light-secondary] text-xs">{program.frequency}</td>
+      <td className="px-4 py-3.5 text-[light-secondary] text-xs">{program.timesAssigned}x</td>
+      <td className="px-4 py-3.5 text-[light-muted] text-xs">{program.lastAssigned}</td>
       <td className="px-4 py-3.5">
         <div className={cn('flex items-center gap-1 transition-opacity', hovered ? 'opacity-100' : 'opacity-40')}>
           {[
@@ -465,7 +465,7 @@ function ProgramListRow({
             <button
               key={btn.action}
               onClick={() => onAction(btn.action, program)}
-              className="text-[#64748B] hover:text-[#0F172A] p-1.5 rounded hover:bg-[#F1F5F9] transition-colors"
+              className="text-[light-secondary] hover:text-[light-primary] p-1.5 rounded hover:bg-[light-hover] transition-colors"
               aria-label={btn.action}
             >
               <btn.icon size={14} />
@@ -507,13 +507,13 @@ function Pagination({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <ChevronLeft size={16} />
       </button>
       {pages.map((p, i) => (
         typeof p === 'string' ? (
-          <span key={`dots-${i}`} className="text-[#94A3B8] px-1">{p}</span>
+          <span key={`dots-${i}`} className="text-[light-muted] px-1">{p}</span>
         ) : (
           <button
             key={p}
@@ -522,7 +522,7 @@ function Pagination({
               'w-9 h-9 rounded-lg text-sm font-medium transition-colors',
               p === currentPage
                 ? 'bg-cyan text-white'
-                : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                : 'text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]'
             )}
           >
             {p}
@@ -532,7 +532,7 @@ function Pagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <ChevronRight size={16} />
       </button>
@@ -695,15 +695,15 @@ export default function ProgramsPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-      className="max-w-[1440px] mx-auto bg-[#F8FAFC] min-h-[calc(100dvh-64px)]"
+      className="max-w-[1440px] mx-auto bg-[light-surface] min-h-[calc(100dvh-64px)]"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-[#0F172A] text-2xl font-semibold tracking-tight" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
+          <h1 className="text-[light-primary] text-2xl font-semibold tracking-tight" style={{ fontFamily: 'Playfair Display, Georgia, serif' }}>
             Program Library
           </h1>
-          <p className="text-[#64748B] text-sm mt-0.5">{filtered.length} program{filtered.length !== 1 ? 's' : ''} available</p>
+          <p className="text-[light-secondary] text-sm mt-0.5">{filtered.length} program{filtered.length !== 1 ? 's' : ''} available</p>
         </div>
         <button
           onClick={() => navigate('/programs/new')}
@@ -715,35 +715,35 @@ export default function ProgramsPage() {
       </div>
 
       {/* Stats Bar */}
-      <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-6 py-5 mb-6">
+      <div className="bg-[white] border border-[light-border] rounded-xl px-6 py-5 mb-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={FolderOpen} label="Total Programs" value={String(stats.total)} color="#0F172A" delay={0} />
-          <StatCard icon={CheckCircle} label="Active" value={String(stats.active)} color="#22C55E" delay={0.06} />
-          <StatCard icon={TrendingUp} label="Most Used This Month" value={stats.mostUsedName} color="#00AEEF" delay={0.12} />
+          <StatCard icon={FolderOpen} label="Total Programs" value={String(stats.total)} color="light-primary" delay={0} />
+          <StatCard icon={CheckCircle} label="Active" value={String(stats.active)} color="success" delay={0.06} />
+          <StatCard icon={TrendingUp} label="Most Used This Month" value={stats.mostUsedName} color="cyan" delay={0.12} />
           <button
             onClick={() => setShowArchived(!showArchived)}
             className="text-left"
           >
-            <StatCard icon={Archive} label={showArchived ? 'Showing Archived' : 'Archived'} value={String(stats.archived)} color="#94A3B8" delay={0.18} />
+            <StatCard icon={Archive} label={showArchived ? 'Showing Archived' : 'Archived'} value={String(stats.archived)} color="light-muted" delay={0.18} />
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-5 py-4 mb-4">
+      <div className="bg-[white] border border-[light-border] rounded-xl px-5 py-4 mb-4">
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
-          <div className="flex items-center bg-[#F8FAFC] rounded-full border border-[#E2E8F0] focus-within:border-cyan transition-colors w-full sm:w-72">
-            <Search size={16} className="text-[#94A3B8] ml-3 flex-shrink-0" />
+          <div className="flex items-center bg-[light-surface] rounded-full border border-[light-border] focus-within:border-cyan transition-colors w-full sm:w-72">
+            <Search size={16} className="text-[light-muted] ml-3 flex-shrink-0" />
             <input
               type="text"
               placeholder="Search programs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-[#0F172A] text-sm placeholder-[#94A3B8] px-3 py-2 w-full outline-none"
+              className="bg-transparent text-[light-primary] text-sm placeholder-[light-muted] px-3 py-2 w-full outline-none"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="text-[#94A3B8] hover:text-[#0F172A] mr-3">
+              <button onClick={() => setSearchQuery('')} className="text-[light-muted] hover:text-[light-primary] mr-3">
                 <X size={14} />
               </button>
             )}
@@ -751,7 +751,7 @@ export default function ProgramsPage() {
 
           {/* Goal Filter */}
           <div className="relative group">
-            <button className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-cyan text-[#64748B] text-sm px-4 py-2 rounded-lg transition-colors">
+            <button className="flex items-center gap-2 bg-[light-surface] border border-[light-border] hover:border-cyan text-[light-secondary] text-sm px-4 py-2 rounded-lg transition-colors">
               <Filter size={14} />
               Goal
               {selectedGoals.length > 0 && (
@@ -761,7 +761,7 @@ export default function ProgramsPage() {
               )}
               <ChevronDown size={14} />
             </button>
-            <div className="absolute top-full left-0 mt-2 w-52 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.4)] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-30 py-1">
+            <div className="absolute top-full left-0 mt-2 w-52 bg-[light-surface] border border-[light-border] rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.4)] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-30 py-1">
               {GOAL_OPTIONS.map((goal) => (
                 <button
                   key={goal.value}
@@ -770,12 +770,12 @@ export default function ProgramsPage() {
                     'w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors',
                     selectedGoals.includes(goal.value)
                       ? 'text-cyan bg-[rgba(0,174,239,0.1)]'
-                      : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                      : 'text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]'
                   )}
                 >
                   <div className={cn(
                     'w-4 h-4 rounded border flex items-center justify-center transition-colors',
-                    selectedGoals.includes(goal.value) ? 'bg-cyan border-cyan' : 'border-[#94A3B8]'
+                    selectedGoals.includes(goal.value) ? 'bg-cyan border-cyan' : 'border-[light-muted]'
                   )}>
                     {selectedGoals.includes(goal.value) && <CheckCircle size={10} className="text-white" />}
                   </div>
@@ -787,7 +787,7 @@ export default function ProgramsPage() {
 
           {/* Method Filter */}
           <div className="relative group">
-            <button className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-cyan text-[#64748B] text-sm px-4 py-2 rounded-lg transition-colors">
+            <button className="flex items-center gap-2 bg-[light-surface] border border-[light-border] hover:border-cyan text-[light-secondary] text-sm px-4 py-2 rounded-lg transition-colors">
               <Dumbbell size={14} />
               Method
               {selectedMethod && (
@@ -795,12 +795,12 @@ export default function ProgramsPage() {
               )}
               <ChevronDown size={14} />
             </button>
-            <div className="absolute top-full left-0 mt-2 w-48 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.4)] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-30 py-1">
+            <div className="absolute top-full left-0 mt-2 w-48 bg-[light-surface] border border-[light-border] rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.4)] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-30 py-1">
               <button
                 onClick={() => setSelectedMethod('')}
                 className={cn(
                   'w-full text-left px-3 py-2 text-sm transition-colors',
-                  !selectedMethod ? 'text-cyan bg-[rgba(0,174,239,0.1)]' : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                  !selectedMethod ? 'text-cyan bg-[rgba(0,174,239,0.1)]' : 'text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]'
                 )}
               >
                 All Methods
@@ -811,7 +811,7 @@ export default function ProgramsPage() {
                   onClick={() => setSelectedMethod(m === selectedMethod ? '' : m)}
                   className={cn(
                     'w-full text-left px-3 py-2 text-sm transition-colors',
-                    selectedMethod === m ? 'text-cyan bg-[rgba(0,174,239,0.1)]' : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                    selectedMethod === m ? 'text-cyan bg-[rgba(0,174,239,0.1)]' : 'text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]'
                   )}
                 >
                   {m}
@@ -829,8 +829,8 @@ export default function ProgramsPage() {
                 className={cn(
                   'text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-200',
                   selectedDifficulties.includes(diff)
-                    ? 'border-cyan bg-[rgba(0,174,239,0.15)] text-cyan'
-                    : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#94A3B8] hover:text-[#64748B] hover:border-[#E2E8F0]'
+                    ? 'border-cyan bg-cyan-glow text-cyan'
+                    : 'border-[light-border] bg-[light-surface] text-[light-muted] hover:text-[light-secondary] hover:border-[light-border]'
                 )}
               >
                 {diff}
@@ -842,7 +842,7 @@ export default function ProgramsPage() {
           {activeFilterCount > 0 && (
             <button
               onClick={clearFilters}
-              className="text-danger hover:text-[#DC2626] text-sm font-medium flex items-center gap-1 transition-colors"
+              className="text-danger hover:text-[danger] text-sm font-medium flex items-center gap-1 transition-colors"
             >
               <X size={14} />
               Clear all
@@ -852,7 +852,7 @@ export default function ProgramsPage() {
 
         {/* Selected goal pills */}
         {selectedGoals.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-[#E2E8F0]">
+          <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-[light-border]">
             {selectedGoals.map((goal) => {
               const label = GOAL_OPTIONS.find(g => g.value === goal)?.label || goal
               return (
@@ -869,26 +869,26 @@ export default function ProgramsPage() {
       {/* Sort & View Controls */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-[#94A3B8] text-sm">Sort by:</span>
+          <span className="text-[light-muted] text-sm">Sort by:</span>
           <div className="relative">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="appearance-none bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] text-sm px-3 py-1.5 pr-8 rounded-lg focus:border-cyan outline-none cursor-pointer"
+              className="appearance-none bg-[light-surface] border border-[light-border] text-[light-secondary] text-sm px-3 py-1.5 pr-8 rounded-lg focus:border-cyan outline-none cursor-pointer"
             >
               <option value="mostUsed">Most Used</option>
               <option value="newest">Newest First</option>
               <option value="alpha">Name A-Z</option>
             </select>
-            <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none" />
+            <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[light-muted] pointer-events-none" />
           </div>
         </div>
-        <div className="flex items-center bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-0.5">
+        <div className="flex items-center bg-[light-surface] border border-[light-border] rounded-lg p-0.5">
           <button
             onClick={() => setViewMode('grid')}
             className={cn(
               'p-1.5 rounded-md transition-colors',
-              viewMode === 'grid' ? 'bg-[#F1F5F9] text-[#0F172A]' : 'text-[#94A3B8] hover:text-[#64748B]'
+              viewMode === 'grid' ? 'bg-[light-hover] text-[light-primary]' : 'text-[light-muted] hover:text-[light-secondary]'
             )}
             aria-label="Grid view"
           >
@@ -898,7 +898,7 @@ export default function ProgramsPage() {
             onClick={() => setViewMode('list')}
             className={cn(
               'p-1.5 rounded-md transition-colors',
-              viewMode === 'list' ? 'bg-[#F1F5F9] text-[#0F172A]' : 'text-[#94A3B8] hover:text-[#64748B]'
+              viewMode === 'list' ? 'bg-[light-hover] text-[light-primary]' : 'text-[light-muted] hover:text-[light-secondary]'
             )}
             aria-label="List view"
           >
@@ -911,24 +911,24 @@ export default function ProgramsPage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl overflow-hidden animate-pulse">
-              <div className="h-20 bg-[#F8FAFC]" />
+            <div key={i} className="bg-[white] border border-[light-border] rounded-xl overflow-hidden animate-pulse">
+              <div className="h-20 bg-[light-surface]" />
               <div className="p-5 space-y-3">
-                <div className="h-4 bg-[#F8FAFC] rounded w-3/4" />
+                <div className="h-4 bg-[light-surface] rounded w-3/4" />
                 <div className="flex gap-2">
-                  <div className="h-5 bg-[#F8FAFC] rounded w-16" />
-                  <div className="h-5 bg-[#F8FAFC] rounded w-14" />
+                  <div className="h-5 bg-[light-surface] rounded w-16" />
+                  <div className="h-5 bg-[light-surface] rounded w-14" />
                 </div>
-                <div className="h-3 bg-[#F8FAFC] rounded w-full" />
+                <div className="h-3 bg-[light-surface] rounded w-full" />
               </div>
             </div>
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24">
-          <Search size={48} className="text-[#94A3B8] mb-4 opacity-50" />
-          <h3 className="text-[#0F172A] font-semibold text-base mb-1">No programs found</h3>
-          <p className="text-[#64748B] text-sm mb-4">Try adjusting your search or filters</p>
+          <Search size={48} className="text-[light-muted] mb-4 opacity-50" />
+          <h3 className="text-[light-primary] font-semibold text-base mb-1">No programs found</h3>
+          <p className="text-[light-secondary] text-sm mb-4">Try adjusting your search or filters</p>
           <button
             onClick={clearFilters}
             className="border border-cyan text-cyan hover:bg-[rgba(0,174,239,0.1)] font-medium px-4 py-2 rounded-lg text-sm transition-colors"
@@ -948,12 +948,12 @@ export default function ProgramsPage() {
           </AnimatePresence>
         </motion.div>
       ) : (
-        <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl overflow-hidden">
+        <div className="bg-[white] border border-[light-border] rounded-xl overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="bg-[#FFFFFF] border-b border-[#E2E8F0]">
+              <tr className="bg-[white] border-b border-[light-border]">
                 {['Name', 'Goal', 'Method', 'Difficulty', 'Duration', 'Frequency', 'Used', 'Last', ''].map((h) => (
-                  <th key={h} className="text-left px-4 py-3 text-[#94A3B8] text-xs font-semibold uppercase tracking-wider">
+                  <th key={h} className="text-left px-4 py-3 text-[light-muted] text-xs font-semibold uppercase tracking-wider">
                     {h}
                   </th>
                 ))}

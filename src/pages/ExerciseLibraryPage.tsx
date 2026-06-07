@@ -18,7 +18,7 @@ export default function ExerciseLibraryPage() {
   const { data: exercises, isLoading } = useExercises(debouncedQuery)
 
   return (
-    <div className="min-h-[100dvh] bg-[#F5F7FA] dark:bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
@@ -40,7 +40,7 @@ export default function ExerciseLibraryPage() {
               'w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700',
               'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100',
               'placeholder:text-slate-400',
-              'focus:outline-none focus:border-[#0EA5E9] transition-colors'
+              'focus:outline-none focus:border-[cyan] transition-colors'
             )}
           />
         </div>
@@ -48,7 +48,7 @@ export default function ExerciseLibraryPage() {
         {/* Results */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 size={32} className="animate-spin text-[#0EA5E9]" />
+            <Loader2 size={32} className="animate-spin text-[cyan]" />
           </div>
         ) : exercises && exercises.length > 0 ? (
           <div className="grid grid-cols-1 gap-3">

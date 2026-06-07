@@ -161,7 +161,7 @@ export default function WorkoutExerciseLog({
                       'w-16 px-2 py-1.5 rounded-lg text-sm text-center',
                       'bg-white dark:bg-slate-800 border',
                       log.completed ? 'border-emerald-200 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600',
-                      'focus:outline-none focus:border-[#0EA5E9]'
+                      'focus:outline-none focus:border-[cyan]'
                     )}
                   />
                   {prev && log.load !== undefined && (
@@ -184,7 +184,7 @@ export default function WorkoutExerciseLog({
                     'w-14 px-2 py-1.5 rounded-lg text-sm text-center',
                     'bg-white dark:bg-slate-800 border',
                     log.completed ? 'border-emerald-200 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600',
-                    'focus:outline-none focus:border-[#0EA5E9]'
+                    'focus:outline-none focus:border-[cyan]'
                   )}
                 />
 
@@ -200,7 +200,7 @@ export default function WorkoutExerciseLog({
                     'w-14 px-2 py-1.5 rounded-lg text-sm text-center',
                     'bg-white dark:bg-slate-800 border',
                     log.completed ? 'border-emerald-200 dark:border-emerald-700' : 'border-slate-200 dark:border-slate-600',
-                    'focus:outline-none focus:border-[#0EA5E9]'
+                    'focus:outline-none focus:border-[cyan]'
                   )}
                 />
 

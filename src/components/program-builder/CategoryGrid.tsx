@@ -43,7 +43,7 @@ export default function CategoryGrid({ categories, selectedId, onSelect }: Categ
               'flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200',
               'min-h-[100px]',
               isSelected
-                ? 'border-[#0EA5E9] bg-[#0EA5E9]/10 text-[#0EA5E9]'
+                ? 'border-[cyan] bg-[cyan]/10 text-[cyan]'
                 : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50',
               'dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300',
               isSelected && 'dark:border-sky-500 dark:bg-sky-900/20 dark:text-sky-400'

@@ -34,11 +34,11 @@ export default function OneRMCalculatorPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#F5F7FA] dark:bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">
-          <Calculator size={28} className="text-[#0EA5E9]" />
+          <Calculator size={28} className="text-[cyan]" />
           <div>
             <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
               1RM Calculator
@@ -65,7 +65,7 @@ export default function OneRMCalculatorPage() {
                   className={cn(
                     'w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700',
                     'bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-lg font-semibold',
-                    'focus:outline-none focus:border-[#0EA5E9] transition-colors'
+                    'focus:outline-none focus:border-[cyan] transition-colors'
                   )}
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">
@@ -88,7 +88,7 @@ export default function OneRMCalculatorPage() {
                 className={cn(
                   'w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700',
                   'bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-lg font-semibold',
-                  'focus:outline-none focus:border-[#0EA5E9] transition-colors'
+                  'focus:outline-none focus:border-[cyan] transition-colors'
                 )}
               />
             </div>
@@ -111,7 +111,7 @@ export default function OneRMCalculatorPage() {
             className="space-y-4"
           >
             {/* Average 1RM highlight */}
-            <div className="bg-gradient-to-r from-[#0EA5E9] to-[#6366F1] rounded-2xl p-6 text-white text-center">
+            <div className="bg-gradient-to-r from-[cyan] to-[indigo] rounded-2xl p-6 text-white text-center">
               <p className="text-sm opacity-90">Estimated 1RM (Average)</p>
               <p className="text-5xl font-bold mt-1">{averageOneRM}</p>
               <p className="text-sm opacity-90">kg</p>
@@ -162,7 +162,7 @@ export default function OneRMCalculatorPage() {
                         <td className="py-2.5 px-4 font-semibold text-slate-700 dark:text-slate-300">
                           {p.percent}%
                         </td>
-                        <td className="py-2.5 px-4 font-bold text-[#0EA5E9]">
+                        <td className="py-2.5 px-4 font-bold text-[cyan]">
                           {p.weight} kg
                         </td>
                         <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400 hidden sm:table-cell">

@@ -31,7 +31,7 @@ export default function WorkoutHistoryPage() {
   )
 
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[az-black]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -50,14 +50,14 @@ export default function WorkoutHistoryPage() {
         </div>
 
         {/* Search */}
-        <div className="flex items-center gap-2 bg-[#141414] border border-dark-border rounded-xl px-4 py-2.5">
+        <div className="flex items-center gap-2 bg-[az-black-card] border border-dark-border rounded-xl px-4 py-2.5">
           <Search size={16} className="text-dark-muted" />
           <input
             type="text"
             placeholder="Search by program or exercise..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-dark-primary placeholder-[#6B6B6B] outline-none"
+            className="flex-1 bg-transparent text-sm text-dark-primary placeholder-[dark-muted] outline-none"
           />
           {search && (
             <button onClick={() => setSearch('')} className="text-dark-muted hover:text-dark-primary">
@@ -113,7 +113,7 @@ export default function WorkoutHistoryPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="bg-[#141414] border border-dark-border rounded-xl overflow-hidden"
+                  className="bg-[az-black-card] border border-dark-border rounded-xl overflow-hidden"
                 >
                   <button
                     onClick={() => setExpandedId(isExpanded ? null : s.id)}
@@ -149,13 +149,13 @@ export default function WorkoutHistoryPage() {
                     <div className="px-4 pb-4 border-t border-dark-border">
                       <p className="text-xs text-dark-muted mt-3 mb-2">{formatDate(s.date)}</p>
                       {s.notes && (
-                        <div className="mb-3 p-2 bg-[#1A1A1A] rounded-lg text-sm text-dark-secondary">
+                        <div className="mb-3 p-2 bg-[az-black-elevated] rounded-lg text-sm text-dark-secondary">
                           {s.notes}
                         </div>
                       )}
                       <div className="space-y-3">
                         {s.exercises.map((ex) => (
-                          <div key={ex.exerciseId} className="bg-[#1A1A1A] rounded-lg p-3">
+                          <div key={ex.exerciseId} className="bg-[az-black-elevated] rounded-lg p-3">
                             <div className="flex items-center justify-between mb-2">
                               <p className="text-sm font-medium text-dark-primary">
                                 <span className="text-cyan mr-1">{ex.notation}</span>
@@ -169,7 +169,7 @@ export default function WorkoutHistoryPage() {
                                   className={`text-xs px-2 py-1 rounded-md border ${
                                     set.completed
                                       ? 'bg-[rgba(34,197,94,0.1)] border-[rgba(34,197,94,0.2)] text-success'
-                                      : 'bg-[#141414] border-dark-border text-dark-muted'
+                                      : 'bg-[az-black-card] border-dark-border text-dark-muted'
                                   }`}
                                 >
                                   {set.completed && set.actualLoad !== undefined && set.actualReps !== undefined
@@ -204,7 +204,7 @@ function StatCard({
   icon: React.ElementType
 }) {
   return (
-    <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+    <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon size={16} className="text-cyan" />
         <span className="text-xs text-dark-muted">{label}</span>

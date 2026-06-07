@@ -32,11 +32,11 @@ export default function DayCard({ dayNumber, dayLabel = `Day ${dayNumber}`, exer
   }, [])
 
   return (
-    <div className="rounded-xl border border-dark-border/30 bg-[#141414] overflow-hidden">
+    <div className="rounded-xl border border-dark-border/30 bg-[az-black-card] overflow-hidden">
       {/* Day header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between px-4 py-3.5 text-left transition-colors hover:bg-[#1A1A1A]"
+        className="w-full flex items-center justify-between px-4 py-3.5 text-left transition-colors hover:bg-[az-black-elevated]"
       >
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold bg-cyan/10 text-cyan">

@@ -43,13 +43,13 @@ function RingChart({
       className="flex-shrink-0"
       style={{ width: size, height: size }}
     >
-      <circle cx="40" cy="40" r={r} fill="none" stroke="#2A3A50" strokeWidth="8" />
+      <circle cx="40" cy="40" r={r} fill="none" stroke="navy-border" strokeWidth="8" />
       <circle
         cx="40"
         cy="40"
         r={r}
         fill="none"
-        stroke="#00AEEF"
+        stroke="cyan"
         strokeWidth="8"
         strokeLinecap="round"
         strokeDasharray={`${filled} ${c}`}
@@ -80,7 +80,7 @@ function Sparkline({ data, width, height }: { data: number[]; width: number; hei
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="mt-1">
-      <path d={pathD} fill="none" stroke="#00AEEF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+      <path d={pathD} fill="none" stroke="cyan" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
     </svg>
   )
 }
@@ -101,7 +101,7 @@ function ClientSegments({
       <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(34,197,94,0.15)] text-success">
         {engaged}
       </span>
-      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(245,158,11,0.15)] text-[#F59E0B]">
+      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(245,158,11,0.15)] text-[warning]">
         {moderate}
       </span>
       <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(239,68,68,0.15)] text-danger">
@@ -144,17 +144,17 @@ export default function MetricCard({ data }: MetricCardProps) {
     'flex items-center gap-4 md:gap-5 lg:gap-6 p-4 md:p-5 lg:p-6 rounded-xl border transition-all duration-200 hover:border-[rgba(0,174,239,0.3)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.15)]'
 
   const labelClass =
-    'text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.05em] text-[#94A3B8] whitespace-nowrap overflow-hidden text-ellipsis'
+    'text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.05em] text-[light-muted] whitespace-nowrap overflow-hidden text-ellipsis'
 
-  const valueClass = 'text-[20px] md:text-[22px] lg:text-[24px] font-bold text-[#F1F5F9] leading-[1.2]'
+  const valueClass = 'text-[20px] md:text-[22px] lg:text-[24px] font-bold text-[light-hover] leading-[1.2]'
 
   switch (data.kind) {
     case 'sessions': {
       const sparkData = [12, 13, 14, 13, 15, 14, 16, 15, 17, 16, 18, 18]
       return (
-        <div className={cardClass} style={{ background: '#151D2E', borderColor: '#2A3A50' }}>
+        <div className={cardClass} style={{ background: 'navy', borderColor: 'navy-border' }}>
           <RingChart percent={data.percent} size={ringSize}>
-            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="#F1F5F9" fontSize="18" fontWeight="700">
+            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="light-hover" fontSize="18" fontWeight="700">
               {data.percent}%
             </text>
           </RingChart>
@@ -176,9 +176,9 @@ export default function MetricCard({ data }: MetricCardProps) {
 
     case 'clients': {
       return (
-        <div className={cardClass} style={{ background: '#151D2E', borderColor: '#2A3A50' }}>
+        <div className={cardClass} style={{ background: 'navy', borderColor: 'navy-border' }}>
           <RingChart percent={100} size={ringSize}>
-            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="#F1F5F9" fontSize="16" fontWeight="700">
+            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="light-hover" fontSize="16" fontWeight="700">
               {data.total}
             </text>
           </RingChart>
@@ -193,9 +193,9 @@ export default function MetricCard({ data }: MetricCardProps) {
 
     case 'adherence': {
       return (
-        <div className={cardClass} style={{ background: '#151D2E', borderColor: '#2A3A50' }}>
+        <div className={cardClass} style={{ background: 'navy', borderColor: 'navy-border' }}>
           <RingChart percent={data.percent} size={ringSize}>
-            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="#F1F5F9" fontSize="18" fontWeight="700">
+            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="light-hover" fontSize="18" fontWeight="700">
               {data.percent}%
             </text>
           </RingChart>
@@ -214,9 +214,9 @@ export default function MetricCard({ data }: MetricCardProps) {
       const formatted = `$${data.value.toLocaleString()}`
       const sparkData = [42, 44, 43, 46, 48, 47, 50, 48, 52, 49, 51, 48]
       return (
-        <div className={cardClass} style={{ background: '#151D2E', borderColor: '#2A3A50' }}>
+        <div className={cardClass} style={{ background: 'navy', borderColor: 'navy-border' }}>
           <RingChart percent={data.percent} size={ringSize}>
-            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="#F1F5F9" fontSize="13" fontWeight="700">
+            <text x="40" y="40" textAnchor="middle" dominantBaseline="central" fill="light-hover" fontSize="13" fontWeight="700">
               {formatted}
             </text>
           </RingChart>
@@ -225,7 +225,7 @@ export default function MetricCard({ data }: MetricCardProps) {
               <div className={labelClass}>Weekly Revenue</div>
               <button
                 onClick={() => setHidden((h) => !h)}
-                className="text-[#94A3B8] hover:text-[#F1F5F9] p-1 -mr-1 -mt-1 rounded transition-colors flex-shrink-0"
+                className="text-[light-muted] hover:text-[light-hover] p-1 -mr-1 -mt-1 rounded transition-colors flex-shrink-0"
                 title="Hide/Show"
               >
                 {hidden ? <EyeOff size={14} /> : <Eye size={14} />}

@@ -66,16 +66,16 @@ export function DashboardTab() {
                 <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="wtGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00AEEF" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#00AEEF" stopOpacity={0} />
+                      <stop offset="5%" stopColor="cyan" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="cyan" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                   <XAxis dataKey="day" tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} interval={4} />
                   <YAxis domain={['dataMin - 1', 'dataMax + 1']} tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                  <Area type="monotone" dataKey="weight" stroke="#00AEEF" strokeWidth={2} fill="url(#wtGrad)" />
-                  <ReferenceLine y={client?.weight || 0} stroke="#22C55E" strokeDasharray="4 4" label={{ value: 'Goal', fill: '#22C55E', fontSize: 11 }} />
+                  <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                  <Area type="monotone" dataKey="weight" stroke="cyan" strokeWidth={2} fill="url(#wtGrad)" />
+                  <ReferenceLine y={client?.weight || 0} stroke="success" strokeDasharray="4 4" label={{ value: 'Goal', fill: 'success', fontSize: 11 }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -89,8 +89,8 @@ export function DashboardTab() {
             <div className="space-y-3">
               {clientWorkouts.slice(0, 5).map((s, i) => (
                 <motion.div key={s.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }} className="flex items-center gap-3 p-3 rounded-lg hover:bg-dark-hover transition-colors">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#22C55E15' }}>
-                    <CheckCircle2 size={16} style={{ color: '#22C55E' }} />
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'success15' }}>
+                    <CheckCircle2 size={16} style={{ color: 'success' }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-dark-primary truncate">Completed {s.programName || 'Workout'} session</p>
@@ -112,9 +112,9 @@ export function DashboardTab() {
             <>
               <div className="flex items-center justify-between text-center">
                 <div><p className="text-xs text-dark-muted mb-1">Start</p><p className="text-lg font-bold text-dark-primary font-mono">{entries[0]?.weight || 0}</p><p className="text-xs text-dark-secondary">kg</p></div>
-                <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[#EF4444] via-[#EAB308] to-[#22C55E] flex-1 mx-3 rounded-full" /><TrendingDown size={16} className="text-success flex-shrink-0" /></div>
+                <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[danger] via-[warning] to-[success] flex-1 mx-3 rounded-full" /><TrendingDown size={16} className="text-success flex-shrink-0" /></div>
                 <div><p className="text-xs text-dark-muted mb-1">Current</p><p className="text-lg font-bold text-cyan font-mono">{latest?.weight || 0}</p><p className="text-xs text-dark-secondary">kg</p></div>
-                <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[#22C55E] to-[#00AEEF] flex-1 mx-3 rounded-full" /><Target size={16} className="text-cyan flex-shrink-0" /></div>
+                <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[success] to-[cyan] flex-1 mx-3 rounded-full" /><Target size={16} className="text-cyan flex-shrink-0" /></div>
                 <div><p className="text-xs text-dark-muted mb-1">Goal</p><p className="text-lg font-bold text-success font-mono">{client?.weight || 0}</p><p className="text-xs text-dark-secondary">kg</p></div>
               </div>
               <div className="mt-3 pt-3 border-t border-dark-border">
@@ -146,8 +146,8 @@ export function DashboardTab() {
           ) : (
             <div className="space-y-2">
               {upcomingSessions.map((s, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#1A1A1A]">
-                  <div className="w-10 h-10 rounded-lg bg-[rgba(0,174,239,0.15)] flex items-center justify-center flex-shrink-0"><Calendar size={18} className="text-cyan" /></div>
+                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[az-black-elevated]">
+                  <div className="w-10 h-10 rounded-lg bg-cyan-glow flex items-center justify-center flex-shrink-0"><Calendar size={18} className="text-cyan" /></div>
                   <div className="flex-1 min-w-0"><p className="text-sm text-dark-primary font-medium truncate">{s.title}</p><p className="text-xs text-dark-muted">{s.date} {s.startTime}</p></div>
                 </div>
               ))}
@@ -161,7 +161,7 @@ export function DashboardTab() {
           ) : (
             <div className="space-y-2">
               {clientNotes.slice(0, 2).map((n) => (
-                <div key={n.id} className="p-3 rounded-lg bg-[#1A1A1A] border border-dark-border">
+                <div key={n.id} className="p-3 rounded-lg bg-[az-black-elevated] border border-dark-border">
                   <div className="flex items-center gap-2 mb-1"><span className="text-xs font-medium text-cyan">{n.category}</span><span className="text-xs text-dark-muted">{n.date}</span></div>
                   <p className="text-sm text-dark-primary font-medium">{n.title}</p>
                   <p className="text-xs text-dark-secondary line-clamp-2 mt-1">{n.content}</p>

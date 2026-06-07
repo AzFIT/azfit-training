@@ -76,7 +76,7 @@ export function LifestyleTab() {
     return (
       <div className="space-y-5">
         <h2 className="text-lg font-semibold text-dark-primary">Lifestyle</h2>
-        <div className="bg-[#141414] border border-dark-border rounded-xl p-10 text-center">
+        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-10 text-center">
           <p className="text-dark-secondary mb-2">No lifestyle notes recorded yet.</p>
           <p className="text-sm text-dark-muted mb-4">
             Add notes tagged with sleep, lifestyle, habit, or stress to build a lifestyle profile.
@@ -110,10 +110,10 @@ export function LifestyleTab() {
                 <XAxis dataKey="day" tick={{ fill: 'var(--dark-muted)', fontSize: 12 }} />
                 <YAxis yAxisId="left" domain={[0, 10]} tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                 <YAxis yAxisId="right" orientation="right" domain={[0, 10]} tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                <ReferenceLine yAxisId="left" y={8} stroke="#22C55E" strokeDasharray="4 4" />
-                <Bar yAxisId="left" dataKey="hours" fill="#00AEEF" radius={[4, 4, 0, 0]} name="Hours" />
-                <Line yAxisId="right" type="monotone" dataKey="quality" stroke="#8B5CF6" strokeWidth={2} name="Quality" dot={{ r: 4, fill: 'var(--violet)' }} />
+                <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                <ReferenceLine yAxisId="left" y={8} stroke="success" strokeDasharray="4 4" />
+                <Bar yAxisId="left" dataKey="hours" fill="cyan" radius={[4, 4, 0, 0]} name="Hours" />
+                <Line yAxisId="right" type="monotone" dataKey="quality" stroke="violet" strokeWidth={2} name="Quality" dot={{ r: 4, fill: 'var(--violet)' }} />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -128,8 +128,8 @@ export function LifestyleTab() {
               { label: 'Stress Trend', value: `Low (Stable)`, icon: Activity },
               { label: 'Sleep Trend', value: `${sleepQuality} (Improving)`, icon: Moon },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-[#1A1A1A] rounded-lg border border-dark-border">
-                <div className="w-8 h-8 rounded-lg bg-[rgba(0,174,239,0.15)] flex items-center justify-center flex-shrink-0">
+              <div key={i} className="flex items-center gap-3 p-3 bg-[az-black-elevated] rounded-lg border border-dark-border">
+                <div className="w-8 h-8 rounded-lg bg-cyan-glow flex items-center justify-center flex-shrink-0">
                   <item.icon size={16} className="text-cyan" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -146,7 +146,7 @@ export function LifestyleTab() {
       <SectionCard title="Lifestyle Notes">
         <div className="space-y-3">
           {lifestyleNotes.map((note) => (
-            <div key={note.id} className="bg-[#1A1A1A] rounded-lg p-4 border border-dark-border">
+            <div key={note.id} className="bg-[az-black-elevated] rounded-lg p-4 border border-dark-border">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm font-semibold text-dark-primary">{note.title}</span>
                 <span className="text-xs text-dark-muted font-mono">{formatDateDMY(note.date)}</span>
@@ -178,7 +178,7 @@ export function LifestyleTab() {
                 const completed = h.week.filter(Boolean).length;
                 const pct = Math.round((completed / 7) * 100);
                 return (
-                  <tr key={h.name} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors">
+                  <tr key={h.name} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
                     <td className="py-2.5 px-3 text-sm text-dark-primary">{h.name}</td>
                     {h.week.map((done, i) => (
                       <td key={i} className="py-2.5 px-2 text-center">

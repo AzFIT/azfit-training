@@ -75,10 +75,10 @@ const sections: SectionDef[] = [
 ]
 
 const accentColors = [
-  { name: 'Cyan', value: '#00AEEF' },
-  { name: 'Purple', value: '#8B5CF6' },
-  { name: 'Green', value: '#22C55E' },
-  { name: 'Pink', value: '#EC4899' },
+  { name: 'Cyan', value: 'cyan' },
+  { name: 'Purple', value: 'violet' },
+  { name: 'Green', value: 'success' },
+  { name: 'Pink', value: 'trainer-accent' },
 ]
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
@@ -89,7 +89,7 @@ const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 function SectionCard({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#141414] border border-dark-border rounded-xl p-6 mb-5">
+    <div className="bg-[az-black-card] border border-dark-border rounded-xl p-6 mb-5">
       <h3 className="text-dark-primary text-base font-semibold mb-1">{title}</h3>
       {description && <p className="text-dark-muted text-sm mb-4">{description}</p>}
       <div className="mt-4">{children}</div>
@@ -135,7 +135,7 @@ function SegmentedControl({
   disabled?: boolean
 }) {
   return (
-    <div className={`inline-flex bg-[#1A1A1A] rounded-lg p-0.5 border border-dark-border ${disabled ? 'opacity-50' : ''}`}>
+    <div className={`inline-flex bg-[az-black-elevated] rounded-lg p-0.5 border border-dark-border ${disabled ? 'opacity-50' : ''}`}>
       {options.map((opt) => (
         <button
           key={opt}
@@ -175,10 +175,10 @@ function DisplaySection() {
           <div className="flex items-center justify-between">
             <Label className="text-dark-secondary text-sm">Timezone</Label>
             <Select defaultValue="Asia/Hong_Kong" disabled>
-              <SelectTrigger className="w-[220px] bg-[#1A1A1A] border-dark-border text-dark-primary opacity-60">
+              <SelectTrigger className="w-[220px] bg-[az-black-elevated] border-dark-border text-dark-primary opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1A1A] border-dark-border">
+              <SelectContent className="bg-[az-black-elevated] border-dark-border">
                 <SelectItem value="Asia/Hong_Kong">Asia/Hong Kong (GMT+8)</SelectItem>
               </SelectContent>
             </Select>
@@ -206,10 +206,10 @@ function DisplaySection() {
           <div className="flex items-center gap-3">
             <span className="text-dark-muted text-sm">HKD (locked)</span>
             <Select defaultValue="HKD" disabled>
-              <SelectTrigger className="w-[160px] bg-[#1A1A1A] border-dark-border text-dark-primary opacity-60">
+              <SelectTrigger className="w-[160px] bg-[az-black-elevated] border-dark-border text-dark-primary opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1A1A] border-dark-border">
+              <SelectContent className="bg-[az-black-elevated] border-dark-border">
                 <SelectItem value="HKD">HKD</SelectItem>
               </SelectContent>
             </Select>
@@ -221,10 +221,10 @@ function DisplaySection() {
         <div className="flex items-center justify-between">
           <Label className="text-dark-secondary text-sm">Language</Label>
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-[200px] bg-[#1A1A1A] border-dark-border text-dark-primary">
+            <SelectTrigger className="w-[200px] bg-[az-black-elevated] border-dark-border text-dark-primary">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#1A1A1A] border-dark-border">
+            <SelectContent className="bg-[az-black-elevated] border-dark-border">
               <SelectItem value="English">English</SelectItem>
               <SelectItem value="zh-HK">繁體中文</SelectItem>
               <SelectItem value="zh-CN">简体中文</SelectItem>
@@ -264,7 +264,7 @@ function NotificationsSection() {
   return (
     <div>
       {/* Channel tabs */}
-      <div className="inline-flex bg-[#1A1A1A] rounded-lg p-0.5 border border-dark-border mb-5">
+      <div className="inline-flex bg-[az-black-elevated] rounded-lg p-0.5 border border-dark-border mb-5">
         {(['email', 'push', 'inapp'] as const).map((c) => (
           <button
             key={c}
@@ -303,7 +303,7 @@ function NotificationsSection() {
             <SectionCard title="In-App Notifications" description="Control which notifications appear inside the app.">
               <div className="space-y-3">
                 {(['All', 'Mentions only', 'None'] as const).map((opt) => (
-                  <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[#1A1A1A] cursor-pointer hover:border-dark-subtle transition-colors">
+                  <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[az-black-elevated] cursor-pointer hover:border-dark-subtle transition-colors">
                     <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${inApp === opt ? 'border-cyan' : 'border-dark-muted'}`}>
                       {inApp === opt && <div className="w-2 h-2 rounded-full bg-cyan" />}
                     </div>
@@ -342,7 +342,7 @@ function ThemeCard({
     <button
       onClick={onClick}
       className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
-        selected ? 'border-cyan bg-[rgba(0,174,239,0.08)]' : 'border-dark-border bg-[#1A1A1A] hover:border-dark-subtle'
+        selected ? 'border-cyan bg-cyan-glow' : 'border-dark-border bg-[az-black-elevated] hover:border-dark-subtle'
       }`}
     >
       <Icon size={24} className={selected ? 'text-cyan' : 'text-dark-secondary'} />
@@ -382,7 +382,7 @@ function AppearanceSection() {
     setThemeState(mode)
   }
 
-  const [accent, setAccent] = useState('#00AEEF')
+  const [accent, setAccent] = useState('cyan')
   const [density, setDensity] = useState<'Comfortable' | 'Compact' | 'Spacious'>('Comfortable')
   const [animations, setAnimations] = useState(true)
 
@@ -447,16 +447,16 @@ function AppearanceSection() {
             <div
               className="rounded-xl p-4 border transition-all duration-300"
               style={{
-                backgroundColor: theme === 'Light' ? '#F8F9FA' : '#0A0A0A',
-                borderColor: theme === 'Light' ? '#E5E7EB' : '#2A2A2A',
+                backgroundColor: theme === 'Light' ? 'off-white-2' : 'az-black',
+                borderColor: theme === 'Light' ? 'gray-200' : 'dark-border',
                 padding: density === 'Compact' ? '8px' : density === 'Spacious' ? '24px' : '16px',
               }}
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: accent }}>A</div>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: theme === 'Light' ? '#111827' : '#F0F0F0' }}>Sample Card</p>
-                  <p className="text-xs" style={{ color: theme === 'Light' ? '#6B7280' : '#6B6B6B' }}>Preview your settings</p>
+                  <p className="text-sm font-medium" style={{ color: theme === 'Light' ? 'gray-950' : 'dark-primary' }}>Sample Card</p>
+                  <p className="text-xs" style={{ color: theme === 'Light' ? 'gray-550' : 'dark-muted' }}>Preview your settings</p>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -464,7 +464,7 @@ function AppearanceSection() {
                 <div className="h-2 flex-1 rounded-full" style={{ backgroundColor: accent, opacity: 0.3 }} />
               </div>
               <div className="mt-3 flex items-center justify-between">
-                <span className="text-xs" style={{ color: theme === 'Light' ? '#6B7280' : '#A0A0A0' }}>Density: {density}</span>
+                <span className="text-xs" style={{ color: theme === 'Light' ? 'gray-550' : 'dark-secondary' }}>Density: {density}</span>
                 <div className="w-8 h-4 rounded-full relative" style={{ backgroundColor: accent }}>
                   <div className="absolute right-0.5 top-0.5 w-3 h-3 rounded-full bg-white" />
                 </div>
@@ -493,7 +493,7 @@ function PrivacySection() {
       <SectionCard title="Profile Visibility" description="Who can see your profile and credentials.">
         <div className="space-y-2">
           {(['Trainers only', 'All authenticated', 'Public'] as const).map((opt) => (
-            <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[#1A1A1A] cursor-pointer hover:border-dark-subtle transition-colors">
+            <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[az-black-elevated] cursor-pointer hover:border-dark-subtle transition-colors">
               <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${profileVisibility === opt ? 'border-cyan' : 'border-dark-muted'}`}>
                 {profileVisibility === opt && <div className="w-2 h-2 rounded-full bg-cyan" />}
               </div>
@@ -562,25 +562,25 @@ function AccountSection() {
           <div className="flex-1 space-y-3">
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Full Name</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
+              <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
             </div>
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Email</Label>
               <div className="flex items-center gap-2">
-                <Input value={email} disabled className="bg-[#1A1A1A] border-dark-border text-dark-primary opacity-60" />
+                <Input value={email} disabled className="bg-[az-black-elevated] border-dark-border text-dark-primary opacity-60" />
                 <Button variant="ghost" size="sm" className="text-cyan hover:text-cyan-hover shrink-0">Change</Button>
               </div>
             </div>
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Phone</Label>
               <div className="flex items-center gap-2">
-                <span className="text-dark-secondary text-sm bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2">+852</span>
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[#1A1A1A] border-dark-border text-dark-primary flex-1" />
+                <span className="text-dark-secondary text-sm bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2">+852</span>
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[az-black-elevated] border-dark-border text-dark-primary flex-1" />
               </div>
             </div>
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Bio <span className="text-dark-muted">({bio.length}/200)</span></Label>
-              <Textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 200))} className="bg-[#1A1A1A] border-dark-border text-dark-primary min-h-[80px]" />
+              <Textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 200))} className="bg-[az-black-elevated] border-dark-border text-dark-primary min-h-[80px]" />
             </div>
             <Button className="bg-cyan hover:bg-cyan-hover text-white">Save Changes</Button>
           </div>
@@ -592,21 +592,21 @@ function AccountSection() {
         <div className="space-y-3 max-w-md">
           <div className="relative">
             <Label className="text-dark-secondary text-xs mb-1">Current Password</Label>
-            <Input type={showCurrent ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-10" />
+            <Input type={showCurrent ? 'text' : 'password'} placeholder="••••••••" className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10" />
             <button onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
           <div className="relative">
             <Label className="text-dark-secondary text-xs mb-1">New Password</Label>
-            <Input type={showNew ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-10" />
+            <Input type={showNew ? 'text' : 'password'} placeholder="••••••••" className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10" />
             <button onClick={() => setShowNew(!showNew)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
           <div className="relative">
             <Label className="text-dark-secondary text-xs mb-1">Confirm New Password</Label>
-            <Input type={showConfirm ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-10" />
+            <Input type={showConfirm ? 'text' : 'password'} placeholder="••••••••" className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10" />
             <button onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -633,7 +633,7 @@ function AccountSection() {
       <SectionCard title="Active Sessions" description="You're signed in on these devices.">
         <div className="space-y-3">
           {sessions.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-[#1A1A1A] border border-dark-border">
+            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-[az-black-elevated] border border-dark-border">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-dark-hover flex items-center justify-center">
                   <Smartphone size={16} className="text-dark-secondary" />
@@ -646,7 +646,7 @@ function AccountSection() {
               {s.current ? (
                 <span className="text-success text-xs font-medium">Current</span>
               ) : (
-                <Button variant="ghost" size="sm" className="text-danger hover:text-[#DC2626] hover:bg-[rgba(239,68,68,0.1)]">Revoke</Button>
+                <Button variant="ghost" size="sm" className="text-danger hover:text-[danger] hover:bg-[rgba(239,68,68,0.1)]">Revoke</Button>
               )}
             </div>
           ))}
@@ -654,7 +654,7 @@ function AccountSection() {
       </SectionCard>
 
       {/* Danger Zone */}
-      <div className="bg-[#141414] border border-[rgba(239,68,68,0.3)] rounded-xl p-6 mb-5">
+      <div className="bg-[az-black-card] border border-[rgba(239,68,68,0.3)] rounded-xl p-6 mb-5">
         <h3 className="text-danger text-base font-semibold mb-4 flex items-center gap-2">
           <Trash2 size={16} />
           Danger Zone
@@ -675,9 +675,9 @@ function AccountSection() {
             </div>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-danger hover:bg-[#DC2626] text-white">Delete Account</Button>
+                <Button className="bg-danger hover:bg-[danger] text-white">Delete Account</Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#141414] border-dark-border text-dark-primary max-w-md">
+              <DialogContent className="bg-[az-black-card] border-dark-border text-dark-primary max-w-md">
                 <DialogHeader>
                   <DialogTitle className="text-danger">Delete Account</DialogTitle>
                   <DialogDescription className="text-dark-muted">
@@ -686,11 +686,11 @@ function AccountSection() {
                 </DialogHeader>
                 <div className="py-4">
                   <Label className="text-dark-secondary text-sm mb-2">Type DELETE to confirm</Label>
-                  <Input placeholder="DELETE" className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
+                  <Input placeholder="DELETE" className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
                 </div>
                 <DialogFooter>
                   <Button variant="ghost" className="text-dark-secondary">Cancel</Button>
-                  <Button className="bg-danger hover:bg-[#DC2626] text-white">Permanently Delete</Button>
+                  <Button className="bg-danger hover:bg-[danger] text-white">Permanently Delete</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -738,7 +738,7 @@ function DataSection() {
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleImportDrop}
-          className="border-2 border-dashed border-dark-border hover:border-cyan rounded-xl bg-[#1A1A1A] p-8 text-center transition-colors cursor-pointer"
+          className="border-2 border-dashed border-dark-border hover:border-cyan rounded-xl bg-[az-black-elevated] p-8 text-center transition-colors cursor-pointer"
           onClick={() => document.getElementById('import-file')?.click()}
         >
           <Upload size={32} className="mx-auto text-dark-muted mb-3" />
@@ -756,7 +756,7 @@ function DataSection() {
         {importFiles.length > 0 && (
           <div className="mt-3 space-y-2">
             {importFiles.map((f, i) => (
-              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-[#1A1A1A] border border-dark-border">
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-[az-black-elevated] border border-dark-border">
                 <span className="text-dark-primary text-sm">{f.name}</span>
                 <span className="text-dark-muted text-xs">{(f.size / 1024).toFixed(0)} KB</span>
               </div>
@@ -788,7 +788,7 @@ function DataSection() {
             <span className="text-dark-secondary">1.2 GB / 5 GB used</span>
             <span className="text-cyan font-medium">{storageUsed}%</span>
           </div>
-          <Progress value={storageUsed} className="h-2 bg-[#1A1A1A] [&>div]:bg-cyan" />
+          <Progress value={storageUsed} className="h-2 bg-[az-black-elevated] [&>div]:bg-cyan" />
           <div className="flex gap-4 text-xs text-dark-muted pt-2">
             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-cyan" /> Photos (60%)</span>
             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-violet" /> Documents (25%)</span>
@@ -824,7 +824,7 @@ function IntegrationsSection() {
       <SectionCard title="Connected Apps">
         <div className="space-y-3">
           {/* Google Sheets */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-dark-border">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-[az-black-elevated] border border-dark-border">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
                 <Globe size={20} className="text-success" />
@@ -837,7 +837,7 @@ function IntegrationsSection() {
             {googleSheets ? (
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 text-xs rounded-full bg-[rgba(34,197,94,0.15)] text-success font-medium">Connected</span>
-                <Button variant="ghost" size="sm" className="text-danger hover:text-[#DC2626]" onClick={() => setGoogleSheets(false)}>Disconnect</Button>
+                <Button variant="ghost" size="sm" className="text-danger hover:text-[danger]" onClick={() => setGoogleSheets(false)}>Disconnect</Button>
               </div>
             ) : (
               <Button size="sm" className="bg-cyan hover:bg-cyan-hover text-white" onClick={() => setGoogleSheets(true)}>Connect</Button>
@@ -845,7 +845,7 @@ function IntegrationsSection() {
           </div>
 
           {/* Calendar Sync */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-dark-border">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-[az-black-elevated] border border-dark-border">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
                 <CalendarDays size={20} className="text-violet" />
@@ -856,7 +856,7 @@ function IntegrationsSection() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <code className="text-xs text-dark-secondary bg-[#0A0A0A] px-2 py-1 rounded border border-dark-border hidden sm:block max-w-[200px] truncate">{icalUrl}</code>
+              <code className="text-xs text-dark-secondary bg-[az-black] px-2 py-1 rounded border border-dark-border hidden sm:block max-w-[200px] truncate">{icalUrl}</code>
               <Button variant="ghost" size="sm" className="text-cyan hover:text-cyan-hover" onClick={() => handleCopy(icalUrl)}>
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </Button>
@@ -864,7 +864,7 @@ function IntegrationsSection() {
           </div>
 
           {/* WhatsApp */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-dark-border">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-[az-black-elevated] border border-dark-border">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
                 <Smartphone size={20} className="text-success" />
@@ -888,7 +888,7 @@ function IntegrationsSection() {
                 type={showKey ? 'text' : 'password'}
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-20"
+                className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-20"
               />
               <button
                 onClick={() => setShowKey(!showKey)}
@@ -912,11 +912,11 @@ function IntegrationsSection() {
         <div className="space-y-3">
           <div>
             <Label className="text-dark-secondary text-xs mb-1">Webhook URL</Label>
-            <Input value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://your-app.com/webhook" className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
+            <Input value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://your-app.com/webhook" className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
           </div>
           <div>
             <Label className="text-dark-secondary text-xs mb-1">Secret Key</Label>
-            <Input value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} placeholder="whsec_..." className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
+            <Input value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} placeholder="whsec_..." className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
           </div>
           <div className="flex gap-2">
             <Button className="bg-cyan hover:bg-cyan-hover text-white">Add Webhook</Button>
@@ -957,7 +957,7 @@ export default function SettingsPage() {
     >
       {/* Settings Sidebar */}
       <aside className="lg:w-[200px] flex-shrink-0">
-        <div className="lg:sticky lg:top-4 bg-[#141414] border border-dark-border rounded-xl overflow-hidden">
+        <div className="lg:sticky lg:top-4 bg-[az-black-card] border border-dark-border rounded-xl overflow-hidden">
           <nav className="py-2">
             {sections.map((s) => {
               const Icon = s.icon
@@ -971,7 +971,7 @@ export default function SettingsPage() {
                       ? 'text-cyan font-medium'
                       : 'text-dark-secondary hover:text-dark-primary hover:bg-dark-hover'
                   }`}
-                  style={isActive ? { background: 'rgba(0,174,239,0.08)', borderLeft: '3px solid #00AEEF' } : { borderLeft: '3px solid transparent' }}
+                  style={isActive ? { background: 'rgba(0,174,239,0.08)', borderLeft: '3px solid cyan' } : { borderLeft: '3px solid transparent' }}
                 >
                   <Icon size={18} className="flex-shrink-0" />
                   <span>{s.label}</span>

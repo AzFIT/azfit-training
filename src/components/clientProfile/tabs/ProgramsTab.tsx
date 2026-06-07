@@ -63,7 +63,7 @@ export function ProgramsTab() {
             <Plus size={16} /> Assign New
           </button>
         </div>
-        <div className="bg-[#141414] border border-dark-border rounded-xl p-10 text-center">
+        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-10 text-center">
           <p className="text-dark-secondary mb-4">No programs assigned to this client yet.</p>
           <button
             onClick={() => navigate(`/programs?assignTo=${clientId}`)}
@@ -90,7 +90,7 @@ export function ProgramsTab() {
 
       {/* Active Program */}
       {activeAssignment && activeProgram && (
-        <div className="bg-gradient-to-br from-[rgba(0,174,239,0.08)] to-[rgba(139,92,246,0.04)] bg-[#141414] border border-dark-border rounded-xl p-6">
+        <div className="bg-gradient-to-br from-cyan-glow to-[rgba(139,92,246,0.04)] bg-[az-black-card] border border-dark-border rounded-xl p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -108,9 +108,9 @@ export function ProgramsTab() {
               <span className="text-dark-secondary">Progress</span>
               <span className="text-dark-primary font-semibold">{activeProgress}%</span>
             </div>
-            <div className="h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
+            <div className="h-2 bg-[az-black-elevated] rounded-full overflow-hidden">
               <motion.div initial={{ width: 0 }} animate={{ width: `${activeProgress}%` }} transition={{ duration: 1, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-[#00AEEF] to-[#8B5CF6] rounded-full" />
+                className="h-full bg-gradient-to-r from-[cyan] to-[violet] rounded-full" />
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-dark-border">
@@ -150,7 +150,7 @@ export function ProgramsTab() {
                   const status = assignment.status;
                   const durationWeeks = program?.durationWeeks ?? 0;
                   return (
-                    <tr key={assignment.id} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors">
+                    <tr key={assignment.id} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
                       <td className="py-2.5 px-3 text-sm text-dark-primary font-medium">{program?.name || 'Unknown Program'}</td>
                       <td className="py-2.5 px-3 text-sm text-dark-secondary">{program?.trainingSplit || '—'}</td>
                       <td className="py-2.5 px-3 text-sm text-dark-secondary font-mono">{durationWeeks ? formatDuration(durationWeeks) : '—'}</td>

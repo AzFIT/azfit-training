@@ -92,11 +92,11 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
             const daySets = day.exercises.reduce((s, ex) => s + ex.sets, 0)
 
             return (
-              <div key={day.day} className="bg-[#141414] border border-dark-border rounded-xl overflow-hidden">
+              <div key={day.day} className="bg-[az-black-card] border border-dark-border rounded-xl overflow-hidden">
                 {/* Accordion Header */}
                 <button
                   onClick={() => toggleDay(dayIdx)}
-                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-[#1A1A1A] transition-colors"
+                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-[az-black-elevated] transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <h3 className="text-dark-primary font-semibold text-base">{day.day} — {day.focus}</h3>
@@ -138,7 +138,7 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: i * 0.03 }}
-                                    className="border-b border-dark-divider last:border-b-0 hover:bg-[#1A1A1A] transition-colors"
+                                    className="border-b border-dark-divider last:border-b-0 hover:bg-[az-black-elevated] transition-colors"
                                   >
                                     <td className="px-2 py-2.5 text-dark-muted text-xs font-mono">{i + 1}</td>
                                     <td className="px-2 py-2.5">
@@ -186,7 +186,7 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
 
         {/* Summary Sidebar */}
         <div className="space-y-4">
-          <div className="bg-[#141414] border border-dark-border rounded-xl p-5">
+          <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
             <h4 className="text-dark-primary font-semibold text-sm mb-4">Program Summary</h4>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -204,7 +204,7 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
             </div>
           </div>
 
-          <div className="bg-[#141414] border border-dark-border rounded-xl p-5">
+          <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
             <h4 className="text-dark-primary font-semibold text-sm mb-3">Muscle Distribution</h4>
             <div className="space-y-2">
               {muscleDist.slice(0, 8).map(([muscle, sets]) => {
@@ -215,7 +215,7 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
                       <span className="text-dark-secondary truncate">{muscle}</span>
                       <span className="text-dark-primary font-mono">{sets}</span>
                     </div>
-                    <div className="h-1.5 bg-[#1A1A1A] rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-[az-black-elevated] rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${pct}%` }}
@@ -248,7 +248,7 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.25, ease: [0.175, 0.885, 0.32, 1.275] as [number, number, number, number] }}
-              className="fixed inset-x-4 top-[10%] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] md:max-w-[90vw] max-h-[80vh] bg-[#141414] border border-dark-border rounded-2xl z-[201] flex flex-col shadow-[0_16px_48px_rgba(0,0,0,0.5)]"
+              className="fixed inset-x-4 top-[10%] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-[600px] md:max-w-[90vw] max-h-[80vh] bg-[az-black-card] border border-dark-border rounded-2xl z-[201] flex flex-col shadow-[0_16px_48px_rgba(0,0,0,0.5)]"
             >
               {/* Modal Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-dark-border flex-shrink-0">
@@ -263,20 +263,20 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
 
               {/* Filters */}
               <div className="px-6 py-3 border-b border-dark-divider flex items-center gap-2 flex-shrink-0">
-                <div className="flex-1 flex items-center bg-[#1A1A1A] border border-dark-border rounded-lg px-3">
+                <div className="flex-1 flex items-center bg-[az-black-elevated] border border-dark-border rounded-lg px-3">
                   <Search size={14} className="text-dark-muted flex-shrink-0" />
                   <input
                     placeholder="Search exercises..."
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
-                    className="bg-transparent text-dark-primary text-sm placeholder-[#6B6B6B] px-2 py-2 w-full outline-none"
+                    className="bg-transparent text-dark-primary text-sm placeholder-[dark-muted] px-2 py-2 w-full outline-none"
                     autoFocus
                   />
                 </div>
                 <select
                   value={muscleFilter}
                   onChange={(e) => setMuscleFilter(e.target.value)}
-                  className="bg-[#1A1A1A] border border-dark-border text-dark-secondary text-xs px-2 py-2 rounded-lg outline-none"
+                  className="bg-[az-black-elevated] border border-dark-border text-dark-secondary text-xs px-2 py-2 rounded-lg outline-none"
                 >
                   <option value="">All Muscles</option>
                   {muscleGroups.map(mg => <option key={mg} value={mg}>{mg}</option>)}
@@ -289,7 +289,7 @@ export default function Step6Review({ weeklySplit, exercises, onChange }: Step6R
                   <button
                     key={ex.ExerciseID}
                     onClick={() => handleSwap(swapModal.dayIndex, swapModal.exId, ex)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#1A1A1A] transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[az-black-elevated] transition-colors text-left"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-dark-primary text-sm font-medium truncate">{ex.Name}</p>

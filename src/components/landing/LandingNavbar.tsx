@@ -58,7 +58,7 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
               <button
                 key={l.label}
                 onClick={() => scrollTo(l.href)}
-                className="text-[#A0A0A0] hover:text-white text-sm font-medium transition-colors"
+                className="text-[dark-secondary] hover:text-white text-sm font-medium transition-colors"
               >
                 {l.label}
               </button>
@@ -75,7 +75,7 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
             </button>
             <Link
               to="/login"
-              className="text-[#A0A0A0] hover:text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="text-[dark-secondary] hover:text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
             >
               Log In
             </Link>
@@ -130,7 +130,7 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
                   <button
                     key={l.label}
                     onClick={() => scrollTo(l.href)}
-                    className="text-left text-[#A0A0A0] hover:text-white text-lg font-medium px-4 py-3 rounded-lg hover:bg-white/5 transition-colors"
+                    className="text-left text-[dark-secondary] hover:text-white text-lg font-medium px-4 py-3 rounded-lg hover:bg-white/5 transition-colors"
                   >
                     {l.label}
                   </button>
@@ -147,7 +147,7 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
                 <Link
                   to="/login"
                   onClick={() => setOpen(false)}
-                  className="text-center text-[#A0A0A0] hover:text-white text-sm font-medium px-4 py-3 rounded-lg border border-white/10 transition-colors"
+                  className="text-center text-[dark-secondary] hover:text-white text-sm font-medium px-4 py-3 rounded-lg border border-white/10 transition-colors"
                 >
                   Log In
                 </Link>

@@ -190,7 +190,7 @@ export default function SubscriptionPage() {
               style={
                 tier.gradientBorder
                   ? {
-                      background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #00AEEF, #EC4899) border-box',
+                      background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, cyan, trainer-accent) border-box',
                     }
                   : undefined
               }

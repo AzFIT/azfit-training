@@ -68,7 +68,7 @@ export default function ExerciseDetailPage() {
 
   if (!history) {
     return (
-      <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center">
         <div className="text-center">
           <Dumbbell size={40} className="mx-auto text-dark-muted mb-3" />
           <p className="text-dark-secondary">No history for this exercise yet.</p>
@@ -84,7 +84,7 @@ export default function ExerciseDetailPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[az-black]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -104,10 +104,10 @@ export default function ExerciseDetailPage() {
 
         {/* PR Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <PRCard label="Max Load" value={`${history.prLoad}kg`} icon={Trophy} color="#EAB308" />
-          <PRCard label="Best Reps" value={`${history.prReps}`} icon={Target} color="#8B5CF6" />
-          <PRCard label="Best Volume (set)" value={`${history.prVolume}kg`} icon={TrendingUp} color="#22C55E" />
-          <PRCard label="Est. 1RM" value={`${history.bestEstimated1RM}kg`} icon={Dumbbell} color="#00AEEF" />
+          <PRCard label="Max Load" value={`${history.prLoad}kg`} icon={Trophy} color="warning" />
+          <PRCard label="Best Reps" value={`${history.prReps}`} icon={Target} color="violet" />
+          <PRCard label="Best Volume (set)" value={`${history.prVolume}kg`} icon={TrendingUp} color="success" />
+          <PRCard label="Est. 1RM" value={`${history.bestEstimated1RM}kg`} icon={Dumbbell} color="cyan" />
         </div>
 
         {/* Progressive Overload Suggestion */}
@@ -115,7 +115,7 @@ export default function ExerciseDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-r from-[rgba(0,174,239,0.08)] to-[rgba(34,197,94,0.04)] border border-cyan/20 rounded-xl p-4"
+            className="bg-gradient-to-r from-cyan-glow to-[rgba(34,197,94,0.04)] border border-cyan/20 rounded-xl p-4"
           >
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-cyan/10 flex items-center justify-center flex-shrink-0">
@@ -141,10 +141,10 @@ export default function ExerciseDetailPage() {
         )}
 
         {/* Chart */}
-        <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-dark-primary">Progress Over Time</h2>
-            <div className="flex gap-1 bg-[#1A1A1A] rounded-lg p-1">
+            <div className="flex gap-1 bg-[az-black-elevated] rounded-lg p-1">
               {[
                 { key: 'load' as const, label: 'Load' },
                 { key: 'volume' as const, label: 'Volume' },
@@ -174,20 +174,20 @@ export default function ExerciseDetailPage() {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="volGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
+                        <stop offset="5%" stopColor="success" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="success" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="date" tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                     <YAxis tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                     <Tooltip
-                      contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }}
+                      contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }}
                     />
                     <Area
                       type="monotone"
                       dataKey="volume"
-                      stroke="#22C55E"
+                      stroke="success"
                       fillOpacity={1}
                       fill="url(#volGrad)"
                       strokeWidth={2}
@@ -199,14 +199,14 @@ export default function ExerciseDetailPage() {
                     <XAxis dataKey="date" tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                     <YAxis tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
                     <Tooltip
-                      contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }}
+                      contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }}
                     />
                     <Line
                       type="monotone"
                       dataKey={activeChart === 'load' ? 'load' : 'estimated1RM'}
-                      stroke={activeChart === 'load' ? '#00AEEF' : '#EAB308'}
+                      stroke={activeChart === 'load' ? 'cyan' : 'warning'}
                       strokeWidth={2}
-                      dot={{ r: 3, fill: activeChart === 'load' ? '#00AEEF' : '#EAB308' }}
+                      dot={{ r: 3, fill: activeChart === 'load' ? 'cyan' : 'warning' }}
                       activeDot={{ r: 5 }}
                     />
                   </LineChart>
@@ -217,7 +217,7 @@ export default function ExerciseDetailPage() {
         </div>
 
         {/* Session history table */}
-        <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
           <h2 className="text-sm font-semibold text-dark-primary mb-4">Set History</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -232,7 +232,7 @@ export default function ExerciseDetailPage() {
               </thead>
               <tbody>
                 {[...history.records].reverse().map((r, i) => (
-                  <tr key={i} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors">
+                  <tr key={i} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
                     <td className="py-2.5 px-3 text-xs text-dark-secondary font-mono whitespace-nowrap">
                       <Calendar size={12} className="inline mr-1" />
                       {r.date}
@@ -279,7 +279,7 @@ function PRCard({
   color: string
 }) {
   return (
-    <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+    <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon size={16} style={{ color }} />
         <span className="text-xs text-dark-muted">{label}</span>

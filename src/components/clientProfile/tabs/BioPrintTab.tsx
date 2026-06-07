@@ -64,7 +64,7 @@ export function BioPrintTab() {
             <p className="text-sm text-dark-muted">No assessments recorded yet</p>
           </div>
         </div>
-        <div className="bg-[#141414] border border-dark-border rounded-xl p-10 text-center">
+        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-10 text-center">
           <p className="text-dark-secondary mb-4">No BioPrint data available for this client.</p>
           <button
             onClick={() => navigate(`/clients/${clientId}/bioprint`)}
@@ -110,7 +110,7 @@ export function BioPrintTab() {
                   const change = prev ? +(current - prev).toFixed(1) : 0;
                   const goal = +(current * 0.85).toFixed(1);
                   return (
-                    <tr key={label} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors">
+                    <tr key={label} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
                       <td className="py-2.5 px-3 text-sm text-dark-primary">{label}</td>
                       <td className="py-2.5 px-3 text-sm text-dark-primary font-mono">{current.toFixed(1)}</td>
                       <td className="py-2.5 px-3 text-sm text-dark-secondary font-mono">{prev ? prev.toFixed(1) : '—'}</td>
@@ -131,14 +131,14 @@ export function BioPrintTab() {
             <div className="flex items-center gap-6">
               <div className="relative w-32 h-32 flex-shrink-0">
                 <svg width="128" height="128" viewBox="0 0 128 128">
-                  <circle cx="64" cy="64" r="50" fill="none" stroke="#2A2A2A" strokeWidth="8" />
-                  <circle cx="64" cy="64" r="50" fill="none" stroke="#00AEEF" strokeWidth="8"
+                  <circle cx="64" cy="64" r="50" fill="none" stroke="dark-border" strokeWidth="8" />
+                  <circle cx="64" cy="64" r="50" fill="none" stroke="cyan" strokeWidth="8"
                     strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
                     transform="rotate(-90 64 64)"
                     style={{ transition: 'stroke-dashoffset 1s ease-out' }}
                   />
-                  <text x="64" y="60" textAnchor="middle" fill="#F0F0F0" fontSize="22" fontWeight="700">{bodyFatPct.toFixed(1)}%</text>
-                  <text x="64" y="78" textAnchor="middle" fill="#A0A0A0" fontSize="11">Body Fat</text>
+                  <text x="64" y="60" textAnchor="middle" fill="dark-primary" fontSize="22" fontWeight="700">{bodyFatPct.toFixed(1)}%</text>
+                  <text x="64" y="78" textAnchor="middle" fill="dark-secondary" fontSize="11">Body Fat</text>
                 </svg>
               </div>
               <div className="space-y-3 flex-1">
@@ -165,16 +165,16 @@ export function BioPrintTab() {
                   <AreaChart data={historyChartData}>
                     <defs>
                       <linearGradient id="bfGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#00AEEF" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#00AEEF" stopOpacity={0} />
+                        <stop offset="5%" stopColor="cyan" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="cyan" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="month" tick={{ fill: 'var(--dark-muted)', fontSize: 12 }} />
                     <YAxis domain={[Math.max(0, bodyFatPct - 10), Math.min(40, bodyFatPct + 10)]} tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
-                    <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                    <Area type="monotone" dataKey="bf" stroke="#00AEEF" strokeWidth={2} fill="url(#bfGrad)" />
-                    <ReferenceLine y={16} stroke="#22C55E" strokeDasharray="4 4" label={{ value: 'Goal 16%', fill: '#22C55E', fontSize: 11 }} />
+                    <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                    <Area type="monotone" dataKey="bf" stroke="cyan" strokeWidth={2} fill="url(#bfGrad)" />
+                    <ReferenceLine y={16} stroke="success" strokeDasharray="4 4" label={{ value: 'Goal 16%', fill: 'success', fontSize: 11 }} />
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (

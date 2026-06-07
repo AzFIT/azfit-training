@@ -87,27 +87,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isDark = theme === 'dark'
 
   /* ── Theme-aware color tokens ───────────────────────── */
-  const appBg = isDark ? 'bg-[#0A0A0A]' : 'bg-[#F8FAFC]'
-  const sidebarBg = isDark ? 'bg-[#141414]' : 'bg-white'
-  const sidebarBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
-  const topBarBg = isDark ? 'bg-[#0A0A0A]/80' : 'bg-white/80'
-  const topBarBorder = isDark ? 'border-dark-divider' : 'border-[#E2E8F0]'
-  const textPrimary = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
-  const textSecondary = isDark ? 'text-dark-secondary' : 'text-[#64748B]'
-  const textMuted = isDark ? 'text-dark-muted' : 'text-[#94A3B8]'
-  const navInactiveText = isDark ? 'text-dark-secondary' : 'text-[#64748B]'
-  const navInactiveHoverText = isDark ? 'hover:text-dark-primary' : 'hover:text-[#0F172A]'
-  const navInactiveHoverBg = isDark ? 'hover:bg-dark-hover' : 'hover:bg-[#F1F5F9]'
-  const navActiveBg = isDark ? 'bg-[rgba(0,174,239,0.15)]' : 'bg-[rgba(0,174,239,0.08)]'
-  const inputBg = isDark ? 'bg-[#141414]' : 'bg-[#F1F5F9]'
-  const inputBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
-  const inputText = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
-  const inputPlaceholder = isDark ? 'placeholder:text-dark-muted' : 'placeholder:text-[#94A3B8]'
-  const tooltipBg = isDark ? 'bg-[#1A1A1A]' : 'bg-white'
-  const tooltipBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
-  const tooltipText = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
-  const hoverRing = isDark ? 'hover:ring-[#00AEEF]' : 'hover:ring-[#00AEEF]'
-  const ringColor = isDark ? 'ring-[#2A2A2A]' : 'ring-[#E2E8F0]'
+  const appBg = isDark ? 'bg-[az-black]' : 'bg-[light-surface]'
+  const sidebarBg = isDark ? 'bg-[az-black-card]' : 'bg-white'
+  const sidebarBorder = isDark ? 'border-dark-border' : 'border-[light-border]'
+  const topBarBg = isDark ? 'bg-[az-black]/80' : 'bg-white/80'
+  const topBarBorder = isDark ? 'border-dark-divider' : 'border-[light-border]'
+  const textPrimary = isDark ? 'text-dark-primary' : 'text-[light-primary]'
+  const textSecondary = isDark ? 'text-dark-secondary' : 'text-[light-secondary]'
+  const textMuted = isDark ? 'text-dark-muted' : 'text-[light-muted]'
+  const navInactiveText = isDark ? 'text-dark-secondary' : 'text-[light-secondary]'
+  const navInactiveHoverText = isDark ? 'hover:text-dark-primary' : 'hover:text-[light-primary]'
+  const navInactiveHoverBg = isDark ? 'hover:bg-dark-hover' : 'hover:bg-[light-hover]'
+  const navActiveBg = isDark ? 'bg-cyan-glow' : 'bg-cyan-glow'
+  const inputBg = isDark ? 'bg-[az-black-card]' : 'bg-[light-hover]'
+  const inputBorder = isDark ? 'border-dark-border' : 'border-[light-border]'
+  const inputText = isDark ? 'text-dark-primary' : 'text-[light-primary]'
+  const inputPlaceholder = isDark ? 'placeholder:text-dark-muted' : 'placeholder:text-[light-muted]'
+  const tooltipBg = isDark ? 'bg-[az-black-elevated]' : 'bg-white'
+  const tooltipBorder = isDark ? 'border-dark-border' : 'border-[light-border]'
+  const tooltipText = isDark ? 'text-dark-primary' : 'text-[light-primary]'
+  const hoverRing = isDark ? 'hover:ring-[cyan]' : 'hover:ring-[cyan]'
+  const ringColor = isDark ? 'ring-[dark-border]' : 'ring-[light-border]'
 
   return (
     <div className={`min-h-[100dvh] ${appBg} transition-colors duration-300`}>
@@ -157,9 +157,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     ? `${navActiveBg}`
                     : `${navInactiveText} ${navInactiveHoverText} ${navInactiveHoverBg}`
                 }`}
-                style={active ? { color: isDark ? '#F0F0F0' : '#0F172A', borderLeft: '3px solid #00AEEF' } : { borderLeft: '3px solid transparent' }}
+                style={active ? { color: isDark ? 'dark-primary' : 'light-primary', borderLeft: '3px solid cyan' } : { borderLeft: '3px solid transparent' }}
               >
-                <item.icon size={20} className="flex-shrink-0" style={active ? { color: '#00AEEF' } : undefined} />
+                <item.icon size={20} className="flex-shrink-0" style={active ? { color: 'cyan' } : undefined} />
                 <span
                   className="text-sm font-medium truncate transition-opacity duration-300"
                   style={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto' }}
@@ -250,9 +250,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                           ? `${navActiveBg} border-l-[3px] border-cyan`
                           : `${navInactiveText} ${navInactiveHoverText} ${navInactiveHoverBg} border-l-[3px] border-transparent`
                       }`}
-                      style={active ? { color: isDark ? '#F0F0F0' : '#0F172A' } : undefined}
+                      style={active ? { color: isDark ? 'dark-primary' : 'light-primary' } : undefined}
                     >
-                      <item.icon size={20} style={active ? { color: '#00AEEF' } : undefined} />
+                      <item.icon size={20} style={active ? { color: 'cyan' } : undefined} />
                       <span className="text-sm font-medium">{item.label}</span>
                     </Link>
                   )

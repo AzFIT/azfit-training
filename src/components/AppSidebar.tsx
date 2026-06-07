@@ -69,7 +69,7 @@ export default function AppSidebar() {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
                 active
-                  ? 'bg-[rgba(0,174,239,0.15)] text-cyan'
+                  ? 'bg-cyan-glow text-cyan'
                   : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
               }`}
               title={collapsed ? item.label : undefined}
@@ -109,7 +109,7 @@ export default function AppSidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="lg:hidden fixed top-3 left-4 z-50 p-2 rounded-lg bg-white/80 dark:bg-[#141414]/80 backdrop-blur border border-gray-200 dark:border-white/10"
+        className="lg:hidden fixed top-3 left-4 z-50 p-2 rounded-lg bg-white/80 dark:bg-[az-black-card]/80 backdrop-blur border border-gray-200 dark:border-white/10"
       >
         {mobileOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -135,7 +135,7 @@ export default function AppSidebar() {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed left-0 top-0 bottom-0 w-60 bg-white dark:bg-[#141414] border-r border-gray-200 dark:border-white/5 z-50 flex flex-col lg:hidden"
+            className="fixed left-0 top-0 bottom-0 w-60 bg-white dark:bg-[az-black-card] border-r border-gray-200 dark:border-white/5 z-50 flex flex-col lg:hidden"
           >
             {sidebarContent}
           </motion.aside>
@@ -144,14 +144,14 @@ export default function AppSidebar() {
 
       {/* Desktop sidebar */}
       <aside
-        className={`hidden lg:flex flex-col h-screen sticky top-0 bg-white dark:bg-[#141414] border-r border-gray-200 dark:border-white/5 transition-all duration-300 ${
+        className={`hidden lg:flex flex-col h-screen sticky top-0 bg-white dark:bg-[az-black-card] border-r border-gray-200 dark:border-white/5 transition-all duration-300 ${
           collapsed ? 'w-16' : 'w-60'
         }`}
       >
         {collapsed && (
           <button
             onClick={() => setCollapsed(false)}
-            className="absolute -right-3 top-20 p-1 rounded-full bg-white dark:bg-[#141414] border border-gray-200 dark:border-white/10 shadow-sm z-10"
+            className="absolute -right-3 top-20 p-1 rounded-full bg-white dark:bg-[az-black-card] border border-gray-200 dark:border-white/10 shadow-sm z-10"
           >
             <Menu size={12} />
           </button>

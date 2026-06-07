@@ -45,7 +45,7 @@ export function RecordsTab() {
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-lg font-semibold text-dark-primary">Exercise Records</h2>
-        <div className="flex gap-1 bg-[#1A1A1A] rounded-lg p-1">
+        <div className="flex gap-1 bg-[az-black-elevated] rounded-lg p-1">
           {([
             { key: 'all' as const, label: 'All Records' },
             { key: 'prs' as const, label: 'Personal Records' },
@@ -72,7 +72,7 @@ export function RecordsTab() {
               key={pr.exerciseId} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
               onClick={() => navigate(`/clients/${clientId}/exercises/${pr.exerciseId}`)}
-              className="cursor-pointer bg-gradient-to-br from-[rgba(234,179,8,0.08)] to-[rgba(249,115,22,0.04)] bg-[#141414] border border-dark-border rounded-xl p-5 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(234,179,8,0.1)] transition-all duration-200"
+              className="cursor-pointer bg-gradient-to-br from-[rgba(234,179,8,0.08)] to-[rgba(249,115,22,0.04)] bg-[az-black-card] border border-dark-border rounded-xl p-5 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(234,179,8,0.1)] transition-all duration-200"
             >
               <div className="absolute top-3 right-3">
                 <Trophy size={20} className="text-warning" />
@@ -101,7 +101,7 @@ export function RecordsTab() {
             </thead>
             <tbody>
               {histories.slice(0, 8).map((h) => (
-                <tr key={h.exerciseId} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors cursor-pointer"
+                <tr key={h.exerciseId} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors cursor-pointer"
                   onClick={() => navigate(`/clients/${clientId}/exercises/${h.exerciseId}`)}>
                   <td className="py-2.5 px-3 text-sm text-dark-primary font-medium">{h.exerciseName}</td>
                   <td className="py-2.5 px-3 text-sm text-dark-primary font-mono font-bold">{h.bestEstimated1RM} kg</td>
@@ -129,7 +129,7 @@ export function RecordsTab() {
             </thead>
             <tbody>
               {recentLifts.map((lift, i) => (
-                <tr key={i} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors cursor-pointer"
+                <tr key={i} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors cursor-pointer"
                   onClick={() => navigate(`/clients/${clientId}/exercises/${lift.exerciseId}`)}>
                   <td className="py-2.5 px-3 text-sm text-dark-secondary font-mono">{lift.date}</td>
                   <td className="py-2.5 px-3 text-sm text-dark-primary">{lift.exercise}</td>

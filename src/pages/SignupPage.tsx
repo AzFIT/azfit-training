@@ -64,13 +64,13 @@ export default function SignupPage() {
   }
 
   const inputClasses =
-    'w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all'
+    'w-full bg-[az-black-elevated] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all'
 
   if (showVerificationMessage) {
     return (
-      <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
+      <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center p-4">
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-[rgba(0,174,239,0.04)] blur-[120px]" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-cyan-glow blur-[120px]" />
         </div>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -78,7 +78,7 @@ export default function SignupPage() {
           transition={{ duration: 0.5, ease: easeOut }}
           className="w-full max-w-[440px] relative z-10 text-center"
         >
-          <div className="bg-[#141414] border border-dark-border rounded-2xl p-8 sm:p-10">
+          <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-8 sm:p-10">
             <div className="w-16 h-16 rounded-full bg-cyan/10 flex items-center justify-center mx-auto mb-6">
               <Mail size={28} className="text-cyan" />
             </div>
@@ -103,7 +103,7 @@ export default function SignupPage() {
                 Didn&apos;t receive it?{' '}
                 <button
                   onClick={() => setShowVerificationMessage(false)}
-                  className="text-cyan hover:text-[#33BFF2] transition-colors"
+                  className="text-cyan hover:text-[cyan-light] transition-colors"
                 >
                   Try again
                 </button>
@@ -116,10 +116,10 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center p-4">
       {/* Ambient glow */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-[rgba(0,174,239,0.04)] blur-[120px]" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-cyan-glow blur-[120px]" />
         <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] rounded-full bg-[rgba(139,92,246,0.03)] blur-[100px]" />
       </div>
 
@@ -156,7 +156,7 @@ export default function SignupPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: easeOut }}
-          className="bg-[#141414] border border-dark-border rounded-2xl p-6 sm:p-8"
+          className="bg-[az-black-card] border border-dark-border rounded-2xl p-6 sm:p-8"
         >
           <div className="space-y-4">
             {/* Full Name */}
@@ -234,7 +234,7 @@ export default function SignupPage() {
                 className={`w-[18px] h-[18px] rounded border flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
                   agreeTerms
                     ? 'bg-cyan border-cyan'
-                    : 'border-[#4A4A4A] group-hover:border-dark-muted'
+                    : 'border-[dark-subtle] group-hover:border-dark-muted'
                 }`}
               >
                 {agreeTerms && (
@@ -257,7 +257,7 @@ export default function SignupPage() {
                     e.stopPropagation()
                     alert('Terms of Service coming soon!')
                   }}
-                  className="text-cyan hover:text-[#33BFF2] transition-colors"
+                  className="text-cyan hover:text-[cyan-light] transition-colors"
                 >
                   Terms of Service
                 </button>{' '}
@@ -268,7 +268,7 @@ export default function SignupPage() {
                     e.stopPropagation()
                     alert('Privacy Policy coming soon!')
                   }}
-                  className="text-cyan hover:text-[#33BFF2] transition-colors"
+                  className="text-cyan hover:text-[cyan-light] transition-colors"
                 >
                   Privacy Policy
                 </button>
@@ -301,7 +301,7 @@ export default function SignupPage() {
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-cyan hover:text-[#33BFF2] transition-colors font-medium"
+                className="text-cyan hover:text-[cyan-light] transition-colors font-medium"
               >
                 Sign In
               </Link>

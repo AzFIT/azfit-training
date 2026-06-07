@@ -45,7 +45,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center p-4">
       {/* Background image */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-20 pointer-events-none"
@@ -55,7 +55,7 @@ export default function LoginPage() {
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
       {/* Ambient glow */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-[rgba(0,174,239,0.04)] blur-[120px]" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-cyan-glow blur-[120px]" />
         <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full bg-[rgba(139,92,246,0.03)] blur-[100px]" />
       </div>
 
@@ -89,7 +89,7 @@ export default function LoginPage() {
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, y: 20 }, { duration: 0.5, delay: 0.2, ease: easeOut })}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#141414] border border-dark-border rounded-2xl p-6 sm:p-8"
+          className="bg-[az-black-card] border border-dark-border rounded-2xl p-6 sm:p-8"
         >
           <div className="space-y-4">
             {/* Email */}
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
+                className="w-full bg-[az-black-elevated] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all"
               />
             </div>
 
@@ -113,7 +113,7 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 pr-11 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
+                  className="w-full bg-[az-black-elevated] border border-dark-border rounded-xl px-4 py-3 pr-11 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all"
                 />
                 <button
                   type="button"
@@ -134,7 +134,7 @@ export default function LoginPage() {
                   className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                     rememberMe
                       ? 'bg-cyan border-cyan'
-                      : 'border-[#4A4A4A] group-hover:border-dark-muted'
+                      : 'border-[dark-subtle] group-hover:border-dark-muted'
                   }`}
                 >
                   {rememberMe && (
@@ -153,7 +153,7 @@ export default function LoginPage() {
               </label>
               <Link
                 to="/forgot-password"
-                className="text-cyan text-sm hover:text-[#33BFF2] transition-colors"
+                className="text-cyan text-sm hover:text-[cyan-light] transition-colors"
               >
                 Forgot password?
               </Link>
@@ -184,7 +184,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-dark-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-[#141414] px-3 text-dark-muted">or</span>
+                <span className="bg-[az-black-card] px-3 text-dark-muted">or</span>
               </div>
             </div>
 
@@ -211,7 +211,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
-                className="text-cyan hover:text-[#33BFF2] transition-colors font-medium"
+                className="text-cyan hover:text-[cyan-light] transition-colors font-medium"
               >
                 Sign Up
               </Link>

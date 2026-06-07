@@ -170,7 +170,7 @@ export default function AIChat() {
           touchAction: 'none',
           userSelect: 'none',
         }}
-        className="rounded-full bg-gradient-to-br from-[#00AEEF] to-[#008DC4] text-white shadow-[0_4px_20px_rgba(0,174,239,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+        className="rounded-full bg-gradient-to-br from-[cyan] to-[cyan-dark] text-white shadow-[0_4px_20px_rgba(0,174,239,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
         aria-label={isOpen ? 'Close chat' : 'Open AI chat'}
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
@@ -195,10 +195,10 @@ export default function AIChat() {
               maxWidth: 'calc(100vw - 48px)',
               zIndex: 9998,
             }}
-            className="bg-white dark:bg-[#141414] rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.2)] border border-gray-200 dark:border-white/[0.08] overflow-hidden flex flex-col"
+            className="bg-white dark:bg-[az-black-card] rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.2)] border border-gray-200 dark:border-white/[0.08] overflow-hidden flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-white/[0.08] bg-gradient-to-r from-[#00AEEF]/10 to-transparent">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-white/[0.08] bg-gradient-to-r from-[cyan]/10 to-transparent">
               <div className="flex items-center gap-2">
                 <Bot size={20} className="text-cyan" />
                 <span className="font-semibold text-sm text-gray-900 dark:text-white">AzFIT AI Assistant</span>
@@ -217,7 +217,7 @@ export default function AIChat() {
                 <div key={msg.id} className={cn('flex gap-2.5', msg.role === 'user' ? 'flex-row-reverse' : 'flex-row')}>
                   <div className={cn(
                     'w-7 h-7 rounded-full flex items-center justify-center shrink-0',
-                    msg.role === 'user' ? 'bg-gray-200 dark:bg-gray-700' : 'bg-[rgba(0,174,239,0.15)]'
+                    msg.role === 'user' ? 'bg-gray-200 dark:bg-gray-700' : 'bg-cyan-glow'
                   )}>
                     {msg.role === 'user'
                       ? <User size={14} className="text-gray-600 dark:text-gray-300" />
@@ -250,7 +250,7 @@ export default function AIChat() {
 
               {isTyping && (
                 <div className="flex gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-[rgba(0,174,239,0.15)] flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-cyan-glow flex items-center justify-center shrink-0">
                     <Bot size={14} className="text-cyan" />
                   </div>
                   <div className="bg-gray-100 dark:bg-white/[0.06] rounded-2xl rounded-bl-sm px-4 py-3">
@@ -274,12 +274,12 @@ export default function AIChat() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
                   placeholder="Ask AzFIT AI..."
-                  className="flex-1 bg-gray-100 dark:bg-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00AEEF]/30"
+                  className="flex-1 bg-gray-100 dark:bg-white/[0.06] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[cyan]/30"
                 />
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || isTyping}
-                  className="w-10 h-10 rounded-xl bg-cyan text-white flex items-center justify-center hover:bg-[#008DC4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="w-10 h-10 rounded-xl bg-cyan text-white flex items-center justify-center hover:bg-[cyan-dark] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send size={16} />
                 </button>

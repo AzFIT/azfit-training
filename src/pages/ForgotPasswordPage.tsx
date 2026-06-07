@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-[100dvh] flex items-center justify-center bg-gray-50 px-4 py-12 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[rgba(0,174,239,0.08)] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-glow rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -204,7 +204,7 @@ export default function ForgotPasswordPage() {
                     value={digit}
                     onChange={(e) => handleCodeChange(i, e.target.value)}
                     onKeyDown={(e) => handleCodeKeyDown(i, e)}
-                    className="w-12 h-14 text-center text-xl font-mono font-bold border-2 border-gray-300 rounded-xl focus:border-cyan focus:ring-[3px] focus:ring-[rgba(0,174,239,0.15)] outline-none transition-all bg-white"
+                    className="w-12 h-14 text-center text-xl font-mono font-bold border-2 border-gray-300 rounded-xl focus:border-cyan focus:ring-[3px] focus:ring-cyan-glow outline-none transition-all bg-white"
                   />
                 ))}
               </div>

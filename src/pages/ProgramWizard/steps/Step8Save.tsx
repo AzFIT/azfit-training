@@ -81,12 +81,12 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
       </div>
 
       {/* Program Info */}
-      <div className="bg-[#141414] border border-dark-border rounded-xl p-5 mb-6">
+      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5 mb-6">
         <label className="block text-dark-muted text-xs mb-2 font-semibold uppercase tracking-wider">Program Name</label>
         <input
           value={state.programName}
           onChange={(e) => onNameChange(e.target.value)}
-          className="w-full bg-[#1A1A1A] border border-dark-border focus:border-cyan text-dark-primary text-base px-4 py-2.5 rounded-xl outline-none mb-4 transition-colors"
+          className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-base px-4 py-2.5 rounded-xl outline-none mb-4 transition-colors"
         />
 
         <label className="block text-dark-muted text-xs mb-2 font-semibold uppercase tracking-wider">Tags</label>
@@ -107,7 +107,7 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
           value={state.description}
           onChange={(e) => onDescChange(e.target.value)}
           rows={3}
-          className="w-full bg-[#1A1A1A] border border-dark-border focus:border-cyan text-dark-primary text-sm placeholder-[#6B6B6B] px-4 py-2.5 rounded-xl outline-none resize-none transition-colors"
+          className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm placeholder-[dark-muted] px-4 py-2.5 rounded-xl outline-none resize-none transition-colors"
         />
       </div>
 
@@ -118,7 +118,7 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => setAssignOpen(!assignOpen)}
-          className="w-full bg-[#141414] border border-dark-border hover:border-cyan rounded-xl p-5 flex items-center gap-4 transition-colors text-left"
+          className="w-full bg-[az-black-card] border border-dark-border hover:border-cyan rounded-xl p-5 flex items-center gap-4 transition-colors text-left"
         >
           <div className="w-12 h-12 bg-[rgba(0,174,239,0.1)] rounded-xl flex items-center justify-center flex-shrink-0">
             <UserPlus size={22} className="text-cyan" />
@@ -138,12 +138,12 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="bg-[#1A1A1A] border border-dark-border rounded-xl p-4 space-y-3 mx-2">
+              <div className="bg-[az-black-elevated] border border-dark-border rounded-xl p-4 space-y-3 mx-2">
                 <div>
                   <label className="block text-dark-muted text-xs mb-1">Select Client</label>
                   <input
                     placeholder="Search client..."
-                    className="w-full bg-[#141414] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                    className="w-full bg-[az-black-card] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -151,12 +151,12 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
                     <label className="block text-dark-muted text-xs mb-1">Start Date</label>
                     <input
                       type="date"
-                      className="w-full bg-[#141414] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                      className="w-full bg-[az-black-card] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                     />
                   </div>
                   <div>
                     <label className="block text-dark-muted text-xs mb-1">Starting Phase</label>
-                    <select className="w-full bg-[#141414] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none">
+                    <select className="w-full bg-[az-black-card] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none">
                       {state.phases.map((p, i) => <option key={p.id} value={i}>Phase {i + 1}: {p.name}</option>)}
                     </select>
                   </div>
@@ -172,7 +172,7 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={handleSave}
-          className="w-full bg-[#141414] border border-dark-border hover:border-success rounded-xl p-5 flex items-center gap-4 transition-colors text-left"
+          className="w-full bg-[az-black-card] border border-dark-border hover:border-success rounded-xl p-5 flex items-center gap-4 transition-colors text-left"
         >
           <div className="w-12 h-12 bg-[rgba(34,197,94,0.1)] rounded-xl flex items-center justify-center flex-shrink-0">
             <Save size={22} className="text-success" />
@@ -189,7 +189,7 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => alert('PDF export coming soon!')}
-          className="w-full bg-[#141414] border border-dark-border hover:border-orange rounded-xl p-5 flex items-center gap-4 transition-colors text-left"
+          className="w-full bg-[az-black-card] border border-dark-border hover:border-orange rounded-xl p-5 flex items-center gap-4 transition-colors text-left"
         >
           <div className="w-12 h-12 bg-[rgba(249,115,22,0.1)] rounded-xl flex items-center justify-center flex-shrink-0">
             <FileText size={22} className="text-orange" />
@@ -203,7 +203,7 @@ export default function Step8Save({ state, onNameChange, onDescChange, onFinish 
       </div>
 
       {/* Summary */}
-      <div className="mt-6 bg-[#141414] border border-dark-border rounded-xl p-5">
+      <div className="mt-6 bg-[az-black-card] border border-dark-border rounded-xl p-5">
         <h4 className="text-dark-primary font-semibold text-sm mb-3">Program Summary</h4>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="flex justify-between"><span className="text-dark-muted">Goal:</span> <span className="text-dark-secondary">{GOAL_CARDS.find(g => g.id === state.selectedGoal)?.label}</span></div>

@@ -60,7 +60,7 @@ export function BodyStatsTab() {
           >
             <Plus size={14} /> Log Measurement
           </button>
-          <div className="flex gap-1 bg-[#1A1A1A] rounded-lg p-1">
+          <div className="flex gap-1 bg-[az-black-elevated] rounded-lg p-1">
             {(['30d', '90d'] as const).map((r) => (
               <button key={r} onClick={() => setRange(r)}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${range === r ? 'bg-dark-hover text-cyan' : 'text-dark-secondary hover:text-dark-primary'}`}>
@@ -97,15 +97,15 @@ export function BodyStatsTab() {
                 <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="wsGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00AEEF" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#00AEEF" stopOpacity={0} />
+                      <stop offset="5%" stopColor="cyan" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="cyan" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                   <XAxis dataKey="day" tick={{ fill: 'var(--dark-muted)', fontSize: 10 }} interval={range === '90d' ? 9 : 4} />
                   <YAxis domain={['auto', 'auto']} tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                  <Area type="monotone" dataKey="weight" stroke="#00AEEF" strokeWidth={2} fill="url(#wsGrad)" />
+                  <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                  <Area type="monotone" dataKey="weight" stroke="cyan" strokeWidth={2} fill="url(#wsGrad)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -118,15 +118,15 @@ export function BodyStatsTab() {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="bfsGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.2} />
-                        <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
+                        <stop offset="5%" stopColor="violet" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="violet" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="rgba(255,255,255,0.04)" />
                     <XAxis dataKey="day" tick={{ fill: 'var(--dark-muted)', fontSize: 10 }} interval={range === '90d' ? 9 : 4} />
                     <YAxis domain={['auto', 'auto']} tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} />
-                    <Tooltip contentStyle={{ background: '#141414', border: '1px solid #2A2A2A', borderRadius: 8, color: '#F0F0F0' }} />
-                    <Area type="monotone" dataKey="bodyFat" stroke="#8B5CF6" strokeWidth={2} fill="url(#bfsGrad)" />
+                    <Tooltip contentStyle={{ background: 'az-black-card', border: '1px solid dark-border', borderRadius: 8, color: 'dark-primary' }} />
+                    <Area type="monotone" dataKey="bodyFat" stroke="violet" strokeWidth={2} fill="url(#bfsGrad)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -147,7 +147,7 @@ export function BodyStatsTab() {
                       <tr><td colSpan={4} className="py-6 text-center text-xs text-dark-muted">No measurements logged</td></tr>
                     ) : (
                       measurementRows.map((m) => (
-                        <tr key={m.name} className="border-b border-dark-divider hover:bg-[#1A1A1A] transition-colors">
+                        <tr key={m.name} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
                           <td className="py-2 px-2 text-sm text-dark-primary">{m.name}</td>
                           <td className="py-2 px-2 text-sm text-dark-primary font-mono">{m.current}</td>
                           <td className="py-2 px-2 text-sm text-dark-secondary font-mono">{m.prev30d}</td>

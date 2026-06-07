@@ -12,7 +12,7 @@ export default function RoleCardsSection() {
           <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">
             For Everyone
           </motion.p>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-[#111827]">
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-[gray-950]">
             Built for Trainers & Clients
           </motion.h2>
         </div>
@@ -40,7 +40,7 @@ export default function RoleCardsSection() {
               <span className="inline-block self-start px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider text-cyan bg-cyan/15 mb-4">For Clients</span>
               <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-white mb-3">Achieve Your Fitness Goals</h3>
               <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-6 max-w-[400px]">Get personalized programs, track your nutrition, monitor progress with photos and metrics, and stay connected with your trainer.</p>
-              <Link to="/signup" className="inline-flex items-center gap-2 self-start bg-white hover:bg-[#F0F0F0] text-[#111827] font-semibold px-6 py-3 rounded-xl transition-all hover:scale-[1.02] text-sm">
+              <Link to="/signup" className="inline-flex items-center gap-2 self-start bg-white hover:bg-[dark-primary] text-[gray-950] font-semibold px-6 py-3 rounded-xl transition-all hover:scale-[1.02] text-sm">
                 Join as Client <ArrowRight size={16} />
               </Link>
             </div>

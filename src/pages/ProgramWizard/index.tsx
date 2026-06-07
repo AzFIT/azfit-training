@@ -298,7 +298,7 @@ export default function ProgramWizardPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="fixed inset-x-4 top-1/3 md:left-1/2 md:-translate-x-1/2 md:w-[400px] bg-[#141414] border border-dark-border rounded-2xl z-[201] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.5)]"
+              className="fixed inset-x-4 top-1/3 md:left-1/2 md:-translate-x-1/2 md:w-[400px] bg-[az-black-card] border border-dark-border rounded-2xl z-[201] p-6 shadow-[0_16px_48px_rgba(0,0,0,0.5)]"
             >
               <h3 className="text-dark-primary font-semibold text-lg mb-2">Resume Draft?</h3>
               <p className="text-dark-secondary text-sm mb-6">A saved draft was found. Would you like to resume where you left off?</p>
@@ -440,7 +440,7 @@ export default function ProgramWizardPage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="sticky bottom-0 bg-[#141414]/95 backdrop-blur-sm border-t border-dark-border px-4 md:px-8 py-4 z-10">
+      <div className="sticky bottom-0 bg-[az-black-card]/95 backdrop-blur-sm border-t border-dark-border px-4 md:px-8 py-4 z-10">
         <div className="flex items-center justify-between max-w-[1200px] mx-auto">
           <div className="flex items-center gap-3">
             <button
@@ -482,7 +482,7 @@ export default function ProgramWizardPage() {
                 const saveBtn = document.querySelector('[data-save-trigger]') as HTMLButtonElement
                 saveBtn?.click()
               }}
-              className="bg-gradient-to-r from-[#00AEEF] to-[#8B5CF6] text-white font-semibold text-sm flex items-center gap-1.5 px-6 py-2.5 rounded-xl hover:scale-[1.02] transition-all duration-200 shadow-[0_4px_20px_rgba(0,174,239,0.3)]"
+              className="bg-gradient-to-r from-[cyan] to-[violet] text-white font-semibold text-sm flex items-center gap-1.5 px-6 py-2.5 rounded-xl hover:scale-[1.02] transition-all duration-200 shadow-[0_4px_20px_rgba(0,174,239,0.3)]"
             >
               <Check size={16} /> Finish &amp; Save
             </button>

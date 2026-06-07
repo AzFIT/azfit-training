@@ -29,13 +29,13 @@ import { v4 as uuidv4 } from 'uuid'
    ═══════════════════════════════════════════ */
 
 const GOAL_OPTIONS = [
-  { key: 'Fat Loss', icon: Flame, color: '#EF4444' },
-  { key: 'Muscle Gain', icon: Dumbbell, color: '#22C55E' },
-  { key: 'Strength', icon: Trophy, color: '#8B5CF6' },
-  { key: 'Endurance', icon: HeartPulse, color: '#F59E0B' },
-  { key: 'Athletic Performance', icon: Activity, color: '#00AEEF' },
-  { key: 'Rehab & Mobility', icon: Shield, color: '#EC4899' },
-  { key: 'General Fitness', icon: User, color: '#64748B' },
+  { key: 'Fat Loss', icon: Flame, color: 'danger' },
+  { key: 'Muscle Gain', icon: Dumbbell, color: 'success' },
+  { key: 'Strength', icon: Trophy, color: 'violet' },
+  { key: 'Endurance', icon: HeartPulse, color: 'warning' },
+  { key: 'Athletic Performance', icon: Activity, color: 'cyan' },
+  { key: 'Rehab & Mobility', icon: Shield, color: 'trainer-accent' },
+  { key: 'General Fitness', icon: User, color: 'light-secondary' },
 ]
 
 const EXPERIENCE_OPTIONS = [
@@ -187,10 +187,10 @@ function calculateMacros(calories: number, weightKg: number, dietType: string) {
 
 function bmiCategory(bmi: number): { label: string; color: string } {
   if (bmi <= 0) return { label: '', color: '' }
-  if (bmi < 18.5) return { label: 'Underweight', color: '#F59E0B' }
-  if (bmi < 25) return { label: 'Normal', color: '#22C55E' }
-  if (bmi < 30) return { label: 'Overweight', color: '#F97316' }
-  return { label: 'Obese', color: '#EF4444' }
+  if (bmi < 18.5) return { label: 'Underweight', color: 'warning' }
+  if (bmi < 25) return { label: 'Normal', color: 'success' }
+  if (bmi < 30) return { label: 'Overweight', color: 'orange' }
+  return { label: 'Obese', color: 'danger' }
 }
 
 function getInitials(name: string): string {
@@ -347,7 +347,7 @@ function CardSelect({
             }`}
           >
             <div className="flex items-center gap-2">
-              {Icon && <Icon size={16} style={{ color: opt.color || '#00AEEF' }} />}
+              {Icon && <Icon size={16} style={{ color: opt.color || 'cyan' }} />}
               <span
                 className={`text-xs font-medium ${isSelected ? 'text-cyan' : 'text-dark-primary'}`}
               >

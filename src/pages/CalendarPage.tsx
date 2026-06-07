@@ -63,11 +63,11 @@ function motionEnter<T extends Record<string, unknown>>(
 }
 
 const SESSION_COLORS: Record<SessionType, { bg: string; border: string; text: string }> = {
-  'Personal Training': { bg: 'rgba(0,174,239,0.2)', border: 'rgba(0,174,239,0.5)', text: '#00AEEF' },
-  'Group Class': { bg: 'rgba(139,92,246,0.2)', border: 'rgba(139,92,246,0.5)', text: '#8B5CF6' },
-  'Assessment': { bg: 'rgba(34,197,94,0.2)', border: 'rgba(34,197,94,0.5)', text: '#22C55E' },
-  'Online': { bg: 'rgba(249,115,22,0.2)', border: 'rgba(249,115,22,0.5)', text: '#F97316' },
-  'Consultation': { bg: 'rgba(59,130,246,0.2)', border: 'rgba(59,130,246,0.5)', text: '#3B82F6' },
+  'Personal Training': { bg: 'rgba(0,174,239,0.2)', border: 'rgba(0,174,239,0.5)', text: 'cyan' },
+  'Group Class': { bg: 'rgba(139,92,246,0.2)', border: 'rgba(139,92,246,0.5)', text: 'violet' },
+  'Assessment': { bg: 'rgba(34,197,94,0.2)', border: 'rgba(34,197,94,0.5)', text: 'success' },
+  'Online': { bg: 'rgba(249,115,22,0.2)', border: 'rgba(249,115,22,0.5)', text: 'orange' },
+  'Consultation': { bg: 'rgba(59,130,246,0.2)', border: 'rgba(59,130,246,0.5)', text: 'info' },
 }
 
 const SESSION_TYPE_LABELS: SessionType[] = [
@@ -203,19 +203,19 @@ function useTimeIndicator(now: Date) {
 
 function WeekViewHeader({ days }: { days: Date[] }) {
   return (
-    <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-[#E2E8F0] bg-[#FFFFFF] sticky top-0 z-20">
-      <div className="h-12 border-r border-[#E2E8F0]" />
+    <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-[light-border] bg-[white] sticky top-0 z-20">
+      <div className="h-12 border-r border-[light-border]" />
       {days.map((day) => {
         const today = isToday(day)
         return (
           <div
             key={day.toISOString()}
-            className={`h-12 flex flex-col items-center justify-center border-r border-[#E2E8F0] ${
+            className={`h-12 flex flex-col items-center justify-center border-r border-[light-border] ${
               today ? 'bg-[rgba(0,174,239,0.05)]' : ''
             }`}
           >
-            <span className="text-[#94A3B8] text-[10px] uppercase font-medium">{format(day, 'EEE')}</span>
-            <span className={`text-sm font-semibold ${today ? 'text-cyan' : 'text-[#0F172A]'}`}>
+            <span className="text-[light-muted] text-[10px] uppercase font-medium">{format(day, 'EEE')}</span>
+            <span className={`text-sm font-semibold ${today ? 'text-cyan' : 'text-[light-primary]'}`}>
               {format(day, 'd')}
             </span>
             {today && (
@@ -231,13 +231,13 @@ function WeekViewHeader({ days }: { days: Date[] }) {
 function TimeGrid({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[60px_repeat(7,1fr)]">
-      <div className="border-r border-[#E2E8F0]">
+      <div className="border-r border-[light-border]">
         {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
           <div
             key={i}
-            className="h-16 border-b border-[#E2E8F0] flex items-start justify-end pr-2 pt-1"
+            className="h-16 border-b border-[light-border] flex items-start justify-end pr-2 pt-1"
           >
-            <span className="text-[10px] text-[#94A3B8] font-mono">{String(i).padStart(2, '0')}:00</span>
+            <span className="text-[10px] text-[light-muted] font-mono">{String(i).padStart(2, '0')}:00</span>
           </div>
         ))}
       </div>
@@ -275,7 +275,7 @@ function SessionOverlay({
     >
       <p className="text-white text-[11px] font-semibold truncate leading-tight">{session.clientName}</p>
       <p className="text-[9px] opacity-80 truncate" style={{ color: colors.text }}>{session.type}</p>
-      <p className="text-[9px] text-[#94A3B8] font-mono truncate">
+      <p className="text-[9px] text-[light-muted] font-mono truncate">
         {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
       </p>
       <div
@@ -331,15 +331,15 @@ function WeekView({
               return (
                 <div
                   key={day.toISOString()}
-                  className={`border-r border-[#E2E8F0] relative ${
+                  className={`border-r border-[light-border] relative ${
                     today ? 'bg-[rgba(0,174,239,0.03)]' : ''
                   }`}
-                  style={today ? { borderLeft: '2px solid #00AEEF' } : {}}
+                  style={today ? { borderLeft: '2px solid cyan' } : {}}
                 >
                   {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
                     <div
                       key={i}
-                      className="h-16 border-b border-[#E2E8F0] hover:bg-[rgba(0,174,239,0.06)] transition-colors cursor-pointer"
+                      className="h-16 border-b border-[light-border] hover:bg-[rgba(0,174,239,0.06)] transition-colors cursor-pointer"
                       onClick={() => onSlotClick(day, i, 0)}
                     />
                   ))}
@@ -369,10 +369,10 @@ function WeekView({
 
 function DayViewHeader({ date }: { date: Date }) {
   return (
-    <div className="grid grid-cols-[80px_1fr] border-b border-[#E2E8F0] bg-[#FFFFFF] sticky top-0 z-20">
-      <div className="h-14 border-r border-[#E2E8F0]" />
+    <div className="grid grid-cols-[80px_1fr] border-b border-[light-border] bg-[white] sticky top-0 z-20">
+      <div className="h-14 border-r border-[light-border]" />
       <div className="h-14 flex items-center px-4">
-        <span className="text-[#0F172A] font-semibold text-sm">{format(date, 'EEEE, d MMMM yyyy')}</span>
+        <span className="text-[light-primary] font-semibold text-sm">{format(date, 'EEEE, d MMMM yyyy')}</span>
         {isToday(date) && (
           <span className="ml-2 text-[10px] bg-cyan text-white px-2 py-0.5 rounded-full">Today</span>
         )}
@@ -384,10 +384,10 @@ function DayViewHeader({ date }: { date: Date }) {
 function DayTimeGrid({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[80px_1fr]">
-      <div className="border-r border-[#E2E8F0]">
+      <div className="border-r border-[light-border]">
         {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
-          <div key={i} className="h-16 border-b border-[#E2E8F0] flex items-start justify-end pr-3 pt-1">
-            <span className="text-[11px] text-[#94A3B8] font-mono">{String(i).padStart(2, '0')}:00</span>
+          <div key={i} className="h-16 border-b border-[light-border] flex items-start justify-end pr-3 pt-1">
+            <span className="text-[11px] text-[light-muted] font-mono">{String(i).padStart(2, '0')}:00</span>
           </div>
         ))}
       </div>
@@ -423,9 +423,9 @@ function DaySessionOverlay({
           <p className="text-white text-sm font-semibold truncate">{session.clientName}</p>
           <p className="text-[10px] opacity-80" style={{ color: colors.text }}>{session.type}</p>
         </div>
-        <span className="text-[10px] text-[#94A3B8] font-mono">{format(session.startTime, 'HH:mm')}</span>
+        <span className="text-[10px] text-[light-muted] font-mono">{format(session.startTime, 'HH:mm')}</span>
       </div>
-      <p className="text-[10px] text-[#94A3B8] mt-1">Duration: {session.duration} min</p>
+      <p className="text-[10px] text-[light-muted] mt-1">Duration: {session.duration} min</p>
       <div className="absolute bottom-1.5 left-2.5 right-2.5 h-[3px] rounded-full opacity-30" style={{ background: colors.text }} />
     </motion.div>
   )
@@ -436,26 +436,26 @@ function DailySummaryPanel({ sessions }: { sessions: CalendarSession[] }) {
   const uniqueClients = [...new Set(sessions.map((s) => s.clientName))].length
 
   return (
-    <div className="hidden xl:block w-80 border-l border-[#E2E8F0] bg-[#FFFFFF] p-5 overflow-auto">
-      <h3 className="text-[#0F172A] font-semibold text-base mb-4">Daily Summary</h3>
+    <div className="hidden xl:block w-80 border-l border-[light-border] bg-[white] p-5 overflow-auto">
+      <h3 className="text-[light-primary] font-semibold text-base mb-4">Daily Summary</h3>
 
       <div className="space-y-3 mb-6">
-        <div className="bg-[#F8FAFC] rounded-xl p-4 border border-[#E2E8F0]">
-          <p className="text-[#94A3B8] text-xs mb-1">Total Sessions</p>
-          <p className="text-[#0F172A] text-2xl font-bold font-mono">{sessions.length}</p>
+        <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border]">
+          <p className="text-[light-muted] text-xs mb-1">Total Sessions</p>
+          <p className="text-[light-primary] text-2xl font-bold font-mono">{sessions.length}</p>
         </div>
-        <div className="bg-[#F8FAFC] rounded-xl p-4 border border-[#E2E8F0]">
-          <p className="text-[#94A3B8] text-xs mb-1">Total Duration</p>
-          <p className="text-[#0F172A] text-2xl font-bold font-mono">{totalDuration} min</p>
+        <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border]">
+          <p className="text-[light-muted] text-xs mb-1">Total Duration</p>
+          <p className="text-[light-primary] text-2xl font-bold font-mono">{totalDuration} min</p>
         </div>
-        <div className="bg-[#F8FAFC] rounded-xl p-4 border border-[#E2E8F0]">
-          <p className="text-[#94A3B8] text-xs mb-1">Clients Seen</p>
-          <p className="text-[#0F172A] text-2xl font-bold font-mono">{uniqueClients}</p>
+        <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border]">
+          <p className="text-[light-muted] text-xs mb-1">Clients Seen</p>
+          <p className="text-[light-primary] text-2xl font-bold font-mono">{uniqueClients}</p>
         </div>
       </div>
 
-      <div className="border-t border-[#E2E8F0] pt-4">
-        <h4 className="text-[#64748B] text-sm font-medium mb-3">Session Breakdown</h4>
+      <div className="border-t border-[light-border] pt-4">
+        <h4 className="text-[light-secondary] text-sm font-medium mb-3">Session Breakdown</h4>
         {SESSION_TYPE_LABELS.map((type) => {
           const count = sessions.filter((s) => s.type === type).length
           if (count === 0) return null
@@ -463,9 +463,9 @@ function DailySummaryPanel({ sessions }: { sessions: CalendarSession[] }) {
             <div key={type} className="flex items-center justify-between py-1.5">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full" style={{ background: SESSION_COLORS[type].text }} />
-                <span className="text-[#64748B] text-xs">{type}</span>
+                <span className="text-[light-secondary] text-xs">{type}</span>
               </div>
-              <span className="text-[#0F172A] text-xs font-semibold">{count}</span>
+              <span className="text-[light-primary] text-xs font-semibold">{count}</span>
             </div>
           )
         })}
@@ -512,7 +512,7 @@ function DayView({
               {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
                 <div
                   key={i}
-                  className="h-16 border-b border-[#E2E8F0] hover:bg-[rgba(0,174,239,0.04)] transition-colors cursor-pointer"
+                  className="h-16 border-b border-[light-border] hover:bg-cyan-glow transition-colors cursor-pointer"
                   onClick={() => onSlotClick(date, i, 0)}
                 />
               ))}
@@ -562,7 +562,7 @@ function MonthView({
         <div className="grid grid-cols-7 mb-2">
           {weekDays.map((d) => (
             <div key={d} className="text-center py-2">
-              <span className="text-[11px] text-[#94A3B8] uppercase font-semibold">{d}</span>
+              <span className="text-[11px] text-[light-muted] uppercase font-semibold">{d}</span>
             </div>
           ))}
         </div>
@@ -581,14 +581,14 @@ function MonthView({
                 animate={{ opacity: 1 }}
                 transition={{ delay: idx * 0.005 }}
                 className={`min-h-[110px] rounded-lg p-2 cursor-pointer transition-colors border ${
-                  inMonth ? 'bg-[#FFFFFF]' : 'bg-[#F8FAFC] opacity-50'
-                } ${today ? 'border-cyan bg-[rgba(0,174,239,0.05)]' : 'border-[#E2E8F0]'}`}
+                  inMonth ? 'bg-[white]' : 'bg-[light-surface] opacity-50'
+                } ${today ? 'border-cyan bg-[rgba(0,174,239,0.05)]' : 'border-[light-border]'}`}
                 onClick={() => onDayClick(day)}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span
                     className={`text-sm font-medium ${
-                      today ? 'text-cyan' : inMonth ? 'text-[#0F172A]' : 'text-[#E2E8F0]'
+                      today ? 'text-cyan' : inMonth ? 'text-[light-primary]' : 'text-[light-border]'
                     }`}
                   >
                     {format(day, 'd')}
@@ -609,7 +609,7 @@ function MonthView({
                     />
                   ))}
                   {daySessions.length > 4 && (
-                    <span className="text-[9px] text-[#94A3B8]">+{daySessions.length - 4}</span>
+                    <span className="text-[9px] text-[light-muted]">+{daySessions.length - 4}</span>
                   )}
                 </div>
 
@@ -674,15 +674,15 @@ function AgendaView({
       <div className="max-w-[900px] mx-auto space-y-4">
         {grouped.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-[#94A3B8] text-sm">No sessions found</p>
+            <p className="text-[light-muted] text-sm">No sessions found</p>
           </div>
         )}
 
         {grouped.map(([dateStr, daySessions]) => (
           <div key={dateStr}>
-            <h3 className="text-[#0F172A] font-semibold text-sm mb-2 px-1">
+            <h3 className="text-[light-primary] font-semibold text-sm mb-2 px-1">
               {getGroupLabel(dateStr)}
-              <span className="text-[#94A3B8] font-normal ml-2">
+              <span className="text-[light-muted] font-normal ml-2">
                 {format(new Date(dateStr), 'dd/MM/yyyy')}
               </span>
             </h3>
@@ -698,15 +698,15 @@ function AgendaView({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.03 }}
-                    className="flex items-center gap-4 bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-4 py-3 cursor-pointer hover:bg-[#E2E8F0] transition-colors"
+                    className="flex items-center gap-4 bg-[white] border border-[light-border] rounded-xl px-4 py-3 cursor-pointer hover:bg-[light-border] transition-colors"
                     onClick={() => onEventClick(session)}
                   >
                     {/* Time */}
                     <div className="w-20 flex-shrink-0">
-                      <p className="text-[#0F172A] text-sm font-mono font-medium">
+                      <p className="text-[light-primary] text-sm font-mono font-medium">
                         {format(session.startTime, 'HH:mm')}
                       </p>
-                      <p className="text-[#94A3B8] text-xs font-mono">
+                      <p className="text-[light-muted] text-xs font-mono">
                         {format(endTime, 'HH:mm')}
                       </p>
                     </div>
@@ -719,10 +719,10 @@ function AgendaView({
 
                     {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-[#0F172A] text-sm font-semibold truncate">
+                      <p className="text-[light-primary] text-sm font-semibold truncate">
                         {session.clientName}
                       </p>
-                      <p className="text-[#94A3B8] text-xs">{session.duration} min</p>
+                      <p className="text-[light-muted] text-xs">{session.duration} min</p>
                     </div>
 
                     {/* Type badge */}
@@ -795,21 +795,21 @@ function NewSessionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-[#FFFFFF] border-[#E2E8F0] text-[#0F172A] max-w-md">
+      <DialogContent className="bg-[white] border-[light-border] text-[light-primary] max-w-md">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Book New Session</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
           <div>
-            <label className="text-xs text-[#64748B] mb-1 block">Client</label>
+            <label className="text-xs text-[light-secondary] mb-1 block">Client</label>
             <Select value={client} onValueChange={setClient}>
-              <SelectTrigger className="bg-[#F8FAFC] border-[#E2E8F0] text-[#0F172A]">
+              <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
                 <SelectValue placeholder="Select client" />
               </SelectTrigger>
-              <SelectContent className="bg-[#F8FAFC] border-[#E2E8F0]">
+              <SelectContent className="bg-[light-surface] border-[light-border]">
                 {clients.map((c) => (
-                  <SelectItem key={c.id} value={c.name} className="text-[#0F172A]">
+                  <SelectItem key={c.id} value={c.name} className="text-[light-primary]">
                     {c.name}
                   </SelectItem>
                 ))}
@@ -819,20 +819,20 @@ function NewSessionModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[#64748B] mb-1 block">Date</label>
+              <label className="text-xs text-[light-secondary] mb-1 block">Date</label>
               <input
                 type="date"
                 value={dateStr}
                 onChange={(e) => setDateStr(e.target.value)}
-                className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[#0F172A] text-sm"
+                className="w-full h-10 bg-[light-surface] border border-[light-border] rounded-lg px-3 text-[light-primary] text-sm"
               />
             </div>
             <div>
-              <label className="text-xs text-[#64748B] mb-1 block">Time</label>
+              <label className="text-xs text-[light-secondary] mb-1 block">Time</label>
               <select
                 value={timeStr}
                 onChange={(e) => setTimeStr(e.target.value)}
-                className="w-full h-10 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 text-[#0F172A] text-sm"
+                className="w-full h-10 bg-[light-surface] border border-[light-border] rounded-lg px-3 text-[light-primary] text-sm"
               >
                 {HK_TIME_SLOTS.map((h) =>
                   [0, 30].map((m) => (
@@ -847,14 +847,14 @@ function NewSessionModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[#64748B] mb-1 block">Duration</label>
+              <label className="text-xs text-[light-secondary] mb-1 block">Duration</label>
               <Select value={duration} onValueChange={setDuration}>
-                <SelectTrigger className="bg-[#F8FAFC] border-[#E2E8F0] text-[#0F172A]">
+                <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#F8FAFC] border-[#E2E8F0]">
+                <SelectContent className="bg-[light-surface] border-[light-border]">
                   {['30', '45', '60', '90', '120'].map((d) => (
-                    <SelectItem key={d} value={d} className="text-[#0F172A]">
+                    <SelectItem key={d} value={d} className="text-[light-primary]">
                       {d} min
                     </SelectItem>
                   ))}
@@ -862,14 +862,14 @@ function NewSessionModal({
               </Select>
             </div>
             <div>
-              <label className="text-xs text-[#64748B] mb-1 block">Session Type</label>
+              <label className="text-xs text-[light-secondary] mb-1 block">Session Type</label>
               <Select value={type} onValueChange={(v) => setType(v as SessionType)}>
-                <SelectTrigger className="bg-[#F8FAFC] border-[#E2E8F0] text-[#0F172A]">
+                <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#F8FAFC] border-[#E2E8F0]">
+                <SelectContent className="bg-[light-surface] border-[light-border]">
                   {SESSION_TYPE_LABELS.map((t) => (
-                    <SelectItem key={t} value={t} className="text-[#0F172A]">
+                    <SelectItem key={t} value={t} className="text-[light-primary]">
                       {t}
                     </SelectItem>
                   ))}
@@ -879,13 +879,13 @@ function NewSessionModal({
           </div>
 
           <div>
-            <label className="text-xs text-[#64748B] mb-1 block">Notes (optional)</label>
+            <label className="text-xs text-[light-secondary] mb-1 block">Notes (optional)</label>
             <textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add session notes..."
-              className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-2 text-[#0F172A] text-sm placeholder:text-[#CBD5E1] resize-none focus:outline-none focus:border-cyan"
+              className="w-full bg-[light-surface] border border-[light-border] rounded-lg px-3 py-2 text-[light-primary] text-sm placeholder:text-[gray-300] resize-none focus:outline-none focus:border-cyan"
             />
           </div>
         </div>
@@ -894,7 +894,7 @@ function NewSessionModal({
           <Button
             variant="ghost"
             onClick={onClose}
-            className="text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
+            className="text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]"
           >
             Cancel
           </Button>
@@ -923,7 +923,7 @@ function ViewToggle({
   ]
 
   return (
-    <div className="flex items-center gap-1 bg-[#F8FAFC] rounded-lg p-1 border border-[#E2E8F0]">
+    <div className="flex items-center gap-1 bg-[light-surface] rounded-lg p-1 border border-[light-border]">
       {views.map((v) => {
         const active = view === v.key
         const Icon = v.icon
@@ -933,8 +933,8 @@ function ViewToggle({
             onClick={() => setView(v.key)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
               active
-                ? 'bg-[#F1F5F9] text-[#0F172A] border border-[#E2E8F0]'
-                : 'text-[#94A3B8] hover:text-[#64748B] hover:bg-[#E2E8F0]'
+                ? 'bg-[light-hover] text-[light-primary] border border-[light-border]'
+                : 'text-[light-muted] hover:text-[light-secondary] hover:bg-[light-border]'
             }`}
           >
             <Icon size={14} />
@@ -969,20 +969,20 @@ function CalendarToolbar({
   onNewSession: () => void
 }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 lg:px-6 py-3 bg-[#FFFFFF] border-b border-[#E2E8F0] flex-shrink-0">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 lg:px-6 py-3 bg-[white] border-b border-[light-border] flex-shrink-0">
       <ViewToggle view={view} setView={setView} />
       <div className="flex items-center gap-2">
-        <button onClick={onPrev} className="w-8 h-8 flex items-center justify-center rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" aria-label="Previous"><ChevronLeft size={16} /></button>
-        <h2 className="text-[#0F172A] font-semibold text-sm min-w-[160px] text-center">{dateDisplay}</h2>
-        <button onClick={onNext} className="w-8 h-8 flex items-center justify-center rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors" aria-label="Next"><ChevronRight size={16} /></button>
-        <button onClick={onToday} className="ml-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors border border-[#E2E8F0]">Today</button>
+        <button onClick={onPrev} className="w-8 h-8 flex items-center justify-center rounded-lg text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover] transition-colors" aria-label="Previous"><ChevronLeft size={16} /></button>
+        <h2 className="text-[light-primary] font-semibold text-sm min-w-[160px] text-center">{dateDisplay}</h2>
+        <button onClick={onNext} className="w-8 h-8 flex items-center justify-center rounded-lg text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover] transition-colors" aria-label="Next"><ChevronRight size={16} /></button>
+        <button onClick={onToday} className="ml-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover] transition-colors border border-[light-border]">Today</button>
       </div>
       <div className="flex items-center gap-2">
         <Select value={filterType} onValueChange={(v) => setFilterType(v as SessionType | 'All')}>
-          <SelectTrigger className="w-[150px] h-8 bg-[#F8FAFC] border-[#E2E8F0] text-[#0F172A] text-xs"><Filter size={12} className="mr-1 text-[#94A3B8]" /><SelectValue /></SelectTrigger>
-          <SelectContent className="bg-[#F8FAFC] border-[#E2E8F0]">
-            <SelectItem value="All" className="text-[#0F172A]">All Types</SelectItem>
-            {SESSION_TYPE_LABELS.map((t) => <SelectItem key={t} value={t} className="text-[#0F172A]">{t}</SelectItem>)}
+          <SelectTrigger className="w-[150px] h-8 bg-[light-surface] border-[light-border] text-[light-primary] text-xs"><Filter size={12} className="mr-1 text-[light-muted]" /><SelectValue /></SelectTrigger>
+          <SelectContent className="bg-[light-surface] border-[light-border]">
+            <SelectItem value="All" className="text-[light-primary]">All Types</SelectItem>
+            {SESSION_TYPE_LABELS.map((t) => <SelectItem key={t} value={t} className="text-[light-primary]">{t}</SelectItem>)}
           </SelectContent>
         </Select>
         <button onClick={onNewSession} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan hover:bg-cyan-hover text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:scale-[1.02]"><Plus size={14} /><span className="hidden sm:inline">New Session</span></button>
@@ -1003,7 +1003,7 @@ function SessionDetailModal({
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-[#FFFFFF] border-[#E2E8F0] text-[#0F172A] max-w-md">
+      <DialogContent className="bg-[white] border-[light-border] text-[light-primary] max-w-md">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Session Details</DialogTitle>
         </DialogHeader>
@@ -1014,28 +1014,28 @@ function SessionDetailModal({
                 <User size={18} style={{ color: SESSION_COLORS[session.type].text }} />
               </div>
               <div>
-                <p className="text-[#0F172A] font-semibold">{session.clientName}</p>
-                <p className="text-[#94A3B8] text-xs">{session.type}</p>
+                <p className="text-[light-primary] font-semibold">{session.clientName}</p>
+                <p className="text-[light-muted] text-xs">{session.type}</p>
               </div>
             </div>
-            <div className="bg-[#F8FAFC] rounded-xl p-4 border border-[#E2E8F0] space-y-2">
+            <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border] space-y-2">
               <div className="flex justify-between">
-                <span className="text-[#94A3B8] text-xs">Date</span>
-                <span className="text-[#0F172A] text-xs font-medium">{format(session.startTime, 'EEEE, d MMMM yyyy')}</span>
+                <span className="text-[light-muted] text-xs">Date</span>
+                <span className="text-[light-primary] text-xs font-medium">{format(session.startTime, 'EEEE, d MMMM yyyy')}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#94A3B8] text-xs">Time</span>
-                <span className="text-[#0F172A] text-xs font-medium font-mono">
+                <span className="text-[light-muted] text-xs">Time</span>
+                <span className="text-[light-primary] text-xs font-medium font-mono">
                   {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#94A3B8] text-xs">Duration</span>
-                <span className="text-[#0F172A] text-xs font-medium">{session.duration} minutes</span>
+                <span className="text-[light-muted] text-xs">Duration</span>
+                <span className="text-[light-primary] text-xs font-medium">{session.duration} minutes</span>
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={onClose} className="text-[#64748B] hover:text-[#0F172A]">Close</Button>
+              <Button variant="ghost" onClick={onClose} className="text-[light-secondary] hover:text-[light-primary]">Close</Button>
             </div>
           </div>
         )}
@@ -1167,7 +1167,7 @@ export default function CalendarPage() {
     <motion.div
       {...motionEnter(reduceMotion, { opacity: 0 }, { duration: 0.3 })}
       animate={{ opacity: 1 }}
-      className="flex flex-col h-[calc(100dvh-64px)] bg-[#F8FAFC]"
+      className="flex flex-col h-[calc(100dvh-64px)] bg-[light-surface]"
     >
       <CalendarToolbar
         view={view}

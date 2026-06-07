@@ -85,16 +85,16 @@ interface ClientData {
 /* ------------------------------------------------------------------ */
 
 const SESSION_TYPE_COLORS: Record<string, string> = {
-  'Strength Training': '#00AEEF',
-  'Upper Body Focus': '#8B5CF6',
-  'Lower Body Power': '#00AEEF',
-  'Cardio & Core': '#22C55E',
-  'HIIT Circuit': '#F97316',
-  'Mobility & Stretch': '#EAB308',
-  'BioPrint Assessment': '#EC4899',
-  'Program Review': '#3B82F6',
-  'Nutrition Check-in': '#10B981',
-  'Personal Training': '#00AEEF',
+  'Strength Training': 'cyan',
+  'Upper Body Focus': 'violet',
+  'Lower Body Power': 'cyan',
+  'Cardio & Core': 'success',
+  'HIIT Circuit': 'orange',
+  'Mobility & Stretch': 'warning',
+  'BioPrint Assessment': 'trainer-accent',
+  'Program Review': 'info',
+  'Nutrition Check-in': 'emerald-light',
+  'Personal Training': 'cyan',
 }
 
 function mapSessionToItem(s: CalendarSession): SessionItem {
@@ -114,7 +114,7 @@ function mapSessionToItem(s: CalendarSession): SessionItem {
     type: s.title,
     duration,
     status,
-    color: SESSION_TYPE_COLORS[s.title] || '#00AEEF',
+    color: SESSION_TYPE_COLORS[s.title] || 'cyan',
   }
 }
 
@@ -197,8 +197,8 @@ function StatusBadge({ status }: { status: SessionItem['status'] }) {
     )
   }
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#94A3B8]">
-      <span className="w-1.5 h-1.5 rounded-full bg-[#94A3B8]" />
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[light-muted]">
+      <span className="w-1.5 h-1.5 rounded-full bg-[light-muted]" />
       Upcoming
     </span>
   )
@@ -213,23 +213,23 @@ function AlertIcon({ type }: { type: AlertItem['type'] }) {
     case 'danger':
       return <AlertTriangle {...props} className="flex-shrink-0 text-danger" />
     case 'warning':
-      return <Clock {...props} className="flex-shrink-0 text-[#F59E0B]" />
+      return <Clock {...props} className="flex-shrink-0 text-[warning]" />
     case 'info':
-      return <Info {...props} className="flex-shrink-0 text-[#3B82F6]" />
+      return <Info {...props} className="flex-shrink-0 text-[info]" />
     case 'success':
       return <CheckCircle2 {...props} className="flex-shrink-0 text-success" />
     default:
-      return <Bell {...props} className="flex-shrink-0 text-[#94A3B8]" />
+      return <Bell {...props} className="flex-shrink-0 text-[light-muted]" />
   }
 }
 
 function AlertBorderColor({ type }: { type: AlertItem['type'] }) {
   switch (type) {
-    case 'danger': return '#EF4444'
-    case 'warning': return '#F59E0B'
-    case 'info': return '#3B82F6'
-    case 'success': return '#22C55E'
-    default: return '#94A3B8'
+    case 'danger': return 'danger'
+    case 'warning': return 'warning'
+    case 'info': return 'info'
+    case 'success': return 'success'
+    default: return 'light-muted'
   }
 }
 
@@ -237,7 +237,7 @@ function AlertBorderColor({ type }: { type: AlertItem['type'] }) {
 /*  Status Dot                                                         */
 /* ------------------------------------------------------------------ */
 function StatusDot({ status }: { status: ClientData['status'] }) {
-  const color = status === 'active' ? '#22C55E' : status === 'warning' ? '#F59E0B' : '#EF4444'
+  const color = status === 'active' ? 'success' : status === 'warning' ? 'warning' : 'danger'
   return (
     <span
       className="absolute top-3 right-3 w-2 h-2 rounded-full"
@@ -320,7 +320,7 @@ export default function DashboardPage() {
     <motion.div
       {...motionEnter(reduceMotion, { opacity: 0 }, { duration: 0.3 })}
       animate={{ opacity: 1 }}
-      className="space-y-8 bg-[#F8FAFC] min-h-[calc(100dvh-64px)]"
+      className="space-y-8 bg-[light-surface] min-h-[calc(100dvh-64px)]"
     >
       {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6 max-w-[1200px] mx-auto">
@@ -341,17 +341,17 @@ export default function DashboardPage() {
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, x: -30 }, { duration: 0.5, delay: 0.3, ease: easeOut })}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-3 bg-white border border-[#E2E8F0] rounded-xl p-5 lg:p-6 shadow-sm"
+          className="lg:col-span-3 bg-white border border-[light-border] rounded-xl p-5 lg:p-6 shadow-sm"
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-[#0F172A] text-lg font-semibold">Today&apos;s Schedule</h2>
-              <p className="text-[#94A3B8] text-xs mt-0.5">{todayDate}</p>
+              <h2 className="text-[light-primary] text-lg font-semibold">Today&apos;s Schedule</h2>
+              <p className="text-[light-muted] text-xs mt-0.5">{todayDate}</p>
             </div>
             <Link
               to="/calendar"
-              className="text-cyan text-xs font-medium hover:text-[#008DC4] transition-colors flex items-center gap-1"
+              className="text-cyan text-xs font-medium hover:text-[cyan-dark] transition-colors flex items-center gap-1"
             >
               View Calendar
               <ChevronRight size={14} />
@@ -361,7 +361,7 @@ export default function DashboardPage() {
           {/* Timeline */}
           <div className="relative space-y-3 max-h-[480px] overflow-y-auto pr-1 custom-scrollbar">
             {/* Vertical line */}
-            <div className="absolute left-[29px] top-0 bottom-0 w-[2px] bg-[#E2E8F0]" />
+            <div className="absolute left-[29px] top-0 bottom-0 w-[2px] bg-[light-border]" />
 
             {todaySessions.map((session, idx) => (
               <motion.div
@@ -371,7 +371,7 @@ export default function DashboardPage() {
                 className="relative flex items-start gap-4 group"
               >
                 {/* Time label */}
-                <div className="w-[50px] text-right text-xs text-[#94A3B8] pt-3" style={{ fontFamily: '"Space Mono", monospace' }}>
+                <div className="w-[50px] text-right text-xs text-[light-muted] pt-3" style={{ fontFamily: '"Space Mono", monospace' }}>
                   {session.time}
                 </div>
 
@@ -379,7 +379,7 @@ export default function DashboardPage() {
                 <div
                   className="relative z-10 w-[10px] h-[10px] rounded-full mt-3.5 flex-shrink-0"
                   style={{
-                    backgroundColor: session.status === 'in-progress' ? session.color : '#E2E8F0',
+                    backgroundColor: session.status === 'in-progress' ? session.color : 'light-border',
                     boxShadow: session.status === 'in-progress' ? `0 0 8px ${session.color}` : 'none',
                   }}
                 >
@@ -393,18 +393,18 @@ export default function DashboardPage() {
 
                 {/* Card */}
                 <div
-                  className="flex-1 bg-[#F8FAFC] rounded-lg p-3.5 border-l-4 transition-all duration-150 group-hover:bg-[#F1F5F9] group-hover:scale-[1.01]"
+                  className="flex-1 bg-[light-surface] rounded-lg p-3.5 border-l-4 transition-all duration-150 group-hover:bg-[light-hover] group-hover:scale-[1.01]"
                   style={{ borderLeftColor: session.color }}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] text-[#94A3B8]" style={{ fontFamily: '"Space Mono", monospace' }}>
+                    <span className="text-[10px] text-[light-muted]" style={{ fontFamily: '"Space Mono", monospace' }}>
                       {session.time} - {String(parseInt(session.time.split(':')[0]) + parseInt(session.duration.split(' ')[0]) / 60).split('.')[0].padStart(2, '0')}:{session.time.split(':')[1]}
                     </span>
                     <StatusBadge status={session.status} />
                   </div>
-                  <p className="text-[#0F172A] text-sm font-semibold">{session.client}</p>
-                  <p className="text-[#64748B] text-xs">{session.type}</p>
-                  <p className="text-[#94A3B8] text-[10px] mt-1 flex items-center gap-1">
+                  <p className="text-[light-primary] text-sm font-semibold">{session.client}</p>
+                  <p className="text-[light-secondary] text-xs">{session.type}</p>
+                  <p className="text-[light-muted] text-[10px] mt-1 flex items-center gap-1">
                     <Clock size={10} />
                     {session.duration}
                   </p>
@@ -418,11 +418,11 @@ export default function DashboardPage() {
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, x: 30 }, { duration: 0.5, delay: 0.4, ease: easeOut })}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2 bg-white border border-[#E2E8F0] rounded-xl p-5 lg:p-6 shadow-sm"
+          className="lg:col-span-2 bg-white border border-[light-border] rounded-xl p-5 lg:p-6 shadow-sm"
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-[#0F172A] text-lg font-semibold">Follow-ups &amp; Alerts</h2>
+            <h2 className="text-[light-primary] text-lg font-semibold">Follow-ups &amp; Alerts</h2>
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[rgba(239,68,68,0.1)] text-danger text-xs font-bold">
               {followupAlerts.length}
             </span>
@@ -435,21 +435,21 @@ export default function DashboardPage() {
                 key={idx}
                 {...motionEnter(reduceMotion, { opacity: 0, x: 20 }, { duration: 0.3, delay: 0.5 + idx * 0.1, ease: easeOut })}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-[#F8FAFC] rounded-lg p-4 border-l-[3px] hover:bg-[#F1F5F9] transition-colors duration-150 cursor-pointer flex items-start gap-3"
+                className="bg-[light-surface] rounded-lg p-4 border-l-[3px] hover:bg-[light-hover] transition-colors duration-150 cursor-pointer flex items-start gap-3"
                 style={{ borderLeftColor: AlertBorderColor({ type: alert.type }) }}
                 onClick={() => navigate('/clients/1')}
               >
                 <AlertIcon type={alert.type} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[#0F172A] text-xs font-medium leading-snug">{alert.message}</p>
+                  <p className="text-[light-primary] text-xs font-medium leading-snug">{alert.message}</p>
                   <div className="flex items-center justify-between mt-1.5">
                     <span className="text-cyan text-xs hover:underline">{alert.client}</span>
-                    <span className="text-[#94A3B8] text-[10px]" style={{ fontFamily: '"Space Mono", monospace' }}>
+                    <span className="text-[light-muted] text-[10px]" style={{ fontFamily: '"Space Mono", monospace' }}>
                       {alert.time}
                     </span>
                   </div>
                 </div>
-                <ChevronRight size={14} className="text-[#94A3B8] flex-shrink-0 mt-0.5" />
+                <ChevronRight size={14} className="text-[light-muted] flex-shrink-0 mt-0.5" />
               </motion.div>
             ))}
           </div>
@@ -464,19 +464,19 @@ export default function DashboardPage() {
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
           <div className="flex items-center gap-3">
-            <h2 className="text-[#0F172A] text-lg font-semibold">Your Clients</h2>
-            <span className="text-[#94A3B8] text-sm">({allClients.length})</span>
+            <h2 className="text-[light-primary] text-lg font-semibold">Your Clients</h2>
+            <span className="text-[light-muted] text-sm">({allClients.length})</span>
           </div>
           <div className="flex items-center gap-3">
             {/* Search */}
             <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[light-muted]" />
               <input
                 type="text"
                 placeholder="Search clients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-48 bg-white border border-[#E2E8F0] rounded-lg pl-8 pr-3 py-2 text-xs text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-cyan transition-colors shadow-sm"
+                className="w-48 bg-white border border-[light-border] rounded-lg pl-8 pr-3 py-2 text-xs text-[light-primary] placeholder:text-[light-muted] focus:outline-none focus:border-cyan transition-colors shadow-sm"
               />
             </div>
             {/* Filter */}
@@ -484,18 +484,18 @@ export default function DashboardPage() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="appearance-none bg-white border border-[#E2E8F0] rounded-lg pl-3 pr-8 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-cyan transition-colors cursor-pointer shadow-sm"
+                className="appearance-none bg-white border border-[light-border] rounded-lg pl-3 pr-8 py-2 text-xs text-[light-primary] focus:outline-none focus:border-cyan transition-colors cursor-pointer shadow-sm"
               >
                 <option value="All">All</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
                 <option value="New This Month">New This Month</option>
               </select>
-              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#94A3B8] pointer-events-none" />
+              <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[light-muted] pointer-events-none" />
             </div>
             <Link
               to="/clients"
-              className="text-cyan text-xs font-medium hover:text-[#008DC4] transition-colors flex items-center gap-1 whitespace-nowrap"
+              className="text-cyan text-xs font-medium hover:text-[cyan-dark] transition-colors flex items-center gap-1 whitespace-nowrap"
             >
               View All
               <ChevronRight size={14} />
@@ -517,7 +517,7 @@ export default function DashboardPage() {
                   transition: { duration: 0.25, ease: easeSmooth },
                 }}
                 onClick={() => navigate(`/clients/${client.id}`)}
-                className="bg-white border border-[#E2E8F0] rounded-xl p-5 relative cursor-pointer hover:border-[rgba(0,174,239,0.3)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-250 shadow-sm"
+                className="bg-white border border-[light-border] rounded-xl p-5 relative cursor-pointer hover:border-[rgba(0,174,239,0.3)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-250 shadow-sm"
               >
                 <StatusDot status={client.status} />
 
@@ -529,34 +529,34 @@ export default function DashboardPage() {
                     className="w-12 h-12 rounded-full object-cover flex-shrink-0"
                   />
                   <div className="min-w-0">
-                    <p className="text-[#0F172A] text-sm font-semibold truncate">{client.name}</p>
-                    <p className="text-[#94A3B8] text-xs">{client.lastSession}</p>
+                    <p className="text-[light-primary] text-sm font-semibold truncate">{client.name}</p>
+                    <p className="text-[light-muted] text-xs">{client.lastSession}</p>
                   </div>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 mb-3">
-                  <div className="bg-[#F8FAFC] rounded-lg p-2 text-center">
-                    <p className="text-[#0F172A] text-xs font-semibold">{client.weight}</p>
-                    <p className="text-[#94A3B8] text-[10px]">Weight</p>
+                  <div className="bg-[light-surface] rounded-lg p-2 text-center">
+                    <p className="text-[light-primary] text-xs font-semibold">{client.weight}</p>
+                    <p className="text-[light-muted] text-[10px]">Weight</p>
                   </div>
-                  <div className="bg-[#F8FAFC] rounded-lg p-2 text-center">
-                    <p className="text-[#0F172A] text-xs font-semibold">{client.bodyFat}</p>
-                    <p className="text-[#94A3B8] text-[10px]">Body Fat</p>
+                  <div className="bg-[light-surface] rounded-lg p-2 text-center">
+                    <p className="text-[light-primary] text-xs font-semibold">{client.bodyFat}</p>
+                    <p className="text-[light-muted] text-[10px]">Body Fat</p>
                   </div>
-                  <div className="bg-[#F8FAFC] rounded-lg p-2 text-center">
-                    <p className="text-[#0F172A] text-xs font-semibold">{client.sessions}</p>
-                    <p className="text-[#94A3B8] text-[10px]">Sessions</p>
+                  <div className="bg-[light-surface] rounded-lg p-2 text-center">
+                    <p className="text-[light-primary] text-xs font-semibold">{client.sessions}</p>
+                    <p className="text-[light-muted] text-[10px]">Sessions</p>
                   </div>
                 </div>
 
                 {/* Progress bar */}
                 <div className="mt-2">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[#94A3B8] text-[10px]">Program Progress</span>
-                    <span className="text-[#0F172A] text-[10px] font-medium">{Math.min(client.sessions * 2, 100)}%</span>
+                    <span className="text-[light-muted] text-[10px]">Program Progress</span>
+                    <span className="text-[light-primary] text-[10px] font-medium">{Math.min(client.sessions * 2, 100)}%</span>
                   </div>
-                  <div className="h-1.5 bg-[#E2E8F0] rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-[light-border] rounded-full overflow-hidden">
                     <motion.div
                       {...motionEnter(reduceMotion, { width: 0 }, { duration: 0.8, delay: 0.7 + idx * 0.05, ease: easeOut })}
                       animate={{ width: `${Math.min(client.sessions * 2, 100)}%` }}
@@ -564,10 +564,10 @@ export default function DashboardPage() {
                       style={{
                         background:
                           client.status === 'active'
-                            ? '#22C55E'
+                            ? 'success'
                             : client.status === 'warning'
-                              ? '#F59E0B'
-                              : '#EF4444',
+                              ? 'warning'
+                              : 'danger',
                       }}
                     />
                   </div>
@@ -579,9 +579,9 @@ export default function DashboardPage() {
 
         {filteredClients.length === 0 && (
           <div className="text-center py-12">
-            <Eye size={32} className="mx-auto text-[#94A3B8] mb-3" />
-            <p className="text-[#0F172A] text-sm font-medium">No clients found</p>
-            <p className="text-[#94A3B8] text-xs mt-1">Try adjusting your search or filter</p>
+            <Eye size={32} className="mx-auto text-[light-muted] mb-3" />
+            <p className="text-[light-primary] text-sm font-medium">No clients found</p>
+            <p className="text-[light-muted] text-xs mt-1">Try adjusting your search or filter</p>
           </div>
         )}
       </motion.div>
@@ -603,7 +603,7 @@ export default function DashboardPage() {
                   {...motionEnter(reduceMotion, { opacity: 0, x: 20 }, { delay: idx * 0.05 })}
                   animate={{ opacity: 1, x: 0 }}
                   onClick={action.action}
-                  className="flex items-center gap-3 bg-white border border-[#E2E8F0] text-[#0F172A] px-4 py-2.5 rounded-full shadow-lg hover:bg-[#F8FAFC] transition-colors whitespace-nowrap text-sm font-medium"
+                  className="flex items-center gap-3 bg-white border border-[light-border] text-[light-primary] px-4 py-2.5 rounded-full shadow-lg hover:bg-[light-surface] transition-colors whitespace-nowrap text-sm font-medium"
                 >
                   <action.icon size={16} className="text-cyan" />
                   {action.label}
@@ -616,7 +616,7 @@ export default function DashboardPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setFabOpen(!fabOpen)}
-          className="w-14 h-14 rounded-full bg-cyan text-white shadow-lg shadow-[rgba(0,174,239,0.3)] flex items-center justify-center hover:bg-[#008DC4] transition-colors"
+          className="w-14 h-14 rounded-full bg-cyan text-white shadow-lg shadow-[rgba(0,174,239,0.3)] flex items-center justify-center hover:bg-[cyan-dark] transition-colors"
         >
           <motion.div animate={{ rotate: fabOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
             <Plus size={24} />

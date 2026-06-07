@@ -41,16 +41,16 @@ const categoryConfig: Record<string, { label: string; icon: typeof Bell }> = {
 };
 
 const typeColors: Record<string, string> = {
-  success: '#22C55E',
-  error: '#EF4444',
-  warning: '#EAB308',
-  info: '#3B82F6',
-  session: '#00AEEF',
-  client: '#A855F7',
-  milestone: '#F59E0B',
-  alert: '#EF4444',
-  message: '#3B82F6',
-  system: '#6B7280',
+  success: 'success',
+  error: 'danger',
+  warning: 'warning',
+  info: 'info',
+  session: 'cyan',
+  client: 'admin-accent',
+  milestone: 'warning',
+  alert: 'danger',
+  message: 'info',
+  system: 'gray-550',
 };
 
 const typeIcons: Record<string, typeof Bell> = {
@@ -72,10 +72,10 @@ const typeIcons: Record<string, typeof Bell> = {
 
 export function showToast(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info') {
   const config = {
-    success: { icon: <CheckCircle size={18} className="text-success" />, borderColor: '#22C55E' },
-    error: { icon: <XCircle size={18} className="text-danger" />, borderColor: '#EF4444' },
-    warning: { icon: <AlertTriangle size={18} className="text-warning" />, borderColor: '#EAB308' },
-    info: { icon: <Info size={18} className="text-info" />, borderColor: '#3B82F6' },
+    success: { icon: <CheckCircle size={18} className="text-success" />, borderColor: 'success' },
+    error: { icon: <XCircle size={18} className="text-danger" />, borderColor: 'danger' },
+    warning: { icon: <AlertTriangle size={18} className="text-warning" />, borderColor: 'warning' },
+    info: { icon: <Info size={18} className="text-info" />, borderColor: 'info' },
   };
   const c = config[type];
   toast(message, {
@@ -112,7 +112,7 @@ function NotificationItem({
   onMarkRead: (id: string) => void;
 }) {
   const Icon = typeIcons[notification.type] || Bell;
-  const color = typeColors[notification.type] || '#6B7280';
+  const color = typeColors[notification.type] || 'gray-550';
 
   return (
     <motion.div
@@ -123,7 +123,7 @@ function NotificationItem({
       animate="show"
       exit="exit"
       layout
-      className={`flex items-start gap-4 p-4 border-b border-gray-100 dark:border-white/[0.04] transition-colors hover:bg-gray-50 dark:hover:bg-[#1A1A1A] ${
+      className={`flex items-start gap-4 p-4 border-b border-gray-100 dark:border-white/[0.04] transition-colors hover:bg-gray-50 dark:hover:bg-[az-black-elevated] ${
         !notification.read ? 'bg-cyan-glow/30 dark:bg-cyan-glow/20' : ''
       }`}
     >
@@ -230,8 +230,8 @@ export default function NotificationsPage() {
         position="top-right"
         toastOptions={{
           style: {
-            background: 'var(--white, #FFFFFF)',
-            border: '1px solid var(--gray-200, #E5E7EB)',
+            background: 'var(--white, white)',
+            border: '1px solid var(--gray-200, gray-200)',
             borderRadius: '0.75rem',
             padding: '1rem 1.25rem',
             boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
@@ -304,7 +304,7 @@ export default function NotificationsPage() {
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeFilter === filter
                   ? 'bg-cyan text-white shadow-cyan'
-                  : 'bg-gray-100 dark:bg-[#1A1A1A] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
+                  : 'bg-gray-100 dark:bg-[az-black-elevated] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
               }`}
             >
               <cfg.icon size={14} />
@@ -326,7 +326,7 @@ export default function NotificationsPage() {
         initial={reduceMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 0.35 }}
-        className="bg-white dark:bg-[#141414] rounded-2xl border border-gray-200 dark:border-white/[0.06] shadow-card overflow-hidden"
+        className="bg-white dark:bg-[az-black-card] rounded-2xl border border-gray-200 dark:border-white/[0.06] shadow-card overflow-hidden"
       >
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-14 text-center">

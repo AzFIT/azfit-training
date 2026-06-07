@@ -146,22 +146,22 @@ export default function WorkoutSessionPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[100dvh] bg-[#F5F7FA] dark:bg-[#0A0A0A] flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-[#0EA5E9]" />
+      <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black] flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-[cyan]" />
       </div>
     )
   }
 
   if (!programData) {
     return (
-      <div className="min-h-[100dvh] bg-[#F5F7FA] dark:bg-[#0A0A0A] flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black] flex items-center justify-center">
         <p className="text-slate-500 dark:text-slate-400">Program not found.</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#F5F7FA] dark:bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="space-y-2">
@@ -180,7 +180,7 @@ export default function WorkoutSessionPage() {
             </div>
             <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[#0EA5E9] to-[#6366F1] rounded-full"
+                className="h-full bg-gradient-to-r from-[cyan] to-[indigo] rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${currentDayExercises.length > 0 ? (completedExercises / currentDayExercises.length) * 100 : 0}%` }}
               />
@@ -200,7 +200,7 @@ export default function WorkoutSessionPage() {
               className={cn(
                 'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all',
                 activeDay === day.day_number
-                  ? 'bg-[#0EA5E9] text-white'
+                  ? 'bg-[cyan] text-white'
                   : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
               )}
             >
@@ -231,7 +231,7 @@ export default function WorkoutSessionPage() {
             disabled={isSaving}
             className={cn(
               'w-full py-4 rounded-2xl font-bold text-white text-lg',
-              'bg-gradient-to-r from-[#0EA5E9] to-[#6366F1]',
+              'bg-gradient-to-r from-[cyan] to-[indigo]',
               'hover:shadow-lg transition-all',
               'flex items-center justify-center gap-2',
               'disabled:opacity-50 disabled:cursor-not-allowed'

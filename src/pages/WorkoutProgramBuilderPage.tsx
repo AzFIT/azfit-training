@@ -62,7 +62,7 @@ export default function WorkoutProgramBuilderPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#F5F7FA] dark:bg-[#0A0A0A]">
+    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export default function WorkoutProgramBuilderPage() {
               className={cn(
                 'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                 step === 1
-                  ? 'bg-[#0EA5E9] text-white'
+                  ? 'bg-[cyan] text-white'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300'
               )}
             >
@@ -125,7 +125,7 @@ export default function WorkoutProgramBuilderPage() {
                     setSelectedClientId('demo-client-1')
                     setStep(2)
                   }}
-                  className="flex items-center gap-3 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#0EA5E9] hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all text-left"
+                  className="flex items-center gap-3 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[cyan] hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all text-left"
                 >
                   <Users size={20} className="text-slate-400" />
                   <div>
@@ -139,7 +139,7 @@ export default function WorkoutProgramBuilderPage() {
                     setSelectedClientId(null)
                     setStep(2)
                   }}
-                  className="flex items-center gap-3 p-4 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-[#0EA5E9] hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all text-left"
+                  className="flex items-center gap-3 p-4 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-[cyan] hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-all text-left"
                 >
                   <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
                     <span className="text-slate-500 text-lg">+</span>
@@ -168,7 +168,7 @@ export default function WorkoutProgramBuilderPage() {
                 </h2>
                 {refLoading ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 size={24} className="animate-spin text-[#0EA5E9]" />
+                    <Loader2 size={24} className="animate-spin text-[cyan]" />
                   </div>
                 ) : (
                   <CategoryGrid
@@ -186,7 +186,7 @@ export default function WorkoutProgramBuilderPage() {
                 </h2>
                 {refLoading ? (
                   <div className="flex items-center justify-center py-4">
-                    <Loader2 size={24} className="animate-spin text-[#0EA5E9]" />
+                    <Loader2 size={24} className="animate-spin text-[cyan]" />
                   </div>
                 ) : (
                   <LevelPillGroup
@@ -211,7 +211,7 @@ export default function WorkoutProgramBuilderPage() {
                         className={cn(
                           'py-2.5 rounded-xl text-sm font-semibold transition-all border-2',
                           selectedDaysPerWeek === days
-                            ? 'border-[#0EA5E9] bg-[#0EA5E9]/10 text-[#0EA5E9]'
+                            ? 'border-[cyan] bg-[cyan]/10 text-[cyan]'
                             : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
                         )}
                       >
@@ -233,7 +233,7 @@ export default function WorkoutProgramBuilderPage() {
                         className={cn(
                           'py-2.5 rounded-xl text-sm font-semibold transition-all border-2',
                           selectedSessionLength === mins
-                            ? 'border-[#0EA5E9] bg-[#0EA5E9]/10 text-[#0EA5E9]'
+                            ? 'border-[cyan] bg-[cyan]/10 text-[cyan]'
                             : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
                         )}
                       >
@@ -259,7 +259,7 @@ export default function WorkoutProgramBuilderPage() {
                   Step 3: Matching Programs
                 </h2>
                 {programsLoading && (
-                  <Loader2 size={16} className="animate-spin text-[#0EA5E9]" />
+                  <Loader2 size={16} className="animate-spin text-[cyan]" />
                 )}
               </div>
 
@@ -277,7 +277,7 @@ export default function WorkoutProgramBuilderPage() {
                 </div>
               ) : programsLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 size={32} className="animate-spin text-[#0EA5E9]" />
+                  <Loader2 size={32} className="animate-spin text-[cyan]" />
                 </div>
               ) : (
                 <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
@@ -301,7 +301,7 @@ export default function WorkoutProgramBuilderPage() {
               onClick={() => handleProgramSelect(programs[0].program_id)}
               className={cn(
                 'w-full py-4 rounded-2xl font-bold text-white text-lg',
-                'bg-gradient-to-r from-[#0EA5E9] to-[#6366F1]',
+                'bg-gradient-to-r from-[cyan] to-[indigo]',
                 'hover:shadow-lg hover:shadow-sky-200/50 dark:hover:shadow-sky-900/30',
                 'transition-all duration-200 flex items-center justify-center gap-2'
               )}

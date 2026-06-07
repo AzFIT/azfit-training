@@ -35,14 +35,14 @@ import {
 
 // ── Question Config ─────────────────────────────────────────────
 const GOAL_OPTIONS = [
-  { id: 'Lose Weight', label: 'Lose Weight', icon: Flame, color: '#EF4444', desc: 'Reduce body fat while preserving muscle' },
-  { id: 'Build Muscle', label: 'Build Muscle', icon: Dumbbell, color: '#8B5CF6', desc: 'Increase lean muscle mass and size' },
-  { id: 'Strength', label: 'Strength', icon: Zap, color: '#00AEEF', desc: 'Maximize force production and power' },
-  { id: 'Hypertrophy', label: 'Hypertrophy', icon: TrendingUp, color: '#A855F7', desc: 'Build muscle size and proportions' },
-  { id: 'Endurance', label: 'Endurance', icon: Wind, color: '#F59E0B', desc: 'Improve aerobic and muscular endurance' },
-  { id: 'Fat Loss', label: 'Fat Loss', icon: Flame, color: '#22C55E', desc: 'High-metabolic training for fat burning' },
-  { id: 'General Fitness', label: 'General Fitness', icon: HeartPulse, color: '#6B7280', desc: 'Balanced fitness for everyday health' },
-  { id: 'Sports Performance', label: 'Sports Performance', icon: Award, color: '#EAB308', desc: 'Sport-specific strength and conditioning' },
+  { id: 'Lose Weight', label: 'Lose Weight', icon: Flame, color: 'danger', desc: 'Reduce body fat while preserving muscle' },
+  { id: 'Build Muscle', label: 'Build Muscle', icon: Dumbbell, color: 'violet', desc: 'Increase lean muscle mass and size' },
+  { id: 'Strength', label: 'Strength', icon: Zap, color: 'cyan', desc: 'Maximize force production and power' },
+  { id: 'Hypertrophy', label: 'Hypertrophy', icon: TrendingUp, color: 'admin-accent', desc: 'Build muscle size and proportions' },
+  { id: 'Endurance', label: 'Endurance', icon: Wind, color: 'warning', desc: 'Improve aerobic and muscular endurance' },
+  { id: 'Fat Loss', label: 'Fat Loss', icon: Flame, color: 'success', desc: 'High-metabolic training for fat burning' },
+  { id: 'General Fitness', label: 'General Fitness', icon: HeartPulse, color: 'gray-550', desc: 'Balanced fitness for everyday health' },
+  { id: 'Sports Performance', label: 'Sports Performance', icon: Award, color: 'warning', desc: 'Sport-specific strength and conditioning' },
 ]
 
 const EXPERIENCE_OPTIONS = [
@@ -108,14 +108,14 @@ function QuestionCard({
 
 // ── Match Score Badge ───────────────────────────────────────────
 function ScoreBadge({ percentage }: { percentage: number }) {
-  const color = percentage >= 90 ? '#22C55E' : percentage >= 70 ? '#F59E0B' : '#EF4444'
+  const color = percentage >= 90 ? 'success' : percentage >= 70 ? 'warning' : 'danger'
   return (
     <div className="relative w-16 h-16">
       <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
         <path
           d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
           fill="none"
-          stroke="#2A2A2A"
+          stroke="dark-border"
           strokeWidth={3}
         />
         <path
@@ -146,14 +146,14 @@ function MatchResultCard({
 }) {
   const d = result.program.data
   const goalColors: Record<string, string> = {
-    strength: 'from-cyan to-[#008DC4]',
-    hypertrophy: 'from-[#8B5CF6] to-[#7C4FE4]',
-    fatloss: 'from-success to-[#1EAD4E]',
-    endurance: 'from-warning to-[#D97706]',
-    rehab: 'from-[#6B7280] to-[#4B5563]',
-    power: 'from-[#EAB308] to-[#CA8A04]',
+    strength: 'from-cyan to-[cyan-dark]',
+    hypertrophy: 'from-[violet] to-[violet]',
+    fatloss: 'from-success to-[success]',
+    endurance: 'from-warning to-[amber-light]',
+    rehab: 'from-[gray-550] to-[gray-650]',
+    power: 'from-[warning] to-[amber]',
   }
-  const gradient = goalColors[d.goal?.toLowerCase()] || 'from-cyan to-[#A855F7]'
+  const gradient = goalColors[d.goal?.toLowerCase()] || 'from-cyan to-[admin-accent]'
   const activeDays = d.days?.length || d.split?.filter(s => s.active).length || 0
   const totalExercises = d.exercises?.length || 0
   const isTop = rank === 0
@@ -315,7 +315,7 @@ export default function ProgramMatcherPage() {
     <div className="w-full max-w-[900px] mx-auto py-6">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan to-[#A855F7] flex items-center justify-center mx-auto mb-4 shadow-[0_4px_20px_rgba(0,174,239,0.3)]">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan to-[admin-accent] flex items-center justify-center mx-auto mb-4 shadow-[0_4px_20px_rgba(0,174,239,0.3)]">
           <Sparkles size={28} className="text-white" />
         </div>
         <h1 className="text-dark-primary text-2xl font-bold">Smart Program Matcher</h1>
@@ -392,7 +392,7 @@ export default function ProgramMatcherPage() {
                   icon={User}
                   label={opt.label}
                   desc={opt.desc}
-                  color="#00AEEF"
+                  color="cyan"
                   selected={prefs.experience === opt.id}
                   onClick={() => updatePref('experience', opt.id)}
                 />
@@ -417,7 +417,7 @@ export default function ProgramMatcherPage() {
                   icon={Layers}
                   label={opt.label}
                   desc={opt.desc}
-                  color="#8B5CF6"
+                  color="violet"
                   selected={prefs.equipment === opt.id}
                   onClick={() => updatePref('equipment', opt.id)}
                 />
@@ -481,7 +481,7 @@ export default function ProgramMatcherPage() {
               <div className="text-dark-secondary text-xs font-semibold uppercase tracking-wider mb-2">Your Preferences</div>
               <div className="flex flex-wrap gap-2">
                 <span className="text-xs px-2 py-1 rounded bg-cyan/10 text-cyan font-medium">{prefs.goal}</span>
-                <span className="text-xs px-2 py-1 rounded bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium">{prefs.experience}</span>
+                <span className="text-xs px-2 py-1 rounded bg-[violet]/10 text-[violet] font-medium">{prefs.experience}</span>
                 <span className="text-xs px-2 py-1 rounded bg-success/10 text-success font-medium">{prefs.equipment}</span>
                 <span className="text-xs px-2 py-1 rounded bg-warning/10 text-warning font-medium">{prefs.daysPerWeek} days/week</span>
                 <span className="text-xs px-2 py-1 rounded bg-danger/10 text-danger font-medium">{prefs.timePerSession} min</span>
@@ -566,7 +566,7 @@ export default function ProgramMatcherPage() {
             <Button
               onClick={() => setStep(s => s + 1)}
               disabled={!canProceed}
-              className="h-10 px-6 bg-gradient-to-r from-cyan to-[#A855F7] text-white font-semibold"
+              className="h-10 px-6 bg-gradient-to-r from-cyan to-[admin-accent] text-white font-semibold"
             >
               Next
               <ArrowRight size={14} className="ml-2" />
@@ -575,7 +575,7 @@ export default function ProgramMatcherPage() {
             <Button
               onClick={handleFindMatches}
               disabled={!canProceed || loading || !loaded}
-              className="h-10 px-6 bg-gradient-to-r from-cyan to-[#A855F7] text-white font-semibold"
+              className="h-10 px-6 bg-gradient-to-r from-cyan to-[admin-accent] text-white font-semibold"
             >
               {loading ? 'Matching...' : 'Find My Program'}
               <Sparkles size={14} className="ml-2" />

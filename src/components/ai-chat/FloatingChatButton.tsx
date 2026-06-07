@@ -72,7 +72,7 @@ export default function FloatingChatButton() {
         touchAction: 'none',
         userSelect: 'none',
       }}
-      className="rounded-full bg-gradient-to-br from-[#00AEEF] to-[#008DC4] text-white shadow-[0_4px_20px_rgba(0,174,239,0.4)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+      className="rounded-full bg-gradient-to-br from-[cyan] to-[cyan-dark] text-white shadow-[0_4px_20px_rgba(0,174,239,0.4)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
       aria-label="Open AI Chat"
     >
       <MessageCircle size={26} />

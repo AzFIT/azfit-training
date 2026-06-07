@@ -59,14 +59,14 @@ export default function AIShowcase() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-6">
               AI That Coaches With You
             </h2>
-            <p className="text-[#9CA3AF] text-base leading-relaxed max-w-[420px] mb-8">
+            <p className="text-[gray-400] text-base leading-relaxed max-w-[420px] mb-8">
               AzFIT&apos;s AI understands your programming philosophy, adapts to client
               feedback, and generates coaching cues in real time. It&apos;s not a chatbot —
               it&apos;s a coaching partner.
             </p>
             <ul className="space-y-4 mb-8">
               {FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-3 text-[#D1D5DB] text-sm">
+                <li key={f} className="flex items-start gap-3 text-[gray-300] text-sm">
                   <Check size={18} className="text-cyan flex-shrink-0 mt-0.5" />
                   {f}
                 </li>
@@ -137,7 +137,7 @@ export default function AIShowcase() {
 
               {/* Floating coaching cue card */}
               <div className="absolute top-[10%] right-[-5%] max-w-[200px] p-3 rounded-lg bg-gradient-to-br from-gray-900/80 to-gray-800/60 border border-cyan/15 animate-cue-fade">
-                <p className="text-[#D1D5DB] text-xs leading-relaxed">{CUES[cueIdx]}</p>
+                <p className="text-[gray-300] text-xs leading-relaxed">{CUES[cueIdx]}</p>
               </div>
             </div>
           </motion.div>
@@ -145,7 +145,7 @@ export default function AIShowcase() {
       </div>
 
       {/* Data stream ticker */}
-      <div className="relative py-16 bg-[#111827] overflow-hidden">
+      <div className="relative py-16 bg-[gray-950] overflow-hidden">
         <div className="[mask-image:linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)]">
           {TICKER_ROWS.map((row, i) => (
             <div key={i} className="overflow-hidden mb-4 whitespace-nowrap">

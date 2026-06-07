@@ -217,7 +217,7 @@ function StatsBar({ photos }: { photos: ProgressPhoto[] }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.06, duration: 0.4, ease }}
-          className="bg-[#141414] border border-dark-border rounded-xl px-5 py-4"
+          className="bg-[az-black-card] border border-dark-border rounded-xl px-5 py-4"
         >
           <div className="flex items-center gap-2 mb-2">
             <s.icon size={16} className="text-cyan" />
@@ -316,7 +316,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) { setFiles([]); onClose() } }}>
-      <DialogContent className="bg-[#141414] border-dark-border text-dark-primary max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-[az-black-card] border-dark-border text-dark-primary max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Upload Progress Photos</DialogTitle>
         </DialogHeader>
@@ -330,8 +330,8 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
             onClick={() => fileRef.current?.click()}
             className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200 ${
               dragOver
-                ? 'border-cyan bg-[rgba(0,174,239,0.08)] scale-[1.02]'
-                : 'border-dark-border bg-[#1A1A1A] hover:border-dark-subtle'
+                ? 'border-cyan bg-cyan-glow scale-[1.02]'
+                : 'border-dark-border bg-[az-black-elevated] hover:border-dark-subtle'
             }`}
           >
             <Upload size={40} className="mx-auto text-dark-muted mb-3" />
@@ -356,7 +356,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                 key={f.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`bg-[#1A1A1A] border rounded-xl p-3 space-y-3 ${
+                className={`bg-[az-black-elevated] border rounded-xl p-3 space-y-3 ${
                   f.status === 'error' ? 'border-danger' : 'border-dark-border'
                 }`}
               >
@@ -378,10 +378,10 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                   <div>
                     <Label className="text-dark-muted text-[10px]">Category</Label>
                     <Select value={f.category} onValueChange={(v) => updateFile(f.id, { category: v as PhotoCategory })}>
-                      <SelectTrigger className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs">
+                      <SelectTrigger className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#141414] border-dark-border">
+                      <SelectContent className="bg-[az-black-card] border-dark-border">
                         {(['Front', 'Back', 'Side', 'Other'] as const).map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
@@ -394,7 +394,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                       type="date"
                       value={f.date}
                       onChange={(e) => updateFile(f.id, { date: e.target.value })}
-                      className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs"
+                      className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                   <div>
@@ -404,7 +404,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                       value={f.weight}
                       onChange={(e) => updateFile(f.id, { weight: e.target.value })}
                       placeholder="78.0"
-                      className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs"
+                      className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                   <div>
@@ -414,7 +414,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                       value={f.bodyFat}
                       onChange={(e) => updateFile(f.id, { bodyFat: e.target.value })}
                       placeholder="22.0"
-                      className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs"
+                      className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                 </div>
@@ -424,12 +424,12 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                     value={f.notes}
                     onChange={(e) => updateFile(f.id, { notes: e.target.value })}
                     placeholder="Optional notes..."
-                    className="bg-[#141414] border-dark-border text-dark-primary min-h-[50px] text-xs"
+                    className="bg-[az-black-card] border-dark-border text-dark-primary min-h-[50px] text-xs"
                   />
                 </div>
 
                 {f.status === 'uploading' && (
-                  <Progress value={f.progress} className="h-1 bg-[#0A0A0A] [&>div]:bg-cyan" />
+                  <Progress value={f.progress} className="h-1 bg-[az-black] [&>div]:bg-cyan" />
                 )}
               </motion.div>
             ))}
@@ -508,10 +508,10 @@ function Lightbox({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-[#0A0A0A] border-dark-border text-dark-primary max-w-5xl max-h-[95vh] overflow-hidden p-0">
+      <DialogContent className="bg-[az-black] border-dark-border text-dark-primary max-w-5xl max-h-[95vh] overflow-hidden p-0">
         <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
           {/* Image Area */}
-          <div className="flex-1 bg-[#0A0A0A] flex items-center justify-center relative min-h-[300px] lg:min-h-0">
+          <div className="flex-1 bg-[az-black] flex items-center justify-center relative min-h-[300px] lg:min-h-0">
             <img src={photo.url} alt="" className="max-w-full max-h-[60vh] lg:max-h-[85vh] object-contain" />
 
             {/* Nav buttons */}
@@ -542,7 +542,7 @@ function Lightbox({
           </div>
 
           {/* Sidebar Info */}
-          <div className="w-full lg:w-[300px] border-t lg:border-t-0 lg:border-l border-dark-border bg-[#141414] p-5 overflow-y-auto max-h-[40vh] lg:max-h-[85vh]">
+          <div className="w-full lg:w-[300px] border-t lg:border-t-0 lg:border-l border-dark-border bg-[az-black-card] p-5 overflow-y-auto max-h-[40vh] lg:max-h-[85vh]">
             <div className="space-y-4">
               <div>
                 <p className="text-dark-muted text-xs mb-1">Date</p>
@@ -550,7 +550,7 @@ function Lightbox({
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(0,174,239,0.15)] text-cyan">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-glow text-cyan">
                   {photo.category}
                 </span>
                 {isMilestone && (
@@ -566,11 +566,11 @@ function Lightbox({
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-[#1A1A1A] rounded-lg p-3">
+                <div className="bg-[az-black-elevated] rounded-lg p-3">
                   <p className="text-dark-muted text-[10px]">Weight</p>
                   <p className="text-dark-primary font-semibold font-mono text-lg">{photo.weight ? `${photo.weight} kg` : '-'}</p>
                 </div>
-                <div className="bg-[#1A1A1A] rounded-lg p-3">
+                <div className="bg-[az-black-elevated] rounded-lg p-3">
                   <p className="text-dark-muted text-[10px]">Body Fat</p>
                   <p className="text-dark-primary font-semibold font-mono text-lg">{photo.bodyFatPercentage ? `${photo.bodyFatPercentage}%` : '-'}</p>
                 </div>
@@ -599,7 +599,7 @@ function Lightbox({
                       value={trainerNotes}
                       onChange={(e) => setTrainerNotes(e.target.value)}
                       placeholder="Add your observations..."
-                      className="bg-[#1A1A1A] border-dark-border text-dark-primary min-h-[80px] text-xs mt-1"
+                      className="bg-[az-black-elevated] border-dark-border text-dark-primary min-h-[80px] text-xs mt-1"
                     />
                   </div>
 
@@ -644,7 +644,7 @@ function ToggleRowInline({
     <button
       onClick={() => onChange(!checked)}
       className={`w-full flex items-center justify-between p-2.5 rounded-lg border transition-all ${
-        checked ? 'border-cyan bg-[rgba(0,174,239,0.08)]' : 'border-dark-border bg-[#1A1A1A]'
+        checked ? 'border-cyan bg-cyan-glow' : 'border-dark-border bg-[az-black-elevated]'
       }`}
     >
       <div className="flex items-center gap-2">
@@ -684,7 +684,7 @@ function ComparisonView({
       className="space-y-4"
     >
       {/* Header Bar */}
-      <div className="bg-[#141414] border border-dark-border rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4">
         {/* Left info */}
         <div className="text-center lg:text-left">
           <p className="text-dark-muted text-xs mb-1">Before</p>
@@ -730,17 +730,17 @@ function ComparisonView({
 
       {/* Photo Panes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-[#0A0A0A] border border-dark-border rounded-xl overflow-hidden">
+        <div className="bg-[az-black] border border-dark-border rounded-xl overflow-hidden">
           <div className="relative">
-            <img src={left.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[#0A0A0A]" />
+            <img src={left.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[az-black]" />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded-md text-xs text-white font-medium">
               {left.category} · {fmtDate(left.date)}
             </div>
           </div>
         </div>
-        <div className="bg-[#0A0A0A] border border-dark-border rounded-xl overflow-hidden">
+        <div className="bg-[az-black] border border-dark-border rounded-xl overflow-hidden">
           <div className="relative">
-            <img src={right.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[#0A0A0A]" />
+            <img src={right.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[az-black]" />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded-md text-xs text-white font-medium">
               {right.category} · {fmtDate(right.date)}
             </div>
@@ -788,7 +788,7 @@ function PhotoCard({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.04, duration: 0.3, ease }}
-      className={`group relative bg-[#141414] border rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
+      className={`group relative bg-[az-black-card] border rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
         selected ? 'border-cyan ring-2 ring-[rgba(0,174,239,0.3)]' : 'border-dark-border hover:border-[rgba(0,174,239,0.3)]'
       }`}
       onClick={() => {
@@ -822,8 +822,8 @@ function PhotoCard({
         {/* Milestone badges */}
         {(photo.isMilestone || photo.isGoalAchieved) && (
           <div className="absolute top-3 right-3 flex gap-1 z-10">
-            {photo.isMilestone && <Star size={14} className="text-warning fill-[#EAB308]" />}
-            {photo.isGoalAchieved && <Trophy size={14} className="text-success fill-[#22C55E]" />}
+            {photo.isMilestone && <Star size={14} className="text-warning fill-[warning]" />}
+            {photo.isGoalAchieved && <Trophy size={14} className="text-success fill-[success]" />}
           </div>
         )}
 
@@ -853,7 +853,7 @@ function PhotoCard({
 
       {/* Bottom info */}
       <div className="p-3 flex items-center justify-between">
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(0,174,239,0.15)] text-cyan">
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-cyan-glow text-cyan">
           {photo.category}
         </span>
         {photo.notes && (
@@ -953,7 +953,7 @@ export default function PhotosPage() {
             exit={{ opacity: 0, height: 0 }}
             className="mb-4 overflow-hidden"
           >
-            <div className="bg-[rgba(0,174,239,0.08)] border border-[rgba(0,174,239,0.3)] rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-cyan-glow border border-[rgba(0,174,239,0.3)] rounded-xl p-4 flex items-center justify-between">
               <p className="text-cyan text-sm">
                 Select 2 photos to compare · <span className="font-medium">{selectedIds.length}/2 selected</span>
               </p>
@@ -1015,10 +1015,10 @@ export default function PhotosPage() {
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-dark-muted" />
             <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as PhotoCategory | 'All')}>
-              <SelectTrigger className="bg-[#1A1A1A] border-dark-border text-dark-primary h-8 text-xs w-[120px]">
+              <SelectTrigger className="bg-[az-black-elevated] border-dark-border text-dark-primary h-8 text-xs w-[120px]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#141414] border-dark-border">
+              <SelectContent className="bg-[az-black-card] border-dark-border">
                 <SelectItem value="All">All Categories</SelectItem>
                 {(['Front', 'Back', 'Side', 'Other'] as const).map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
@@ -1028,7 +1028,7 @@ export default function PhotosPage() {
 
             <button
               onClick={() => setSortOrder((o) => (o === 'newest' ? 'oldest' : 'newest'))}
-              className="flex items-center gap-1 h-8 px-3 bg-[#1A1A1A] border border-dark-border rounded-md text-xs text-dark-secondary hover:text-dark-primary transition-colors"
+              className="flex items-center gap-1 h-8 px-3 bg-[az-black-elevated] border border-dark-border rounded-md text-xs text-dark-secondary hover:text-dark-primary transition-colors"
             >
               <ArrowUpDown size={12} />
               {sortOrder === 'newest' ? 'Newest' : 'Oldest'}

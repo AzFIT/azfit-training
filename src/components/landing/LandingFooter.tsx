@@ -40,51 +40,51 @@ export default function LandingFooter({ logoSrc }: LandingFooterProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <motion.div variants={itemVariants}>
             <img src={logoSrc} alt="AzFIT" className="h-8 w-auto brightness-0 invert mb-4" />
-            <p className="text-[#6B6B6B] text-sm mb-6">Science-based training, beautifully organized.</p>
+            <p className="text-[dark-muted] text-sm mb-6">Science-based training, beautifully organized.</p>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-[#6B6B6B] hover:text-cyan transition-colors" aria-label="Instagram">
+              <a href="#" className="text-[dark-muted] hover:text-cyan transition-colors" aria-label="Instagram">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>
               </a>
-              <a href="#" className="text-[#6B6B6B] hover:text-cyan transition-colors" aria-label="Facebook">
+              <a href="#" className="text-[dark-muted] hover:text-cyan transition-colors" aria-label="Facebook">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
               </a>
-              <a href="#" className="text-[#6B6B6B] hover:text-cyan transition-colors" aria-label="LinkedIn">
+              <a href="#" className="text-[dark-muted] hover:text-cyan transition-colors" aria-label="LinkedIn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
               </a>
             </div>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <h4 className="text-[#F0F0F0] font-semibold text-sm mb-4">Product</h4>
+            <h4 className="text-[dark-primary] font-semibold text-sm mb-4">Product</h4>
             <ul className="space-y-3">
               {PRODUCT_LINKS.map((l) => (
-                <li key={l.label}><Link to={l.href} className="text-[#6B6B6B] hover:text-[#A0A0A0] text-sm transition-colors">{l.label}</Link></li>
+                <li key={l.label}><Link to={l.href} className="text-[dark-muted] hover:text-[dark-secondary] text-sm transition-colors">{l.label}</Link></li>
               ))}
             </ul>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <h4 className="text-[#F0F0F0] font-semibold text-sm mb-4">Resources</h4>
+            <h4 className="text-[dark-primary] font-semibold text-sm mb-4">Resources</h4>
             <ul className="space-y-3">
               {RESOURCE_LINKS.map((l) => (
-                <li key={l.label}><Link to={l.href} className="text-[#6B6B6B] hover:text-[#A0A0A0] text-sm transition-colors">{l.label}</Link></li>
+                <li key={l.label}><Link to={l.href} className="text-[dark-muted] hover:text-[dark-secondary] text-sm transition-colors">{l.label}</Link></li>
               ))}
             </ul>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <h4 className="text-[#F0F0F0] font-semibold text-sm mb-4">Company</h4>
+            <h4 className="text-[dark-primary] font-semibold text-sm mb-4">Company</h4>
             <ul className="space-y-3">
               {COMPANY_LINKS.map((l) => (
-                <li key={l.label}><Link to={l.href} className="text-[#6B6B6B] hover:text-[#A0A0A0] text-sm transition-colors">{l.label}</Link></li>
+                <li key={l.label}><Link to={l.href} className="text-[dark-muted] hover:text-[dark-secondary] text-sm transition-colors">{l.label}</Link></li>
               ))}
             </ul>
           </motion.div>
         </div>
 
         <motion.div variants={itemVariants} className="mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[#6B6B6B] text-sm text-center sm:text-left">&copy; 2025 AzTechFit Hong Kong. All rights reserved.</p>
-          <p className="text-[#6B6B6B] text-sm">Made with precision in Hong Kong</p>
+          <p className="text-[dark-muted] text-sm text-center sm:text-left">&copy; 2025 AzTechFit Hong Kong. All rights reserved.</p>
+          <p className="text-[dark-muted] text-sm">Made with precision in Hong Kong</p>
         </motion.div>
       </motion.div>
     </footer>

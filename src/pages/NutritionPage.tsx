@@ -202,15 +202,15 @@ function generateFoodDatabase(): FoodItem[] {
 const FOOD_DB = generateFoodDatabase()
 
 const CATEGORY_COLORS: Record<FoodCategory, string> = {
-  Protein: '#00AEEF',
-  Carbs: '#8B5CF6',
-  Fats: '#F97316',
-  Vegetables: '#22C55E',
-  Fruits: '#EC4899',
-  Dairy: '#3B82F6',
-  Grains: '#EAB308',
-  Snacks: '#F97316',
-  Beverages: '#06B6D4',
+  Protein: 'cyan',
+  Carbs: 'violet',
+  Fats: 'orange',
+  Vegetables: 'success',
+  Fruits: 'trainer-accent',
+  Dairy: 'info',
+  Grains: 'warning',
+  Snacks: 'orange',
+  Beverages: 'teal',
 }
 
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, { label: string; value: number }> = {
@@ -278,7 +278,7 @@ function MacroRing({
     <div className="flex flex-col items-center">
       <div className="relative w-[100px] h-[100px]">
         <svg width="100" height="100" viewBox="0 0 100 100" className="-rotate-90">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#2A2A2A" strokeWidth="8" />
+          <circle cx="50" cy="50" r="45" fill="none" stroke="dark-border" strokeWidth="8" />
           <circle
             cx="50"
             cy="50"
@@ -430,7 +430,7 @@ function MealPlannerTab({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-[#141414] border border-dark-border rounded-xl p-5"
+            className="bg-[az-black-card] border border-dark-border rounded-xl p-5"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
@@ -447,16 +447,16 @@ function MealPlannerTab({
             </div>
 
             {/* Progress bar */}
-            <div className="w-full h-1 bg-[#1A1A1A] rounded-full mb-3">
+            <div className="w-full h-1 bg-[az-black-elevated] rounded-full mb-3">
               <motion.div
                 className="h-full rounded-full"
                 style={{
                   background:
                     progress > 100
-                      ? '#EF4444'
+                      ? 'danger'
                       : progress > 80
-                        ? '#22C55E'
-                        : '#00AEEF',
+                        ? 'success'
+                        : 'cyan',
                 }}
                 initial={{ width: 0 }}
                 animate={{ width: `${Math.min(progress, 100)}%` }}
@@ -473,7 +473,7 @@ function MealPlannerTab({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="flex items-center justify-between py-1.5 px-2 bg-[#1A1A1A] rounded-lg"
+                    className="flex items-center justify-between py-1.5 px-2 bg-[az-black-elevated] rounded-lg"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -504,7 +504,7 @@ function MealPlannerTab({
 
             {/* Add food */}
             {addingToMeal === mealType.type ? (
-              <div className="bg-[#1A1A1A] rounded-lg p-3 space-y-2">
+              <div className="bg-[az-black-elevated] rounded-lg p-3 space-y-2">
                 <input
                   type="text"
                   placeholder="Search foods..."
@@ -527,7 +527,7 @@ function MealPlannerTab({
                         }}
                         className={`w-full text-left px-2 py-1.5 rounded text-xs transition-colors ${
                           selectedFood === String(f.id)
-                            ? 'bg-[rgba(0,174,239,0.15)] text-cyan'
+                            ? 'bg-cyan-glow text-cyan'
                             : 'text-dark-secondary hover:bg-dark-hover'
                         }`}
                       >
@@ -569,7 +569,7 @@ function MealPlannerTab({
             ) : (
               <button
                 onClick={() => setAddingToMeal(mealType.type)}
-                className="flex items-center gap-1 text-cyan hover:text-[#33BFF2] text-xs font-medium transition-colors"
+                className="flex items-center gap-1 text-cyan hover:text-[cyan-light] text-xs font-medium transition-colors"
               >
                 <Plus size={14} />
                 Add Food
@@ -580,7 +580,7 @@ function MealPlannerTab({
       })}
 
       {/* Daily summary bar */}
-      <div className="bg-[#141414] border border-dark-border rounded-xl p-4">
+      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <span className="text-dark-primary text-sm font-semibold">Daily Totals</span>
           <div className="flex items-center gap-6">
@@ -652,7 +652,7 @@ function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
           placeholder="Search 120+ foods..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full h-10 bg-[#141414] border border-dark-border rounded-xl pl-10 pr-4 text-dark-primary text-sm placeholder:text-dark-subtle focus:outline-none focus:border-cyan"
+          className="w-full h-10 bg-[az-black-card] border border-dark-border rounded-xl pl-10 pr-4 text-dark-primary text-sm placeholder:text-dark-subtle focus:outline-none focus:border-cyan"
         />
       </div>
 
@@ -666,8 +666,8 @@ function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
               onClick={() => toggleCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 active
-                  ? 'bg-[rgba(0,174,239,0.15)] text-cyan border border-[rgba(0,174,239,0.3)]'
-                  : 'bg-[#1A1A1A] text-dark-secondary border border-dark-border hover:text-dark-primary'
+                  ? 'bg-cyan-glow text-cyan border border-[rgba(0,174,239,0.3)]'
+                  : 'bg-[az-black-elevated] text-dark-secondary border border-dark-border hover:text-dark-primary'
               }`}
             >
               {cat}
@@ -688,7 +688,7 @@ function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ delay: idx * 0.02 }}
-              className="bg-[#141414] border border-dark-border rounded-xl p-4 hover:border-dark-subtle transition-colors"
+              className="bg-[az-black-card] border border-dark-border rounded-xl p-4 hover:border-dark-subtle transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-dark-primary text-sm font-semibold truncate">{food.name}</h4>
@@ -757,13 +757,13 @@ function WaterTrackerTab() {
       <div className="flex flex-col items-center">
         <div className="relative w-24 h-24 mb-3">
           <svg width="96" height="96" viewBox="0 0 96 96" className="-rotate-90">
-            <circle cx="48" cy="48" r="35" fill="none" stroke="#2A2A2A" strokeWidth="6" />
+            <circle cx="48" cy="48" r="35" fill="none" stroke="dark-border" strokeWidth="6" />
             <circle
               cx="48"
               cy="48"
               r="35"
               fill="none"
-              stroke="#00AEEF"
+              stroke="cyan"
               strokeWidth="6"
               strokeLinecap="round"
               strokeDasharray={circumference}
@@ -799,7 +799,7 @@ function WaterTrackerTab() {
                 <path
                   d="M4 4 L8 44 Q8 46 10 46 L26 46 Q28 46 28 44 L32 4"
                   fill="none"
-                  stroke="#2A2A2A"
+                  stroke="dark-border"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -831,7 +831,7 @@ function WaterTrackerTab() {
           <button
             key={ml}
             onClick={() => setGlasses((g) => Math.min(g + ml / 250, 20))}
-            className="px-3 py-1.5 bg-[#1A1A1A] border border-dark-border rounded-lg text-xs text-cyan hover:bg-dark-hover transition-colors"
+            className="px-3 py-1.5 bg-[az-black-elevated] border border-dark-border rounded-lg text-xs text-cyan hover:bg-dark-hover transition-colors"
           >
             +{ml}ml
           </button>
@@ -845,7 +845,7 @@ function WaterTrackerTab() {
       </div>
 
       {/* Weekly chart */}
-      <div className="bg-[#141414] border border-dark-border rounded-xl p-5">
+      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
         <h4 className="text-dark-primary font-semibold text-sm mb-4">This Week</h4>
         <div className="h-40">
           <ResponsiveContainer width="100%" height="100%">
@@ -854,7 +854,7 @@ function WaterTrackerTab() {
               <XAxis
                 dataKey="day"
                 tick={{ fill: 'var(--dark-muted)', fontSize: 11 }}
-                axisLine={{ stroke: '#2A2A2A' }}
+                axisLine={{ stroke: 'dark-border' }}
                 tickLine={false}
               />
               <YAxis
@@ -865,10 +865,10 @@ function WaterTrackerTab() {
               />
               <Tooltip
                 contentStyle={{
-                  background: '#1A1A1A',
-                  border: '1px solid #2A2A2A',
+                  background: 'az-black-elevated',
+                  border: '1px solid dark-border',
                   borderRadius: '8px',
-                  color: '#F0F0F0',
+                  color: 'dark-primary',
                   fontSize: '12px',
                 }}
               />
@@ -876,7 +876,7 @@ function WaterTrackerTab() {
                 {weeklyData.map((entry, index) => (
                   <Cell
                     key={index}
-                    fill={entry.amount >= targetMl ? '#00AEEF' : entry.amount >= 1500 ? '#8B5CF6' : '#F97316'}
+                    fill={entry.amount >= targetMl ? 'cyan' : entry.amount >= 1500 ? 'violet' : 'orange'}
                   />
                 ))}
               </Bar>
@@ -927,7 +927,7 @@ function SupplementsTab() {
   return (
     <div className="space-y-6">
       {/* Progress */}
-      <div className="flex items-center justify-between bg-[#141414] border border-dark-border rounded-xl p-4">
+      <div className="flex items-center justify-between bg-[az-black-card] border border-dark-border rounded-xl p-4">
         <div>
           <p className="text-dark-primary font-semibold text-sm">Today&apos;s Supplements</p>
           <p className="text-dark-muted text-xs mt-0.5">
@@ -935,11 +935,11 @@ function SupplementsTab() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-32 h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
+          <div className="w-32 h-2 bg-[az-black-elevated] rounded-full overflow-hidden">
             <motion.div
               className="h-full rounded-full"
               style={{
-                background: takenCount === supplements.length ? '#22C55E' : '#00AEEF',
+                background: takenCount === supplements.length ? 'success' : 'cyan',
               }}
               animate={{ width: `${(takenCount / supplements.length) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -967,7 +967,7 @@ function SupplementsTab() {
                   key={supp.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex items-center justify-between bg-[#141414] border rounded-xl p-4 transition-colors ${
+                  className={`flex items-center justify-between bg-[az-black-card] border rounded-xl p-4 transition-colors ${
                     supp.taken ? 'border-[rgba(34,197,94,0.3)]' : 'border-dark-border'
                   }`}
                 >
@@ -1094,9 +1094,9 @@ export default function NutritionPage() {
   const avgAdherence = Math.round(adherenceData.reduce((s, d) => s + d.adherence, 0) / adherenceData.length)
 
   const getBarColor = (val: number) => {
-    if (val >= 90) return '#22C55E'
-    if (val >= 70) return '#EAB308'
-    return '#EF4444'
+    if (val >= 90) return 'success'
+    if (val >= 70) return 'warning'
+    return 'danger'
   }
 
   return (
@@ -1107,7 +1107,7 @@ export default function NutritionPage() {
       className="space-y-6"
     >
       {/* ═══ TDEE Summary + Macro Rings ═══ */}
-      <div className="bg-[#141414] border border-dark-border rounded-2xl p-6">
+      <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-6">
         <div className="flex flex-col xl:flex-row gap-8">
           {/* TDEE Calculation Card */}
           <motion.div
@@ -1121,7 +1121,7 @@ export default function NutritionPage() {
             {/* Inputs */}
             <div className="grid grid-cols-2 gap-3">
               {/* Gender */}
-              <div className="flex items-center gap-1 bg-[#1A1A1A] rounded-lg p-1 border border-dark-border">
+              <div className="flex items-center gap-1 bg-[az-black-elevated] rounded-lg p-1 border border-dark-border">
                 <button
                   onClick={() => setGender('male')}
                   className={`flex-1 py-1.5 rounded-md text-xs font-medium transition-all ${
@@ -1133,14 +1133,14 @@ export default function NutritionPage() {
                 <button
                   onClick={() => setGender('female')}
                   className={`flex-1 py-1.5 rounded-md text-xs font-medium transition-all ${
-                    gender === 'female' ? 'bg-[#EC4899] text-white' : 'text-dark-muted hover:text-dark-secondary'
+                    gender === 'female' ? 'bg-[trainer-accent] text-white' : 'text-dark-muted hover:text-dark-secondary'
                   }`}
                 >
                   Female
                 </button>
               </div>
               {/* Age */}
-              <div className="flex items-center bg-[#1A1A1A] rounded-lg border border-dark-border px-3">
+              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
                 <span className="text-dark-muted text-[10px] mr-2">Age</span>
                 <input
                   type="number"
@@ -1152,7 +1152,7 @@ export default function NutritionPage() {
                 />
               </div>
               {/* Weight */}
-              <div className="flex items-center bg-[#1A1A1A] rounded-lg border border-dark-border px-3">
+              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
                 <span className="text-dark-muted text-[10px] mr-2">Weight (kg)</span>
                 <input
                   type="number"
@@ -1165,7 +1165,7 @@ export default function NutritionPage() {
                 />
               </div>
               {/* Height */}
-              <div className="flex items-center bg-[#1A1A1A] rounded-lg border border-dark-border px-3">
+              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
                 <span className="text-dark-muted text-[10px] mr-2">Height (cm)</span>
                 <input
                   type="number"
@@ -1180,10 +1180,10 @@ export default function NutritionPage() {
 
             {/* Activity Level */}
             <Select value={activity} onValueChange={(v) => setActivity(v as ActivityLevel)}>
-              <SelectTrigger className="bg-[#1A1A1A] border-dark-border text-dark-primary text-xs h-9">
+              <SelectTrigger className="bg-[az-black-elevated] border-dark-border text-dark-primary text-xs h-9">
                 <SelectValue placeholder="Activity Level" />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1A1A] border-dark-border">
+              <SelectContent className="bg-[az-black-elevated] border-dark-border">
                 {(Object.entries(ACTIVITY_MULTIPLIERS) as [ActivityLevel, { label: string; value: number }][]).map(
                   ([key, { label }]) => (
                     <SelectItem key={key} value={key} className="text-dark-primary">
@@ -1195,7 +1195,7 @@ export default function NutritionPage() {
             </Select>
 
             {/* Goal Toggle */}
-            <div className="flex items-center gap-1 bg-[#1A1A1A] rounded-lg p-1 border border-dark-border">
+            <div className="flex items-center gap-1 bg-[az-black-elevated] rounded-lg p-1 border border-dark-border">
               {(Object.entries(GOAL_LABELS) as [Goal, { label: string; adjustment: number }][]).map(
                 ([key, { label }]) => (
                   <button
@@ -1229,7 +1229,7 @@ export default function NutritionPage() {
                       className={`text-left px-3 py-2 rounded-lg border text-xs transition-all ${
                         dietPreset === key
                           ? 'border-cyan bg-[rgba(0,174,239,0.1)] text-dark-primary'
-                          : 'border-dark-border bg-[#1A1A1A] text-dark-muted hover:text-dark-secondary'
+                          : 'border-dark-border bg-[az-black-elevated] text-dark-muted hover:text-dark-secondary'
                       }`}
                     >
                       <span className="font-medium block">{label}</span>
@@ -1241,7 +1241,7 @@ export default function NutritionPage() {
             </div>
 
             {/* TDEE Display */}
-            <div className="bg-[#1A1A1A] rounded-xl p-4 border border-dark-border space-y-2">
+            <div className="bg-[az-black-elevated] rounded-xl p-4 border border-dark-border space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-cyan text-3xl font-bold font-mono">{targetCalories.toLocaleString()} kcal</span>
               </div>
@@ -1324,7 +1324,7 @@ export default function NutritionPage() {
                   label="Protein"
                   value={currentMacros.protein}
                   target={proteinTarget}
-                  color="#00AEEF"
+                  color="cyan"
                   unit="g"
                   delay={0}
                 />
@@ -1332,7 +1332,7 @@ export default function NutritionPage() {
                   label="Carbs"
                   value={currentMacros.carbs}
                   target={carbTarget}
-                  color="#8B5CF6"
+                  color="violet"
                   unit="g"
                   delay={150}
                 />
@@ -1340,7 +1340,7 @@ export default function NutritionPage() {
                   label="Fats"
                   value={currentMacros.fats}
                   target={fatTarget}
-                  color="#F97316"
+                  color="orange"
                   unit="g"
                   delay={300}
                 />
@@ -1369,31 +1369,31 @@ export default function NutritionPage() {
 
       {/* ═══ Tabs ═══ */}
       <Tabs defaultValue="planner" className="w-full">
-        <TabsList className="bg-[#141414] border border-dark-border p-1 rounded-xl w-full justify-start gap-1">
+        <TabsList className="bg-[az-black-card] border border-dark-border p-1 rounded-xl w-full justify-start gap-1">
           <TabsTrigger
             value="planner"
-            className="data-[state=active]:bg-[#1A1A1A] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
+            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
           >
             <Utensils size={14} className="mr-1.5" />
             Meal Planner
           </TabsTrigger>
           <TabsTrigger
             value="database"
-            className="data-[state=active]:bg-[#1A1A1A] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
+            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
           >
             <Search size={14} className="mr-1.5" />
             Food DB
           </TabsTrigger>
           <TabsTrigger
             value="water"
-            className="data-[state=active]:bg-[#1A1A1A] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
+            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
           >
             <Droplets size={14} className="mr-1.5" />
             Water
           </TabsTrigger>
           <TabsTrigger
             value="supplements"
-            className="data-[state=active]:bg-[#1A1A1A] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
+            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
           >
             <Pill size={14} className="mr-1.5" />
             Supplements
@@ -1455,7 +1455,7 @@ export default function NutritionPage() {
       </Tabs>
 
       {/* ═══ Weekly Adherence Section ═══ */}
-      <div className="bg-[#141414] border border-dark-border rounded-2xl p-6">
+      <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <Info size={16} className="text-cyan" />
           <h3 className="text-dark-primary font-semibold text-base">This Week&apos;s Adherence</h3>
@@ -1468,7 +1468,7 @@ export default function NutritionPage() {
               <XAxis
                 dataKey="day"
                 tick={{ fill: 'var(--dark-muted)', fontSize: 11 }}
-                axisLine={{ stroke: '#2A2A2A' }}
+                axisLine={{ stroke: 'dark-border' }}
                 tickLine={false}
               />
               <YAxis
@@ -1479,10 +1479,10 @@ export default function NutritionPage() {
               />
               <Tooltip
                 contentStyle={{
-                  background: '#1A1A1A',
-                  border: '1px solid #2A2A2A',
+                  background: 'az-black-elevated',
+                  border: '1px solid dark-border',
                   borderRadius: '8px',
-                  color: '#F0F0F0',
+                  color: 'dark-primary',
                   fontSize: '12px',
                 }}
                 formatter={(value: number) => [`${value}%`, 'Adherence']}

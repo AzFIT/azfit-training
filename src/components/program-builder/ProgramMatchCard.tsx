@@ -18,7 +18,7 @@ export default function ProgramMatchCard({ program, rank, isTopMatch, onClick }:
         'w-full text-left p-4 rounded-2xl border-2 transition-all duration-200',
         'bg-white hover:shadow-md',
         isTopMatch
-          ? 'border-[#0EA5E9] shadow-sm'
+          ? 'border-[cyan] shadow-sm'
           : 'border-slate-200 hover:border-slate-300',
         'dark:bg-slate-800/50 dark:border-slate-700',
         isTopMatch && 'dark:border-sky-500'
@@ -30,7 +30,7 @@ export default function ProgramMatchCard({ program, rank, isTopMatch, onClick }:
           className={cn(
             'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold',
             isTopMatch
-              ? 'bg-[#0EA5E9] text-white'
+              ? 'bg-[cyan] text-white'
               : 'bg-slate-100 text-slate-500',
             'dark:bg-slate-700 dark:text-slate-300',
             isTopMatch && 'dark:bg-sky-600'
@@ -72,7 +72,7 @@ export default function ProgramMatchCard({ program, rank, isTopMatch, onClick }:
                   className={cn(
                     'w-3 h-1.5 rounded-full',
                     i < program.difficulty_rating
-                      ? 'bg-[#0EA5E9]'
+                      ? 'bg-[cyan]'
                       : 'bg-slate-200 dark:bg-slate-600'
                   )}
                 />

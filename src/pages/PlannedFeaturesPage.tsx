@@ -101,11 +101,11 @@ function PhaseCard({ phase, index }: { phase: typeof phases[0]; index: number })
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.4 }}
     >
-      <Card className="bg-[#141414] border-dark-border hover:border-cyan/40 transition-all duration-300 h-full group">
+      <Card className="bg-[az-black-card] border-dark-border hover:border-cyan/40 transition-all duration-300 h-full group">
         <CardContent className="p-5">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#1A1A1A] border border-dark-border flex items-center justify-center group-hover:border-cyan/40 transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-[az-black-elevated] border border-dark-border flex items-center justify-center group-hover:border-cyan/40 transition-colors">
                 <Icon size={20} className="text-cyan" />
               </div>
               <div>
@@ -113,7 +113,7 @@ function PhaseCard({ phase, index }: { phase: typeof phases[0]; index: number })
                 <h3 className="text-dark-primary font-semibold text-sm">{phase.title}</h3>
               </div>
             </div>
-            <span className="text-xs bg-[#1A1A1A] text-dark-muted px-2 py-0.5 rounded-full border border-dark-border">
+            <span className="text-xs bg-[az-black-elevated] text-dark-muted px-2 py-0.5 rounded-full border border-dark-border">
               Planned
             </span>
           </div>
@@ -144,7 +144,7 @@ export default function PlannedFeaturesPage() {
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex gap-1 bg-[#141414] p-1 rounded-lg border border-dark-border w-fit">
+      <div className="flex gap-1 bg-[az-black-card] p-1 rounded-lg border border-dark-border w-fit">
         {[
           { key: 'roadmap' as const, label: 'Phase Roadmap (9-14)' },
           { key: 'nutrition' as const, label: 'Nutrition Enhanced' },
@@ -154,7 +154,7 @@ export default function PlannedFeaturesPage() {
             onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
               activeTab === t.key
-                ? 'bg-[#1A1A1A] text-dark-primary border border-dark-border'
+                ? 'bg-[az-black-elevated] text-dark-primary border border-dark-border'
                 : 'text-dark-muted hover:text-dark-secondary'
             }`}
           >
@@ -183,7 +183,7 @@ export default function PlannedFeaturesPage() {
           animate={{ opacity: 1 }}
           className="space-y-4"
         >
-          <div className="bg-[#141414] border border-dark-border rounded-xl p-5">
+          <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
             <h2 className="text-lg font-semibold text-dark-primary mb-2">TDEE Calculator Enhancement</h2>
             <p className="text-dark-secondary text-sm mb-4">
               Enhanced TDEE engine with Mifflin-St Jeor + Katch-McArdle formulas, 
@@ -196,7 +196,7 @@ export default function PlannedFeaturesPage() {
                 'Carb Cycling',
                 'Refeed Day Protocol',
               ].map((f) => (
-                <div key={f} className="bg-[#1A1A1A] border border-dark-border rounded-lg p-3 text-center">
+                <div key={f} className="bg-[az-black-elevated] border border-dark-border rounded-lg p-3 text-center">
                   <Star size={16} className="text-cyan mx-auto mb-1" />
                   <span className="text-xs text-dark-secondary">{f}</span>
                 </div>
@@ -212,10 +212,10 @@ export default function PlannedFeaturesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="bg-[#141414] border-dark-border h-full">
+                <Card className="bg-[az-black-card] border-dark-border h-full">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-lg bg-[#1A1A1A] border border-dark-border flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-[az-black-elevated] border border-dark-border flex items-center justify-center">
                         <Star size={16} className="text-warning" />
                       </div>
                       <h3 className="text-dark-primary font-semibold text-sm">{f.title}</h3>
@@ -230,7 +230,7 @@ export default function PlannedFeaturesPage() {
       )}
 
       {/* Timeline */}
-      <div className="bg-[#141414] border border-dark-border rounded-xl p-5">
+      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
         <h2 className="text-lg font-semibold text-dark-primary mb-4 flex items-center gap-2">
           <Clock size={18} className="text-cyan" />
           Implementation Timeline
@@ -238,13 +238,13 @@ export default function PlannedFeaturesPage() {
         <div className="relative pl-6 space-y-4">
           <div className="absolute left-[11px] top-2 bottom-2 w-px bg-dark-border" />
           {[
-            { phase: 'Phase 8', label: 'Progress Photos Upload', status: 'completed', color: '#22C55E' },
-            { phase: 'Phase 9', label: 'PDF Export for Programs', status: 'planned', color: '#00AEEF' },
-            { phase: 'Phase 10', label: 'QR Code Generation', status: 'planned', color: '#00AEEF' },
-            { phase: 'Phase 11', label: 'WhatsApp Integration', status: 'planned', color: '#00AEEF' },
-            { phase: 'Phase 12', label: 'Payment / Invoicing (HKD)', status: 'planned', color: '#00AEEF' },
-            { phase: 'Phase 13', label: 'Progress Videos', status: 'planned', color: '#00AEEF' },
-            { phase: 'Phase 14', label: 'Wearable Integration', status: 'planned', color: '#00AEEF' },
+            { phase: 'Phase 8', label: 'Progress Photos Upload', status: 'completed', color: 'success' },
+            { phase: 'Phase 9', label: 'PDF Export for Programs', status: 'planned', color: 'cyan' },
+            { phase: 'Phase 10', label: 'QR Code Generation', status: 'planned', color: 'cyan' },
+            { phase: 'Phase 11', label: 'WhatsApp Integration', status: 'planned', color: 'cyan' },
+            { phase: 'Phase 12', label: 'Payment / Invoicing (HKD)', status: 'planned', color: 'cyan' },
+            { phase: 'Phase 13', label: 'Progress Videos', status: 'planned', color: 'cyan' },
+            { phase: 'Phase 14', label: 'Wearable Integration', status: 'planned', color: 'cyan' },
           ].map((item) => (
             <div key={item.phase} className="flex items-center gap-3 relative">
               <div

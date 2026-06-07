@@ -67,7 +67,7 @@ export default function Step2Method({ methods, selectedGoal, selectedMethod, onS
         <select
           value={filterExp}
           onChange={(e) => setFilterExp(e.target.value)}
-          className="bg-[#1A1A1A] border border-dark-border text-dark-secondary text-xs px-3 py-1.5 rounded-full outline-none focus:border-cyan"
+          className="bg-[az-black-elevated] border border-dark-border text-dark-secondary text-xs px-3 py-1.5 rounded-full outline-none focus:border-cyan"
         >
           <option value="">All Levels</option>
           <option value="Beginner">Beginner</option>
@@ -77,7 +77,7 @@ export default function Step2Method({ methods, selectedGoal, selectedMethod, onS
         <select
           value={filterEquip}
           onChange={(e) => setFilterEquip(e.target.value)}
-          className="bg-[#1A1A1A] border border-dark-border text-dark-secondary text-xs px-3 py-1.5 rounded-full outline-none focus:border-cyan"
+          className="bg-[az-black-elevated] border border-dark-border text-dark-secondary text-xs px-3 py-1.5 rounded-full outline-none focus:border-cyan"
         >
           <option value="">All Equipment</option>
           <option value="Barbell">Barbell</option>
@@ -102,14 +102,14 @@ export default function Step2Method({ methods, selectedGoal, selectedMethod, onS
               transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.5), ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
               onClick={() => onSelect(method)}
               className={cn(
-                'relative text-left bg-[#141414] border rounded-xl p-6 transition-all duration-200 w-full',
+                'relative text-left bg-[az-black-card] border rounded-xl p-6 transition-all duration-200 w-full',
                 selected
                   ? 'border-cyan bg-[rgba(0,174,239,0.05)] shadow-[0_0_16px_rgba(0,174,239,0.1)]'
                   : 'border-dark-border hover:border-[rgba(0,174,239,0.3)]'
               )}
             >
               {isBest && (
-                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-[#00AEEF] to-[#8B5CF6] text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg">
+                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-[cyan] to-[violet] text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg">
                   <Star size={10} />
                   Best Match
                 </div>
@@ -125,11 +125,11 @@ export default function Step2Method({ methods, selectedGoal, selectedMethod, onS
                   <div className="flex flex-wrap gap-1.5 mb-2">
                     <span
                       className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: goalNorm === 'muscle' ? 'rgba(139,92,246,0.15)' : goalNorm === 'fat-loss' ? 'rgba(34,197,94,0.15)' : goalNorm === 'strength' ? 'rgba(0,174,239,0.15)' : 'rgba(192,192,192,0.15)', color: '#F0F0F0' }}
+                      style={{ backgroundColor: goalNorm === 'muscle' ? 'rgba(139,92,246,0.15)' : goalNorm === 'fat-loss' ? 'rgba(34,197,94,0.15)' : goalNorm === 'strength' ? 'rgba(0,174,239,0.15)' : 'rgba(192,192,192,0.15)', color: 'dark-primary' }}
                     >
                       {method.Goal}
                     </span>
-                    <span className="text-[10px] text-dark-muted bg-[#1A1A1A] px-2 py-0.5 rounded-full">{method.Category}</span>
+                    <span className="text-[10px] text-dark-muted bg-[az-black-elevated] px-2 py-0.5 rounded-full">{method.Category}</span>
                   </div>
                   <p className="text-dark-secondary text-xs leading-relaxed mb-3 line-clamp-2">{method.Structure}</p>
                   <div className="flex flex-wrap gap-1">
