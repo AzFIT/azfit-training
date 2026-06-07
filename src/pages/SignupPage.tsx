@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { UserPlus, Eye, EyeOff } from 'lucide-react'
+import { useAuthStore } from '../stores/authStore'
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -20,12 +21,29 @@ export default function SignupPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleCreateAccount = () => {
+  const { register } = useAuthStore()
+  const [error, setError] = useState('')
+
+  const handleCreateAccount = async () => {
+    setError('')
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+    if (!agreeTerms) {
+      setError('Please agree to the terms')
+      return
+    }
     setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
+    const { error: registerError } = await register(email, password, {
+      full_name: fullName,
+    })
+    setIsLoading(false)
+    if (registerError) {
+      setError(registerError)
+    } else {
       navigate('/dashboard')
-    }, 800)
+    }
   }
 
   const inputClasses =
@@ -233,6 +251,11 @@ export default function SignupPage() {
                 </button>
               </span>
             </label>
+
+            {/* Error */}
+            {error && (
+              <div className="text-danger text-sm text-center">{error}</div>
+            )}
 
             {/* Create Account Button */}
             <button

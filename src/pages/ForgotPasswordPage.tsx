@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { resetPassword } from '../lib/auth';
 
 function getPasswordStrength(pwd: string): number {
   let s = 0;
@@ -41,13 +42,18 @@ export default function ForgotPasswordPage() {
     }
   }, [resendCountdown]);
 
-  const handleSendCode = (e: React.FormEvent) => {
+  const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('Please enter a valid email');
       return;
     }
     setError('');
+    const { error: resetError } = await resetPassword(email);
+    if (resetError) {
+      setError(resetError.message);
+      return;
+    }
     setStep(2);
     setResendCountdown(60);
     setTimeout(() => codeRefs.current[0]?.focus(), 300);

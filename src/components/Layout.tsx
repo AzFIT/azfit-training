@@ -23,8 +23,9 @@ import {
   Shield,
 } from 'lucide-react'
 import AiChat from './AiChat'
+import { useAuthStore } from '../stores/authStore'
 
-const navItems = [
+const allNavItems = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Calendar', path: '/calendar', icon: CalendarDays },
   { label: 'Programs', path: '/programs', icon: Dumbbell },
@@ -35,7 +36,7 @@ const navItems = [
   { label: 'Photos', path: '/photos', icon: Camera },
   { label: 'Notifications', path: '/notifications', icon: Bell },
   { label: 'Settings', path: '/settings', icon: Settings },
-  { label: 'Admin', path: '/admin', icon: Shield },
+  { label: 'Admin', path: '/admin', icon: Shield, adminOnly: true },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -69,6 +70,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [])
 
   const sidebarWidthPx = isDesktop ? (collapsed ? 72 : 260) : 0
+  const { logout, user, profile, role } = useAuthStore()
+  const isAdmin = role === 'admin'
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/login')
+  }
+
   const isActive = (path: string) => {
     if (path === '/clients') return location.pathname.startsWith('/clients')
     if (path === '/program-builder') return location.pathname.startsWith('/program-builder')
@@ -135,7 +144,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Nav Items */}
         <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
+          {allNavItems.map((item) => {
+            // Skip admin-only items for non-admins
+            if ('adminOnly' in item && (item as { adminOnly?: boolean }).adminOnly && !isAdmin) return null
             const active = isActive(item.path)
             return (
               <Link
@@ -178,11 +189,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               className="flex-1 min-w-0 overflow-hidden transition-opacity duration-300"
               style={{ opacity: collapsed ? 0 : 1, width: collapsed ? 0 : 'auto' }}
             >
-              <p className={`${textPrimary} text-sm font-medium truncate`}>Trainer</p>
-              <p className={`${textMuted} text-xs truncate`}>Pro Plan</p>
+              <p className={`${textPrimary} text-sm font-medium truncate`}>{profile?.full_name || user?.email?.split('@')[0] || 'Trainer'}</p>
+              <p className={`${textMuted} text-xs truncate`}>{isAdmin ? 'Admin' : 'Coach'}</p>
             </div>
             {!collapsed && (
-              <button className={`${textMuted} hover:text-danger p-1 transition-colors flex-shrink-0`} aria-label="Logout">
+              <button
+                onClick={handleLogout}
+                className={`${textMuted} hover:text-danger p-1 transition-colors flex-shrink-0`}
+                aria-label="Logout"
+                title="Logout"
+              >
                 <LogOut size={16} />
               </button>
             )}
@@ -220,7 +236,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
               {/* Mobile Nav Items */}
               <nav className="flex-1 py-4 px-3 space-y-1">
-                {navItems.map((item) => {
+                {allNavItems.map((item) => {
+                  // Skip admin-only items for non-admins
+                  if ('adminOnly' in item && (item as { adminOnly?: boolean }).adminOnly && !isAdmin) return null
                   const active = isActive(item.path)
                   return (
                     <Link
@@ -272,7 +290,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Menu size={20} />
             </button>
             <h1 className={`${textPrimary} font-semibold text-lg hidden sm:block`}>
-              {navItems.find((i) => isActive(i.path))?.label || 'Dashboard'}
+              {allNavItems.find((i) => isActive(i.path))?.label || 'Dashboard'}
             </h1>
           </div>
 

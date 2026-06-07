@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { LogIn, Eye, EyeOff } from 'lucide-react'
+import { useAuthStore } from '../stores/authStore'
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -23,12 +24,19 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSignIn = () => {
+  const { login } = useAuthStore()
+  const [error, setError] = useState('')
+
+  const handleSignIn = async () => {
+    setError('')
     setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
+    const { error: loginError } = await login(email, password)
+    setIsLoading(false)
+    if (loginError) {
+      setError(loginError)
+    } else {
       navigate('/dashboard')
-    }, 800)
+    }
   }
 
   const handleDemoMode = () => {
@@ -142,14 +150,18 @@ export default function LoginPage() {
                 </div>
                 <span className="text-dark-secondary text-sm">Remember me</span>
               </label>
-              <button
-                type="button"
-                onClick={() => alert('Password reset coming soon!')}
+              <Link
+                to="/forgot-password"
                 className="text-cyan text-sm hover:text-[#33BFF2] transition-colors"
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
+
+            {/* Error */}
+            {error && (
+              <div className="text-danger text-sm text-center">{error}</div>
+            )}
 
             {/* Sign In Button */}
             <button
