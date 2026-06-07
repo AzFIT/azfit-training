@@ -413,7 +413,7 @@ function LinkableMessage({
       <button
         key={key++}
         onClick={() => onNavigate(path)}
-        className="inline-flex items-center gap-0.5 text-[#00AEEF] hover:text-[#33BEF2] hover:underline font-semibold transition-colors"
+        className="inline-flex items-center gap-0.5 text-cyan hover:text-[#33BEF2] hover:underline font-semibold transition-colors"
       >
         {text}
         <ArrowRight size={11} />
@@ -714,25 +714,25 @@ export default function AiChat() {
   const isDark = theme === 'dark'
 
   /* Theme-aware colours */
-  const panelBg = isDark ? 'bg-[#141414] border-[#2A2A2A]' : 'bg-white border-[#E2E8F0]'
+  const panelBg = isDark ? 'bg-[#141414] border-dark-border' : 'bg-white border-[#E2E8F0]'
   const headerBg = isDark ? 'bg-[#0F0F0F]' : 'bg-[#F8FAFC]'
-  const headerBorder = isDark ? 'border-[#2A2A2A]' : 'border-[#E2E8F0]'
-  const titleText = isDark ? 'text-[#F0F0F0]' : 'text-[#0F172A]'
-  const subtitleText = isDark ? 'text-[#6B6B6B]' : 'text-[#94A3B8]'
+  const headerBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
+  const titleText = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
+  const subtitleText = isDark ? 'text-dark-muted' : 'text-[#94A3B8]'
   const msgBgAssistant = isDark
-    ? 'bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0]'
+    ? 'bg-[#1A1A1A] border-dark-border text-dark-primary'
     : 'bg-[#F1F5F9] border-[#E2E8F0] text-[#0F172A]'
-  const msgBgUser = 'bg-[#00AEEF] text-white'
-  const inputBg = isDark ? 'bg-[#1A1A1A] border-[#2A2A2A]' : 'bg-white border-[#E2E8F0]'
-  const inputText = isDark ? 'text-[#F0F0F0] placeholder:text-[#6B6B6B]' : 'text-[#0F172A] placeholder:text-[#94A3B8]'
+  const msgBgUser = 'bg-cyan text-white'
+  const inputBg = isDark ? 'bg-[#1A1A1A] border-dark-border' : 'bg-white border-[#E2E8F0]'
+  const inputText = isDark ? 'text-dark-primary placeholder:text-dark-muted' : 'text-[#0F172A] placeholder:text-[#94A3B8]'
   const quickBg = isDark
-    ? 'bg-[#1A1A1A] border-[#2A2A2A] text-[#A0A0A0] hover:text-[#00AEEF] hover:border-[#00AEEF]/30'
-    : 'bg-white border-[#E2E8F0] text-[#64748B] hover:text-[#00AEEF] hover:border-[#00AEEF]/30'
-  const iconMuted = isDark ? 'text-[#6B6B6B]' : 'text-[#94A3B8]'
-  const typingDot = isDark ? 'bg-[#6B6B6B]' : 'bg-[#CBD5E1]'
-  const dropdownBg = isDark ? 'bg-[#1A1A1A] border-[#2A2A2A]' : 'bg-white border-[#E2E8F0]'
-  const dropdownHover = isDark ? 'hover:bg-[#242424]' : 'hover:bg-[#F1F5F9]'
-  const cmdOutputBg = isDark ? 'bg-[#00AEEF]/5 border-[#00AEEF]/20' : 'bg-[#00AEEF]/5 border-[#00AEEF]/15'
+    ? 'bg-[#1A1A1A] border-dark-border text-dark-secondary hover:text-cyan hover:border-cyan/30'
+    : 'bg-white border-[#E2E8F0] text-[#64748B] hover:text-cyan hover:border-cyan/30'
+  const iconMuted = isDark ? 'text-dark-muted' : 'text-[#94A3B8]'
+  const typingDot = isDark ? 'bg-dark-muted' : 'bg-[#CBD5E1]'
+  const dropdownBg = isDark ? 'bg-[#1A1A1A] border-dark-border' : 'bg-white border-[#E2E8F0]'
+  const dropdownHover = isDark ? 'hover:bg-dark-hover' : 'hover:bg-[#F1F5F9]'
+  const cmdOutputBg = isDark ? 'bg-cyan/5 border-cyan/20' : 'bg-cyan/5 border-cyan/15'
 
   return (
     <>
@@ -789,7 +789,7 @@ export default function AiChat() {
             >
               <MessageCircle size={20} />
               {hasUnread && (
-                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#EF4444] border-2 border-white dark:border-[#141414]" />
+                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-danger border-2 border-white dark:border-[#141414]" />
               )}
             </motion.div>
           )}
@@ -825,28 +825,28 @@ export default function AiChat() {
                   AzFIT AI Assistant
                 </h4>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                   <span className={cn('text-xs', subtitleText)}>Online</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setSoundEnabled((v) => !v)}
-                  className={cn('p-1.5 rounded-lg transition-colors', iconMuted, soundEnabled ? 'hover:text-[#00AEEF]' : 'hover:text-[#EF4444]')}
+                  className={cn('p-1.5 rounded-lg transition-colors', iconMuted, soundEnabled ? 'hover:text-cyan' : 'hover:text-danger')}
                   title={soundEnabled ? 'Mute sound' : 'Unmute sound'}
                 >
                   {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
                 </button>
                 <button
                   onClick={clearChat}
-                  className={cn('p-1.5 rounded-lg transition-colors', iconMuted, 'hover:text-[#EF4444] hover:bg-[#EF4444]/10')}
+                  className={cn('p-1.5 rounded-lg transition-colors', iconMuted, 'hover:text-danger hover:bg-danger/10')}
                   title="Clear chat"
                 >
                   <Trash2 size={15} />
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className={cn('p-1.5 rounded-lg transition-colors', iconMuted, isDark ? 'hover:text-[#F0F0F0] hover:bg-[#242424]' : 'hover:text-[#0F172A] hover:bg-[#F1F5F9]')}
+                  className={cn('p-1.5 rounded-lg transition-colors', iconMuted, isDark ? 'hover:text-dark-primary hover:bg-dark-hover' : 'hover:text-[#0F172A] hover:bg-[#F1F5F9]')}
                 >
                   <X size={18} />
                 </button>
@@ -868,13 +868,13 @@ export default function AiChat() {
                       'w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0',
                       msg.role === 'assistant'
                         ? 'bg-gradient-to-br from-[#00AEEF] to-[#8B5CF6]'
-                        : isDark ? 'bg-[#2A2A2A]' : 'bg-[#E2E8F0]'
+                        : isDark ? 'bg-dark-border' : 'bg-[#E2E8F0]'
                     )}
                   >
                     {msg.role === 'assistant' ? (
                       <Bot size={14} className="text-white" />
                     ) : (
-                      <User size={14} className={isDark ? 'text-[#A0A0A0]' : 'text-[#64748B]'} />
+                      <User size={14} className={isDark ? 'text-dark-secondary' : 'text-[#64748B]'} />
                     )}
                   </div>
                   <div
@@ -898,7 +898,7 @@ export default function AiChat() {
                   <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-[#00AEEF] to-[#8B5CF6]">
                     <Bot size={14} className="text-white" />
                   </div>
-                  <div className={cn('border rounded-xl px-3.5 py-2.5', isDark ? 'bg-[#1A1A1A] border-[#2A2A2A]' : 'bg-[#F1F5F9] border-[#E2E8F0]')}>
+                  <div className={cn('border rounded-xl px-3.5 py-2.5', isDark ? 'bg-[#1A1A1A] border-dark-border' : 'bg-[#F1F5F9] border-[#E2E8F0]')}>
                     <div className="flex gap-1">
                       <span className={cn('w-2 h-2 rounded-full animate-bounce', typingDot)} style={{ animationDelay: '0ms' }} />
                       <span className={cn('w-2 h-2 rounded-full animate-bounce', typingDot)} style={{ animationDelay: '150ms' }} />
@@ -959,7 +959,7 @@ export default function AiChat() {
                         'w-full rounded-xl px-4 py-2.5 text-sm outline-none transition-all focus:ring-1 focus:ring-[#00AEEF]/20 border pr-8',
                         inputBg,
                         inputText,
-                        'focus:border-[#00AEEF]'
+                        'focus:border-cyan'
                       )}
                     />
                     <Command size={14} className={cn('absolute right-3 top-1/2 -translate-y-1/2', iconMuted)} />
@@ -967,7 +967,7 @@ export default function AiChat() {
                   <button
                     onClick={() => handleSend(input)}
                     disabled={!input.trim()}
-                    className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#00AEEF] hover:bg-[#009BD6] disabled:opacity-40 disabled:hover:bg-[#00AEEF] text-white transition-all duration-200 hover:scale-105 flex-shrink-0"
+                    className="w-10 h-10 rounded-xl flex items-center justify-center bg-cyan hover:bg-cyan-hover disabled:opacity-40 disabled:hover:bg-cyan text-white transition-all duration-200 hover:scale-105 flex-shrink-0"
                   >
                     <Send size={16} />
                   </button>
@@ -989,9 +989,9 @@ export default function AiChat() {
                             <button
                               key={cmd.cmd}
                               onClick={() => insertAutocomplete(cmd.cmd)}
-                              className={cn('w-full flex items-center justify-between px-3 py-2 text-left text-sm transition-colors', dropdownHover, isDark ? 'text-[#F0F0F0]' : 'text-[#0F172A]')}
+                              className={cn('w-full flex items-center justify-between px-3 py-2 text-left text-sm transition-colors', dropdownHover, isDark ? 'text-dark-primary' : 'text-[#0F172A]')}
                             >
-                              <span className="font-mono text-[#00AEEF]">{cmd.cmd}</span>
+                              <span className="font-mono text-cyan">{cmd.cmd}</span>
                               <span className={cn('text-xs', subtitleText)}>{cmd.desc}</span>
                             </button>
                           ))}
@@ -1003,7 +1003,7 @@ export default function AiChat() {
                             <button
                               key={client}
                               onClick={() => insertAutocomplete(client)}
-                              className={cn('w-full flex items-center justify-between px-3 py-2 text-left text-sm transition-colors', dropdownHover, isDark ? 'text-[#F0F0F0]' : 'text-[#0F172A]')}
+                              className={cn('w-full flex items-center justify-between px-3 py-2 text-left text-sm transition-colors', dropdownHover, isDark ? 'text-dark-primary' : 'text-[#0F172A]')}
                             >
                               <span className="font-semibold">@{client}</span>
                               <span className={cn('text-xs', subtitleText)}>{CLIENTS[client]}</span>

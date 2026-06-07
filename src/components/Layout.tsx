@@ -78,23 +78,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   /* ── Theme-aware color tokens ───────────────────────── */
   const appBg = isDark ? 'bg-[#0A0A0A]' : 'bg-[#F8FAFC]'
   const sidebarBg = isDark ? 'bg-[#141414]' : 'bg-white'
-  const sidebarBorder = isDark ? 'border-[#2A2A2A]' : 'border-[#E2E8F0]'
+  const sidebarBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
   const topBarBg = isDark ? 'bg-[#0A0A0A]/80' : 'bg-white/80'
-  const topBarBorder = isDark ? 'border-[#1F1F1F]' : 'border-[#E2E8F0]'
-  const textPrimary = isDark ? 'text-[#F0F0F0]' : 'text-[#0F172A]'
-  const textSecondary = isDark ? 'text-[#A0A0A0]' : 'text-[#64748B]'
-  const textMuted = isDark ? 'text-[#6B6B6B]' : 'text-[#94A3B8]'
-  const navInactiveText = isDark ? 'text-[#A0A0A0]' : 'text-[#64748B]'
-  const navInactiveHoverText = isDark ? 'hover:text-[#F0F0F0]' : 'hover:text-[#0F172A]'
-  const navInactiveHoverBg = isDark ? 'hover:bg-[#242424]' : 'hover:bg-[#F1F5F9]'
+  const topBarBorder = isDark ? 'border-dark-divider' : 'border-[#E2E8F0]'
+  const textPrimary = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
+  const textSecondary = isDark ? 'text-dark-secondary' : 'text-[#64748B]'
+  const textMuted = isDark ? 'text-dark-muted' : 'text-[#94A3B8]'
+  const navInactiveText = isDark ? 'text-dark-secondary' : 'text-[#64748B]'
+  const navInactiveHoverText = isDark ? 'hover:text-dark-primary' : 'hover:text-[#0F172A]'
+  const navInactiveHoverBg = isDark ? 'hover:bg-dark-hover' : 'hover:bg-[#F1F5F9]'
   const navActiveBg = isDark ? 'bg-[rgba(0,174,239,0.15)]' : 'bg-[rgba(0,174,239,0.08)]'
   const inputBg = isDark ? 'bg-[#141414]' : 'bg-[#F1F5F9]'
-  const inputBorder = isDark ? 'border-[#2A2A2A]' : 'border-[#E2E8F0]'
-  const inputText = isDark ? 'text-[#F0F0F0]' : 'text-[#0F172A]'
-  const inputPlaceholder = isDark ? 'placeholder:text-[#6B6B6B]' : 'placeholder:text-[#94A3B8]'
+  const inputBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
+  const inputText = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
+  const inputPlaceholder = isDark ? 'placeholder:text-dark-muted' : 'placeholder:text-[#94A3B8]'
   const tooltipBg = isDark ? 'bg-[#1A1A1A]' : 'bg-white'
-  const tooltipBorder = isDark ? 'border-[#2A2A2A]' : 'border-[#E2E8F0]'
-  const tooltipText = isDark ? 'text-[#F0F0F0]' : 'text-[#0F172A]'
+  const tooltipBorder = isDark ? 'border-dark-border' : 'border-[#E2E8F0]'
+  const tooltipText = isDark ? 'text-dark-primary' : 'text-[#0F172A]'
   const hoverRing = isDark ? 'hover:ring-[#00AEEF]' : 'hover:ring-[#00AEEF]'
   const ringColor = isDark ? 'ring-[#2A2A2A]' : 'ring-[#E2E8F0]'
 
@@ -180,7 +180,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <p className={`${textMuted} text-xs truncate`}>Pro Plan</p>
             </div>
             {!collapsed && (
-              <button className={`${textMuted} hover:text-[#EF4444] p-1 transition-colors flex-shrink-0`} aria-label="Logout">
+              <button className={`${textMuted} hover:text-danger p-1 transition-colors flex-shrink-0`} aria-label="Logout">
                 <LogOut size={16} />
               </button>
             )}
@@ -227,7 +227,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       onClick={() => setMobileOpen(false)}
                       className={`flex items-center gap-3 h-12 px-3 rounded-lg transition-all duration-200 ${
                         active
-                          ? `${navActiveBg} border-l-[3px] border-[#00AEEF]`
+                          ? `${navActiveBg} border-l-[3px] border-cyan`
                           : `${navInactiveText} ${navInactiveHoverText} ${navInactiveHoverBg} border-l-[3px] border-transparent`
                       }`}
                       style={active ? { color: isDark ? '#F0F0F0' : '#0F172A' } : undefined}
@@ -279,7 +279,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Search */}
             <div
               className={`hidden sm:flex items-center ${inputBg} rounded-full border ${inputBorder} transition-all duration-300 ${
-                searchFocused ? 'w-64 border-[#00AEEF]' : 'w-48'
+                searchFocused ? 'w-64 border-cyan' : 'w-48'
               }`}
             >
               <Search size={16} className={`${textMuted} ml-3 flex-shrink-0`} />
@@ -307,7 +307,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               aria-label="Notifications"
             >
               <Bell size={18} />
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#EF4444]" />
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-danger" />
             </button>
 
             {/* Avatar */}

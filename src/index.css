@@ -70,6 +70,37 @@
     --client-accent: #00AEEF;
     --admin-accent: #A855F7;
 
+    /* Semantic dark theme tokens */
+    --dark-muted: #6B6B6B;
+    --dark-primary: #F0F0F0;
+    --dark-secondary: #A0A0A0;
+    --dark-border: #2A2A2A;
+    --dark-hover: #242424;
+    --dark-subtle: #3A3A3A;
+    --dark-divider: #1F1F1F;
+
+    /* Semantic light theme tokens */
+    --light-primary: #0F172A;
+    --light-secondary: #64748B;
+    --light-muted: #94A3B8;
+    --light-border: #E2E8F0;
+    --light-surface: #F8FAFC;
+    --light-hover: #F1F5F9;
+
+    /* Extended accent tokens */
+    --violet: #8B5CF6;
+    --violet-light: #A78BFA;
+    --violet-dark: #7C3AED;
+    --orange: #F97316;
+    --orange-light: #FB923C;
+    --orange-dark: #EA580C;
+    --cyan-hover: #009BD6;
+
+    /* Navy (BioPrint / dashboard cards) */
+    --navy: #151D2E;
+    --navy-border: #2A3A50;
+    --navy-input: #0B1120;
+
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, #0A0A0A 0%, #111827 40%, #00AEEF 100%);
     --gradient-cyan: linear-gradient(135deg, #00AEEF, #33BFF2);

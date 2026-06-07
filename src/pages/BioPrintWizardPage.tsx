@@ -129,7 +129,7 @@ export default function BioPrintWizardPage() {
           <p className="text-[#94A3B8] mb-4">Client not found</p>
           <button
             onClick={() => navigate('/clients')}
-            className="bg-[#00AEEF] text-white px-4 py-2 rounded-lg text-sm"
+            className="bg-cyan text-white px-4 py-2 rounded-lg text-sm"
           >
             Back to Clients
           </button>
@@ -149,8 +149,8 @@ export default function BioPrintWizardPage() {
           <ChevronLeft size={20} />
         </button>
         <div>
-          <h1 className="text-xl font-semibold text-[#F0F0F0]">BioPrint Assessment</h1>
-          <p className="text-sm text-[#6B6B6B]">
+          <h1 className="text-xl font-semibold text-dark-primary">BioPrint Assessment</h1>
+          <p className="text-sm text-dark-muted">
             {client.name} · 12-site Poliquin BioSignature
           </p>
         </div>
@@ -164,10 +164,10 @@ export default function BioPrintWizardPage() {
           className="space-y-6"
         >
           {/* Weight */}
-          <div className="bg-[#151D2E] border border-[#2A3A50] rounded-xl p-5">
+          <div className="bg-navy border border-navy-border rounded-xl p-5">
             <div className="flex items-center gap-3 mb-4">
               <Scale size={18} className="text-cyan" />
-              <h3 className="text-[#F0F0F0] font-medium">Body Weight</h3>
+              <h3 className="text-dark-primary font-medium">Body Weight</h3>
             </div>
             <div className="flex items-center gap-3">
               <input
@@ -179,20 +179,20 @@ export default function BioPrintWizardPage() {
                   if (v === '' || /^\d*\.?\d*$/.test(v)) setWeight(v)
                 }}
                 placeholder="0.0"
-                className="w-32 bg-[#0B1120] border border-[#2A3A50] rounded-lg px-4 py-2.5 text-[#F0F0F0] text-sm focus:border-cyan outline-none"
+                className="w-32 bg-navy-input border border-navy-border rounded-lg px-4 py-2.5 text-dark-primary text-sm focus:border-cyan outline-none"
               />
-              <span className="text-[#6B6B6B] text-sm">kg</span>
+              <span className="text-dark-muted text-sm">kg</span>
             </div>
           </div>
 
           {/* Skinfold Sites */}
-          <div className="bg-[#151D2E] border border-[#2A3A50] rounded-xl p-5">
+          <div className="bg-navy border border-navy-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
                 <Ruler size={18} className="text-cyan" />
-                <h3 className="text-[#F0F0F0] font-medium">12-Site Skinfold</h3>
+                <h3 className="text-dark-primary font-medium">12-Site Skinfold</h3>
               </div>
-              <span className="text-xs text-[#6B6B6B]">
+              <span className="text-xs text-dark-muted">
                 {numValues}/{SITES.length} entered
               </span>
             </div>
@@ -208,7 +208,7 @@ export default function BioPrintWizardPage() {
                 >
                   <label className="text-xs text-[#94A3B8] block">
                     {site.label}
-                    <span className="text-[#6B6B6B] ml-1">({site.desc})</span>
+                    <span className="text-dark-muted ml-1">({site.desc})</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -218,11 +218,11 @@ export default function BioPrintWizardPage() {
                       onChange={(e) => updateValue(site.key, e.target.value)}
                       placeholder="0.0"
                       className={cn(
-                        'flex-1 bg-[#0B1120] border rounded-lg px-3 py-2 text-[#F0F0F0] text-sm outline-none transition-colors',
-                        values[site.key] ? 'border-cyan/50' : 'border-[#2A3A50] focus:border-cyan'
+                        'flex-1 bg-navy-input border rounded-lg px-3 py-2 text-dark-primary text-sm outline-none transition-colors',
+                        values[site.key] ? 'border-cyan/50' : 'border-navy-border focus:border-cyan'
                       )}
                     />
-                    <span className="text-[#6B6B6B] text-xs w-8">mm</span>
+                    <span className="text-dark-muted text-xs w-8">mm</span>
                   </div>
                 </motion.div>
               ))}
@@ -230,17 +230,17 @@ export default function BioPrintWizardPage() {
           </div>
 
           {/* Notes */}
-          <div className="bg-[#151D2E] border border-[#2A3A50] rounded-xl p-5">
+          <div className="bg-navy border border-navy-border rounded-xl p-5">
             <div className="flex items-center gap-3 mb-3">
               <ClipboardCheck size={18} className="text-cyan" />
-              <h3 className="text-[#F0F0F0] font-medium">Notes</h3>
+              <h3 className="text-dark-primary font-medium">Notes</h3>
             </div>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Any observations during assessment..."
               rows={3}
-              className="w-full bg-[#0B1120] border border-[#2A3A50] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm focus:border-cyan outline-none resize-none"
+              className="w-full bg-navy-input border border-navy-border rounded-lg px-4 py-3 text-dark-primary text-sm focus:border-cyan outline-none resize-none"
             />
           </div>
 
@@ -248,7 +248,7 @@ export default function BioPrintWizardPage() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
-              className="text-[#94A3B8] hover:text-[#F0F0F0] text-sm px-4 py-2.5 rounded-lg hover:bg-[#1A1A1A] transition-colors"
+              className="text-[#94A3B8] hover:text-dark-primary text-sm px-4 py-2.5 rounded-lg hover:bg-[#1A1A1A] transition-colors"
             >
               Cancel
             </button>
@@ -259,7 +259,7 @@ export default function BioPrintWizardPage() {
                 'flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all',
                 allFilled
                   ? 'bg-cyan text-white hover:bg-cyan/90 hover:scale-[1.02]'
-                  : 'bg-[#2A3A50] text-[#6B6B6B] cursor-not-allowed'
+                  : 'bg-navy-border text-dark-muted cursor-not-allowed'
               )}
             >
               <Calculator size={16} />
@@ -285,22 +285,22 @@ export default function BioPrintWizardPage() {
           </div>
 
           {/* Category */}
-          <div className="bg-[#151D2E] border border-[#2A3A50] rounded-xl p-5 text-center">
-            <p className="text-sm text-[#6B6B6B] mb-1">Body Fat Category</p>
-            <p className="text-2xl font-bold text-[#F0F0F0]">{bodyFatCategory(bodyFatPct)}</p>
+          <div className="bg-navy border border-navy-border rounded-xl p-5 text-center">
+            <p className="text-sm text-dark-muted mb-1">Body Fat Category</p>
+            <p className="text-2xl font-bold text-dark-primary">{bodyFatCategory(bodyFatPct)}</p>
           </div>
 
           {/* Site Breakdown */}
-          <div className="bg-[#151D2E] border border-[#2A3A50] rounded-xl p-5">
-            <h3 className="text-[#F0F0F0] font-medium mb-4">Site Breakdown</h3>
+          <div className="bg-navy border border-navy-border rounded-xl p-5">
+            <h3 className="text-dark-primary font-medium mb-4">Site Breakdown</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {SITES.map((site) => (
                 <div
                   key={site.key}
-                  className="flex items-center justify-between bg-[#0B1120] rounded-lg px-3 py-2"
+                  className="flex items-center justify-between bg-navy-input rounded-lg px-3 py-2"
                 >
                   <span className="text-xs text-[#94A3B8]">{site.label}</span>
-                  <span className="text-sm text-[#F0F0F0] font-mono">
+                  <span className="text-sm text-dark-primary font-mono">
                     {values[site.key]} mm
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export default function BioPrintWizardPage() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setStep(1)}
-              className="text-[#94A3B8] hover:text-[#F0F0F0] text-sm px-4 py-2.5 rounded-lg hover:bg-[#1A1A1A] transition-colors"
+              className="text-[#94A3B8] hover:text-dark-primary text-sm px-4 py-2.5 rounded-lg hover:bg-[#1A1A1A] transition-colors"
             >
               Back to Measurements
             </button>
@@ -322,7 +322,7 @@ export default function BioPrintWizardPage() {
               className={cn(
                 'flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all',
                 saving
-                  ? 'bg-[#2A3A50] text-[#6B6B6B]'
+                  ? 'bg-navy-border text-dark-muted'
                   : 'bg-cyan text-white hover:bg-cyan/90 hover:scale-[1.02]'
               )}
             >
@@ -348,8 +348,8 @@ function ResultCard({
   color: string
 }) {
   return (
-    <div className="bg-[#151D2E] border border-[#2A3A50] rounded-xl p-4 text-center">
-      <p className="text-xs text-[#6B6B6B] mb-1">{label}</p>
+    <div className="bg-navy border border-navy-border rounded-xl p-4 text-center">
+      <p className="text-xs text-dark-muted mb-1">{label}</p>
       <p className="text-xl font-bold font-mono" style={{ color }}>
         {value}
       </p>

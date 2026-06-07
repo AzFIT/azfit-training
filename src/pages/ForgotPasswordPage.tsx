@@ -119,14 +119,14 @@ export default function ForgotPasswordPage() {
               <div className="flex flex-col items-center">
                 <div
                   className={`w-3 h-3 rounded-full flex items-center justify-center transition-colors ${
-                    step > s.num ? 'bg-success' : step === s.num ? 'bg-[#00AEEF]' : 'bg-gray-300'
+                    step > s.num ? 'bg-success' : step === s.num ? 'bg-cyan' : 'bg-gray-300'
                   }`}
                 >
                   {step > s.num && <CheckCircle size={10} className="text-white" />}
                 </div>
                 <span
                   className={`text-[10px] mt-1 font-medium transition-colors ${
-                    step === s.num ? 'text-[#00AEEF]' : step > s.num ? 'text-gray-600' : 'text-gray-400'
+                    step === s.num ? 'text-cyan' : step > s.num ? 'text-gray-600' : 'text-gray-400'
                   }`}
                 >
                   {s.label}
@@ -162,7 +162,7 @@ export default function ForgotPasswordPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-[#00AEEF] outline-none"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-cyan outline-none"
                     />
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default function ForgotPasswordPage() {
             >
               <h2 className="text-heading-lg text-gray-900 font-semibold text-center mb-2">Check Your Email</h2>
               <p className="text-body-sm text-gray-500 text-center mb-6">
-                We&apos;ve sent a 6-digit code to <span className="text-[#00AEEF] font-medium">{email}</span>. Enter it below.
+                We&apos;ve sent a 6-digit code to <span className="text-cyan font-medium">{email}</span>. Enter it below.
               </p>
               <div className="flex gap-2 justify-center mb-6" onPaste={handlePaste}>
                 {code.map((digit, i) => (
@@ -198,7 +198,7 @@ export default function ForgotPasswordPage() {
                     value={digit}
                     onChange={(e) => handleCodeChange(i, e.target.value)}
                     onKeyDown={(e) => handleCodeKeyDown(i, e)}
-                    className="w-12 h-14 text-center text-xl font-mono font-bold border-2 border-gray-300 rounded-xl focus:border-[#00AEEF] focus:ring-[3px] focus:ring-[rgba(0,174,239,0.15)] outline-none transition-all bg-white"
+                    className="w-12 h-14 text-center text-xl font-mono font-bold border-2 border-gray-300 rounded-xl focus:border-cyan focus:ring-[3px] focus:ring-[rgba(0,174,239,0.15)] outline-none transition-all bg-white"
                   />
                 ))}
               </div>
@@ -208,7 +208,7 @@ export default function ForgotPasswordPage() {
                 ) : (
                   <button
                     onClick={() => { setResendCountdown(60); setCode(['', '', '', '', '', '']); }}
-                    className="text-sm text-[#00AEEF] font-medium hover:underline"
+                    className="text-sm text-cyan font-medium hover:underline"
                   >
                     Didn&apos;t receive it? Resend code
                   </button>
@@ -238,7 +238,7 @@ export default function ForgotPasswordPage() {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Enter new password"
-                      className="w-full pl-10 pr-10 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-[#00AEEF] outline-none"
+                      className="w-full pl-10 pr-10 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-cyan outline-none"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -266,7 +266,7 @@ export default function ForgotPasswordPage() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm password"
                       className={`w-full pl-10 pr-10 py-3 bg-gray-50 border-[1.5px] rounded-xl text-sm outline-none ${
-                        confirmPassword && newPassword !== confirmPassword ? 'border-danger' : 'border-gray-200 focus:border-[#00AEEF]'
+                        confirmPassword && newPassword !== confirmPassword ? 'border-danger' : 'border-gray-200 focus:border-cyan'
                       }`}
                     />
                     <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">

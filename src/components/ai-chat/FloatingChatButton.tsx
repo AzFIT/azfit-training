@@ -77,7 +77,7 @@ export default function FloatingChatButton() {
     >
       <MessageCircle size={26} />
       {/* Pulse ring */}
-      <span className="absolute inset-0 rounded-full bg-[#00AEEF] animate-ping opacity-20" style={{ animationDuration: '2.5s' }} />
+      <span className="absolute inset-0 rounded-full bg-cyan animate-ping opacity-20" style={{ animationDuration: '2.5s' }} />
     </button>
   );
 }

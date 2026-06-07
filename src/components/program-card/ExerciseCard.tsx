@@ -48,13 +48,13 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
   const estimatedVolume = displaySets * parseFloat(displayReps || '0') * 50
 
   const methodColors: Record<string, string> = {
-    'Straight Set': 'bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/30',
+    'Straight Set': 'bg-success/10 text-success border-success/30',
     'Superset': 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30',
-    'Triset': 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30',
-    'Circuit': 'bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/30',
+    'Triset': 'bg-danger/10 text-danger border-danger/30',
+    'Circuit': 'bg-violet/10 text-violet border-violet/30',
     'Giant Set': 'bg-[#EC4899]/10 text-[#EC4899] border-[#EC4899]/30',
     'Drop Set': 'bg-[#06B6D4]/10 text-[#06B6D4] border-[#06B6D4]/30',
-    'Complex': 'bg-[#EAB308]/10 text-[#EAB308] border-[#EAB308]/30',
+    'Complex': 'bg-warning/10 text-warning border-warning/30',
   }
 
   const handleSave = () => {
@@ -81,8 +81,8 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
     <div
       className={`rounded-xl border transition-all duration-300 overflow-hidden ${
         isExpanded
-          ? 'pb-card-gradient border-[#00AEEF]/25 shadow-[0_0_20px_rgba(0,174,239,0.06)]'
-          : 'bg-[#141414] border-[#2A2A2A]/30 hover:border-[#374151]/50'
+          ? 'pb-card-gradient border-cyan/25 shadow-[0_0_20px_rgba(0,174,239,0.06)]'
+          : 'bg-[#141414] border-dark-border/30 hover:border-[#374151]/50'
       }`}
     >
       {/* ── Card Header ─────────────────────────────────────────── */}
@@ -91,12 +91,12 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {/* Notation badge */}
-        <span className="text-[13px] px-2 py-0.5 rounded bg-[#00AEEF]/10 text-[#00AEEF] font-mono font-semibold shrink-0">
+        <span className="text-[13px] px-2 py-0.5 rounded bg-cyan/10 text-cyan font-mono font-semibold shrink-0">
           {notation}
         </span>
 
         {/* Exercise name */}
-        <span className="text-[#00AEEF] font-semibold text-[15px] hover:brightness-125 transition-all truncate">
+        <span className="text-cyan font-semibold text-[15px] hover:brightness-125 transition-all truncate">
           {exercise.exercise_name}
         </span>
 
@@ -109,7 +109,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
 
         {/* Equipment */}
         {exercise.equipment_primary && (
-          <span className="hidden sm:inline text-[11px] text-[#6B6B6B] shrink-0">
+          <span className="hidden sm:inline text-[11px] text-dark-muted shrink-0">
             {exercise.equipment_primary}
           </span>
         )}
@@ -123,18 +123,18 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
               max={50}
               value={editSets}
               onChange={(e) => setEditSets(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-12 h-7 px-1 text-center text-[13px] font-semibold bg-[#0A0A0A] border border-[#2A2A2A] rounded text-[#F0F0F0] focus:border-[#00AEEF] outline-none tabular-nums"
+              className="w-12 h-7 px-1 text-center text-[13px] font-semibold bg-[#0A0A0A] border border-dark-border rounded text-dark-primary focus:border-cyan outline-none tabular-nums"
             />
-            <span className="text-[#6B6B6B] text-sm">×</span>
+            <span className="text-dark-muted text-sm">×</span>
             <input
               type="text"
               value={editReps}
               onChange={(e) => setEditReps(e.target.value)}
-              className="w-14 h-7 px-1 text-center text-[13px] font-semibold bg-[#0A0A0A] border border-[#2A2A2A] rounded text-[#F0F0F0] focus:border-[#00AEEF] outline-none"
+              className="w-14 h-7 px-1 text-center text-[13px] font-semibold bg-[#0A0A0A] border border-dark-border rounded text-dark-primary focus:border-cyan outline-none"
             />
           </div>
         ) : (
-          <span className="text-[#00AEEF] font-semibold text-sm tabular-nums ml-auto shrink-0">
+          <span className="text-cyan font-semibold text-sm tabular-nums ml-auto shrink-0">
             {scheme}
           </span>
         )}
@@ -150,7 +150,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
                 setIsEditing(true)
               }
             }}
-            className="w-8 h-8 flex items-center justify-center text-[#6B6B6B] hover:text-[#00AEEF] transition-colors shrink-0"
+            className="w-8 h-8 flex items-center justify-center text-dark-muted hover:text-cyan transition-colors shrink-0"
             title={isEditing ? 'Cancel edit' : 'Edit exercise'}
           >
             {isEditing ? <X size={16} /> : <Pencil size={15} />}
@@ -160,7 +160,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
         {/* Expand toggle */}
         <button
           onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded) }}
-          className={`w-8 h-8 flex items-center justify-center text-[#6B6B6B] hover:text-[#00AEEF] transition-all duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
+          className={`w-8 h-8 flex items-center justify-center text-dark-muted hover:text-cyan transition-all duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
         >
           <ChevronDown size={18} />
         </button>
@@ -176,12 +176,12 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
 
           {/* Edit controls bar */}
           {isEditing && (
-            <div className="flex items-center gap-3 mb-3 p-2.5 rounded-lg bg-[#00AEEF]/5 border border-[#00AEEF]/20">
-              <span className="text-[11px] font-semibold text-[#00AEEF] uppercase tracking-wider">Type</span>
+            <div className="flex items-center gap-3 mb-3 p-2.5 rounded-lg bg-cyan/5 border border-cyan/20">
+              <span className="text-[11px] font-semibold text-cyan uppercase tracking-wider">Type</span>
               <select
                 value={editType}
                 onChange={(e) => setEditType(e.target.value)}
-                className="h-8 px-2 text-[13px] bg-[#0A0A0A] border border-[#2A2A2A] rounded text-[#F0F0F0] focus:border-[#00AEEF] outline-none cursor-pointer"
+                className="h-8 px-2 text-[13px] bg-[#0A0A0A] border border-dark-border rounded text-dark-primary focus:border-cyan outline-none cursor-pointer"
               >
                 {TYPE_OPTIONS.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -191,13 +191,13 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
               <div className="ml-auto flex items-center gap-2">
                 <button
                   onClick={handleCancel}
-                  className="h-8 px-3 rounded-lg text-[12px] font-medium text-[#A0A0A0] hover:text-[#F0F0F0] hover:bg-[#2A2A2A] transition-colors"
+                  className="h-8 px-3 rounded-lg text-[12px] font-medium text-dark-secondary hover:text-dark-primary hover:bg-dark-border transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
-                  className="h-8 px-3 rounded-lg text-[12px] font-semibold bg-[#00AEEF] text-white hover:bg-[#33BFF2] transition-colors flex items-center gap-1"
+                  className="h-8 px-3 rounded-lg text-[12px] font-semibold bg-cyan text-white hover:bg-[#33BFF2] transition-colors flex items-center gap-1"
                 >
                   <Check size={14} />
                   Save
@@ -211,7 +211,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
             <thead>
               <tr className="text-left">
                 {['Set', 'Prescribed', 'Tempo', 'Rest', 'RPE', 'Type'].map((h) => (
-                  <th key={h} className="pb-2 pt-1 text-[11px] font-semibold uppercase tracking-wider text-[#6B6B6B] px-2">
+                  <th key={h} className="pb-2 pt-1 text-[11px] font-semibold uppercase tracking-wider text-dark-muted px-2">
                     {h}
                   </th>
                 ))}
@@ -221,33 +221,33 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
               {Array.from({ length: displaySets }).map((_, si) => (
                 <tr
                   key={si}
-                  className="transition-colors duration-300 border-b border-[#2A2A2A]/20 last:border-0"
+                  className="transition-colors duration-300 border-b border-dark-border/20 last:border-0"
                 >
                   {/* Set */}
-                  <td className="py-2 px-2 text-[#A0A0A0] tabular-nums font-mono">{si + 1}</td>
+                  <td className="py-2 px-2 text-dark-secondary tabular-nums font-mono">{si + 1}</td>
 
                   {/* Prescribed — auto-updates from edited sets/reps */}
-                  <td className="py-2 px-2 text-[#F0F0F0] font-medium whitespace-nowrap">
+                  <td className="py-2 px-2 text-dark-primary font-medium whitespace-nowrap">
                     {scheme}
                     {exercise.rpe_target && (
-                      <span className="text-[#6B6B6B] font-normal ml-1">@ RPE {exercise.rpe_target}</span>
+                      <span className="text-dark-muted font-normal ml-1">@ RPE {exercise.rpe_target}</span>
                     )}
                   </td>
 
                   {/* Tempo */}
-                  <td className="py-2 px-2 text-[#A0A0A0] tabular-nums">
+                  <td className="py-2 px-2 text-dark-secondary tabular-nums">
                     {formatTempo(exercise.tempo)}
                   </td>
 
                   {/* Rest */}
-                  <td className="py-2 px-2 text-[#A0A0A0] tabular-nums">
+                  <td className="py-2 px-2 text-dark-secondary tabular-nums">
                     {formatRestTime(exercise.rest_seconds)}
                   </td>
 
                   {/* RPE */}
                   <td className="py-2 px-2">
                     {exercise.rpe_target ? (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#00AEEF]/10 text-[#00AEEF]">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-cyan/10 text-cyan">
                         {exercise.rpe_target}
                       </span>
                     ) : (
@@ -267,39 +267,39 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
           </table>
 
           {/* ── Summary Bar ─────────────────────────────────────── */}
-          <div className="mt-3 pt-3 border-t border-[#2A2A2A]/30 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <div className="flex items-center gap-1.5 text-[12px] text-[#A0A0A0]">
-              <Dumbbell size={12} className="text-[#6B6B6B]" />
+          <div className="mt-3 pt-3 border-t border-dark-border/30 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <div className="flex items-center gap-1.5 text-[12px] text-dark-secondary">
+              <Dumbbell size={12} className="text-dark-muted" />
               <span>{displaySets} sets</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[12px] text-[#A0A0A0]">
-              <Layers size={12} className="text-[#6B6B6B]" />
+            <div className="flex items-center gap-1.5 text-[12px] text-dark-secondary">
+              <Layers size={12} className="text-dark-muted" />
               <span>{displayReps} reps</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[12px] text-[#A0A0A0]">
-              <Clock size={12} className="text-[#6B6B6B]" />
+            <div className="flex items-center gap-1.5 text-[12px] text-dark-secondary">
+              <Clock size={12} className="text-dark-muted" />
               <span>{formatRestTime(exercise.rest_seconds)} rest</span>
             </div>
             {exercise.tempo && exercise.tempo !== 'Hold' && (
-              <div className="text-[12px] text-[#A0A0A0]">
-                Tempo: <span className="text-[#F0F0F0] font-medium">{formatTempo(exercise.tempo)}</span>
+              <div className="text-[12px] text-dark-secondary">
+                Tempo: <span className="text-dark-primary font-medium">{formatTempo(exercise.tempo)}</span>
               </div>
             )}
 
             {/* Estimated volume */}
             {estimatedVolume > 0 && (
-              <div className="ml-auto text-[12px] text-[#A0A0A0]">
-                Est. Vol: <span className="text-[#00AEEF] font-semibold">{estimatedVolume.toLocaleString()}</span>
+              <div className="ml-auto text-[12px] text-dark-secondary">
+                Est. Vol: <span className="text-cyan font-semibold">{estimatedVolume.toLocaleString()}</span>
               </div>
             )}
           </div>
 
           {/* ── Coach Notes ─────────────────────────────────────── */}
           {exercise.notes && (
-            <div className="mt-3 p-3 rounded-lg bg-[#1A1A1A] border border-[#2A2A2A]/50">
+            <div className="mt-3 p-3 rounded-lg bg-[#1A1A1A] border border-dark-border/50">
               <div className="flex items-center gap-1.5 mb-1">
-                <StickyNote size={12} className="text-[#EAB308]" />
-                <span className="text-[11px] font-semibold text-[#EAB308] uppercase tracking-wider">Coach Note</span>
+                <StickyNote size={12} className="text-warning" />
+                <span className="text-[11px] font-semibold text-warning uppercase tracking-wider">Coach Note</span>
               </div>
               <p className="text-[13px] text-[#D1D5DB] leading-relaxed">
                 {exercise.notes}

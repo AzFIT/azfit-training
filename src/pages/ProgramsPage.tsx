@@ -259,7 +259,7 @@ function ProgramCard({
           {getGoalIcon(program.goal)}
         </div>
         {program.timesAssigned >= 15 && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 bg-[rgba(234,179,8,0.2)] border border-[rgba(234,179,8,0.4)] text-[#EAB308] text-xs font-semibold px-2 py-0.5 rounded-full">
+          <div className="absolute top-3 right-3 flex items-center gap-1 bg-[rgba(234,179,8,0.2)] border border-[rgba(234,179,8,0.4)] text-warning text-xs font-semibold px-2 py-0.5 rounded-full">
             <Star size={10} />
             Most Used
           </div>
@@ -384,7 +384,7 @@ function ProgramCard({
                 className={cn(
                   'flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200',
                   btn.primary
-                    ? 'bg-[#00AEEF] text-white hover:bg-[#009BD6]'
+                    ? 'bg-cyan text-white hover:bg-cyan-hover'
                     : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
                 )}
               >
@@ -433,7 +433,7 @@ function ProgramListRow({
           <div>
             <p className="text-[#0F172A] text-sm font-medium">{program.name}</p>
             {program.timesAssigned >= 15 && (
-              <span className="inline-flex items-center gap-1 text-[10px] text-[#EAB308] font-semibold">
+              <span className="inline-flex items-center gap-1 text-[10px] text-warning font-semibold">
                 <Star size={10} /> Most Used
               </span>
             )}
@@ -521,7 +521,7 @@ function Pagination({
             className={cn(
               'w-9 h-9 rounded-lg text-sm font-medium transition-colors',
               p === currentPage
-                ? 'bg-[#00AEEF] text-white'
+                ? 'bg-cyan text-white'
                 : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
             )}
           >
@@ -707,7 +707,7 @@ export default function ProgramsPage() {
         </div>
         <button
           onClick={() => navigate('/programs/new')}
-          className="bg-[#00AEEF] hover:bg-[#009BD6] text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:scale-[1.02] text-sm flex items-center gap-2"
+          className="bg-cyan hover:bg-cyan-hover text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:scale-[1.02] text-sm flex items-center gap-2"
         >
           <Dumbbell size={16} />
           New Program
@@ -733,7 +733,7 @@ export default function ProgramsPage() {
       <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl px-5 py-4 mb-4">
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
-          <div className="flex items-center bg-[#F8FAFC] rounded-full border border-[#E2E8F0] focus-within:border-[#00AEEF] transition-colors w-full sm:w-72">
+          <div className="flex items-center bg-[#F8FAFC] rounded-full border border-[#E2E8F0] focus-within:border-cyan transition-colors w-full sm:w-72">
             <Search size={16} className="text-[#94A3B8] ml-3 flex-shrink-0" />
             <input
               type="text"
@@ -751,11 +751,11 @@ export default function ProgramsPage() {
 
           {/* Goal Filter */}
           <div className="relative group">
-            <button className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#00AEEF] text-[#64748B] text-sm px-4 py-2 rounded-lg transition-colors">
+            <button className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-cyan text-[#64748B] text-sm px-4 py-2 rounded-lg transition-colors">
               <Filter size={14} />
               Goal
               {selectedGoals.length > 0 && (
-                <span className="bg-[#00AEEF] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="bg-cyan text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                   {selectedGoals.length}
                 </span>
               )}
@@ -769,13 +769,13 @@ export default function ProgramsPage() {
                   className={cn(
                     'w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors',
                     selectedGoals.includes(goal.value)
-                      ? 'text-[#00AEEF] bg-[rgba(0,174,239,0.1)]'
+                      ? 'text-cyan bg-[rgba(0,174,239,0.1)]'
                       : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
                   )}
                 >
                   <div className={cn(
                     'w-4 h-4 rounded border flex items-center justify-center transition-colors',
-                    selectedGoals.includes(goal.value) ? 'bg-[#00AEEF] border-[#00AEEF]' : 'border-[#94A3B8]'
+                    selectedGoals.includes(goal.value) ? 'bg-cyan border-cyan' : 'border-[#94A3B8]'
                   )}>
                     {selectedGoals.includes(goal.value) && <CheckCircle size={10} className="text-white" />}
                   </div>
@@ -787,11 +787,11 @@ export default function ProgramsPage() {
 
           {/* Method Filter */}
           <div className="relative group">
-            <button className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#00AEEF] text-[#64748B] text-sm px-4 py-2 rounded-lg transition-colors">
+            <button className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-cyan text-[#64748B] text-sm px-4 py-2 rounded-lg transition-colors">
               <Dumbbell size={14} />
               Method
               {selectedMethod && (
-                <span className="bg-[#00AEEF] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
+                <span className="bg-cyan text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">1</span>
               )}
               <ChevronDown size={14} />
             </button>
@@ -800,7 +800,7 @@ export default function ProgramsPage() {
                 onClick={() => setSelectedMethod('')}
                 className={cn(
                   'w-full text-left px-3 py-2 text-sm transition-colors',
-                  !selectedMethod ? 'text-[#00AEEF] bg-[rgba(0,174,239,0.1)]' : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                  !selectedMethod ? 'text-cyan bg-[rgba(0,174,239,0.1)]' : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
                 )}
               >
                 All Methods
@@ -811,7 +811,7 @@ export default function ProgramsPage() {
                   onClick={() => setSelectedMethod(m === selectedMethod ? '' : m)}
                   className={cn(
                     'w-full text-left px-3 py-2 text-sm transition-colors',
-                    selectedMethod === m ? 'text-[#00AEEF] bg-[rgba(0,174,239,0.1)]' : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
+                    selectedMethod === m ? 'text-cyan bg-[rgba(0,174,239,0.1)]' : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]'
                   )}
                 >
                   {m}
@@ -829,7 +829,7 @@ export default function ProgramsPage() {
                 className={cn(
                   'text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-200',
                   selectedDifficulties.includes(diff)
-                    ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.15)] text-[#00AEEF]'
+                    ? 'border-cyan bg-[rgba(0,174,239,0.15)] text-cyan'
                     : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#94A3B8] hover:text-[#64748B] hover:border-[#E2E8F0]'
                 )}
               >
@@ -842,7 +842,7 @@ export default function ProgramsPage() {
           {activeFilterCount > 0 && (
             <button
               onClick={clearFilters}
-              className="text-[#EF4444] hover:text-[#DC2626] text-sm font-medium flex items-center gap-1 transition-colors"
+              className="text-danger hover:text-[#DC2626] text-sm font-medium flex items-center gap-1 transition-colors"
             >
               <X size={14} />
               Clear all
@@ -856,7 +856,7 @@ export default function ProgramsPage() {
             {selectedGoals.map((goal) => {
               const label = GOAL_OPTIONS.find(g => g.value === goal)?.label || goal
               return (
-                <span key={goal} className="inline-flex items-center gap-1 bg-[rgba(0,174,239,0.1)] text-[#00AEEF] text-xs px-2.5 py-1 rounded-full">
+                <span key={goal} className="inline-flex items-center gap-1 bg-[rgba(0,174,239,0.1)] text-cyan text-xs px-2.5 py-1 rounded-full">
                   {label}
                   <button onClick={() => toggleGoal(goal)} className="hover:text-white"><X size={10} /></button>
                 </span>
@@ -874,7 +874,7 @@ export default function ProgramsPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="appearance-none bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] text-sm px-3 py-1.5 pr-8 rounded-lg focus:border-[#00AEEF] outline-none cursor-pointer"
+              className="appearance-none bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] text-sm px-3 py-1.5 pr-8 rounded-lg focus:border-cyan outline-none cursor-pointer"
             >
               <option value="mostUsed">Most Used</option>
               <option value="newest">Newest First</option>
@@ -931,7 +931,7 @@ export default function ProgramsPage() {
           <p className="text-[#64748B] text-sm mb-4">Try adjusting your search or filters</p>
           <button
             onClick={clearFilters}
-            className="border border-[#00AEEF] text-[#00AEEF] hover:bg-[rgba(0,174,239,0.1)] font-medium px-4 py-2 rounded-lg text-sm transition-colors"
+            className="border border-cyan text-cyan hover:bg-[rgba(0,174,239,0.1)] font-medium px-4 py-2 rounded-lg text-sm transition-colors"
           >
             Clear filters
           </button>

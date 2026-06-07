@@ -46,7 +46,7 @@ export default function PortalNavbar() {
             <>
               <Link
                 to={`/${pathSegments[0]}`}
-                className="text-sm text-gray-500 hover:text-[#00AEEF] capitalize"
+                className="text-sm text-gray-500 hover:text-cyan capitalize"
               >
                 {pathSegments[0]}
               </Link>

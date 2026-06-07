@@ -69,12 +69,12 @@ export default function AppSidebar() {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
                 active
-                  ? 'bg-[rgba(0,174,239,0.15)] text-[#00AEEF]'
+                  ? 'bg-[rgba(0,174,239,0.15)] text-cyan'
                   : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
               }`}
               title={collapsed ? item.label : undefined}
             >
-              <item.icon size={20} className={active ? 'text-[#00AEEF]' : ''} />
+              <item.icon size={20} className={active ? 'text-cyan' : ''} />
               {!collapsed && (
                 <span className="text-sm font-medium">{item.label}</span>
               )}
@@ -94,7 +94,7 @@ export default function AppSidebar() {
               <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                 {user?.name ?? 'User'}
               </p>
-              <span className="text-caption text-[#00AEEF] capitalize">
+              <span className="text-caption text-cyan capitalize">
                 {user?.role ?? 'Trainer'}
               </span>
             </div>

@@ -181,16 +181,16 @@ function buildMetricCards(kpis: ReturnType<typeof useDashboardKPIs>, clients: Cl
 function StatusBadge({ status }: { status: SessionItem['status'] }) {
   if (status === 'completed') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#22C55E]">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success">
+        <span className="w-1.5 h-1.5 rounded-full bg-success" />
         Done
       </span>
     )
   }
   if (status === 'in-progress') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#00AEEF]">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#00AEEF] animate-pulse" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-cyan">
+        <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
         Now
       </span>
     )
@@ -210,13 +210,13 @@ function AlertIcon({ type }: { type: AlertItem['type'] }) {
   const props = { size: 18, className: 'flex-shrink-0' }
   switch (type) {
     case 'danger':
-      return <AlertTriangle {...props} className="flex-shrink-0 text-[#EF4444]" />
+      return <AlertTriangle {...props} className="flex-shrink-0 text-danger" />
     case 'warning':
       return <Clock {...props} className="flex-shrink-0 text-[#F59E0B]" />
     case 'info':
       return <Info {...props} className="flex-shrink-0 text-[#3B82F6]" />
     case 'success':
-      return <CheckCircle2 {...props} className="flex-shrink-0 text-[#22C55E]" />
+      return <CheckCircle2 {...props} className="flex-shrink-0 text-success" />
     default:
       return <Bell {...props} className="flex-shrink-0 text-[#94A3B8]" />
   }
@@ -349,7 +349,7 @@ export default function DashboardPage() {
             </div>
             <Link
               to="/calendar"
-              className="text-[#00AEEF] text-xs font-medium hover:text-[#008DC4] transition-colors flex items-center gap-1"
+              className="text-cyan text-xs font-medium hover:text-[#008DC4] transition-colors flex items-center gap-1"
             >
               View Calendar
               <ChevronRight size={14} />
@@ -421,7 +421,7 @@ export default function DashboardPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-[#0F172A] text-lg font-semibold">Follow-ups &amp; Alerts</h2>
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[rgba(239,68,68,0.1)] text-[#EF4444] text-xs font-bold">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[rgba(239,68,68,0.1)] text-danger text-xs font-bold">
               {followupAlerts.length}
             </span>
           </div>
@@ -441,7 +441,7 @@ export default function DashboardPage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-[#0F172A] text-xs font-medium leading-snug">{alert.message}</p>
                   <div className="flex items-center justify-between mt-1.5">
-                    <span className="text-[#00AEEF] text-xs hover:underline">{alert.client}</span>
+                    <span className="text-cyan text-xs hover:underline">{alert.client}</span>
                     <span className="text-[#94A3B8] text-[10px]" style={{ fontFamily: '"Space Mono", monospace' }}>
                       {alert.time}
                     </span>
@@ -474,7 +474,7 @@ export default function DashboardPage() {
                 placeholder="Search clients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-48 bg-white border border-[#E2E8F0] rounded-lg pl-8 pr-3 py-2 text-xs text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#00AEEF] transition-colors shadow-sm"
+                className="w-48 bg-white border border-[#E2E8F0] rounded-lg pl-8 pr-3 py-2 text-xs text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-cyan transition-colors shadow-sm"
               />
             </div>
             {/* Filter */}
@@ -482,7 +482,7 @@ export default function DashboardPage() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="appearance-none bg-white border border-[#E2E8F0] rounded-lg pl-3 pr-8 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-[#00AEEF] transition-colors cursor-pointer shadow-sm"
+                className="appearance-none bg-white border border-[#E2E8F0] rounded-lg pl-3 pr-8 py-2 text-xs text-[#0F172A] focus:outline-none focus:border-cyan transition-colors cursor-pointer shadow-sm"
               >
                 <option value="All">All</option>
                 <option value="Active">Active</option>
@@ -493,7 +493,7 @@ export default function DashboardPage() {
             </div>
             <Link
               to="/clients"
-              className="text-[#00AEEF] text-xs font-medium hover:text-[#008DC4] transition-colors flex items-center gap-1 whitespace-nowrap"
+              className="text-cyan text-xs font-medium hover:text-[#008DC4] transition-colors flex items-center gap-1 whitespace-nowrap"
             >
               View All
               <ChevronRight size={14} />
@@ -603,7 +603,7 @@ export default function DashboardPage() {
                   onClick={action.action}
                   className="flex items-center gap-3 bg-white border border-[#E2E8F0] text-[#0F172A] px-4 py-2.5 rounded-full shadow-lg hover:bg-[#F8FAFC] transition-colors whitespace-nowrap text-sm font-medium"
                 >
-                  <action.icon size={16} className="text-[#00AEEF]" />
+                  <action.icon size={16} className="text-cyan" />
                   {action.label}
                 </motion.button>
               ))}
@@ -614,7 +614,7 @@ export default function DashboardPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setFabOpen(!fabOpen)}
-          className="w-14 h-14 rounded-full bg-[#00AEEF] text-white shadow-lg shadow-[rgba(0,174,239,0.3)] flex items-center justify-center hover:bg-[#008DC4] transition-colors"
+          className="w-14 h-14 rounded-full bg-cyan text-white shadow-lg shadow-[rgba(0,174,239,0.3)] flex items-center justify-center hover:bg-[#008DC4] transition-colors"
         >
           <motion.div animate={{ rotate: fabOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
             <Plus size={24} />

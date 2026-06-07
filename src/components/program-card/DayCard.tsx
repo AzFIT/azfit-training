@@ -32,24 +32,24 @@ export default function DayCard({ dayNumber, dayLabel = `Day ${dayNumber}`, exer
   }, [])
 
   return (
-    <div className="rounded-xl border border-[#2A2A2A]/30 bg-[#141414] overflow-hidden">
+    <div className="rounded-xl border border-dark-border/30 bg-[#141414] overflow-hidden">
       {/* Day header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between px-4 py-3.5 text-left transition-colors hover:bg-[#1A1A1A]"
       >
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold bg-[#00AEEF]/10 text-[#00AEEF]">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold bg-cyan/10 text-cyan">
             {dayNumber}
           </div>
           <div>
-            <h3 className="text-[#F0F0F0] font-semibold text-[15px]">{dayLabel}</h3>
+            <h3 className="text-dark-primary font-semibold text-[15px]">{dayLabel}</h3>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[11px] text-[#6B6B6B]">
+              <span className="text-[11px] text-dark-muted">
                 {exercises.length} exercises
               </span>
-              <span className="text-[#2A2A2A]">·</span>
-              <span className="text-[11px] text-[#6B6B6B]">
+              <span className="text-dark-border">·</span>
+              <span className="text-[11px] text-dark-muted">
                 {totalSets} sets
               </span>
             </div>
@@ -57,12 +57,12 @@ export default function DayCard({ dayNumber, dayLabel = `Day ${dayNumber}`, exer
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-[#6B6B6B]">
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-dark-muted">
             <Clock size={12} />
             <span>~{estimatedMinutes} min</span>
           </div>
           <div
-            className={`w-8 h-8 flex items-center justify-center text-[#6B6B6B] hover:text-[#00AEEF] transition-all duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
+            className={`w-8 h-8 flex items-center justify-center text-dark-muted hover:text-cyan transition-all duration-300 shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
           >
             <ChevronDown size={18} />
           </div>

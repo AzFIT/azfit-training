@@ -215,11 +215,11 @@ function WeekViewHeader({ days }: { days: Date[] }) {
             }`}
           >
             <span className="text-[#94A3B8] text-[10px] uppercase font-medium">{format(day, 'EEE')}</span>
-            <span className={`text-sm font-semibold ${today ? 'text-[#00AEEF]' : 'text-[#0F172A]'}`}>
+            <span className={`text-sm font-semibold ${today ? 'text-cyan' : 'text-[#0F172A]'}`}>
               {format(day, 'd')}
             </span>
             {today && (
-              <span className="text-[8px] bg-[#00AEEF] text-white px-1 rounded-full">Today</span>
+              <span className="text-[8px] bg-cyan text-white px-1 rounded-full">Today</span>
             )}
           </div>
         )
@@ -290,8 +290,8 @@ function CurrentTimeLine({ top }: { top: number }) {
   return (
     <div className="absolute left-0 right-0 z-30 pointer-events-none" style={{ top: `${top}px` }}>
       <div className="flex items-center">
-        <div className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse flex-shrink-0" />
-        <div className="h-[2px] bg-[#EF4444] flex-1" />
+        <div className="w-2 h-2 rounded-full bg-danger animate-pulse flex-shrink-0" />
+        <div className="h-[2px] bg-danger flex-1" />
       </div>
     </div>
   )
@@ -374,7 +374,7 @@ function DayViewHeader({ date }: { date: Date }) {
       <div className="h-14 flex items-center px-4">
         <span className="text-[#0F172A] font-semibold text-sm">{format(date, 'EEEE, d MMMM yyyy')}</span>
         {isToday(date) && (
-          <span className="ml-2 text-[10px] bg-[#00AEEF] text-white px-2 py-0.5 rounded-full">Today</span>
+          <span className="ml-2 text-[10px] bg-cyan text-white px-2 py-0.5 rounded-full">Today</span>
         )}
       </div>
     </div>
@@ -582,19 +582,19 @@ function MonthView({
                 transition={{ delay: idx * 0.005 }}
                 className={`min-h-[110px] rounded-lg p-2 cursor-pointer transition-colors border ${
                   inMonth ? 'bg-[#FFFFFF]' : 'bg-[#F8FAFC] opacity-50'
-                } ${today ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.05)]' : 'border-[#E2E8F0]'}`}
+                } ${today ? 'border-cyan bg-[rgba(0,174,239,0.05)]' : 'border-[#E2E8F0]'}`}
                 onClick={() => onDayClick(day)}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span
                     className={`text-sm font-medium ${
-                      today ? 'text-[#00AEEF]' : inMonth ? 'text-[#0F172A]' : 'text-[#E2E8F0]'
+                      today ? 'text-cyan' : inMonth ? 'text-[#0F172A]' : 'text-[#E2E8F0]'
                     }`}
                   >
                     {format(day, 'd')}
                   </span>
                   {today && (
-                    <span className="text-[8px] bg-[#00AEEF] text-white px-1 rounded-full">Today</span>
+                    <span className="text-[8px] bg-cyan text-white px-1 rounded-full">Today</span>
                   )}
                 </div>
 
@@ -885,7 +885,7 @@ function NewSessionModal({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add session notes..."
-              className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-2 text-[#0F172A] text-sm placeholder:text-[#CBD5E1] resize-none focus:outline-none focus:border-[#00AEEF]"
+              className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-2 text-[#0F172A] text-sm placeholder:text-[#CBD5E1] resize-none focus:outline-none focus:border-cyan"
             />
           </div>
         </div>
@@ -898,7 +898,7 @@ function NewSessionModal({
           >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} className="bg-[#00AEEF] hover:bg-[#009BD6] text-white">
+          <Button onClick={handleSubmit} className="bg-cyan hover:bg-cyan-hover text-white">
             Book Session
           </Button>
         </div>
@@ -985,7 +985,7 @@ function CalendarToolbar({
             {SESSION_TYPE_LABELS.map((t) => <SelectItem key={t} value={t} className="text-[#0F172A]">{t}</SelectItem>)}
           </SelectContent>
         </Select>
-        <button onClick={onNewSession} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00AEEF] hover:bg-[#009BD6] text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:scale-[1.02]"><Plus size={14} /><span className="hidden sm:inline">New Session</span></button>
+        <button onClick={onNewSession} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan hover:bg-cyan-hover text-white rounded-lg text-xs font-semibold transition-all duration-200 hover:scale-[1.02]"><Plus size={14} /><span className="hidden sm:inline">New Session</span></button>
       </div>
     </div>
   )

@@ -85,6 +85,50 @@ module.exports = {
         'az-black': '#0A0A0A',
         'az-black-card': '#141414',
         'az-black-elevated': '#1A1A1A',
+        // Semantic dark theme tokens
+        dark: {
+          muted: '#6B6B6B',
+          primary: '#F0F0F0',
+          secondary: '#A0A0A0',
+          border: '#2A2A2A',
+          hover: '#242424',
+          subtle: '#3A3A3A',
+          divider: '#1F1F1F',
+        },
+        // Semantic light theme tokens
+        light: {
+          primary: '#0F172A',
+          secondary: '#64748B',
+          muted: '#94A3B8',
+          border: '#E2E8F0',
+          surface: '#F8FAFC',
+          hover: '#F1F5F9',
+        },
+        // Extended accent tokens
+        violet: {
+          DEFAULT: '#8B5CF6',
+          light: '#A78BFA',
+          dark: '#7C3AED',
+        },
+        orange: {
+          DEFAULT: '#F97316',
+          light: '#FB923C',
+          dark: '#EA580C',
+        },
+        // Extended cyan
+        cyan: {
+          DEFAULT: '#00AEEF',
+          light: '#33BFF2',
+          dark: '#008DC4',
+          hover: '#009BD6',
+          glow: 'rgba(0, 174, 239, 0.15)',
+        },
+        // Navy (BioPrint / dashboard cards)
+        navy: {
+          DEFAULT: '#151D2E',
+          border: '#2A3A50',
+          input: '#0B1120',
+        },
       },
       fontFamily: {
         inter: ['Inter', 'system-ui', 'sans-serif'],

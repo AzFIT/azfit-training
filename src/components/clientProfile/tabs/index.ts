@@ -1,0 +1,13 @@
+export { BioPrintTab } from './BioPrintTab';
+export { ProgramsTab } from './ProgramsTab';
+export { GoalsTab } from './GoalsTab';
+export { CalendarView } from './CalendarView';
+export { DashboardTab } from './DashboardTab';
+export { BodyStatsTab } from './BodyStatsTab';
+export { RecordsTab } from './RecordsTab';
+export { SessionsTab } from './SessionsTab';
+export { DatabaseTab } from './DatabaseTab';
+export { DietTab } from './DietTab';
+export { LifestyleTab } from './LifestyleTab';
+export { NotesTab } from './NotesTab';
+export { PhotosTab } from './PhotosTab';

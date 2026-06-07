@@ -29,7 +29,7 @@ export default function SignupPage() {
   }
 
   const inputClasses =
-    'w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl px-4 py-3 text-sm text-[#F0F0F0] placeholder:text-[#6B6B6B] focus:outline-none focus:border-[#00AEEF] focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all'
+    'w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all'
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center p-4">
@@ -59,10 +59,10 @@ export default function SignupPage() {
               className="h-10 w-auto brightness-0 invert mx-auto mb-6"
             />
           </Link>
-          <h1 className="font-playfair text-3xl font-bold text-[#F0F0F0] mb-2">
+          <h1 className="font-playfair text-3xl font-bold text-dark-primary mb-2">
             Create your account
           </h1>
-          <p className="text-[#A0A0A0] text-sm">
+          <p className="text-dark-secondary text-sm">
             Join AzFIT and start training smarter
           </p>
         </motion.div>
@@ -72,7 +72,7 @@ export default function SignupPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: easeOut }}
-          className="bg-[#141414] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8"
+          className="bg-[#141414] border border-dark-border rounded-2xl p-6 sm:p-8"
         >
           <div className="space-y-4">
             {/* Role Selection */}
@@ -82,8 +82,8 @@ export default function SignupPage() {
                 onClick={() => setRole('trainer')}
                 className={`py-2.5 px-4 rounded-xl border text-sm font-medium transition-all duration-200 ${
                   role === 'trainer'
-                    ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.15)] text-[#00AEEF]'
-                    : 'border-[#2A2A2A] text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-[#F0F0F0]'
+                    ? 'border-cyan bg-[rgba(0,174,239,0.15)] text-cyan'
+                    : 'border-dark-border text-dark-secondary hover:bg-[#1A1A1A] hover:text-dark-primary'
                 }`}
               >
                 Trainer
@@ -93,8 +93,8 @@ export default function SignupPage() {
                 onClick={() => setRole('client')}
                 className={`py-2.5 px-4 rounded-xl border text-sm font-medium transition-all duration-200 ${
                   role === 'client'
-                    ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.15)] text-[#00AEEF]'
-                    : 'border-[#2A2A2A] text-[#A0A0A0] hover:bg-[#1A1A1A] hover:text-[#F0F0F0]'
+                    ? 'border-cyan bg-[rgba(0,174,239,0.15)] text-cyan'
+                    : 'border-dark-border text-dark-secondary hover:bg-[#1A1A1A] hover:text-dark-primary'
                 }`}
               >
                 Client
@@ -103,7 +103,7 @@ export default function SignupPage() {
 
             {/* Full Name */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Full Name</label>
+              <label className="block text-dark-secondary text-sm mb-2">Full Name</label>
               <input
                 type="text"
                 placeholder="Your full name"
@@ -115,7 +115,7 @@ export default function SignupPage() {
 
             {/* Email */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Email</label>
+              <label className="block text-dark-secondary text-sm mb-2">Email</label>
               <input
                 type="email"
                 placeholder="you@example.com"
@@ -127,9 +127,9 @@ export default function SignupPage() {
 
             {/* Phone */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Phone</label>
+              <label className="block text-dark-secondary text-sm mb-2">Phone</label>
               <div className="flex">
-                <div className="flex-shrink-0 flex items-center bg-[#1A1A1A] border border-r-0 border-[#2A2A2A] rounded-l-xl px-3 py-3 text-sm text-[#6B6B6B]">
+                <div className="flex-shrink-0 flex items-center bg-[#1A1A1A] border border-r-0 border-dark-border rounded-l-xl px-3 py-3 text-sm text-dark-muted">
                   +852
                 </div>
                 <input
@@ -144,7 +144,7 @@ export default function SignupPage() {
 
             {/* Password */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Password</label>
+              <label className="block text-dark-secondary text-sm mb-2">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -156,7 +156,7 @@ export default function SignupPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6B6B] hover:text-[#A0A0A0] transition-colors p-0.5"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-muted hover:text-dark-secondary transition-colors p-0.5"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -166,7 +166,7 @@ export default function SignupPage() {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Confirm Password</label>
+              <label className="block text-dark-secondary text-sm mb-2">Confirm Password</label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -178,7 +178,7 @@ export default function SignupPage() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6B6B] hover:text-[#A0A0A0] transition-colors p-0.5"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-muted hover:text-dark-secondary transition-colors p-0.5"
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 >
                   {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -192,8 +192,8 @@ export default function SignupPage() {
                 onClick={() => setAgreeTerms(!agreeTerms)}
                 className={`w-[18px] h-[18px] rounded border flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
                   agreeTerms
-                    ? 'bg-[#00AEEF] border-[#00AEEF]'
-                    : 'border-[#4A4A4A] group-hover:border-[#6B6B6B]'
+                    ? 'bg-cyan border-cyan'
+                    : 'border-[#4A4A4A] group-hover:border-dark-muted'
                 }`}
               >
                 {agreeTerms && (
@@ -208,7 +208,7 @@ export default function SignupPage() {
                   </svg>
                 )}
               </div>
-              <span className="text-[#A0A0A0] text-xs leading-relaxed">
+              <span className="text-dark-secondary text-xs leading-relaxed">
                 I agree to the{' '}
                 <button
                   type="button"
@@ -216,7 +216,7 @@ export default function SignupPage() {
                     e.stopPropagation()
                     alert('Terms of Service coming soon!')
                   }}
-                  className="text-[#00AEEF] hover:text-[#33BFF2] transition-colors"
+                  className="text-cyan hover:text-[#33BFF2] transition-colors"
                 >
                   Terms of Service
                 </button>{' '}
@@ -227,7 +227,7 @@ export default function SignupPage() {
                     e.stopPropagation()
                     alert('Privacy Policy coming soon!')
                   }}
-                  className="text-[#00AEEF] hover:text-[#33BFF2] transition-colors"
+                  className="text-cyan hover:text-[#33BFF2] transition-colors"
                 >
                   Privacy Policy
                 </button>
@@ -238,7 +238,7 @@ export default function SignupPage() {
             <button
               onClick={handleCreateAccount}
               disabled={isLoading || !agreeTerms}
-              className="w-full flex items-center justify-center gap-2 bg-[#00AEEF] hover:bg-[#009BD6] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-sm mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-cyan hover:bg-cyan-hover disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-sm mt-2"
             >
               {isLoading ? (
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -251,11 +251,11 @@ export default function SignupPage() {
 
           {/* Sign In Link */}
           <div className="mt-6 text-center">
-            <p className="text-[#6B6B6B] text-sm">
+            <p className="text-dark-muted text-sm">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-[#00AEEF] hover:text-[#33BFF2] transition-colors font-medium"
+                className="text-cyan hover:text-[#33BFF2] transition-colors font-medium"
               >
                 Sign In
               </Link>
@@ -272,7 +272,7 @@ export default function SignupPage() {
         >
           <Link
             to="/"
-            className="text-[#6B6B6B] text-xs hover:text-[#A0A0A0] transition-colors"
+            className="text-dark-muted text-xs hover:text-dark-secondary transition-colors"
           >
             Back to home page
           </Link>

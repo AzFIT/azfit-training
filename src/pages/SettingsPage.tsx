@@ -89,9 +89,9 @@ const ease = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 function SectionCard({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#141414] border border-[#2A2A2A] rounded-xl p-6 mb-5">
-      <h3 className="text-[#F0F0F0] text-base font-semibold mb-1">{title}</h3>
-      {description && <p className="text-[#6B6B6B] text-sm mb-4">{description}</p>}
+    <div className="bg-[#141414] border border-dark-border rounded-xl p-6 mb-5">
+      <h3 className="text-dark-primary text-base font-semibold mb-1">{title}</h3>
+      {description && <p className="text-dark-muted text-sm mb-4">{description}</p>}
       <div className="mt-4">{children}</div>
     </div>
   )
@@ -109,10 +109,10 @@ function ToggleRow({
   onCheckedChange: (v: boolean) => void
 }) {
   return (
-    <div className="flex items-center justify-between py-4 border-b border-[#1F1F1F] last:border-0">
+    <div className="flex items-center justify-between py-4 border-b border-dark-divider last:border-0">
       <div className="flex-1 pr-4">
-        <p className="text-[#F0F0F0] text-sm font-medium">{title}</p>
-        {description && <p className="text-[#6B6B6B] text-xs mt-0.5">{description}</p>}
+        <p className="text-dark-primary text-sm font-medium">{title}</p>
+        {description && <p className="text-dark-muted text-xs mt-0.5">{description}</p>}
       </div>
       <Switch checked={checked} onCheckedChange={onCheckedChange} />
     </div>
@@ -135,15 +135,15 @@ function SegmentedControl({
   disabled?: boolean
 }) {
   return (
-    <div className={`inline-flex bg-[#1A1A1A] rounded-lg p-0.5 border border-[#2A2A2A] ${disabled ? 'opacity-50' : ''}`}>
+    <div className={`inline-flex bg-[#1A1A1A] rounded-lg p-0.5 border border-dark-border ${disabled ? 'opacity-50' : ''}`}>
       {options.map((opt) => (
         <button
           key={opt}
           onClick={() => !disabled && onChange(opt)}
           className={`px-3 py-1.5 text-sm rounded-md transition-all duration-200 ${
             value === opt
-              ? 'bg-[#242424] text-[#00AEEF] font-medium'
-              : 'text-[#A0A0A0] hover:text-[#F0F0F0]'
+              ? 'bg-dark-hover text-cyan font-medium'
+              : 'text-dark-secondary hover:text-dark-primary'
           }`}
           disabled={disabled}
         >
@@ -165,20 +165,20 @@ function DisplaySection() {
       <SectionCard title="Date &amp; Time" description="Configure how dates and times are displayed.">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-[#A0A0A0] text-sm">Date Format</Label>
+            <Label className="text-dark-secondary text-sm">Date Format</Label>
             <SegmentedControl options={['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD']} value={dateFormat} onChange={setDateFormat} />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="text-[#A0A0A0] text-sm">Time Format</Label>
+            <Label className="text-dark-secondary text-sm">Time Format</Label>
             <SegmentedControl options={['24-hour', '12-hour']} value={timeFormat} onChange={(v: string) => setTimeFormat(v as '24-hour' | '12-hour')} />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="text-[#A0A0A0] text-sm">Timezone</Label>
+            <Label className="text-dark-secondary text-sm">Timezone</Label>
             <Select defaultValue="Asia/Hong_Kong" disabled>
-              <SelectTrigger className="w-[220px] bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] opacity-60">
+              <SelectTrigger className="w-[220px] bg-[#1A1A1A] border-dark-border text-dark-primary opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1A1A] border-[#2A2A2A]">
+              <SelectContent className="bg-[#1A1A1A] border-dark-border">
                 <SelectItem value="Asia/Hong_Kong">Asia/Hong Kong (GMT+8)</SelectItem>
               </SelectContent>
             </Select>
@@ -189,27 +189,27 @@ function DisplaySection() {
       <SectionCard title="Measurement Units" description="Choose your preferred units for weight, height, and distance.">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-[#A0A0A0] text-sm">Units System</Label>
+            <Label className="text-dark-secondary text-sm">Units System</Label>
             <SegmentedControl options={['Metric', 'Imperial']} value={units} onChange={(v) => setUnits(v as 'Metric' | 'Imperial')} />
           </div>
           <div className="flex items-center gap-6 text-sm">
-            <span className="text-[#6B6B6B]">Weight: <span className="text-[#A0A0A0]">{units === 'Metric' ? 'kg' : 'lb'}</span></span>
-            <span className="text-[#6B6B6B]">Height: <span className="text-[#A0A0A0]">{units === 'Metric' ? 'cm' : 'in'}</span></span>
-            <span className="text-[#6B6B6B]">Body Fat: <span className="text-[#A0A0A0]">%</span></span>
+            <span className="text-dark-muted">Weight: <span className="text-dark-secondary">{units === 'Metric' ? 'kg' : 'lb'}</span></span>
+            <span className="text-dark-muted">Height: <span className="text-dark-secondary">{units === 'Metric' ? 'cm' : 'in'}</span></span>
+            <span className="text-dark-muted">Body Fat: <span className="text-dark-secondary">%</span></span>
           </div>
         </div>
       </SectionCard>
 
       <SectionCard title="Currency" description="Currency display for all monetary values.">
         <div className="flex items-center justify-between">
-          <Label className="text-[#A0A0A0] text-sm">Currency</Label>
+          <Label className="text-dark-secondary text-sm">Currency</Label>
           <div className="flex items-center gap-3">
-            <span className="text-[#6B6B6B] text-sm">HKD (locked)</span>
+            <span className="text-dark-muted text-sm">HKD (locked)</span>
             <Select defaultValue="HKD" disabled>
-              <SelectTrigger className="w-[160px] bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] opacity-60">
+              <SelectTrigger className="w-[160px] bg-[#1A1A1A] border-dark-border text-dark-primary opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1A1A1A] border-[#2A2A2A]">
+              <SelectContent className="bg-[#1A1A1A] border-dark-border">
                 <SelectItem value="HKD">HKD</SelectItem>
               </SelectContent>
             </Select>
@@ -219,12 +219,12 @@ function DisplaySection() {
 
       <SectionCard title="Language" description="Select your preferred interface language.">
         <div className="flex items-center justify-between">
-          <Label className="text-[#A0A0A0] text-sm">Language</Label>
+          <Label className="text-dark-secondary text-sm">Language</Label>
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-[200px] bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0]">
+            <SelectTrigger className="w-[200px] bg-[#1A1A1A] border-dark-border text-dark-primary">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#1A1A1A] border-[#2A2A2A]">
+            <SelectContent className="bg-[#1A1A1A] border-dark-border">
               <SelectItem value="English">English</SelectItem>
               <SelectItem value="zh-HK">繁體中文</SelectItem>
               <SelectItem value="zh-CN">简体中文</SelectItem>
@@ -264,13 +264,13 @@ function NotificationsSection() {
   return (
     <div>
       {/* Channel tabs */}
-      <div className="inline-flex bg-[#1A1A1A] rounded-lg p-0.5 border border-[#2A2A2A] mb-5">
+      <div className="inline-flex bg-[#1A1A1A] rounded-lg p-0.5 border border-dark-border mb-5">
         {(['email', 'push', 'inapp'] as const).map((c) => (
           <button
             key={c}
             onClick={() => setChannel(c)}
             className={`px-4 py-1.5 text-sm rounded-md transition-all capitalize ${
-              channel === c ? 'bg-[#242424] text-[#00AEEF] font-medium' : 'text-[#A0A0A0] hover:text-[#F0F0F0]'
+              channel === c ? 'bg-dark-hover text-cyan font-medium' : 'text-dark-secondary hover:text-dark-primary'
             }`}
           >
             {c === 'inapp' ? 'In-App' : c}
@@ -303,11 +303,11 @@ function NotificationsSection() {
             <SectionCard title="In-App Notifications" description="Control which notifications appear inside the app.">
               <div className="space-y-3">
                 {(['All', 'Mentions only', 'None'] as const).map((opt) => (
-                  <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] cursor-pointer hover:border-[#3A3A3A] transition-colors">
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${inApp === opt ? 'border-[#00AEEF]' : 'border-[#6B6B6B]'}`}>
-                      {inApp === opt && <div className="w-2 h-2 rounded-full bg-[#00AEEF]" />}
+                  <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[#1A1A1A] cursor-pointer hover:border-dark-subtle transition-colors">
+                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${inApp === opt ? 'border-cyan' : 'border-dark-muted'}`}>
+                      {inApp === opt && <div className="w-2 h-2 rounded-full bg-cyan" />}
                     </div>
-                    <span className="text-[#F0F0F0] text-sm">{opt}</span>
+                    <span className="text-dark-primary text-sm">{opt}</span>
                   </label>
                 ))}
               </div>
@@ -342,12 +342,12 @@ function ThemeCard({
     <button
       onClick={onClick}
       className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
-        selected ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.08)]' : 'border-[#2A2A2A] bg-[#1A1A1A] hover:border-[#3A3A3A]'
+        selected ? 'border-cyan bg-[rgba(0,174,239,0.08)]' : 'border-dark-border bg-[#1A1A1A] hover:border-dark-subtle'
       }`}
     >
-      <Icon size={24} className={selected ? 'text-[#00AEEF]' : 'text-[#A0A0A0]'} />
-      <span className={`text-sm ${selected ? 'text-[#00AEEF] font-medium' : 'text-[#A0A0A0]'}`}>{label}</span>
-      {selected && <CheckCircle2 size={16} className="text-[#00AEEF] absolute top-2 right-2" />}
+      <Icon size={24} className={selected ? 'text-cyan' : 'text-dark-secondary'} />
+      <span className={`text-sm ${selected ? 'text-cyan font-medium' : 'text-dark-secondary'}`}>{label}</span>
+      {selected && <CheckCircle2 size={16} className="text-cyan absolute top-2 right-2" />}
     </button>
   )
 }
@@ -493,11 +493,11 @@ function PrivacySection() {
       <SectionCard title="Profile Visibility" description="Who can see your profile and credentials.">
         <div className="space-y-2">
           {(['Trainers only', 'All authenticated', 'Public'] as const).map((opt) => (
-            <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] cursor-pointer hover:border-[#3A3A3A] transition-colors">
-              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${profileVisibility === opt ? 'border-[#00AEEF]' : 'border-[#6B6B6B]'}`}>
-                {profileVisibility === opt && <div className="w-2 h-2 rounded-full bg-[#00AEEF]" />}
+            <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[#1A1A1A] cursor-pointer hover:border-dark-subtle transition-colors">
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${profileVisibility === opt ? 'border-cyan' : 'border-dark-muted'}`}>
+                {profileVisibility === opt && <div className="w-2 h-2 rounded-full bg-cyan" />}
               </div>
-              <span className="text-[#F0F0F0] text-sm">{opt}</span>
+              <span className="text-dark-primary text-sm">{opt}</span>
             </label>
           ))}
         </div>
@@ -552,37 +552,37 @@ function AccountSection() {
             <img
               src={avatar || '/avatar-placeholder.png'}
               alt="Profile"
-              className="w-20 h-20 rounded-full object-cover border-2 border-[#2A2A2A]"
+              className="w-20 h-20 rounded-full object-cover border-2 border-dark-border"
             />
-            <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-[#00AEEF] hover:bg-[#009BD6] rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg">
+            <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-cyan hover:bg-cyan-hover rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-lg">
               <Camera size={14} className="text-white" />
               <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
             </label>
           </div>
           <div className="flex-1 space-y-3">
             <div>
-              <Label className="text-[#A0A0A0] text-xs mb-1">Full Name</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0]" />
+              <Label className="text-dark-secondary text-xs mb-1">Full Name</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
             </div>
             <div>
-              <Label className="text-[#A0A0A0] text-xs mb-1">Email</Label>
+              <Label className="text-dark-secondary text-xs mb-1">Email</Label>
               <div className="flex items-center gap-2">
-                <Input value={email} disabled className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] opacity-60" />
-                <Button variant="ghost" size="sm" className="text-[#00AEEF] hover:text-[#009BD6] shrink-0">Change</Button>
+                <Input value={email} disabled className="bg-[#1A1A1A] border-dark-border text-dark-primary opacity-60" />
+                <Button variant="ghost" size="sm" className="text-cyan hover:text-cyan-hover shrink-0">Change</Button>
               </div>
             </div>
             <div>
-              <Label className="text-[#A0A0A0] text-xs mb-1">Phone</Label>
+              <Label className="text-dark-secondary text-xs mb-1">Phone</Label>
               <div className="flex items-center gap-2">
-                <span className="text-[#A0A0A0] text-sm bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg px-3 py-2">+852</span>
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] flex-1" />
+                <span className="text-dark-secondary text-sm bg-[#1A1A1A] border border-dark-border rounded-lg px-3 py-2">+852</span>
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[#1A1A1A] border-dark-border text-dark-primary flex-1" />
               </div>
             </div>
             <div>
-              <Label className="text-[#A0A0A0] text-xs mb-1">Bio <span className="text-[#6B6B6B]">({bio.length}/200)</span></Label>
-              <Textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 200))} className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] min-h-[80px]" />
+              <Label className="text-dark-secondary text-xs mb-1">Bio <span className="text-dark-muted">({bio.length}/200)</span></Label>
+              <Textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 200))} className="bg-[#1A1A1A] border-dark-border text-dark-primary min-h-[80px]" />
             </div>
-            <Button className="bg-[#00AEEF] hover:bg-[#009BD6] text-white">Save Changes</Button>
+            <Button className="bg-cyan hover:bg-cyan-hover text-white">Save Changes</Button>
           </div>
         </div>
       </SectionCard>
@@ -591,27 +591,27 @@ function AccountSection() {
       <SectionCard title="Change Password">
         <div className="space-y-3 max-w-md">
           <div className="relative">
-            <Label className="text-[#A0A0A0] text-xs mb-1">Current Password</Label>
-            <Input type={showCurrent ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] pr-10" />
-            <button onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-[26px] text-[#6B6B6B] hover:text-[#A0A0A0]">
+            <Label className="text-dark-secondary text-xs mb-1">Current Password</Label>
+            <Input type={showCurrent ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-10" />
+            <button onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
           <div className="relative">
-            <Label className="text-[#A0A0A0] text-xs mb-1">New Password</Label>
-            <Input type={showNew ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] pr-10" />
-            <button onClick={() => setShowNew(!showNew)} className="absolute right-3 top-[26px] text-[#6B6B6B] hover:text-[#A0A0A0]">
+            <Label className="text-dark-secondary text-xs mb-1">New Password</Label>
+            <Input type={showNew ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-10" />
+            <button onClick={() => setShowNew(!showNew)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
           <div className="relative">
-            <Label className="text-[#A0A0A0] text-xs mb-1">Confirm New Password</Label>
-            <Input type={showConfirm ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] pr-10" />
-            <button onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-[26px] text-[#6B6B6B] hover:text-[#A0A0A0]">
+            <Label className="text-dark-secondary text-xs mb-1">Confirm New Password</Label>
+            <Input type={showConfirm ? 'text' : 'password'} placeholder="••••••••" className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-10" />
+            <button onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
-          <Button className="bg-[#00AEEF] hover:bg-[#009BD6] text-white">Update Password</Button>
+          <Button className="bg-cyan hover:bg-cyan-hover text-white">Update Password</Button>
         </div>
       </SectionCard>
 
@@ -620,12 +620,12 @@ function AccountSection() {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <p className="text-[#F0F0F0] text-sm font-medium">Status</p>
-              <span className="px-2 py-0.5 text-xs rounded-full bg-[rgba(234,179,8,0.15)] text-[#EAB308] font-medium">Not enabled</span>
+              <p className="text-dark-primary text-sm font-medium">Status</p>
+              <span className="px-2 py-0.5 text-xs rounded-full bg-[rgba(234,179,8,0.15)] text-warning font-medium">Not enabled</span>
             </div>
-            <p className="text-[#6B6B6B] text-xs">Add an extra layer of security to your account.</p>
+            <p className="text-dark-muted text-xs">Add an extra layer of security to your account.</p>
           </div>
-          <Button variant="outline" className="border-[#00AEEF] text-[#00AEEF] hover:bg-[rgba(0,174,239,0.1)]">Enable 2FA</Button>
+          <Button variant="outline" className="border-cyan text-cyan hover:bg-[rgba(0,174,239,0.1)]">Enable 2FA</Button>
         </div>
       </SectionCard>
 
@@ -633,20 +633,20 @@ function AccountSection() {
       <SectionCard title="Active Sessions" description="You're signed in on these devices.">
         <div className="space-y-3">
           {sessions.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-[#1A1A1A] border border-[#2A2A2A]">
+            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-[#1A1A1A] border border-dark-border">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#242424] flex items-center justify-center">
-                  <Smartphone size={16} className="text-[#A0A0A0]" />
+                <div className="w-9 h-9 rounded-lg bg-dark-hover flex items-center justify-center">
+                  <Smartphone size={16} className="text-dark-secondary" />
                 </div>
                 <div>
-                  <p className="text-[#F0F0F0] text-sm font-medium">{s.device} — {s.browser}</p>
-                  <p className="text-[#6B6B6B] text-xs">{s.location} · {s.lastActive}</p>
+                  <p className="text-dark-primary text-sm font-medium">{s.device} — {s.browser}</p>
+                  <p className="text-dark-muted text-xs">{s.location} · {s.lastActive}</p>
                 </div>
               </div>
               {s.current ? (
-                <span className="text-[#22C55E] text-xs font-medium">Current</span>
+                <span className="text-success text-xs font-medium">Current</span>
               ) : (
-                <Button variant="ghost" size="sm" className="text-[#EF4444] hover:text-[#DC2626] hover:bg-[rgba(239,68,68,0.1)]">Revoke</Button>
+                <Button variant="ghost" size="sm" className="text-danger hover:text-[#DC2626] hover:bg-[rgba(239,68,68,0.1)]">Revoke</Button>
               )}
             </div>
           ))}
@@ -655,42 +655,42 @@ function AccountSection() {
 
       {/* Danger Zone */}
       <div className="bg-[#141414] border border-[rgba(239,68,68,0.3)] rounded-xl p-6 mb-5">
-        <h3 className="text-[#EF4444] text-base font-semibold mb-4 flex items-center gap-2">
+        <h3 className="text-danger text-base font-semibold mb-4 flex items-center gap-2">
           <Trash2 size={16} />
           Danger Zone
         </h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[#F0F0F0] text-sm font-medium">Deactivate Account</p>
-              <p className="text-[#6B6B6B] text-xs">Temporarily disable your account. You can reactivate anytime.</p>
+              <p className="text-dark-primary text-sm font-medium">Deactivate Account</p>
+              <p className="text-dark-muted text-xs">Temporarily disable your account. You can reactivate anytime.</p>
             </div>
-            <Button variant="outline" className="border-[#EF4444] text-[#EF4444] hover:bg-[rgba(239,68,68,0.1)]">Deactivate</Button>
+            <Button variant="outline" className="border-danger text-danger hover:bg-[rgba(239,68,68,0.1)]">Deactivate</Button>
           </div>
           <div className="h-px bg-[rgba(239,68,68,0.2)]" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[#F0F0F0] text-sm font-medium">Delete Account</p>
-              <p className="text-[#6B6B6B] text-xs">Permanently delete your account and all data. This cannot be undone.</p>
+              <p className="text-dark-primary text-sm font-medium">Delete Account</p>
+              <p className="text-dark-muted text-xs">Permanently delete your account and all data. This cannot be undone.</p>
             </div>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-[#EF4444] hover:bg-[#DC2626] text-white">Delete Account</Button>
+                <Button className="bg-danger hover:bg-[#DC2626] text-white">Delete Account</Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] max-w-md">
+              <DialogContent className="bg-[#141414] border-dark-border text-dark-primary max-w-md">
                 <DialogHeader>
-                  <DialogTitle className="text-[#EF4444]">Delete Account</DialogTitle>
-                  <DialogDescription className="text-[#6B6B6B]">
+                  <DialogTitle className="text-danger">Delete Account</DialogTitle>
+                  <DialogDescription className="text-dark-muted">
                     This action is permanent and cannot be undone. All your data will be permanently removed.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="py-4">
-                  <Label className="text-[#A0A0A0] text-sm mb-2">Type DELETE to confirm</Label>
-                  <Input placeholder="DELETE" className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0]" />
+                  <Label className="text-dark-secondary text-sm mb-2">Type DELETE to confirm</Label>
+                  <Input placeholder="DELETE" className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
                 </div>
                 <DialogFooter>
-                  <Button variant="ghost" className="text-[#A0A0A0]">Cancel</Button>
-                  <Button className="bg-[#EF4444] hover:bg-[#DC2626] text-white">Permanently Delete</Button>
+                  <Button variant="ghost" className="text-dark-secondary">Cancel</Button>
+                  <Button className="bg-danger hover:bg-[#DC2626] text-white">Permanently Delete</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -724,10 +724,10 @@ function DataSection() {
       <SectionCard title="Export Your Data" description="Download all your data in your preferred format.">
         <div className="space-y-4">
           <div>
-            <Label className="text-[#A0A0A0] text-sm mb-2">Format</Label>
+            <Label className="text-dark-secondary text-sm mb-2">Format</Label>
             <SegmentedControl options={['JSON', 'CSV']} value={exportFormat} onChange={(v) => setExportFormat(v as 'JSON' | 'CSV')} />
           </div>
-          <Button className="bg-[#00AEEF] hover:bg-[#009BD6] text-white">
+          <Button className="bg-cyan hover:bg-cyan-hover text-white">
             <Download size={16} className="mr-2" />
             Export Data
           </Button>
@@ -738,12 +738,12 @@ function DataSection() {
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleImportDrop}
-          className="border-2 border-dashed border-[#2A2A2A] hover:border-[#00AEEF] rounded-xl bg-[#1A1A1A] p-8 text-center transition-colors cursor-pointer"
+          className="border-2 border-dashed border-dark-border hover:border-cyan rounded-xl bg-[#1A1A1A] p-8 text-center transition-colors cursor-pointer"
           onClick={() => document.getElementById('import-file')?.click()}
         >
-          <Upload size={32} className="mx-auto text-[#6B6B6B] mb-3" />
-          <p className="text-[#A0A0A0] text-sm mb-1">Drag files here or click to browse</p>
-          <p className="text-[#6B6B6B] text-xs">JSON, CSV supported</p>
+          <Upload size={32} className="mx-auto text-dark-muted mb-3" />
+          <p className="text-dark-secondary text-sm mb-1">Drag files here or click to browse</p>
+          <p className="text-dark-muted text-xs">JSON, CSV supported</p>
           <input
             id="import-file"
             type="file"
@@ -756,12 +756,12 @@ function DataSection() {
         {importFiles.length > 0 && (
           <div className="mt-3 space-y-2">
             {importFiles.map((f, i) => (
-              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-[#1A1A1A] border border-[#2A2A2A]">
-                <span className="text-[#F0F0F0] text-sm">{f.name}</span>
-                <span className="text-[#6B6B6B] text-xs">{(f.size / 1024).toFixed(0)} KB</span>
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-[#1A1A1A] border border-dark-border">
+                <span className="text-dark-primary text-sm">{f.name}</span>
+                <span className="text-dark-muted text-xs">{(f.size / 1024).toFixed(0)} KB</span>
               </div>
             ))}
-            <Button className="mt-2 bg-[#00AEEF] hover:bg-[#009BD6] text-white">
+            <Button className="mt-2 bg-cyan hover:bg-cyan-hover text-white">
               <Upload size={16} className="mr-2" />
               Import {importFiles.length} File{importFiles.length > 1 ? 's' : ''}
             </Button>
@@ -772,10 +772,10 @@ function DataSection() {
       <SectionCard title="Backup" description="Automatic backups are created weekly.">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[#F0F0F0] text-sm">Last backup: <span className="text-[#A0A0A0]">{lastBackup}</span></p>
-            <p className="text-[#6B6B6B] text-xs mt-1">Next backup: 22/04/2026 03:00</p>
+            <p className="text-dark-primary text-sm">Last backup: <span className="text-dark-secondary">{lastBackup}</span></p>
+            <p className="text-dark-muted text-xs mt-1">Next backup: 22/04/2026 03:00</p>
           </div>
-          <Button variant="outline" className="border-[#00AEEF] text-[#00AEEF] hover:bg-[rgba(0,174,239,0.1)]">
+          <Button variant="outline" className="border-cyan text-cyan hover:bg-[rgba(0,174,239,0.1)]">
             <RefreshCw size={16} className="mr-2" />
             Backup Now
           </Button>
@@ -785,14 +785,14 @@ function DataSection() {
       <SectionCard title="Storage Usage">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-[#A0A0A0]">1.2 GB / 5 GB used</span>
-            <span className="text-[#00AEEF] font-medium">{storageUsed}%</span>
+            <span className="text-dark-secondary">1.2 GB / 5 GB used</span>
+            <span className="text-cyan font-medium">{storageUsed}%</span>
           </div>
-          <Progress value={storageUsed} className="h-2 bg-[#1A1A1A] [&>div]:bg-[#00AEEF]" />
-          <div className="flex gap-4 text-xs text-[#6B6B6B] pt-2">
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#00AEEF]" /> Photos (60%)</span>
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#8B5CF6]" /> Documents (25%)</span>
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-[#F97316]" /> Other (15%)</span>
+          <Progress value={storageUsed} className="h-2 bg-[#1A1A1A] [&>div]:bg-cyan" />
+          <div className="flex gap-4 text-xs text-dark-muted pt-2">
+            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-cyan" /> Photos (60%)</span>
+            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-violet" /> Documents (25%)</span>
+            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-orange" /> Other (15%)</span>
           </div>
         </div>
       </SectionCard>
@@ -824,83 +824,83 @@ function IntegrationsSection() {
       <SectionCard title="Connected Apps">
         <div className="space-y-3">
           {/* Google Sheets */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A]">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-dark-border">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#242424] flex items-center justify-center">
-                <Globe size={20} className="text-[#22C55E]" />
+              <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
+                <Globe size={20} className="text-success" />
               </div>
               <div>
-                <p className="text-[#F0F0F0] text-sm font-medium">Google Sheets</p>
-                <p className="text-[#6B6B6B] text-xs">Sync client data to spreadsheets</p>
+                <p className="text-dark-primary text-sm font-medium">Google Sheets</p>
+                <p className="text-dark-muted text-xs">Sync client data to spreadsheets</p>
               </div>
             </div>
             {googleSheets ? (
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 text-xs rounded-full bg-[rgba(34,197,94,0.15)] text-[#22C55E] font-medium">Connected</span>
-                <Button variant="ghost" size="sm" className="text-[#EF4444] hover:text-[#DC2626]" onClick={() => setGoogleSheets(false)}>Disconnect</Button>
+                <span className="px-2 py-0.5 text-xs rounded-full bg-[rgba(34,197,94,0.15)] text-success font-medium">Connected</span>
+                <Button variant="ghost" size="sm" className="text-danger hover:text-[#DC2626]" onClick={() => setGoogleSheets(false)}>Disconnect</Button>
               </div>
             ) : (
-              <Button size="sm" className="bg-[#00AEEF] hover:bg-[#009BD6] text-white" onClick={() => setGoogleSheets(true)}>Connect</Button>
+              <Button size="sm" className="bg-cyan hover:bg-cyan-hover text-white" onClick={() => setGoogleSheets(true)}>Connect</Button>
             )}
           </div>
 
           {/* Calendar Sync */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A]">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-dark-border">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#242424] flex items-center justify-center">
-                <CalendarDays size={20} className="text-[#8B5CF6]" />
+              <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
+                <CalendarDays size={20} className="text-violet" />
               </div>
               <div>
-                <p className="text-[#F0F0F0] text-sm font-medium">Calendar Sync</p>
-                <p className="text-[#6B6B6B] text-xs">iCal feed for external calendars</p>
+                <p className="text-dark-primary text-sm font-medium">Calendar Sync</p>
+                <p className="text-dark-muted text-xs">iCal feed for external calendars</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <code className="text-xs text-[#A0A0A0] bg-[#0A0A0A] px-2 py-1 rounded border border-[#2A2A2A] hidden sm:block max-w-[200px] truncate">{icalUrl}</code>
-              <Button variant="ghost" size="sm" className="text-[#00AEEF] hover:text-[#009BD6]" onClick={() => handleCopy(icalUrl)}>
+              <code className="text-xs text-dark-secondary bg-[#0A0A0A] px-2 py-1 rounded border border-dark-border hidden sm:block max-w-[200px] truncate">{icalUrl}</code>
+              <Button variant="ghost" size="sm" className="text-cyan hover:text-cyan-hover" onClick={() => handleCopy(icalUrl)}>
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </Button>
             </div>
           </div>
 
           {/* WhatsApp */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-[#2A2A2A]">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-[#1A1A1A] border border-dark-border">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#242424] flex items-center justify-center">
-                <Smartphone size={20} className="text-[#22C55E]" />
+              <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
+                <Smartphone size={20} className="text-success" />
               </div>
               <div>
-                <p className="text-[#F0F0F0] text-sm font-medium">WhatsApp Business</p>
-                <p className="text-[#6B6B6B] text-xs">Send client reminders via WhatsApp</p>
+                <p className="text-dark-primary text-sm font-medium">WhatsApp Business</p>
+                <p className="text-dark-muted text-xs">Send client reminders via WhatsApp</p>
               </div>
             </div>
-            <Button size="sm" variant="outline" className="border-[#00AEEF] text-[#00AEEF] hover:bg-[rgba(0,174,239,0.1)]">Setup</Button>
+            <Button size="sm" variant="outline" className="border-cyan text-cyan hover:bg-[rgba(0,174,239,0.1)]">Setup</Button>
           </div>
         </div>
       </SectionCard>
 
       <SectionCard title="API Keys" description="Manage API keys for third-party integrations.">
         <div className="space-y-3">
-          <Label className="text-[#A0A0A0] text-xs">Live API Key</Label>
+          <Label className="text-dark-secondary text-xs">Live API Key</Label>
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Input
                 type={showKey ? 'text' : 'password'}
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] pr-20"
+                className="bg-[#1A1A1A] border-dark-border text-dark-primary pr-20"
               />
               <button
                 onClick={() => setShowKey(!showKey)}
-                className="absolute right-10 top-1/2 -translate-y-1/2 text-[#6B6B6B] hover:text-[#A0A0A0]"
+                className="absolute right-10 top-1/2 -translate-y-1/2 text-dark-muted hover:text-dark-secondary"
               >
                 {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            <Button variant="ghost" size="icon" className="text-[#00AEEF] hover:text-[#009BD6]" onClick={() => handleCopy(apiKey)}>
+            <Button variant="ghost" size="icon" className="text-cyan hover:text-cyan-hover" onClick={() => handleCopy(apiKey)}>
               {copied ? <Check size={16} /> : <Copy size={16} />}
             </Button>
-            <Button variant="outline" size="sm" className="border-[#2A2A2A] text-[#A0A0A0] hover:text-[#F0F0F0] shrink-0">
+            <Button variant="outline" size="sm" className="border-dark-border text-dark-secondary hover:text-dark-primary shrink-0">
               <RefreshCw size={14} className="mr-1" />
               Regenerate
             </Button>
@@ -911,16 +911,16 @@ function IntegrationsSection() {
       <SectionCard title="Webhooks" description="Receive real-time event notifications.">
         <div className="space-y-3">
           <div>
-            <Label className="text-[#A0A0A0] text-xs mb-1">Webhook URL</Label>
-            <Input value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://your-app.com/webhook" className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0]" />
+            <Label className="text-dark-secondary text-xs mb-1">Webhook URL</Label>
+            <Input value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://your-app.com/webhook" className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
           </div>
           <div>
-            <Label className="text-[#A0A0A0] text-xs mb-1">Secret Key</Label>
-            <Input value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} placeholder="whsec_..." className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0]" />
+            <Label className="text-dark-secondary text-xs mb-1">Secret Key</Label>
+            <Input value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} placeholder="whsec_..." className="bg-[#1A1A1A] border-dark-border text-dark-primary" />
           </div>
           <div className="flex gap-2">
-            <Button className="bg-[#00AEEF] hover:bg-[#009BD6] text-white">Add Webhook</Button>
-            <Button variant="outline" className="border-[#2A2A2A] text-[#A0A0A0]">Send Test</Button>
+            <Button className="bg-cyan hover:bg-cyan-hover text-white">Add Webhook</Button>
+            <Button variant="outline" className="border-dark-border text-dark-secondary">Send Test</Button>
           </div>
         </div>
       </SectionCard>
@@ -957,7 +957,7 @@ export default function SettingsPage() {
     >
       {/* Settings Sidebar */}
       <aside className="lg:w-[200px] flex-shrink-0">
-        <div className="lg:sticky lg:top-4 bg-[#141414] border border-[#2A2A2A] rounded-xl overflow-hidden">
+        <div className="lg:sticky lg:top-4 bg-[#141414] border border-dark-border rounded-xl overflow-hidden">
           <nav className="py-2">
             {sections.map((s) => {
               const Icon = s.icon
@@ -968,8 +968,8 @@ export default function SettingsPage() {
                   onClick={() => setActive(s.id)}
                   className={`w-full flex items-center gap-3 h-10 px-4 text-sm transition-all duration-200 relative ${
                     isActive
-                      ? 'text-[#00AEEF] font-medium'
-                      : 'text-[#A0A0A0] hover:text-[#F0F0F0] hover:bg-[#242424]'
+                      ? 'text-cyan font-medium'
+                      : 'text-dark-secondary hover:text-dark-primary hover:bg-dark-hover'
                   }`}
                   style={isActive ? { background: 'rgba(0,174,239,0.08)', borderLeft: '3px solid #00AEEF' } : { borderLeft: '3px solid transparent' }}
                 >
@@ -992,7 +992,7 @@ export default function SettingsPage() {
             exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.2, ease }}
           >
-            <h2 className="text-[#F0F0F0] text-2xl font-semibold mb-6">
+            <h2 className="text-dark-primary text-2xl font-semibold mb-6">
               {sections.find((s) => s.id === active)?.label} Preferences
             </h2>
             {renderSection()}

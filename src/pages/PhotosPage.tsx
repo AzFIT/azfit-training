@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Camera,
@@ -39,6 +40,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import EmptyState from '../components/EmptyState'
+import { useAppDataStore } from '../stores/useAppDataStore'
 
 /* ═══════════════════════════════════════════════════════════
    Types
@@ -77,7 +79,7 @@ interface UploadFile {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Demo Data — 8 Progress Photos for Sarah Johnson
+   Demo Data — 8 Progress Photos
    ═══════════════════════════════════════════════════════════ */
 
 const demoPhotos: ProgressPhoto[] = [
@@ -215,13 +217,13 @@ function StatsBar({ photos }: { photos: ProgressPhoto[] }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.06, duration: 0.4, ease }}
-          className="bg-[#141414] border border-[#2A2A2A] rounded-xl px-5 py-4"
+          className="bg-[#141414] border border-dark-border rounded-xl px-5 py-4"
         >
           <div className="flex items-center gap-2 mb-2">
-            <s.icon size={16} className="text-[#00AEEF]" />
-            <span className="text-[#6B6B6B] text-xs">{s.label}</span>
+            <s.icon size={16} className="text-cyan" />
+            <span className="text-dark-muted text-xs">{s.label}</span>
           </div>
-          <p className="text-[#F0F0F0] font-semibold text-lg font-mono">{s.value}</p>
+          <p className="text-dark-primary font-semibold text-lg font-mono">{s.value}</p>
         </motion.div>
       ))}
     </div>
@@ -314,7 +316,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) { setFiles([]); onClose() } }}>
-      <DialogContent className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-[#141414] border-dark-border text-dark-primary max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Upload Progress Photos</DialogTitle>
         </DialogHeader>
@@ -328,13 +330,13 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
             onClick={() => fileRef.current?.click()}
             className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200 ${
               dragOver
-                ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.08)] scale-[1.02]'
-                : 'border-[#2A2A2A] bg-[#1A1A1A] hover:border-[#3A3A3A]'
+                ? 'border-cyan bg-[rgba(0,174,239,0.08)] scale-[1.02]'
+                : 'border-dark-border bg-[#1A1A1A] hover:border-dark-subtle'
             }`}
           >
-            <Upload size={40} className="mx-auto text-[#6B6B6B] mb-3" />
-            <p className="text-[#A0A0A0] text-sm mb-1">Drag photos here or click to browse</p>
-            <p className="text-[#6B6B6B] text-xs">JPG, PNG, WebP up to 5MB each (max 10 files)</p>
+            <Upload size={40} className="mx-auto text-dark-muted mb-3" />
+            <p className="text-dark-secondary text-sm mb-1">Drag photos here or click to browse</p>
+            <p className="text-dark-muted text-xs">JPG, PNG, WebP up to 5MB each (max 10 files)</p>
             <input
               ref={fileRef}
               type="file"
@@ -355,18 +357,18 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={`bg-[#1A1A1A] border rounded-xl p-3 space-y-3 ${
-                  f.status === 'error' ? 'border-[#EF4444]' : 'border-[#2A2A2A]'
+                  f.status === 'error' ? 'border-danger' : 'border-dark-border'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <img src={f.preview} alt="" className="w-14 h-14 object-cover rounded-lg flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#F0F0F0] text-sm truncate">{f.file.name}</p>
-                    <p className="text-[#6B6B6B] text-xs">{(f.file.size / 1024 / 1024).toFixed(1)} MB</p>
+                    <p className="text-dark-primary text-sm truncate">{f.file.name}</p>
+                    <p className="text-dark-muted text-xs">{(f.file.size / 1024 / 1024).toFixed(1)} MB</p>
                   </div>
-                  {f.status === 'done' && <Check size={18} className="text-[#22C55E]" />}
-                  {f.status === 'error' && <AlertTriangle size={18} className="text-[#EF4444]" />}
-                  <Button variant="ghost" size="icon" className="text-[#6B6B6B] hover:text-[#EF4444]" onClick={() => removeFile(f.id)}>
+                  {f.status === 'done' && <Check size={18} className="text-success" />}
+                  {f.status === 'error' && <AlertTriangle size={18} className="text-danger" />}
+                  <Button variant="ghost" size="icon" className="text-dark-muted hover:text-danger" onClick={() => removeFile(f.id)}>
                     <X size={16} />
                   </Button>
                 </div>
@@ -374,12 +376,12 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                 {/* Metadata */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label className="text-[#6B6B6B] text-[10px]">Category</Label>
+                    <Label className="text-dark-muted text-[10px]">Category</Label>
                     <Select value={f.category} onValueChange={(v) => updateFile(f.id, { category: v as PhotoCategory })}>
-                      <SelectTrigger className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] h-8 text-xs">
+                      <SelectTrigger className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#141414] border-[#2A2A2A]">
+                      <SelectContent className="bg-[#141414] border-dark-border">
                         {(['Front', 'Back', 'Side', 'Other'] as const).map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
@@ -387,47 +389,47 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
                     </Select>
                   </div>
                   <div>
-                    <Label className="text-[#6B6B6B] text-[10px]">Date</Label>
+                    <Label className="text-dark-muted text-[10px]">Date</Label>
                     <Input
                       type="date"
                       value={f.date}
                       onChange={(e) => updateFile(f.id, { date: e.target.value })}
-                      className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] h-8 text-xs"
+                      className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                   <div>
-                    <Label className="text-[#6B6B6B] text-[10px]">Weight (kg)</Label>
+                    <Label className="text-dark-muted text-[10px]">Weight (kg)</Label>
                     <Input
                       type="number"
                       value={f.weight}
                       onChange={(e) => updateFile(f.id, { weight: e.target.value })}
                       placeholder="78.0"
-                      className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] h-8 text-xs"
+                      className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                   <div>
-                    <Label className="text-[#6B6B6B] text-[10px]">Body Fat %</Label>
+                    <Label className="text-dark-muted text-[10px]">Body Fat %</Label>
                     <Input
                       type="number"
                       value={f.bodyFat}
                       onChange={(e) => updateFile(f.id, { bodyFat: e.target.value })}
                       placeholder="22.0"
-                      className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] h-8 text-xs"
+                      className="bg-[#141414] border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                 </div>
                 <div>
-                  <Label className="text-[#6B6B6B] text-[10px]">Notes</Label>
+                  <Label className="text-dark-muted text-[10px]">Notes</Label>
                   <Textarea
                     value={f.notes}
                     onChange={(e) => updateFile(f.id, { notes: e.target.value })}
                     placeholder="Optional notes..."
-                    className="bg-[#141414] border-[#2A2A2A] text-[#F0F0F0] min-h-[50px] text-xs"
+                    className="bg-[#141414] border-dark-border text-dark-primary min-h-[50px] text-xs"
                   />
                 </div>
 
                 {f.status === 'uploading' && (
-                  <Progress value={f.progress} className="h-1 bg-[#0A0A0A] [&>div]:bg-[#00AEEF]" />
+                  <Progress value={f.progress} className="h-1 bg-[#0A0A0A] [&>div]:bg-cyan" />
                 )}
               </motion.div>
             ))}
@@ -435,7 +437,7 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
             {/* Add more files */}
             <button
               onClick={() => fileRef.current?.click()}
-              className="w-full py-3 border-2 border-dashed border-[#2A2A2A] rounded-xl text-[#6B6B6B] text-sm hover:border-[#00AEEF] hover:text-[#00AEEF] transition-colors"
+              className="w-full py-3 border-2 border-dashed border-dark-border rounded-xl text-dark-muted text-sm hover:border-cyan hover:text-cyan transition-colors"
             >
               + Add more files
             </button>
@@ -451,16 +453,16 @@ function UploadModal({ open, onClose, onUpload }: { open: boolean; onClose: () =
             {/* Progress */}
             {files.some((f) => f.status === 'uploading') && (
               <div className="pt-2">
-                <p className="text-[#6B6B6B] text-xs mb-1">
+                <p className="text-dark-muted text-xs mb-1">
                   Uploading... {Math.round(files.reduce((acc, f) => acc + f.progress, 0) / files.length)}%
                 </p>
               </div>
             )}
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button variant="ghost" className="text-[#A0A0A0]" onClick={() => { setFiles([]); onClose() }}>Cancel</Button>
+              <Button variant="ghost" className="text-dark-secondary" onClick={() => { setFiles([]); onClose() }}>Cancel</Button>
               <Button
-                className="bg-[#00AEEF] hover:bg-[#009BD6] text-white"
+                className="bg-cyan hover:bg-cyan-hover text-white"
                 onClick={handleUpload}
                 disabled={files.length === 0 || files.some((f) => f.status === 'uploading')}
               >
@@ -506,7 +508,7 @@ function Lightbox({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-[#0A0A0A] border-[#2A2A2A] text-[#F0F0F0] max-w-5xl max-h-[95vh] overflow-hidden p-0">
+      <DialogContent className="bg-[#0A0A0A] border-dark-border text-dark-primary max-w-5xl max-h-[95vh] overflow-hidden p-0">
         <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
           {/* Image Area */}
           <div className="flex-1 bg-[#0A0A0A] flex items-center justify-center relative min-h-[300px] lg:min-h-0">
@@ -540,24 +542,24 @@ function Lightbox({
           </div>
 
           {/* Sidebar Info */}
-          <div className="w-full lg:w-[300px] border-t lg:border-t-0 lg:border-l border-[#2A2A2A] bg-[#141414] p-5 overflow-y-auto max-h-[40vh] lg:max-h-[85vh]">
+          <div className="w-full lg:w-[300px] border-t lg:border-t-0 lg:border-l border-dark-border bg-[#141414] p-5 overflow-y-auto max-h-[40vh] lg:max-h-[85vh]">
             <div className="space-y-4">
               <div>
-                <p className="text-[#6B6B6B] text-xs mb-1">Date</p>
-                <p className="text-[#F0F0F0] font-semibold text-base">{fmtDate(photo.date)}</p>
+                <p className="text-dark-muted text-xs mb-1">Date</p>
+                <p className="text-dark-primary font-semibold text-base">{fmtDate(photo.date)}</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(0,174,239,0.15)] text-[#00AEEF]">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(0,174,239,0.15)] text-cyan">
                   {photo.category}
                 </span>
                 {isMilestone && (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(234,179,8,0.15)] text-[#EAB308]">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(234,179,8,0.15)] text-warning">
                     Milestone
                   </span>
                 )}
                 {isGoalAchieved && (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(34,197,94,0.15)] text-[#22C55E]">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[rgba(34,197,94,0.15)] text-success">
                     Goal Achieved
                   </span>
                 )}
@@ -565,56 +567,56 @@ function Lightbox({
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-[#1A1A1A] rounded-lg p-3">
-                  <p className="text-[#6B6B6B] text-[10px]">Weight</p>
-                  <p className="text-[#F0F0F0] font-semibold font-mono text-lg">{photo.weight ? `${photo.weight} kg` : '-'}</p>
+                  <p className="text-dark-muted text-[10px]">Weight</p>
+                  <p className="text-dark-primary font-semibold font-mono text-lg">{photo.weight ? `${photo.weight} kg` : '-'}</p>
                 </div>
                 <div className="bg-[#1A1A1A] rounded-lg p-3">
-                  <p className="text-[#6B6B6B] text-[10px]">Body Fat</p>
-                  <p className="text-[#F0F0F0] font-semibold font-mono text-lg">{photo.bodyFatPercentage ? `${photo.bodyFatPercentage}%` : '-'}</p>
+                  <p className="text-dark-muted text-[10px]">Body Fat</p>
+                  <p className="text-dark-primary font-semibold font-mono text-lg">{photo.bodyFatPercentage ? `${photo.bodyFatPercentage}%` : '-'}</p>
                 </div>
               </div>
 
               {photo.notes && (
                 <div>
-                  <p className="text-[#6B6B6B] text-xs mb-1">Client Notes</p>
-                  <p className="text-[#A0A0A0] text-sm italic">&ldquo;{photo.notes}&rdquo;</p>
+                  <p className="text-dark-muted text-xs mb-1">Client Notes</p>
+                  <p className="text-dark-secondary text-sm italic">&ldquo;{photo.notes}&rdquo;</p>
                 </div>
               )}
 
-              <div className="h-px bg-[#2A2A2A]" />
+              <div className="h-px bg-dark-border" />
 
               {/* Trainer Annotations */}
               <div>
-                <p className="text-[#F0F0F0] text-sm font-semibold mb-3 flex items-center gap-2">
-                  <MessageSquare size={14} className="text-[#00AEEF]" />
+                <p className="text-dark-primary text-sm font-semibold mb-3 flex items-center gap-2">
+                  <MessageSquare size={14} className="text-cyan" />
                   Trainer Annotations
                 </p>
 
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-[#6B6B6B] text-[10px]">Trainer Notes</Label>
+                    <Label className="text-dark-muted text-[10px]">Trainer Notes</Label>
                     <Textarea
                       value={trainerNotes}
                       onChange={(e) => setTrainerNotes(e.target.value)}
                       placeholder="Add your observations..."
-                      className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] min-h-[80px] text-xs mt-1"
+                      className="bg-[#1A1A1A] border-dark-border text-dark-primary min-h-[80px] text-xs mt-1"
                     />
                   </div>
 
                   <ToggleRowInline
                     title="Mark as Milestone"
-                    icon={<Star size={14} className="text-[#EAB308]" />}
+                    icon={<Star size={14} className="text-warning" />}
                     checked={isMilestone}
                     onChange={setIsMilestone}
                   />
                   <ToggleRowInline
                     title="Goal Achieved"
-                    icon={<Trophy size={14} className="text-[#22C55E]" />}
+                    icon={<Trophy size={14} className="text-success" />}
                     checked={isGoalAchieved}
                     onChange={setIsGoalAchieved}
                   />
 
-                  <Button className="w-full bg-[#00AEEF] hover:bg-[#009BD6] text-white mt-2" onClick={handleSave}>
+                  <Button className="w-full bg-cyan hover:bg-cyan-hover text-white mt-2" onClick={handleSave}>
                     Save Annotations
                   </Button>
                 </div>
@@ -642,14 +644,14 @@ function ToggleRowInline({
     <button
       onClick={() => onChange(!checked)}
       className={`w-full flex items-center justify-between p-2.5 rounded-lg border transition-all ${
-        checked ? 'border-[#00AEEF] bg-[rgba(0,174,239,0.08)]' : 'border-[#2A2A2A] bg-[#1A1A1A]'
+        checked ? 'border-cyan bg-[rgba(0,174,239,0.08)]' : 'border-dark-border bg-[#1A1A1A]'
       }`}
     >
       <div className="flex items-center gap-2">
         {icon}
-        <span className="text-[#F0F0F0] text-xs">{title}</span>
+        <span className="text-dark-primary text-xs">{title}</span>
       </div>
-      <div className={`w-8 h-4 rounded-full relative transition-colors ${checked ? 'bg-[#00AEEF]' : 'bg-[#2A2A2A]'}`}>
+      <div className={`w-8 h-4 rounded-full relative transition-colors ${checked ? 'bg-cyan' : 'bg-dark-border'}`}>
         <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${checked ? 'right-0.5' : 'left-0.5'}`} />
       </div>
     </button>
@@ -682,31 +684,31 @@ function ComparisonView({
       className="space-y-4"
     >
       {/* Header Bar */}
-      <div className="bg-[#141414] border border-[#2A2A2A] rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="bg-[#141414] border border-dark-border rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4">
         {/* Left info */}
         <div className="text-center lg:text-left">
-          <p className="text-[#6B6B6B] text-xs mb-1">Before</p>
-          <p className="text-[#F0F0F0] font-mono text-sm font-semibold">{fmtDate(left.date)}</p>
-          <p className="text-[#A0A0A0] text-xs font-mono">{left.weight} kg · {left.bodyFatPercentage}% BF</p>
+          <p className="text-dark-muted text-xs mb-1">Before</p>
+          <p className="text-dark-primary font-mono text-sm font-semibold">{fmtDate(left.date)}</p>
+          <p className="text-dark-secondary text-xs font-mono">{left.weight} kg · {left.bodyFatPercentage}% BF</p>
         </div>
 
         {/* Delta */}
         <div className="text-center">
-          <p className="text-[#6B6B6B] text-xs mb-1">{days} days between photos</p>
+          <p className="text-dark-muted text-xs mb-1">{days} days between photos</p>
           <div className="flex items-center gap-4 justify-center">
             {weightDelta !== null && (
-              <p className={`font-semibold font-mono text-lg ${weightDelta < 0 ? 'text-[#22C55E]' : weightDelta > 0 ? 'text-[#EF4444]' : 'text-[#A0A0A0]'}`}>
+              <p className={`font-semibold font-mono text-lg ${weightDelta < 0 ? 'text-success' : weightDelta > 0 ? 'text-danger' : 'text-dark-secondary'}`}>
                 {weightDelta > 0 ? '+' : ''}{weightDelta.toFixed(1)} kg
               </p>
             )}
             {bfDelta !== null && (
-              <p className={`font-semibold font-mono text-lg ${bfDelta < 0 ? 'text-[#22C55E]' : bfDelta > 0 ? 'text-[#EF4444]' : 'text-[#A0A0A0]'}`}>
+              <p className={`font-semibold font-mono text-lg ${bfDelta < 0 ? 'text-success' : bfDelta > 0 ? 'text-danger' : 'text-dark-secondary'}`}>
                 {bfDelta > 0 ? '+' : ''}{bfDelta.toFixed(1)}% BF
               </p>
             )}
           </div>
           {weightDelta !== null && weightDelta < 0 && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(34,197,94,0.15)] text-[#22C55E]">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(34,197,94,0.15)] text-success">
               Progress!
             </span>
           )}
@@ -714,13 +716,13 @@ function ComparisonView({
 
         {/* Right info */}
         <div className="text-center lg:text-right">
-          <p className="text-[#6B6B6B] text-xs mb-1">After</p>
-          <p className="text-[#F0F0F0] font-mono text-sm font-semibold">{fmtDate(right.date)}</p>
-          <p className="text-[#A0A0A0] text-xs font-mono">{right.weight} kg · {right.bodyFatPercentage}% BF</p>
+          <p className="text-dark-muted text-xs mb-1">After</p>
+          <p className="text-dark-primary font-mono text-sm font-semibold">{fmtDate(right.date)}</p>
+          <p className="text-dark-secondary text-xs font-mono">{right.weight} kg · {right.bodyFatPercentage}% BF</p>
         </div>
 
         {/* Close */}
-        <Button variant="ghost" size="sm" className="text-[#A0A0A0] hover:text-[#F0F0F0]" onClick={onClose}>
+        <Button variant="ghost" size="sm" className="text-dark-secondary hover:text-dark-primary" onClick={onClose}>
           <X size={16} className="mr-1" />
           Close
         </Button>
@@ -728,7 +730,7 @@ function ComparisonView({
 
       {/* Photo Panes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-xl overflow-hidden">
+        <div className="bg-[#0A0A0A] border border-dark-border rounded-xl overflow-hidden">
           <div className="relative">
             <img src={left.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[#0A0A0A]" />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded-md text-xs text-white font-medium">
@@ -736,7 +738,7 @@ function ComparisonView({
             </div>
           </div>
         </div>
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-xl overflow-hidden">
+        <div className="bg-[#0A0A0A] border border-dark-border rounded-xl overflow-hidden">
           <div className="relative">
             <img src={right.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[#0A0A0A]" />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded-md text-xs text-white font-medium">
@@ -752,7 +754,7 @@ function ComparisonView({
       </div>
 
       <div className="flex justify-center">
-        <Button variant="outline" className="border-[#2A2A2A] text-[#A0A0A0]">
+        <Button variant="outline" className="border-dark-border text-dark-secondary">
           <Download size={16} className="mr-2" />
           Download Comparison
         </Button>
@@ -787,7 +789,7 @@ function PhotoCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.04, duration: 0.3, ease }}
       className={`group relative bg-[#141414] border rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
-        selected ? 'border-[#00AEEF] ring-2 ring-[rgba(0,174,239,0.3)]' : 'border-[#2A2A2A] hover:border-[rgba(0,174,239,0.3)]'
+        selected ? 'border-cyan ring-2 ring-[rgba(0,174,239,0.3)]' : 'border-dark-border hover:border-[rgba(0,174,239,0.3)]'
       }`}
       onClick={() => {
         if (compareMode) {
@@ -810,7 +812,7 @@ function PhotoCard({
         {compareMode && (
           <div className="absolute top-3 left-3 z-10" onClick={(e) => e.stopPropagation()}>
             <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
-              selected ? 'bg-[#00AEEF] border-[#00AEEF]' : 'bg-black/50 border-white/50'
+              selected ? 'bg-cyan border-cyan' : 'bg-black/50 border-white/50'
             }`}>
               {selected && <Check size={14} className="text-white" />}
             </div>
@@ -820,8 +822,8 @@ function PhotoCard({
         {/* Milestone badges */}
         {(photo.isMilestone || photo.isGoalAchieved) && (
           <div className="absolute top-3 right-3 flex gap-1 z-10">
-            {photo.isMilestone && <Star size={14} className="text-[#EAB308] fill-[#EAB308]" />}
-            {photo.isGoalAchieved && <Trophy size={14} className="text-[#22C55E] fill-[#22C55E]" />}
+            {photo.isMilestone && <Star size={14} className="text-warning fill-[#EAB308]" />}
+            {photo.isGoalAchieved && <Trophy size={14} className="text-success fill-[#22C55E]" />}
           </div>
         )}
 
@@ -840,7 +842,7 @@ function PhotoCard({
                 <button className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/20 transition-colors" onClick={(e) => e.stopPropagation()}>
                   <Download size={12} />
                 </button>
-                <button className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-white/80 hover:text-[#EF4444] hover:bg-white/20 transition-colors" onClick={(e) => e.stopPropagation()}>
+                <button className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-white/80 hover:text-danger hover:bg-white/20 transition-colors" onClick={(e) => e.stopPropagation()}>
                   <Trash2 size={12} />
                 </button>
               </div>
@@ -851,11 +853,11 @@ function PhotoCard({
 
       {/* Bottom info */}
       <div className="p-3 flex items-center justify-between">
-        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(0,174,239,0.15)] text-[#00AEEF]">
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(0,174,239,0.15)] text-cyan">
           {photo.category}
         </span>
         {photo.notes && (
-          <span className="text-[#6B6B6B] text-[10px] truncate max-w-[120px]">{photo.notes}</span>
+          <span className="text-dark-muted text-[10px] truncate max-w-[120px]">{photo.notes}</span>
         )}
       </div>
     </motion.div>
@@ -867,6 +869,10 @@ function PhotoCard({
    ═══════════════════════════════════════════════════════════ */
 
 export default function PhotosPage() {
+  const { id: clientId } = useParams<{ id: string }>()
+  const { clients } = useAppDataStore()
+  const clientName = clientId ? clients[clientId]?.name : null
+
   const [photos, setPhotos] = useState<ProgressPhoto[]>(demoPhotos)
   const [uploadOpen, setUploadOpen] = useState(false)
   const [compareMode, setCompareMode] = useState(false)
@@ -931,8 +937,8 @@ export default function PhotosPage() {
     >
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-[#F0F0F0] text-2xl font-semibold mb-1">Progress Photos</h1>
-        <p className="text-[#6B6B6B] text-sm">Sarah Johnson — Visual transformation tracking</p>
+        <h1 className="text-dark-primary text-2xl font-semibold mb-1">Progress Photos</h1>
+        <p className="text-dark-muted text-sm">{clientName || 'Unknown Client'} — Visual transformation tracking</p>
       </div>
 
       {/* Stats */}
@@ -948,21 +954,21 @@ export default function PhotosPage() {
             className="mb-4 overflow-hidden"
           >
             <div className="bg-[rgba(0,174,239,0.08)] border border-[rgba(0,174,239,0.3)] rounded-xl p-4 flex items-center justify-between">
-              <p className="text-[#00AEEF] text-sm">
+              <p className="text-cyan text-sm">
                 Select 2 photos to compare · <span className="font-medium">{selectedIds.length}/2 selected</span>
               </p>
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[#A0A0A0]"
+                  className="text-dark-secondary"
                   onClick={() => { setCompareMode(false); setSelectedIds([]) }}
                 >
                   Cancel
                 </Button>
                 <Button
                   size="sm"
-                  className="bg-[#00AEEF] hover:bg-[#009BD6] text-white"
+                  className="bg-cyan hover:bg-cyan-hover text-white"
                   disabled={selectedIds.length !== 2}
                   onClick={startComparison}
                 >
@@ -992,13 +998,13 @@ export default function PhotosPage() {
       {!comparePair && (
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-2">
-            <Button className="bg-[#00AEEF] hover:bg-[#009BD6] text-white" onClick={() => setUploadOpen(true)}>
+            <Button className="bg-cyan hover:bg-cyan-hover text-white" onClick={() => setUploadOpen(true)}>
               <Upload size={16} className="mr-2" />
               Upload Photos
             </Button>
             <Button
               variant={compareMode ? 'default' : 'outline'}
-              className={compareMode ? 'bg-[#00AEEF] text-white' : 'border-[#2A2A2A] text-[#A0A0A0] hover:text-[#F0F0F0]'}
+              className={compareMode ? 'bg-cyan text-white' : 'border-dark-border text-dark-secondary hover:text-dark-primary'}
               onClick={() => { setCompareMode(!compareMode); setSelectedIds([]) }}
             >
               <Columns2 size={16} className="mr-2" />
@@ -1007,12 +1013,12 @@ export default function PhotosPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Filter size={14} className="text-[#6B6B6B]" />
+            <Filter size={14} className="text-dark-muted" />
             <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as PhotoCategory | 'All')}>
-              <SelectTrigger className="bg-[#1A1A1A] border-[#2A2A2A] text-[#F0F0F0] h-8 text-xs w-[120px]">
+              <SelectTrigger className="bg-[#1A1A1A] border-dark-border text-dark-primary h-8 text-xs w-[120px]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#141414] border-[#2A2A2A]">
+              <SelectContent className="bg-[#141414] border-dark-border">
                 <SelectItem value="All">All Categories</SelectItem>
                 {(['Front', 'Back', 'Side', 'Other'] as const).map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
@@ -1022,7 +1028,7 @@ export default function PhotosPage() {
 
             <button
               onClick={() => setSortOrder((o) => (o === 'newest' ? 'oldest' : 'newest'))}
-              className="flex items-center gap-1 h-8 px-3 bg-[#1A1A1A] border border-[#2A2A2A] rounded-md text-xs text-[#A0A0A0] hover:text-[#F0F0F0] transition-colors"
+              className="flex items-center gap-1 h-8 px-3 bg-[#1A1A1A] border border-dark-border rounded-md text-xs text-dark-secondary hover:text-dark-primary transition-colors"
             >
               <ArrowUpDown size={12} />
               {sortOrder === 'newest' ? 'Newest' : 'Oldest'}
@@ -1064,7 +1070,7 @@ export default function PhotosPage() {
           title="No photos match"
           description="Try adjusting your filters or upload new photos."
           action={
-            <Button variant="outline" className="border-[#00AEEF] text-[#00AEEF] hover:bg-[rgba(0,174,239,0.1)]" onClick={() => { setCategoryFilter('All') }}>
+            <Button variant="outline" className="border-cyan text-cyan hover:bg-[rgba(0,174,239,0.1)]" onClick={() => { setCategoryFilter('All') }}>
               Clear Filters
             </Button>
           }

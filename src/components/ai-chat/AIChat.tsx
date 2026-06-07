@@ -175,7 +175,7 @@ export default function AIChat() {
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
         {!isOpen && (
-          <span className="absolute inset-0 rounded-full bg-[#00AEEF] opacity-20 animate-ping" style={{ animationDuration: '2.5s' }} />
+          <span className="absolute inset-0 rounded-full bg-cyan opacity-20 animate-ping" style={{ animationDuration: '2.5s' }} />
         )}
       </button>
 
@@ -200,7 +200,7 @@ export default function AIChat() {
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-white/[0.08] bg-gradient-to-r from-[#00AEEF]/10 to-transparent">
               <div className="flex items-center gap-2">
-                <Bot size={20} className="text-[#00AEEF]" />
+                <Bot size={20} className="text-cyan" />
                 <span className="font-semibold text-sm text-gray-900 dark:text-white">AzFIT AI Assistant</span>
               </div>
               <button
@@ -221,13 +221,13 @@ export default function AIChat() {
                   )}>
                     {msg.role === 'user'
                       ? <User size={14} className="text-gray-600 dark:text-gray-300" />
-                      : <Bot size={14} className="text-[#00AEEF]" />
+                      : <Bot size={14} className="text-cyan" />
                     }
                   </div>
                   <div className={cn(
                     'max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed',
                     msg.role === 'user'
-                      ? 'bg-[#00AEEF] text-white rounded-br-sm'
+                      ? 'bg-cyan text-white rounded-br-sm'
                       : 'bg-gray-100 dark:bg-white/[0.06] text-gray-800 dark:text-gray-200 rounded-bl-sm'
                   )}>
                     <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -237,7 +237,7 @@ export default function AIChat() {
                           <button
                             key={s}
                             onClick={() => { setInput(s); }}
-                            className="text-xs px-2.5 py-1 rounded-full bg-white/20 dark:bg-white/10 text-[#00AEEF] hover:bg-[#00AEEF]/20 transition-colors border border-[#00AEEF]/20"
+                            className="text-xs px-2.5 py-1 rounded-full bg-white/20 dark:bg-white/10 text-cyan hover:bg-cyan/20 transition-colors border border-cyan/20"
                           >
                             {s}
                           </button>
@@ -251,7 +251,7 @@ export default function AIChat() {
               {isTyping && (
                 <div className="flex gap-2.5">
                   <div className="w-7 h-7 rounded-full bg-[rgba(0,174,239,0.15)] flex items-center justify-center shrink-0">
-                    <Bot size={14} className="text-[#00AEEF]" />
+                    <Bot size={14} className="text-cyan" />
                   </div>
                   <div className="bg-gray-100 dark:bg-white/[0.06] rounded-2xl rounded-bl-sm px-4 py-3">
                     <div className="flex gap-1">
@@ -279,7 +279,7 @@ export default function AIChat() {
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || isTyping}
-                  className="w-10 h-10 rounded-xl bg-[#00AEEF] text-white flex items-center justify-center hover:bg-[#008DC4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="w-10 h-10 rounded-xl bg-cyan text-white flex items-center justify-center hover:bg-[#008DC4] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send size={16} />
                 </button>

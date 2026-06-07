@@ -126,7 +126,7 @@ export default function ProgramLibraryPage() {
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Program Library</h1>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {filtered.length} of {totalPrograms} programs
-                {activeCount > 0 && <span className="text-[#00AEEF]"> (filtered)</span>}
+                {activeCount > 0 && <span className="text-cyan"> (filtered)</span>}
               </p>
             </div>
             <button
@@ -139,7 +139,7 @@ export default function ProgramLibraryPage() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <StatCard label="Total Programs" value={String(totalPrograms)} icon={Grid3X3} color="bg-[#00AEEF]/10 text-[#00AEEF]" />
+            <StatCard label="Total Programs" value={String(totalPrograms)} icon={Grid3X3} color="bg-cyan/10 text-cyan" />
             <StatCard label="Categories" value={String(totalCategories)} icon={Dumbbell} color="bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400" />
             <StatCard label="Avg Adherence" value={`${avgAdherence.toFixed(1)}%`} icon={TrendingUp} color="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400" />
             <StatCard label="Total Revenue" value={`$${(totalRevenue / 1000000).toFixed(2)}M`} icon={DollarSign} color="bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" />
@@ -154,7 +154,7 @@ export default function ProgramLibraryPage() {
                 placeholder="Search programs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1A1A1A] text-sm focus:border-[#00AEEF] outline-none"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1A1A1A] text-sm focus:border-cyan outline-none"
               />
               {search && (
                 <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -175,7 +175,7 @@ export default function ProgramLibraryPage() {
               {DIFFICULTY_OPTIONS.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
             {activeCount > 0 && (
-              <button onClick={clearFilters} className="text-xs text-[#00AEEF] hover:underline flex items-center gap-1">
+              <button onClick={clearFilters} className="text-xs text-cyan hover:underline flex items-center gap-1">
                 <X className="w-3 h-3" /> Clear
               </button>
             )}
@@ -189,7 +189,7 @@ export default function ProgramLibraryPage() {
           <div className="text-center py-16 text-gray-400">
             <Dumbbell className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="text-sm">No programs match your filters.</p>
-            <button onClick={clearFilters} className="text-sm text-[#00AEEF] hover:underline mt-2">Clear all filters</button>
+            <button onClick={clearFilters} className="text-sm text-cyan hover:underline mt-2">Clear all filters</button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -243,7 +243,7 @@ export default function ProgramLibraryPage() {
                     <button className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
                       View
                     </button>
-                    <button className="text-xs px-3 py-1.5 rounded-lg bg-[#00AEEF] text-white hover:bg-[#008DC4]">
+                    <button className="text-xs px-3 py-1.5 rounded-lg bg-cyan text-white hover:bg-[#008DC4]">
                       Use
                     </button>
                   </div>

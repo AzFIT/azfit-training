@@ -118,7 +118,7 @@ export default function InvitationPage() {
         {/* Logo */}
         <div className="text-center mb-4">
           <img src="./AzFIT_Logo_BlackBackground.png" alt="AzFIT" className="h-16 w-auto mx-auto mb-2" />
-          <p className="text-[#00AEEF] font-bold text-lg tracking-wider">AzFIT</p>
+          <p className="text-cyan font-bold text-lg tracking-wider">AzFIT</p>
           <span className="inline-block mt-2 px-3 py-1 bg-[#A855F7] text-white text-caption font-medium rounded-full">
             Admin Invitation
           </span>

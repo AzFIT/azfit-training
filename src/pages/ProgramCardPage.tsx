@@ -22,16 +22,16 @@ function DayTab({ dayNumber, dayLabel, exerciseCount, isActive, onClick }: DayTa
       onClick={onClick}
       className={`relative flex-shrink-0 min-w-[140px] rounded-lg border p-3 text-left transition-all ${
         isActive
-          ? 'bg-[#1A1A1A] border-[#00AEEF]/50 ring-1 ring-[#00AEEF]/20'
-          : 'bg-[#141414] border-[#2A2A2A] hover:border-[#3A3A3A]'
+          ? 'bg-[#1A1A1A] border-cyan/50 ring-1 ring-[#00AEEF]/20'
+          : 'bg-[#141414] border-dark-border hover:border-dark-subtle'
       }`}
     >
       <div className="flex items-center justify-between mb-1">
-        <span className={`text-xs font-semibold ${isActive ? 'text-[#00AEEF]' : 'text-[#A0A0A0]'}`}>
+        <span className={`text-xs font-semibold ${isActive ? 'text-cyan' : 'text-dark-secondary'}`}>
           Day {dayNumber}
         </span>
       </div>
-      <div className="text-[#F0F0F0] text-sm font-medium truncate">{dayLabel || `Day ${dayNumber}`}</div>
+      <div className="text-dark-primary text-sm font-medium truncate">{dayLabel || `Day ${dayNumber}`}</div>
       <div className="flex items-center gap-2 mt-1">
         <span className="text-[#555] text-[10px]">· {exerciseCount} exercises</span>
       </div>
@@ -51,7 +51,7 @@ export default function ProgramCardPage() {
   if (isLoading) {
     return (
       <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-[#00AEEF]" />
+        <Loader2 size={32} className="animate-spin text-cyan" />
       </div>
     )
   }
@@ -60,7 +60,7 @@ export default function ProgramCardPage() {
     return (
       <div className="min-h-[100dvh] bg-[#0A0A0A] flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-[#A0A0A0]">
+          <p className="text-dark-secondary">
             {error ? 'Failed to load program. Please try again.' : 'Program not found.'}
           </p>
         </div>
@@ -89,17 +89,17 @@ export default function ProgramCardPage() {
             <Dumbbell size={20} className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-[#F0F0F0] text-xl font-semibold truncate">{program.program_name}</h1>
-            <p className="text-[#6B6B6B] text-sm">
-              <span className="text-[#00AEEF]">Program Card</span>
-              <span className="text-[#2A2A2A] mx-2">|</span>
+            <h1 className="text-dark-primary text-xl font-semibold truncate">{program.program_name}</h1>
+            <p className="text-dark-muted text-sm">
+              <span className="text-cyan">Program Card</span>
+              <span className="text-dark-border mx-2">|</span>
               <span>View exercises, sets, and training parameters</span>
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="h-9 px-4 rounded-lg border border-[#2A2A2A] text-[#A0A0A0] hover:border-[#00AEEF] hover:text-[#00AEEF] bg-transparent text-xs font-medium transition-all flex items-center gap-1.5"
+              className="h-9 px-4 rounded-lg border border-dark-border text-dark-secondary hover:border-cyan hover:text-cyan bg-transparent text-xs font-medium transition-all flex items-center gap-1.5"
             >
               <ArrowLeft size={14} />
               Back
@@ -128,14 +128,14 @@ export default function ProgramCardPage() {
 
         {/* Day info banner */}
         {currentDay && (
-          <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-[#141414] border border-[#2A2A2A]/50">
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-[#141414] border border-dark-border/50">
             <div className="flex items-center gap-2">
-              <span className="text-[#00AEEF] text-sm font-medium">
+              <span className="text-cyan text-sm font-medium">
                 Day {currentDay.day_number}: {currentDay.day_label || `Day ${currentDay.day_number}`}
               </span>
             </div>
-            <div className="w-px h-4 bg-[#2A2A2A]" />
-            <div className="text-[10px] text-[#A0A0A0]">
+            <div className="w-px h-4 bg-dark-border" />
+            <div className="text-[10px] text-dark-secondary">
               {currentDay.exercises.length} exercises · {currentDay.exercises.reduce((s, e) => s + e.sets, 0)} sets
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function ProgramCardPage() {
           </button>
           <button
             onClick={handleStartWorkout}
-            className="px-4 py-3 rounded-xl font-semibold text-[#00AEEF] bg-[#141414] border-2 border-[#00AEEF] hover:bg-[#00AEEF]/10 transition-all flex items-center justify-center gap-2 text-sm"
+            className="px-4 py-3 rounded-xl font-semibold text-cyan bg-[#141414] border-2 border-cyan hover:bg-cyan/10 transition-all flex items-center justify-center gap-2 text-sm"
           >
             <Play size={18} />
             <span className="hidden sm:inline">Start Workout</span>

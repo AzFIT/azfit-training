@@ -137,7 +137,7 @@ export default function SubscriptionPage() {
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <p className="text-caption uppercase tracking-[0.1em] text-[#00AEEF] font-semibold mb-3">Pricing</p>
+          <p className="text-caption uppercase tracking-[0.1em] text-cyan font-semibold mb-3">Pricing</p>
           <h1 className="font-playfair text-display-md text-gray-900 mb-4">Simple, Transparent Pricing</h1>
           <p className="text-body-md text-gray-500 mb-8">Choose the plan that fits your training needs. No hidden fees.</p>
 
@@ -154,7 +154,7 @@ export default function SubscriptionPage() {
                 {billing === b && (
                   <motion.div
                     layoutId="billingTab"
-                    className="absolute inset-0 bg-[#00AEEF] rounded-full"
+                    className="absolute inset-0 bg-cyan rounded-full"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -182,7 +182,7 @@ export default function SubscriptionPage() {
               transition={{ duration: 0.4, delay: i * 0.12 }}
               className={`relative rounded-2xl p-8 transition-all duration-300 ${
                 tier.highlight
-                  ? 'bg-white border-2 border-[#00AEEF] -translate-y-2 shadow-[0_12px_32px_rgba(0,174,239,0.15)]'
+                  ? 'bg-white border-2 border-cyan -translate-y-2 shadow-[0_12px_32px_rgba(0,174,239,0.15)]'
                   : tier.gradientBorder
                   ? 'bg-white border-2 border-transparent'
                   : 'bg-white border border-gray-200 hover:-translate-y-1 hover:shadow-card-hover'
@@ -196,12 +196,12 @@ export default function SubscriptionPage() {
               }
             >
               {tier.badge && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#00AEEF] text-white text-caption font-semibold rounded-full">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-cyan text-white text-caption font-semibold rounded-full">
                   {tier.badge}
                 </span>
               )}
 
-              <h3 className={`text-heading-sm font-semibold mb-1 ${tier.highlight ? 'text-[#00AEEF]' : 'text-gray-900'}`}>
+              <h3 className={`text-heading-sm font-semibold mb-1 ${tier.highlight ? 'text-cyan' : 'text-gray-900'}`}>
                 {tier.name}
               </h3>
               <p className="text-body-sm text-gray-500 mb-4">{tier.desc}</p>
@@ -264,7 +264,7 @@ export default function SubscriptionPage() {
                   <tr className="bg-gray-50">
                     <th className="text-left px-6 py-3 text-caption font-semibold text-gray-500 uppercase">Feature</th>
                     <th className="text-center px-4 py-3 text-caption font-semibold text-gray-500 uppercase">Starter</th>
-                    <th className="text-center px-4 py-3 text-caption font-semibold text-[#00AEEF] uppercase bg-[rgba(0,174,239,0.05)]">Pro</th>
+                    <th className="text-center px-4 py-3 text-caption font-semibold text-cyan uppercase bg-[rgba(0,174,239,0.05)]">Pro</th>
                     <th className="text-center px-4 py-3 text-caption font-semibold text-gray-500 uppercase">Elite</th>
                   </tr>
                 </thead>

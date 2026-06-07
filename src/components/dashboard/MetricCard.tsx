@@ -98,13 +98,13 @@ function ClientSegments({
 }) {
   return (
     <div className="flex flex-wrap gap-1.5">
-      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(34,197,94,0.15)] text-[#22C55E]">
+      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(34,197,94,0.15)] text-success">
         {engaged}
       </span>
       <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(245,158,11,0.15)] text-[#F59E0B]">
         {moderate}
       </span>
-      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(239,68,68,0.15)] text-[#EF4444]">
+      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(239,68,68,0.15)] text-danger">
         {atRisk}
       </span>
     </div>
@@ -119,8 +119,8 @@ function DeltaBadge({ value }: { value: number }) {
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold flex-shrink-0 ${
         isPositive
-          ? 'bg-[rgba(34,197,94,0.15)] text-[#22C55E]'
-          : 'bg-[rgba(239,68,68,0.15)] text-[#EF4444]'
+          ? 'bg-[rgba(34,197,94,0.15)] text-success'
+          : 'bg-[rgba(239,68,68,0.15)] text-danger'
       }`}
     >
       {value >= 0 ? '+' : ''}

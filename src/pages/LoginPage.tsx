@@ -68,10 +68,10 @@ export default function LoginPage() {
               className="h-10 w-auto mx-auto mb-6"
             />
           </Link>
-          <h1 className="font-playfair text-3xl font-bold text-[#F0F0F0] mb-2">
+          <h1 className="font-playfair text-3xl font-bold text-dark-primary mb-2">
             Welcome back
           </h1>
-          <p className="text-[#A0A0A0] text-sm">
+          <p className="text-dark-secondary text-sm">
             Sign in to your AzFIT trainer portal
           </p>
         </motion.div>
@@ -80,36 +80,36 @@ export default function LoginPage() {
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, y: 20 }, { duration: 0.5, delay: 0.2, ease: easeOut })}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#141414] border border-[#2A2A2A] rounded-2xl p-6 sm:p-8"
+          className="bg-[#141414] border border-dark-border rounded-2xl p-6 sm:p-8"
         >
           <div className="space-y-4">
             {/* Email */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Email</label>
+              <label className="block text-dark-secondary text-sm mb-2">Email</label>
               <input
                 type="email"
                 placeholder="trainer@azfit.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl px-4 py-3 text-sm text-[#F0F0F0] placeholder:text-[#6B6B6B] focus:outline-none focus:border-[#00AEEF] focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
+                className="w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-[#A0A0A0] text-sm mb-2">Password</label>
+              <label className="block text-dark-secondary text-sm mb-2">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl px-4 py-3 pr-11 text-sm text-[#F0F0F0] placeholder:text-[#6B6B6B] focus:outline-none focus:border-[#00AEEF] focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
+                  className="w-full bg-[#1A1A1A] border border-dark-border rounded-xl px-4 py-3 pr-11 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-[rgba(0,174,239,0.15)] transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6B6B] hover:text-[#A0A0A0] transition-colors p-0.5"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-muted hover:text-dark-secondary transition-colors p-0.5"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -124,8 +124,8 @@ export default function LoginPage() {
                   onClick={() => setRememberMe(!rememberMe)}
                   className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                     rememberMe
-                      ? 'bg-[#00AEEF] border-[#00AEEF]'
-                      : 'border-[#4A4A4A] group-hover:border-[#6B6B6B]'
+                      ? 'bg-cyan border-cyan'
+                      : 'border-[#4A4A4A] group-hover:border-dark-muted'
                   }`}
                 >
                   {rememberMe && (
@@ -140,12 +140,12 @@ export default function LoginPage() {
                     </svg>
                   )}
                 </div>
-                <span className="text-[#A0A0A0] text-sm">Remember me</span>
+                <span className="text-dark-secondary text-sm">Remember me</span>
               </label>
               <button
                 type="button"
                 onClick={() => alert('Password reset coming soon!')}
-                className="text-[#00AEEF] text-sm hover:text-[#33BFF2] transition-colors"
+                className="text-cyan text-sm hover:text-[#33BFF2] transition-colors"
               >
                 Forgot password?
               </button>
@@ -155,7 +155,7 @@ export default function LoginPage() {
             <button
               onClick={handleSignIn}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 bg-[#00AEEF] hover:bg-[#009BD6] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-sm mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-cyan hover:bg-cyan-hover disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-sm mt-2"
             >
               {isLoading ? (
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -168,17 +168,17 @@ export default function LoginPage() {
             {/* Divider */}
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#2A2A2A]" />
+                <div className="w-full border-t border-dark-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-[#141414] px-3 text-[#6B6B6B]">or</span>
+                <span className="bg-[#141414] px-3 text-dark-muted">or</span>
               </div>
             </div>
 
             {/* Demo Mode Button */}
             <button
               onClick={handleDemoMode}
-              className="w-full bg-transparent border border-[#2A2A2A] hover:border-[#00AEEF]/50 text-[#A0A0A0] hover:text-[#F0F0F0] font-medium py-3 rounded-xl transition-all duration-200 text-sm"
+              className="w-full bg-transparent border border-dark-border hover:border-cyan/50 text-dark-secondary hover:text-dark-primary font-medium py-3 rounded-xl transition-all duration-200 text-sm"
             >
               Demo Mode — Skip Authentication
             </button>
@@ -186,11 +186,11 @@ export default function LoginPage() {
 
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
-            <p className="text-[#6B6B6B] text-sm">
+            <p className="text-dark-muted text-sm">
               Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
-                className="text-[#00AEEF] hover:text-[#33BFF2] transition-colors font-medium"
+                className="text-cyan hover:text-[#33BFF2] transition-colors font-medium"
               >
                 Sign Up
               </Link>
@@ -206,7 +206,7 @@ export default function LoginPage() {
         >
           <Link
             to="/"
-            className="text-[#6B6B6B] text-xs hover:text-[#A0A0A0] transition-colors"
+            className="text-dark-muted text-xs hover:text-dark-secondary transition-colors"
           >
             Back to home page
           </Link>
