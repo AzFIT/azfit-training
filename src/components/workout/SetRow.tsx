@@ -2,11 +2,13 @@
  * Set Row — Individual set input row for workout logging
  *
  * Strong-inspired: weight, reps, RPE inputs with checkmark completion
+ * Tap weight field to open plate calculator
  */
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Check } from 'lucide-react'
+import PlateCalculator from './PlateCalculator'
 
 export interface SetData {
   setNumber: number
@@ -29,6 +31,7 @@ export default function SetRow({ set, onUpdate, previousSet: _previousSet }: Set
   const [weight, setWeight] = useState(set.actualWeight?.toString() || '')
   const [reps, setReps] = useState(set.actualReps?.toString() || '')
   const [rpe, setRpe] = useState(set.actualRpe?.toString() || '')
+  const [showPlateCalc, setShowPlateCalc] = useState(false)
 
   const handleComplete = () => {
     onUpdate({
@@ -76,78 +79,114 @@ export default function SetRow({ set, onUpdate, previousSet: _previousSet }: Set
     }
   }
 
+  const handlePlateSelect = (selectedWeight: number) => {
+    const w = selectedWeight.toFixed(1)
+    setWeight(w)
+    setShowPlateCalc(false)
+    onUpdate({
+      ...set,
+      actualWeight: selectedWeight,
+      actualReps: parseInt(reps) || set.targetReps,
+      actualRpe: parseInt(rpe) || set.targetRpe,
+    })
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="flex items-center gap-2 py-1.5"
-    >
-      <span className="text-xs text-light-muted w-10 text-right flex-shrink-0">
-        Set {set.setNumber}
-      </span>
-
-      {/* Weight input */}
-      <div className="relative flex-1 max-w-[90px]">
-        <input
-          type="number"
-          step="0.5"
-          placeholder={String(set.targetWeight)}
-          value={weight}
-          onChange={(e) => handleWeightChange(e.target.value)}
-          className={`w-full text-center text-sm py-1.5 px-2 rounded-lg border transition-all ${
-            set.completed
-              ? 'bg-success/10 border-success/30 text-success'
-              : 'bg-light-surface border-light-border text-light-primary focus:border-cyan focus:ring-1 focus:ring-cyan/20'
-          }`}
-        />
-        <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-light-muted">kg</span>
-      </div>
-
-      {/* Reps input */}
-      <div className="relative flex-1 max-w-[80px]">
-        <input
-          type="number"
-          placeholder={String(set.targetReps)}
-          value={reps}
-          onChange={(e) => handleRepsChange(e.target.value)}
-          className={`w-full text-center text-sm py-1.5 px-2 rounded-lg border transition-all ${
-            set.completed
-              ? 'bg-success/10 border-success/30 text-success'
-              : 'bg-light-surface border-light-border text-light-primary focus:border-cyan focus:ring-1 focus:ring-cyan/20'
-          }`}
-        />
-        <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-light-muted">reps</span>
-      </div>
-
-      {/* RPE input */}
-      <div className="relative flex-1 max-w-[70px]">
-        <input
-          type="number"
-          min="1"
-          max="10"
-          placeholder={`RPE ${set.targetRpe}`}
-          value={rpe}
-          onChange={(e) => handleRpeChange(e.target.value)}
-          className={`w-full text-center text-sm py-1.5 px-2 rounded-lg border transition-all ${
-            set.completed
-              ? 'bg-success/10 border-success/30 text-success'
-              : 'bg-light-surface border-light-border text-light-primary focus:border-cyan focus:ring-1 focus:ring-cyan/20'
-          }`}
-        />
-      </div>
-
-      {/* Complete checkmark */}
-      <motion.button
-        whileTap={{ scale: 0.9 }}
-        onClick={handleComplete}
-        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-          set.completed
-            ? 'bg-success text-white shadow-sm shadow-success/30'
-            : 'bg-light-surface border border-light-border text-light-muted hover:border-cyan hover:text-cyan'
-        }`}
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center gap-2 py-1.5"
       >
-        <Check size={14} strokeWidth={3} />
-      </motion.button>
-    </motion.div>
+        <span className="text-xs text-light-muted w-10 text-right flex-shrink-0">
+          Set {set.setNumber}
+        </span>
+
+        {/* Weight input — tap to open plate calculator */}
+        <div className="relative flex-1 max-w-[90px]">
+          <input
+            type="number"
+            step="0.5"
+            placeholder={String(set.targetWeight)}
+            value={weight}
+            onChange={(e) => handleWeightChange(e.target.value)}
+            onFocus={() => {
+              if (!weight && set.targetWeight > 0) {
+                setShowPlateCalc(true)
+              }
+            }}
+            className={`w-full text-center text-sm py-1.5 px-2 rounded-lg border transition-all cursor-pointer ${
+              set.completed
+                ? 'bg-success/10 border-success/30 text-success'
+                : 'bg-light-surface border-light-border text-light-primary focus:border-cyan focus:ring-1 focus:ring-cyan/20'
+            }`}
+          />
+          <button
+            onClick={() => setShowPlateCalc(true)}
+            className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-light-muted hover:text-cyan px-1"
+            title="Open plate calculator"
+          >
+            kg
+          </button>
+        </div>
+
+        {/* Reps input */}
+        <div className="relative flex-1 max-w-[80px]">
+          <input
+            type="number"
+            placeholder={String(set.targetReps)}
+            value={reps}
+            onChange={(e) => handleRepsChange(e.target.value)}
+            className={`w-full text-center text-sm py-1.5 px-2 rounded-lg border transition-all ${
+              set.completed
+                ? 'bg-success/10 border-success/30 text-success'
+                : 'bg-light-surface border-light-border text-light-primary focus:border-cyan focus:ring-1 focus:ring-cyan/20'
+            }`}
+          />
+          <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-light-muted">reps</span>
+        </div>
+
+        {/* RPE input */}
+        <div className="relative flex-1 max-w-[70px]">
+          <input
+            type="number"
+            min="1"
+            max="10"
+            placeholder={`RPE ${set.targetRpe}`}
+            value={rpe}
+            onChange={(e) => handleRpeChange(e.target.value)}
+            className={`w-full text-center text-sm py-1.5 px-2 rounded-lg border transition-all ${
+              set.completed
+                ? 'bg-success/10 border-success/30 text-success'
+                : 'bg-light-surface border-light-border text-light-primary focus:border-cyan focus:ring-1 focus:ring-cyan/20'
+            }`}
+          />
+        </div>
+
+        {/* Complete checkmark */}
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={handleComplete}
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+            set.completed
+              ? 'bg-success text-white shadow-sm shadow-success/30'
+              : 'bg-light-surface border border-light-border text-light-muted hover:border-cyan hover:text-cyan'
+          }`}
+        >
+          <Check size={14} strokeWidth={3} />
+        </motion.button>
+      </motion.div>
+
+      {/* Plate Calculator Modal */}
+      <AnimatePresence>
+        {showPlateCalc && (
+          <PlateCalculator
+            targetWeight={parseFloat(weight) || set.targetWeight || 60}
+            onSelect={handlePlateSelect}
+            onClose={() => setShowPlateCalc(false)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   )
 }
