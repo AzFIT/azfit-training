@@ -13,6 +13,7 @@ import LandingPage from './pages/LandingPage'
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const SignupPage = lazy(() => import('./pages/SignupPage'))
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'))
 const InvitationPage = lazy(() => import('./pages/InvitationPage'))
 
 /* ── Protected app pages ── */
@@ -80,6 +81,7 @@ export default function App() {
       <Route path="/login" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><LoginPage /></ErrorBoundary></Suspense>} />
       <Route path="/signup" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><SignupPage /></ErrorBoundary></Suspense>} />
       <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><ForgotPasswordPage /></ErrorBoundary></Suspense>} />
+      <Route path="/reset-password" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><ResetPasswordPage /></ErrorBoundary></Suspense>} />
       <Route path="/invitation/:token" element={<Suspense fallback={<PageLoader />}><ErrorBoundary><InvitationPage /></ErrorBoundary></Suspense>} />
 
       {/* Protected routes */}
