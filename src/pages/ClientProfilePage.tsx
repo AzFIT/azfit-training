@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Scale, CalendarPlus, MessageSquare, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { tabsConfig, type TabKey } from '../components/clientProfile/tabsConfig';
+import { RoadmapTab } from '../components/clientProfile/tabs';
 import {
   DashboardTab, BioPrintTab, BodyStatsTab, RecordsTab, NotesTab, SessionsTab,
   CalendarView, ProgramsTab, DietTab, LifestyleTab, DatabaseTab, GoalsTab, PhotosTab,
@@ -24,6 +25,7 @@ const TAB_COMPONENTS: Record<TabKey, React.ComponentType> = {
   database: DatabaseTab,
   goals: GoalsTab,
   photos: PhotosTab,
+  roadmap: RoadmapTab,
 };
 
 export default function ClientProfilePage() {

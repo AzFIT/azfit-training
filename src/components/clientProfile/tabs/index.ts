@@ -11,3 +11,4 @@ export { DietTab } from './DietTab';
 export { LifestyleTab } from './LifestyleTab';
 export { NotesTab } from './NotesTab';
 export { PhotosTab } from './PhotosTab';
+export { RoadmapTab } from './RoadmapTab';

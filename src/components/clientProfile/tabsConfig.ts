@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Scan, Scale, FileText, StickyNote, Calendar, CalendarDays,
-  ClipboardList, Apple, Heart, Database, Target, Camera,
+  ClipboardList, Apple, Heart, Database, Target, Camera, Map,
 } from 'lucide-react';
 
 export const COLORS = ['#00AEEF', '#8B5CF6', '#22C55E', '#F97316', '#EC4899', '#EAB308', '#EF4444', '#C0C0C0'];
@@ -19,6 +19,7 @@ export const tabsConfig = [
   { key: 'database', label: 'Database', icon: Database },
   { key: 'goals', label: 'Goals', icon: Target },
   { key: 'photos', label: 'Progress Photos', icon: Camera },
+  { key: 'roadmap', label: 'Roadmap', icon: Map },
 ] as const;
 
 export type TabKey = (typeof tabsConfig)[number]['key'];
