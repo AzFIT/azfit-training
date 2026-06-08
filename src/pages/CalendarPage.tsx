@@ -85,7 +85,9 @@ const HK_TIME_SLOTS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 
 
 const HOUR_HEIGHT = 64
 const MS_PER_MINUTE = 60000
-const HOURS_IN_DAY = 24
+const CALENDAR_START_HOUR = 5
+const CALENDAR_END_HOUR = 22
+const VISIBLE_HOURS = CALENDAR_END_HOUR - CALENDAR_START_HOUR
 const SCROLL_TO_HOUR = 7
 
 function addMinutes(date: Date, minutes: number): Date {
@@ -96,7 +98,7 @@ function getSessionPosition(session: CalendarSession, minHeight: number) {
   const start = session.startTime
   const h = getHours(start)
   const m = getMinutes(start)
-  const top = h * HOUR_HEIGHT + (m / 60) * HOUR_HEIGHT
+  const top = (h - CALENDAR_START_HOUR) * HOUR_HEIGHT + (m / 60) * HOUR_HEIGHT
   const height = Math.max((session.duration / 60) * HOUR_HEIGHT, minHeight)
   return { top, height }
 }
@@ -191,12 +193,12 @@ function useTimeIndicator(now: Date) {
   const top = useMemo(() => {
     const h = getHours(now)
     const m = getMinutes(now)
-    return (h + m / 60) * HOUR_HEIGHT
+    return (h - CALENDAR_START_HOUR + m / 60) * HOUR_HEIGHT
   }, [now])
 
   const visible = useMemo(() => {
     const h = getHours(now)
-    return h >= 0 && h < HOURS_IN_DAY
+    return h >= CALENDAR_START_HOUR && h < CALENDAR_END_HOUR
   }, [now])
 
   return { top, visible }
@@ -235,14 +237,17 @@ function TimeGrid({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[60px_repeat(7,1fr)]">
       <div className="border-r border-[light-border]">
-        {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
-          <div
-            key={i}
-            className="h-16 border-b border-[light-border] flex items-start justify-end pr-2 pt-1"
-          >
-            <span className="text-[10px] text-[light-muted] font-mono">{String(i).padStart(2, '0')}:00</span>
-          </div>
-        ))}
+        {Array.from({ length: VISIBLE_HOURS }, (_, i) => {
+          const hour = CALENDAR_START_HOUR + i
+          return (
+            <div
+              key={hour}
+              className="h-16 border-b border-[light-border] flex items-start justify-end pr-2 pt-1"
+            >
+              <span className="text-[10px] text-[light-muted] font-mono">{String(hour).padStart(2, '0')}:00</span>
+            </div>
+          )
+        })}
       </div>
       {children}
     </div>
@@ -349,13 +354,16 @@ function WeekView({
                   }`}
                   style={today ? { borderLeft: '2px solid cyan' } : {}}
                 >
-                  {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
-                    <div
-                      key={i}
-                      className="h-16 border-b border-[light-border] hover:bg-[rgba(0,174,239,0.06)] transition-colors cursor-pointer"
-                      onClick={() => onSlotClick(day, i, 0)}
-                    />
-                  ))}
+                  {Array.from({ length: VISIBLE_HOURS }, (_, i) => {
+                    const hour = CALENDAR_START_HOUR + i
+                    return (
+                      <div
+                        key={hour}
+                        className="h-16 border-b border-[light-border] hover:bg-[rgba(0,174,239,0.06)] transition-colors cursor-pointer"
+                        onClick={() => onSlotClick(day, hour, 0)}
+                      />
+                    )
+                  })}
 
                   {filtered
                     .filter((s) => isSameDay(s.startTime, day))
@@ -398,11 +406,14 @@ function DayTimeGrid({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[80px_1fr]">
       <div className="border-r border-[light-border]">
-        {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
-          <div key={i} className="h-16 border-b border-[light-border] flex items-start justify-end pr-3 pt-1">
-            <span className="text-[11px] text-[light-muted] font-mono">{String(i).padStart(2, '0')}:00</span>
-          </div>
-        ))}
+        {Array.from({ length: VISIBLE_HOURS }, (_, i) => {
+          const hour = CALENDAR_START_HOUR + i
+          return (
+            <div key={hour} className="h-16 border-b border-[light-border] flex items-start justify-end pr-3 pt-1">
+              <span className="text-[11px] text-[light-muted] font-mono">{String(hour).padStart(2, '0')}:00</span>
+            </div>
+          )
+        })}
       </div>
       <div className="relative">{children}</div>
     </div>
@@ -530,13 +541,16 @@ function DayView({
           <DayViewHeader date={date} />
           <div className="relative">
             <DayTimeGrid>
-              {Array.from({ length: HOURS_IN_DAY }, (_, i) => (
-                <div
-                  key={i}
-                  className="h-16 border-b border-[light-border] hover:bg-cyan-glow transition-colors cursor-pointer"
-                  onClick={() => onSlotClick(date, i, 0)}
-                />
-              ))}
+              {Array.from({ length: VISIBLE_HOURS }, (_, i) => {
+                const hour = CALENDAR_START_HOUR + i
+                return (
+                  <div
+                    key={hour}
+                    className="h-16 border-b border-[light-border] hover:bg-cyan-glow transition-colors cursor-pointer"
+                    onClick={() => onSlotClick(date, hour, 0)}
+                  />
+                )
+              })}
               {filtered.map((session) => (
                 <DaySessionOverlay
                   key={session.id}
