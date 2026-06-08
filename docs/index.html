@@ -8,8 +8,10 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='system-ui' font-weight='700' font-size='20' fill='%2300AEEF'%3EA%3C/text%3E%3C/svg%3E">
   <title>AzFIT — Smart Training. Engineered For You.</title>
   <style>
-    /* ── Reset & Base ── */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    /* ═══════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0A0A0A;color:#F9FAFB;line-height:1.6;overflow-x:hidden}
     img{max-width:100%;display:block}
@@ -17,46 +19,31 @@
     button{border:none;background:none;cursor:pointer;font:inherit;color:inherit}
     ul{list-style:none}
 
-    /* ── CSS Variables ── */
+    /* ═══════════════════════════════════════════
+       CSS VARIABLES
+       ═══════════════════════════════════════════ */
     :root{
-      --cyan:#00AEEF;
-      --cyan-light:#3B82F6;
-      --bg:#0A0A0A;
-      --bg-2:#030712;
-      --bg-3:#111827;
-      --text:#F9FAFB;
-      --text-2:#D1D5DB;
-      --text-3:#9CA3AF;
-      --text-4:#6B7280;
-      --border:rgba(255,255,255,0.1);
-      --border-hover:rgba(0,174,239,0.3);
-      --max-w:1280px;
-      --pad-x:clamp(1rem,4vw,2rem);
+      --cyan:#00AEEF;--cyan-light:#3B82F6;--bg:#0A0A0A;--bg-2:#030712;--bg-3:#111827;
+      --text:#F9FAFB;--text-2:#D1D5DB;--text-3:#9CA3AF;--text-4:#6B7280;--text-5:#64748B;
+      --border:rgba(255,255,255,0.1);--border-hover:rgba(0,174,239,0.3);
+      --max-w:1280px;--pad-x:clamp(1rem,4vw,2rem);
       --ease-out:cubic-bezier(0.16,1,0.3,1);
     }
 
-    /* ── Utilities ── */
+    /* ═══════════════════════════════════════════
+       UTILITIES
+       ═══════════════════════════════════════════ */
     .container{max-width:var(--max-w);margin:0 auto;padding-left:var(--pad-x);padding-right:var(--pad-x)}
-    .flex{display:flex}
-    .items-center{align-items:center}
-    .justify-between{justify-content:space-between}
-    .justify-center{justify-content:center}
-    .gap-2{gap:0.5rem}
-    .gap-4{gap:1rem}
-    .gap-6{gap:1.5rem}
-    .gap-8{gap:2rem}
-    .grid{display:grid}
-    .grid-3{grid-template-columns:repeat(3,1fr)}
-    .grid-2{grid-template-columns:repeat(2,1fr)}
     .text-center{text-align:center}
     .relative{position:relative}
     .absolute{position:absolute}
     .inset-0{top:0;left:0;right:0;bottom:0}
     .z-10{z-index:10}
     .pointer-events-none{pointer-events:none}
-    .hidden{display:none}
 
-    /* ── Navbar ── */
+    /* ═══════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════ */
     .navbar{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;transition:background 0.3s,border-color 0.3s;border-bottom:1px solid transparent}
     .navbar.scrolled{background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-color:var(--border)}
     .navbar .container{height:100%;display:flex;align-items:center;justify-content:space-between}
@@ -65,11 +52,12 @@
     .navbar-link{font-size:14px;color:var(--text-3);transition:color 0.2s}
     .navbar-link:hover{color:var(--text)}
     .navbar-cta{display:none;align-items:center;gap:0.75rem}
-    .btn{font-size:14px;font-weight:600;padding:0.5rem 1.25rem;border-radius:8px;transition:all 0.2s}
-    .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--cyan-light));color:#fff}
-    .btn-primary:hover{transform:scale(1.03);box-shadow:0 0 20px rgba(0,174,239,0.3)}
+    .btn{font-size:14px;font-weight:600;padding:0.5rem 1.25rem;border-radius:8px;transition:all 0.2s;display:inline-block}
+    .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--cyan-light));color:#fff;box-shadow:0 4px 20px rgba(0,174,239,0.25)}
+    .btn-primary:hover{transform:scale(1.03);box-shadow:0 8px 40px rgba(0,174,239,0.35)}
     .btn-ghost{border:1px solid var(--border);color:var(--text-3)}
     .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+    .btn-lg{font-size:16px;padding:1rem 2rem}
     .navbar-toggle{display:flex;flex-direction:column;gap:4px;padding:8px}
     .navbar-toggle span{display:block;width:22px;height:2px;background:var(--text-2);transition:all 0.3s}
     .navbar-toggle.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
@@ -80,69 +68,119 @@
     .mobile-menu a{font-size:18px;color:var(--text-2)}
     .mobile-menu .btn{text-align:center}
 
-    /* ── Hero ── */
+    /* ═══════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════ */
     .hero{min-height:100dvh;display:flex;align-items:center;position:relative;overflow:hidden;background:linear-gradient(to bottom,#030712,#111827)}
-    .hero-bg{position:absolute;inset:0;background:url(assets/hero-bg.jpg) center/cover;opacity:0.15}
+    .hero-bg{position:absolute;inset:0;background:url(assets/hero-bg.jpg) center/cover;opacity:0.12}
     .hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:0.4;pointer-events:none}
     .hero .container{position:relative;z-index:10;padding-top:80px;padding-bottom:40px}
     .hero-grid{display:grid;grid-template-columns:1fr;gap:3rem;align-items:center}
     .hero-label{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;color:var(--cyan);margin-bottom:1rem}
-    .hero-title{font-size:clamp(48px,7vw,100px);font-weight:800;line-height:1.05;letter-spacing:-0.02em;background:linear-gradient(135deg,#fff,#00AEEF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.5rem}
-    .hero-desc{font-size:clamp(16px,1.2vw,18px);color:var(--text-3);max-width:520px;line-height:1.7;margin-bottom:2rem}
-    .hero-btns{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:3rem}
-    .hero-btns .btn{font-size:16px;padding:0.875rem 1.75rem}
-    .hero-btns .btn-ghost{display:flex;align-items:center;gap:0.5rem}
+    .hero-title{font-size:clamp(64px,7vw,110px);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:0.5rem;background:linear-gradient(135deg,#00AEEF,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-subtitle{font-size:clamp(20px,2vw,28px);font-weight:400;color:var(--text-2);max-width:520px;line-height:1.3;margin-bottom:1.5rem}
+    .hero-desc{font-size:16px;color:var(--text-3);max-width:440px;line-height:1.7;margin-bottom:2rem}
+    .hero-btns{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+    .hero-trust{font-size:12px;font-weight:500;letter-spacing:0.02em;color:var(--text-5);margin-bottom:2rem}
     .hero-stats{display:flex;flex-wrap:wrap;gap:2rem}
     .hero-stat .stat-num{font-family:'SF Mono',monospace;font-size:24px;font-weight:700;color:var(--cyan)}
     .hero-stat .stat-label{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-4)}
 
-    /* ── Orb ── */
+    /* ═══════════════════════════════════════════
+       ORB (from AzFIT_Hero_Orb.html)
+       ═══════════════════════════════════════════ */
     .orb-wrap{display:flex;align-items:center;justify-content:center;position:relative;height:min(400px,55vw)}
-    .orb{position:relative;width:min(320px,45vw);height:min(320px,45vw);border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,174,239,0.25),rgba(59,130,246,0.1) 40%,rgba(17,24,39,0.6) 70%,rgba(3,7,18,0.8));border:2px solid rgba(0,174,239,0.3);box-shadow:0 0 60px rgba(0,174,239,0.15),inset 0 0 40px rgba(0,174,239,0.05);animation:orbBreathe 4s ease-in-out infinite}
+    .orb-wrapper{position:relative;width:min(360px,50vw);height:min(360px,50vw)}
+    .orb-outer-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,0.15) 0%,transparent 70%);filter:blur(40px);animation:orbBreathe 4s ease-in-out infinite}
+    .orb-pulse-ring{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .orb-pulse-ring::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;border:1px solid rgba(0,174,239,0.15);animation:pulseRing 3s ease-out infinite}
+    .orb-pulse-ring:nth-child(2)::after{border-color:rgba(0,174,239,0.12);animation-delay:1s}
+    .orb-pulse-ring:nth-child(3)::after{border-color:rgba(0,174,239,0.08);animation-delay:2s}
+    .orb-main{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(0,174,239,0.25),rgba(59,130,246,0.1) 40%,rgba(17,24,39,0.6) 70%,rgba(3,7,18,0.8));border:2px solid rgba(0,174,239,0.3);backdrop-filter:blur(8px);box-shadow:0 0 60px rgba(0,174,239,0.15),inset 0 0 40px rgba(0,174,239,0.05);animation:orbBreathe 4s ease-in-out infinite}
+    .orb-wireframe{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,0.2)}
+    .orb-wireframe:nth-of-type(1){inset:15%;animation:spin 15s linear infinite}
+    .orb-wireframe:nth-of-type(2){inset:25%;border-color:rgba(0,174,239,0.15);animation:spin 20s linear infinite reverse}
+    .orb-wireframe:nth-of-type(3){inset:35%;border-color:rgba(0,174,239,0.1);animation:spin 10s linear infinite}
+    .orb-cross-v{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(0,174,239,0.15);transform:translateX(-50%)}
+    .orb-cross-h{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,174,239,0.15);transform:translateY(-50%)}
     .orb-logo{position:absolute;inset:10%;display:flex;align-items:center;justify-content:center}
     .orb-logo img{width:85%;height:85%;object-fit:contain;filter:drop-shadow(0 0 12px rgba(0,174,239,0.5))}
-    .orb-ring{position:absolute;inset:-10%;border-radius:50%;border:1px solid rgba(0,174,239,0.15);animation:spin 20s linear infinite}
-    .orb-ring:nth-child(2){inset:-20%;border-color:rgba(0,174,239,0.1);animation-duration:30s;animation-direction:reverse}
-    .orb-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px rgba(0,174,239,0.8)}
-    .orb-dot:nth-of-type(1){top:0;left:50%;transform:translate(-50%,-50%)}
-    .orb-dot:nth-of-type(2){bottom:0;left:50%;transform:translate(-50%,50%)}
-    .orb-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,0.15),transparent 70%);filter:blur(40px);animation:orbBreathe 4s ease-in-out infinite}
+    .orb-core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30%;height:30%;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,0.4) 0%,rgba(59,130,246,0.15) 50%,transparent 100%);filter:blur(8px)}
+    .orb-hotspot{position:absolute;border-radius:50%;background:var(--cyan);animation:orbBreathe 4s ease-in-out infinite}
+    .orb-hotspot:nth-of-type(1){width:10px;height:10px;top:20%;left:70%;box-shadow:0 0 12px rgba(0,174,239,0.8),0 0 24px rgba(0,174,239,0.4);animation-delay:0.5s}
+    .orb-hotspot:nth-of-type(2){width:8px;height:8px;top:65%;left:25%;box-shadow:0 0 10px rgba(0,174,239,0.7),0 0 20px rgba(0,174,239,0.3);animation-delay:1.5s}
+    .orb-hotspot:nth-of-type(3){width:6px;height:6px;top:75%;left:60%;background:var(--cyan-light);box-shadow:0 0 8px rgba(59,130,246,0.7),0 0 16px rgba(59,130,246,0.3);animation-delay:2.5s}
+    .orb-orbit{position:absolute;inset:0;animation:spin 20s linear infinite;pointer-events:none}
+    .orb-orbit:nth-of-type(2){animation:spin 30s linear infinite reverse}
+    .orb-orbit-dot{position:absolute;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px rgba(0,174,239,0.6)}
 
     @keyframes orbBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulseRing{0%{transform:scale(0.8);opacity:0.6}100%{transform:scale(1.3);opacity:0}}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-    /* ── Trusted By ── */
+    /* ═══════════════════════════════════════════
+       TRUSTED BY
+       ═══════════════════════════════════════════ */
     .trusted{padding:4rem 0;background:var(--bg-2)}
     .trusted-label{text-align:center;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-4);margin-bottom:2rem}
     .trusted-logos{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem 3rem}
     .trusted-logos span{font-size:16px;font-weight:600;color:var(--text-4);opacity:0.4;transition:opacity 0.3s}
     .trusted-logos span:hover{opacity:0.7}
 
-    /* ── Features ── */
-    .features{padding:6rem 0;background:var(--bg-2)}
+    /* ═══════════════════════════════════════════
+       AI SHOWCASE (from AzFIT_AI_Showcase.html)
+       ═══════════════════════════════════════════ */
+    .ai-showcase{padding:6rem 0;background:linear-gradient(to bottom,var(--bg-2),var(--bg-3));position:relative;overflow:hidden}
+    .ai-radial-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center bottom,rgba(0,174,239,0.1) 0%,transparent 60%)}
+    .ai-showcase .container{display:grid;grid-template-columns:1fr;gap:3rem;align-items:center;position:relative;z-index:10}
+    .ai-label{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;color:var(--cyan);margin-bottom:1rem;display:block}
+    .ai-title{font-size:clamp(36px,3.5vw,56px);font-weight:700;color:var(--text);letter-spacing:-0.015em;line-height:1.1;margin-bottom:1.5rem}
+    .ai-desc{font-size:16px;color:var(--text-3);max-width:420px;line-height:1.7;margin-bottom:2rem}
+    .ai-features{list-style:none;margin-bottom:2rem}
+    .ai-features li{display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:1rem;font-size:14px;color:var(--text-2)}
+    .ai-features li svg{flex-shrink:0;width:18px;height:18px;color:var(--cyan);margin-top:2px}
+
+    /* AI Visual */
+    .ai-visual{display:flex;align-items:center;justify-content:center;position:relative}
+    .ai-visual-inner{position:relative;width:360px;height:360px;display:flex;align-items:center;justify-content:center}
+    .ai-pedestal{position:absolute;bottom:0;left:50%;transform:translate(-50%,32px);width:200px;height:30px;background:radial-gradient(ellipse,rgba(0,174,239,0.08) 0%,transparent 70%);border-radius:50%}
+    .ai-pulse-waves{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .ai-pulse-wave{position:absolute;border-radius:50%;border:1px solid rgba(0,174,239,0.15);width:320px;height:320px;animation:pulseRing 3s ease-out infinite}
+    .ai-pulse-wave:nth-child(2){border-color:rgba(0,174,239,0.12);animation-delay:1s}
+    .ai-pulse-wave:nth-child(3){border-color:rgba(0,174,239,0.08);animation-delay:2s}
+    .ai-outer-ring{position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(0,174,239,0.15);animation:spin 30s linear infinite;pointer-events:none}
+    .ai-skill-icon{position:absolute;display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:rgba(0,174,239,0.08);animation:spin 30s linear infinite reverse}
+    .ai-skill-icon svg{width:22px;height:22px;color:var(--cyan)}
+    .ai-central-orb{position:relative;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(0,174,239,0.2) 0%,transparent 70%);border:2px solid rgba(0,174,239,0.3);display:flex;align-items:center;justify-content:center;animation:orbBreathe 4s ease-in-out infinite}
+    .ai-central-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(0,174,239,0.3) 0%,transparent 60%)}
+    .ai-central-orb svg{position:relative;z-index:2;width:40px;height:40px;color:var(--cyan)}
+    .ai-cue-card{position:absolute;top:10%;right:-5%;max-width:200px;padding:12px 16px;background:linear-gradient(135deg,rgba(17,24,39,0.8),rgba(31,41,55,0.6));border:1px solid rgba(0,174,239,0.15);border-radius:8px;animation:cueFade 4s ease-in-out infinite}
+    .ai-cue-card p{color:var(--text-2);font-size:13px;line-height:1.5}
+
+    @keyframes cueFade{0%,100%{opacity:0;transform:translateY(10px)}20%,80%{opacity:1;transform:translateY(0)}}
+
+    /* ═══════════════════════════════════════════
+       DATA STREAM TICKER
+       ═══════════════════════════════════════════ */
+    .data-stream{padding:4rem 0;background:var(--bg-3);overflow:hidden}
+    .data-stream-mask{mask-image:linear-gradient(to right,transparent 0%,black 15%,black 85%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 15%,black 85%,transparent 100%)}
+    .data-stream-row{overflow:hidden;margin-bottom:1rem;white-space:nowrap}
+    .data-stream-text{display:inline-block;font-family:monospace;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;animation:tickerScroll linear infinite}
+    .data-stream-row:nth-child(1) .data-stream-text{font-size:clamp(14px,1.2vw,18px);color:rgba(209,213,219,0.4);animation-duration:40s}
+    .data-stream-row:nth-child(2) .data-stream-text{font-size:clamp(14px,1.2vw,18px);color:rgba(209,213,219,0.35);animation-duration:45s;animation-direction:reverse}
+    .data-stream-row:nth-child(3) .data-stream-text{font-size:clamp(14px,1.2vw,18px);color:rgba(209,213,219,0.3);animation-duration:55s}
+    @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* ═══════════════════════════════════════════
+       DASHBOARD PREVIEW
+       ═══════════════════════════════════════════ */
+    .dashboard{padding:6rem 0;background:var(--bg-2);position:relative;overflow:hidden}
+    .dashboard::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,174,239,0.05),transparent 60%);pointer-events:none}
     .section-label{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;color:var(--cyan);margin-bottom:1rem}
     .section-title{font-size:clamp(32px,3.5vw,52px);font-weight:700;line-height:1.1;letter-spacing:-0.015em;margin-bottom:1rem}
     .section-desc{font-size:16px;color:var(--text-3);max-width:560px;line-height:1.6}
-    .feature-grid{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-top:3rem}
-    .feature-card{padding:1.5rem;border-radius:12px;background:linear-gradient(135deg,rgba(17,24,39,0.8),rgba(31,41,55,0.6));border:1px solid var(--border);transition:border-color 0.3s,transform 0.3s}
-    .feature-card:hover{border-color:var(--border-hover);transform:translateY(-4px)}
-    .feature-icon{width:48px;height:48px;border-radius:50%;background:rgba(0,174,239,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
-    .feature-icon svg{width:22px;height:22px;color:var(--cyan)}
-    .feature-card h3{font-size:18px;font-weight:600;margin-bottom:0.5rem}
-    .feature-card p{font-size:14px;color:var(--text-3);line-height:1.6}
-
-    /* ── AI Showcase ── */
-    .ai-showcase{padding:6rem 0;background:linear-gradient(to bottom,var(--bg-2),var(--bg-3))}
-    .ai-showcase .container{display:grid;grid-template-columns:1fr;gap:3rem;align-items:center}
-    .ai-list{list-style:none;margin:1.5rem 0}
-    .ai-list li{display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:1rem;font-size:14px;color:var(--text-2)}
-    .ai-list li svg{flex-shrink:0;width:18px;height:18px;color:var(--cyan);margin-top:2px}
-
-    /* ── Dashboard Preview ── */
-    .dashboard{padding:6rem 0;background:var(--bg-2);position:relative;overflow:hidden}
-    .dashboard::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,174,239,0.05),transparent 60%);pointer-events:none}
     .dashboard-mock{max-width:900px;margin:3rem auto 0;border-radius:16px;border:1px solid var(--border);background:linear-gradient(135deg,rgba(17,24,39,0.9),rgba(31,41,55,0.8));padding:2rem;position:relative}
-    .mock-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .mock-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
     .mock-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--cyan-light))}
     .mock-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.5rem}
     .mock-kpi{padding:1rem;border-radius:8px;background:rgba(31,41,55,0.6);border:1px solid rgba(255,255,255,0.06)}
@@ -152,7 +190,21 @@
     .mock-bar{flex:1;border-radius:4px 4px 0 0;transition:all 0.3s}
     .mock-bar:hover{opacity:0.8}
 
-    /* ── Testimonials ── */
+    /* ═══════════════════════════════════════════
+       FEATURE GRID
+       ═══════════════════════════════════════════ */
+    .features{padding:6rem 0;background:var(--bg-2)}
+    .feature-grid{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-top:3rem}
+    .feature-card{padding:1.5rem;border-radius:12px;background:linear-gradient(135deg,rgba(17,24,39,0.8),rgba(31,41,55,0.6));border:1px solid var(--border);transition:border-color 0.3s,transform 0.3s}
+    .feature-card:hover{border-color:var(--border-hover);transform:translateY(-4px)}
+    .feature-icon{width:48px;height:48px;border-radius:50%;background:rgba(0,174,239,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+    .feature-icon svg{width:22px;height:22px;color:var(--cyan)}
+    .feature-card h3{font-size:18px;font-weight:600;margin-bottom:0.5rem}
+    .feature-card p{font-size:14px;color:var(--text-3);line-height:1.6}
+
+    /* ═══════════════════════════════════════════
+       TESTIMONIALS
+       ═══════════════════════════════════════════ */
     .testimonials{padding:6rem 0;background:var(--bg-2)}
     .testimonial-grid{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-top:3rem}
     .testimonial-card{padding:2rem;border-radius:12px;background:linear-gradient(135deg,rgba(17,24,39,0.8),rgba(31,41,55,0.6));border:1px solid rgba(255,255,255,0.06)}
@@ -164,16 +216,19 @@
     .testimonial-author .name{font-weight:600;color:var(--text-2)}
     .testimonial-author .role{font-size:14px;color:var(--text-3)}
 
-    /* ── CTA ── */
+    /* ═══════════════════════════════════════════
+       CTA
+       ═══════════════════════════════════════════ */
     .cta{padding:clamp(6rem,10vh,10rem) 0;background:linear-gradient(to bottom,var(--bg-3),var(--bg-2));position:relative;overflow:hidden}
     .cta::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,174,239,0.05),transparent 50%);pointer-events:none;animation:glowPulse 4s ease-in-out infinite}
     .cta .container{position:relative;z-index:10;text-align:center;max-width:720px}
     .cta-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin:2rem 0}
-    .cta-btns .btn{font-size:18px;padding:1rem 2.5rem}
     .cta-note{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-4)}
     @keyframes glowPulse{0%,100%{opacity:0.5}50%{opacity:1}}
 
-    /* ── Footer ── */
+    /* ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ */
     .footer{padding:4rem 0 2rem;background:var(--bg-2);border-top:1px solid var(--border)}
     .footer-grid{display:grid;grid-template-columns:1fr;gap:2rem;margin-bottom:3rem}
     .footer-brand .logo{height:32px;width:auto;margin-bottom:1rem}
@@ -184,14 +239,18 @@
     .footer-bottom{padding-top:2rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:1rem;align-items:center;text-align:center}
     .footer-bottom p{font-size:13px;color:var(--text-4)}
 
-    /* ── Scroll Reveal ── */
+    /* ═══════════════════════════════════════════
+       SCROLL REVEAL
+       ═══════════════════════════════════════════ */
     .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s var(--ease-out),transform 0.8s var(--ease-out)}
     .reveal.visible{opacity:1;transform:translateY(0)}
     .reveal-delay-1{transition-delay:0.1s}
     .reveal-delay-2{transition-delay:0.2s}
     .reveal-delay-3{transition-delay:0.3s}
 
-    /* ── Responsive ── */
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════ */
     @media(min-width:640px){
       .feature-grid{grid-template-columns:repeat(2,1fr)}
       .testimonial-grid{grid-template-columns:repeat(2,1fr)}
@@ -208,11 +267,24 @@
       .ai-showcase .container{grid-template-columns:45% 55%}
       .footer-bottom{flex-direction:row;justify-content:space-between}
     }
+    @media(max-width:640px){
+      .ai-visual-inner{width:280px;height:280px}
+      .ai-pulse-wave{width:260px;height:260px}
+      .ai-outer-ring{width:220px;height:220px}
+      .ai-skill-icon{width:40px;height:40px}
+      .ai-skill-icon svg{width:18px;height:18px}
+      .ai-central-orb{width:120px;height:120px}
+      .ai-central-orb svg{width:32px;height:32px}
+      .ai-cue-card{right:-10%;max-width:160px}
+      .ai-cue-card p{font-size:11px}
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- ═══════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════ -->
   <nav class="navbar" id="navbar">
     <div class="container">
       <a href="#"><img src="assets/AzFIT_Logo_WhiteBackground_Text.png" alt="AzFIT" class="navbar-logo"></a>
@@ -240,7 +312,9 @@
     </div>
   </nav>
 
-  <!-- Hero -->
+  <!-- ═══════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════ -->
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-noise"></div>
@@ -248,36 +322,52 @@
       <div class="hero-grid">
         <div>
           <p class="hero-label reveal">The First of Its Kind</p>
-          <h1 class="hero-title reveal reveal-delay-1">Smart Training.<br>Engineered For You.</h1>
-          <p class="hero-desc reveal reveal-delay-2">The professional fitness platform that connects trainers and clients with data-driven insights, comprehensive assessments, and intelligent program design.</p>
+          <h1 class="hero-title reveal reveal-delay-1">AZFIT</h1>
+          <p class="hero-subtitle reveal reveal-delay-1">The Operating System for Modern Personal Training</p>
+          <p class="hero-desc reveal reveal-delay-2">The all-in-one platform that combines AI-driven programming, real-time biometric sync, and seamless client engagement into a single operating system for modern coaches.</p>
           <div class="hero-btns reveal reveal-delay-2">
-            <a href="#signup" class="btn btn-primary">Start Free Trial</a>
-            <a href="#demo" class="btn btn-ghost">
+            <a href="#signup" class="btn btn-primary btn-lg">Start 14-Day Trial</a>
+            <a href="#features" class="btn btn-ghost btn-lg" style="display:inline-flex;align-items:center;gap:0.5rem">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Watch Demo
+              See Features
             </a>
           </div>
+          <p class="hero-trust reveal reveal-delay-2">Trusted by 500+ coaches worldwide</p>
           <div class="hero-stats reveal reveal-delay-3">
-            <div class="hero-stat"><div class="stat-num" data-target="500">0</div><div class="stat-label">Coaches Onboarded</div></div>
-            <div class="hero-stat"><div class="stat-num" data-target="50000">0</div><div class="stat-label">Workouts Delivered</div></div>
-            <div class="hero-stat"><div class="stat-num" data-target="99.9" data-decimal="1">0</div><div class="stat-label">Uptime SLA</div></div>
+            <div class="hero-stat"><div class="stat-num" data-target="200">0</div><div class="stat-label">Exercises</div></div>
+            <div class="hero-stat"><div class="stat-num" data-target="84">0</div><div class="stat-label">Templates</div></div>
+            <div class="hero-stat"><div class="stat-num" data-target="12">0</div><div class="stat-label">BioPrint Sites</div></div>
           </div>
         </div>
         <div class="orb-wrap reveal reveal-delay-2">
-          <div class="orb-glow"></div>
-          <div class="orb-ring"></div>
-          <div class="orb-ring"></div>
-          <div class="orb">
-            <div class="orb-logo"><img src="assets/AzFIT_LOGO_Transparent.png" alt="AzFIT"></div>
+          <div class="orb-wrapper">
+            <div class="orb-outer-glow"></div>
+            <div class="orb-pulse-ring"></div>
+            <div class="orb-pulse-ring"></div>
+            <div class="orb-pulse-ring"></div>
+            <div class="orb-main">
+              <div class="orb-wireframe"></div>
+              <div class="orb-wireframe"></div>
+              <div class="orb-wireframe"></div>
+              <div class="orb-cross-v"></div>
+              <div class="orb-cross-h"></div>
+              <div class="orb-logo"><img src="assets/AzFIT_LOGO_Transparent.png" alt="AzFIT"></div>
+              <div class="orb-core"></div>
+              <div class="orb-hotspot"></div>
+              <div class="orb-hotspot"></div>
+              <div class="orb-hotspot"></div>
+            </div>
+            <div class="orb-orbit"><div class="orb-orbit-dot" style="top:0;left:50%;transform:translate(-50%,-50%);width:8px;height:8px"></div></div>
+            <div class="orb-orbit"><div class="orb-orbit-dot" style="bottom:0;left:50%;transform:translate(-50%,50%);width:6px;height:6px;background:var(--cyan-light)"></div></div>
           </div>
-          <div class="orb-dot"></div>
-          <div class="orb-dot"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trusted By -->
+  <!-- ═══════════════════════════════════════════
+       TRUSTED BY
+       ═══════════════════════════════════════════ -->
   <section class="trusted">
     <div class="container">
       <p class="trusted-label reveal">Trusted by leading fitness brands</p>
@@ -288,42 +378,58 @@
     </div>
   </section>
 
-  <!-- AI Showcase -->
+  <!-- ═══════════════════════════════════════════
+       AI SHOWCASE
+       ═══════════════════════════════════════════ -->
   <section class="ai-showcase" id="features">
+    <div class="ai-radial-glow"></div>
     <div class="container">
       <div>
-        <p class="section-label reveal">Artificial Intelligence</p>
-        <h2 class="section-title reveal reveal-delay-1">AI That Coaches With You</h2>
-        <p class="section-desc reveal reveal-delay-1">AzFIT's AI understands your programming philosophy, adapts to client feedback, and generates coaching cues in real time.</p>
-        <ul class="ai-list reveal reveal-delay-2">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Context-aware — knows the page you're on and the client you're viewing</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Drag-and-drop floating assistant, always within reach</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Learns your coaching style with every interaction</li>
+        <span class="ai-label reveal">Artificial Intelligence</span>
+        <h2 class="ai-title reveal reveal-delay-1">AI That Coaches With You</h2>
+        <p class="ai-desc reveal reveal-delay-1">AzFIT's AI understands your programming philosophy, adapts to client feedback, and generates coaching cues in real time. It's not a chatbot — it's a coaching partner.</p>
+        <ul class="ai-features reveal reveal-delay-2">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Context-aware — knows the page you're on and the client you're viewing</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Drag-and-drop floating assistant, always within reach</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Learns your coaching style with every interaction</span></li>
         </ul>
-        <a href="#roadmap" class="btn btn-primary reveal reveal-delay-3">Explore AI Features</a>
+        <a href="#features" class="btn btn-primary btn-lg reveal reveal-delay-3">Explore AI Features</a>
       </div>
-      <div class="reveal reveal-delay-2">
-        <div class="dashboard-mock" style="margin-top:0">
-          <div class="mock-header">
-            <div class="mock-avatar"></div>
-            <div><div style="font-weight:600">Coach Dashboard</div><div style="font-size:12px;color:var(--text-4)">AI Assistant Active</div></div>
+      <div class="ai-visual reveal reveal-delay-2">
+        <div class="ai-visual-inner">
+          <div class="ai-pedestal"></div>
+          <div class="ai-pulse-waves">
+            <div class="ai-pulse-wave"></div>
+            <div class="ai-pulse-wave"></div>
+            <div class="ai-pulse-wave"></div>
           </div>
-          <div style="padding:1rem;background:rgba(0,174,239,0.05);border-radius:8px;margin-bottom:1rem;border:1px solid rgba(0,174,239,0.15)">
-            <div style="font-size:12px;color:var(--cyan);margin-bottom:0.5rem">AI Coaching Cue</div>
-            <div style="font-size:14px;color:var(--text-2)">"Client's squat depth improved 12% this week. Recommend progressing to 85% 1RM."</div>
+          <div class="ai-outer-ring" id="iconRing"></div>
+          <div class="ai-central-orb">
+            <div class="ai-central-glow"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/><path d="M12 2v3"/><path d="M12 14v3"/><path d="M5 8h3"/><path d="M16 8h3"/><path d="M7 5a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/><path d="M17 5a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/></svg>
           </div>
-          <div class="mock-kpis">
-            <div class="mock-kpi"><div class="mock-kpi-label">Active Clients</div><div class="mock-kpi-value">24</div></div>
-            <div class="mock-kpi"><div class="mock-kpi-label">Sessions Today</div><div class="mock-kpi-value">8</div></div>
-            <div class="mock-kpi"><div class="mock-kpi-label">Compliance</div><div class="mock-kpi-value">94%</div></div>
-            <div class="mock-kpi"><div class="mock-kpi-label">Revenue</div><div class="mock-kpi-value">$12.5k</div></div>
+          <div class="ai-cue-card" id="cueCard">
+            <p id="cueText">PR alert: Sarah hit a new 1RM on deadlifts!</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Dashboard Preview -->
+  <!-- ═══════════════════════════════════════════
+       DATA STREAM TICKER
+       ═══════════════════════════════════════════ -->
+  <section class="data-stream">
+    <div class="data-stream-mask">
+      <div class="data-stream-row"><div class="data-stream-text" id="ticker1"></div></div>
+      <div class="data-stream-row"><div class="data-stream-text" id="ticker2"></div></div>
+      <div class="data-stream-row"><div class="data-stream-text" id="ticker3"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       DASHBOARD PREVIEW
+       ═══════════════════════════════════════════ -->
   <section class="dashboard" id="how-it-works">
     <div class="container text-center">
       <p class="section-label reveal">Experience</p>
@@ -333,7 +439,7 @@
         <div class="mock-header">
           <div style="display:flex;align-items:center;gap:0.75rem">
             <div class="mock-avatar"></div>
-            <div><div style="font-weight:600">Sarah Chen</div><div style="font-size:12px;color:var(--text-4)">Strength Phase • Week 4</div></div>
+            <div><div style="font-weight:600">Sarah Chen</div><div style="font-size:12px;color:var(--text-4)">Strength Phase &bull; Week 4</div></div>
           </div>
           <div style="font-size:12px;color:var(--cyan);font-weight:500">Live Session</div>
         </div>
@@ -368,7 +474,9 @@
     </div>
   </section>
 
-  <!-- Feature Grid -->
+  <!-- ═══════════════════════════════════════════
+       FEATURE GRID
+       ═══════════════════════════════════════════ -->
   <section class="features" id="pricing">
     <div class="container">
       <div class="text-center">
@@ -411,7 +519,9 @@
     </div>
   </section>
 
-  <!-- Testimonials -->
+  <!-- ═══════════════════════════════════════════
+       TESTIMONIALS
+       ═══════════════════════════════════════════ -->
   <section class="testimonials" id="about">
     <div class="container">
       <div class="text-center">
@@ -466,20 +576,24 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- ═══════════════════════════════════════════
+       CTA
+       ═══════════════════════════════════════════ -->
   <section class="cta">
     <div class="container">
       <h2 class="section-title reveal">Ready to Transform Your Coaching?</h2>
       <p class="section-desc reveal reveal-delay-1" style="margin:1rem auto 0">Join 500+ coaches already using AzFIT. Start your free 14-day trial today — no credit card required.</p>
       <div class="cta-btns reveal reveal-delay-2">
-        <a href="#signup" class="btn btn-primary">Start Free Trial</a>
-        <a href="#signup" class="btn btn-ghost">View Pricing</a>
+        <a href="#signup" class="btn btn-primary btn-lg">Start Free Trial</a>
+        <a href="#signup" class="btn btn-ghost btn-lg">View Pricing</a>
       </div>
       <p class="cta-note reveal reveal-delay-3">Free for 14 days &bull; Cancel anytime &bull; Full feature access</p>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
@@ -517,13 +631,17 @@
   </footer>
 
   <script>
-    // ── Navbar scroll effect ──
+    // ═══════════════════════════════════════════
+    // NAVBAR SCROLL EFFECT
+    // ═══════════════════════════════════════════
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
       navbar.classList.toggle('scrolled', window.scrollY > 100);
     }, { passive: true });
 
-    // ── Mobile menu toggle ──
+    // ═══════════════════════════════════════════
+    // MOBILE MENU TOGGLE
+    // ═══════════════════════════════════════════
     const navToggle = document.getElementById('navToggle');
     const mobileMenu = document.getElementById('mobileMenu');
     navToggle.addEventListener('click', () => {
@@ -537,7 +655,9 @@
       });
     });
 
-    // ── Scroll reveal ──
+    // ═══════════════════════════════════════════
+    // SCROLL REVEAL
+    // ═══════════════════════════════════════════
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -546,43 +666,84 @@
         }
       });
     }, { threshold: 0.1, rootMargin: '-50px' });
-
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // ── Stat counter animation ──
+    // ═══════════════════════════════════════════
+    // STAT COUNTER ANIMATION
+    // ═══════════════════════════════════════════
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
         const el = entry.target;
         const target = parseFloat(el.dataset.target);
-        const decimal = parseInt(el.dataset.decimal || '0');
         const duration = 1500;
         const start = performance.now();
-
         const tick = (now) => {
           const progress = Math.min((now - start) / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
-          const current = target * eased;
-          el.textContent = decimal > 0
-            ? current.toFixed(decimal)
-            : current >= 1000
-              ? Math.floor(current).toLocaleString()
-              : Math.floor(current);
+          const current = Math.floor(target * eased);
+          el.textContent = current >= 1000 ? current.toLocaleString() : current;
           if (progress < 1) requestAnimationFrame(tick);
-          else {
-            el.textContent = decimal > 0
-              ? target.toFixed(decimal)
-              : target >= 1000
-                ? target.toLocaleString()
-                : target;
-          }
+          else el.textContent = target >= 1000 ? target.toLocaleString() : target;
         };
         requestAnimationFrame(tick);
         counterObserver.unobserve(el);
       });
     }, { threshold: 0.5 });
-
     document.querySelectorAll('.stat-num').forEach(el => counterObserver.observe(el));
+
+    // ═══════════════════════════════════════════
+    // AI SKILL ICONS — positioned around the ring
+    // ═══════════════════════════════════════════
+    const skillIcons = [
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/><path d="M12 2v3"/><path d="M12 14v3"/><path d="M5 8h3"/><path d="M16 8h3"/><path d="M7 5a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/><path d="M17 5a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V8a3 3 0 0 0-3-3Z"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5H20.5"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>',
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>',
+    ];
+    const ring = document.getElementById('iconRing');
+    const radius = 140;
+    skillIcons.forEach((svg, i) => {
+      const angle = (i * 360) / skillIcons.length;
+      const rad = (angle * Math.PI) / 180;
+      const x = Math.cos(rad) * radius;
+      const y = Math.sin(rad) * radius;
+      const iconDiv = document.createElement('div');
+      iconDiv.className = 'ai-skill-icon';
+      iconDiv.style.left = `calc(50% + ${x}px - 24px)`;
+      iconDiv.style.top = `calc(50% + ${y}px - 24px)`;
+      iconDiv.innerHTML = svg;
+      ring.appendChild(iconDiv);
+    });
+
+    // ═══════════════════════════════════════════
+    // COACHING CUES — rotating text
+    // ═══════════════════════════════════════════
+    const coachingCues = [
+      "Client's squat depth improved 12% this week",
+      "Recommend deload for Client 247 — HRV down 15%",
+      "PR alert: Sarah hit a new 1RM on deadlifts!",
+    ];
+    let cueIndex = 0;
+    const cueText = document.getElementById('cueText');
+    setInterval(() => {
+      cueIndex = (cueIndex + 1) % coachingCues.length;
+      cueText.textContent = coachingCues[cueIndex];
+    }, 4000);
+
+    // ═══════════════════════════════════════════
+    // DATA STREAM TICKER
+    // ═══════════════════════════════════════════
+    const row1 = "LOAD \u2022 VOLUME \u2022 INTENSITY \u2022 HR_ZONE \u2022 RECOVERY \u2022 STREAK \u2022 SYNC \u2022 COACH \u2022 CLIENT \u2022 PROGRESS \u2022 METRICS \u2022 PERFORMANCE \u2022 ";
+    const row2 = "AI_COACH \u2022 BIOPRINT \u2022 TDEE_CALC \u2022 WEARABLE \u2022 MACRO \u2022 SET \u2022 REP \u2022 REST \u2022 PERIODIZE \u2022 ANALYZE \u2022 PREDICT \u2022 RETAIN \u2022 ";
+    const row3 = "SESSION_01 \u2022 SESSION_02 \u2022 CLIENT_247 \u2022 CHECK_IN \u2022 STREAK_14 \u2022 GOAL_HIT \u2022 PR_SET \u2022 RECOVERY_95% \u2022 SLEEP_A \u2022 HRV_62 \u2022 ";
+    document.getElementById('ticker1').innerHTML = row1.repeat(6);
+    document.getElementById('ticker2').innerHTML = row2.repeat(6);
+    document.getElementById('ticker3').innerHTML = row3.repeat(8);
   </script>
 </body>
 </html>
