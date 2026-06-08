@@ -1,13 +1,12 @@
 /**
- * Auth Store — Central authentication state
+ * Auth Store — Central authentication state (LocalStorage Mode)
  *
  * Uses Zustand for reactive auth state.
- * Supabase Auth handles session persistence (localStorage/cookies) internally.
- * This store mirrors the Supabase session + adds coach profile/role.
+ * Local auth handles session persistence via localStorage.
+ * This store mirrors the local session + adds coach profile/role.
  */
 
 import { create } from 'zustand'
-import type { User, Session } from '@supabase/supabase-js'
 import type { CoachProfile } from '../lib/auth'
 import {
   signIn,
@@ -16,7 +15,8 @@ import {
   getSession,
   getCoachProfile,
   onAuthStateChange,
-} from '../lib/auth'
+} from '../lib/localAuth'
+import type { LocalSession } from '../lib/localAuth'
 
 export type UserRole = 'admin' | 'coach'
 
@@ -28,8 +28,8 @@ interface DemoUser {
 
 interface AuthState {
   // ── State ──────────────────────────────────────────────────────
-  user: User | DemoUser | null
-  session: Session | null
+  user: DemoUser | null
+  session: LocalSession | null
   profile: CoachProfile | null
   isAuthenticated: boolean
   isLoading: boolean
@@ -42,8 +42,8 @@ interface AuthState {
   logout: () => Promise<void>
   loadSession: () => Promise<void>
   enableDemoMode: () => void
-  setUser: (user: User | null) => void
-  setSession: (session: Session | null) => void
+  setUser: (user: DemoUser | null) => void
+  setSession: (session: LocalSession | null) => void
   setProfile: (profile: CoachProfile | null) => void
   setRole: (role: UserRole | null) => void
 }
@@ -69,7 +69,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
 
     // Fetch coach profile
-    const { profile: coachProfile } = await getCoachProfile(session.user.id)
+    const { profile: coachProfile } = await getCoachProfile(session.coachId)
 
     set({
       user: session.user,
@@ -87,23 +87,27 @@ export const useAuthStore = create<AuthState>((set) => ({
   // ── Register ───────────────────────────────────────────────────
   register: async (email, password, metadata) => {
     set({ isLoading: true })
-    const { error } = await signUp(email, password, metadata)
+    const { user, error } = await signUp(email, password, metadata)
 
     if (error) {
       set({ isLoading: false })
       return { error: error.message }
     }
 
-    // After signup, user needs to verify email before signing in
-    // Try auto-login anyway (works if email confirmation is disabled)
+    if (!user) {
+      set({ isLoading: false })
+      return { error: 'Registration failed' }
+    }
+
+    // Auto-login after signup (local auth does this automatically)
     const { session, error: signInError } = await signIn(email, password)
 
     if (signInError || !session) {
       set({ isLoading: false })
-      return { error: null } // Success but needs email verification
+      return { error: signInError?.message || 'Auto-login failed' }
     }
 
-    const { profile: coachProfile } = await getCoachProfile(session.user.id)
+    const { profile: coachProfile } = await getCoachProfile(session.coachId)
 
     set({
       user: session.user,
@@ -142,7 +146,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       return
     }
 
-    const { profile: coachProfile } = await getCoachProfile(session.user.id)
+    const { profile: coachProfile } = await getCoachProfile(session.coachId)
 
     set({
       user: session.user,
@@ -163,7 +167,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       user_metadata: { full_name: 'Demo Trainer' },
     }
     set({
-      user: demoUser as unknown as User,
+      user: demoUser,
       session: null,
       profile: { id: demoUser.id, full_name: 'Demo Trainer', email: demoUser.email, role: 'coach', created_at: new Date().toISOString() },
       isAuthenticated: true,
@@ -188,21 +192,6 @@ export function initAuthListener() {
   if (authListenerInitialized) return
   authListenerInitialized = true
 
-  const { data } = onAuthStateChange((event, session) => {
-    const store = useAuthStore.getState()
-
-    if (event === 'SIGNED_IN' && session) {
-      getCoachProfile(session.user.id).then(({ profile }) => {
-        store.setUser(session.user)
-        store.setSession(session)
-        store.setProfile(profile)
-      })
-    }
-
-    if (event === 'SIGNED_OUT') {
-      store.logout()
-    }
-  })
-
-  return data.subscription
+  // Local auth doesn't have real-time state changes
+  onAuthStateChange(() => {})
 }

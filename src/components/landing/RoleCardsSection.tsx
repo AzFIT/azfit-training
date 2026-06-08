@@ -20,7 +20,7 @@ export default function RoleCardsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Trainer Card */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.5, ease: EASE }} className="group relative min-h-[480px] rounded-[20px] overflow-hidden cursor-pointer">
-            <img src="/trainer-role-card.jpg" alt="Trainer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms]" />
+            <img src="./trainer-role-card.jpg" alt="Trainer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms]" />
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,10,10,0.85)] via-[rgba(10,10,10,0.3)] to-transparent" />
             <div className="relative h-full min-h-[480px] flex flex-col justify-end p-8 sm:p-10">
               <span className="inline-block self-start px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider text-cyan bg-cyan/15 mb-4">For Trainers</span>
@@ -34,7 +34,7 @@ export default function RoleCardsSection() {
 
           {/* Client Card */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: 0.2, duration: 0.5, ease: EASE }} className="group relative min-h-[480px] rounded-[20px] overflow-hidden cursor-pointer">
-            <img src="/client-role-card.jpg" alt="Client" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms]" />
+            <img src="./client-role-card.jpg" alt="Client" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms]" />
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,10,10,0.85)] via-[rgba(10,10,10,0.3)] to-transparent" />
             <div className="relative h-full min-h-[480px] flex flex-col justify-end p-8 sm:p-10">
               <span className="inline-block self-start px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider text-cyan bg-cyan/15 mb-4">For Clients</span>

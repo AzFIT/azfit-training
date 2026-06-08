@@ -262,7 +262,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {/* Mobile User */}
               <div className={`p-4 border-t ${sidebarBorder}`}>
                 <div className="flex items-center gap-3">
-                  <img src="/avatar-placeholder.png" alt="User" className="w-9 h-9 rounded-full object-cover" />
+                  <img src="./avatar-placeholder.png" alt="User" className="w-9 h-9 rounded-full object-cover" />
                   <div className="flex-1">
                     <p className={`${textPrimary} text-sm font-medium`}>{profile?.full_name || user?.email?.split('@')[0] || 'Trainer'}</p>
                     <p className={`${textMuted} text-xs`}>{isAdmin ? 'Admin' : 'Coach'}</p>
@@ -335,7 +335,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               onClick={() => navigate('/settings')}
               className={`w-9 h-9 rounded-full overflow-hidden ring-2 ${ringColor} ${hoverRing} transition-all`}
             >
-              <img src="/avatar-placeholder.png" alt="User" className="w-full h-full object-cover" />
+              <img src="./avatar-placeholder.png" alt="User" className="w-full h-full object-cover" />
             </button>
           </div>
         </div>
