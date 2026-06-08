@@ -10,6 +10,9 @@ import {
   Plus,
   Filter,
   User,
+  Pencil,
+  Trash2,
+  CheckCircle2,
 } from 'lucide-react'
 import {
   format,
@@ -250,10 +253,12 @@ function SessionOverlay({
   session,
   onEventClick,
   minHeight,
+  hasWorkout,
 }: {
   session: CalendarSession
   onEventClick: (session: CalendarSession) => void
   minHeight: number
+  hasWorkout?: boolean
 }) {
   const { top, height } = getSessionPosition(session, minHeight)
   const colors = SESSION_COLORS[session.type]
@@ -273,7 +278,12 @@ function SessionOverlay({
       }}
       onClick={(e) => { e.stopPropagation(); onEventClick(session) }}
     >
-      <p className="text-white text-[11px] font-semibold truncate leading-tight">{session.clientName}</p>
+      <div className="flex items-start justify-between">
+        <p className="text-white text-[11px] font-semibold truncate leading-tight flex-1">{session.clientName}</p>
+        {hasWorkout && (
+          <CheckCircle2 size={10} className="text-success flex-shrink-0 ml-1" />
+        )}
+      </div>
       <p className="text-[9px] opacity-80 truncate" style={{ color: colors.text }}>{session.type}</p>
       <p className="text-[9px] text-[light-muted] font-mono truncate">
         {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
@@ -304,13 +314,16 @@ function WeekView({
   filterType,
   onSlotClick,
   onEventClick,
+  getWorkoutForSession,
 }: {
   days: Date[]
   sessions: CalendarSession[]
   filterType: SessionType | 'All'
   onSlotClick: (date: Date, hour: number, minute: number) => void
   onEventClick: (session: CalendarSession) => void
+  getWorkoutForSession: (session: CalendarSession) => import('@/types/entities').WorkoutSessionLog | undefined
 }) {
+  void getWorkoutForSession
   const now = useCurrentTime()
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -399,9 +412,11 @@ function DayTimeGrid({ children }: { children: React.ReactNode }) {
 function DaySessionOverlay({
   session,
   onEventClick,
+  hasWorkout,
 }: {
   session: CalendarSession
   onEventClick: (session: CalendarSession) => void
+  hasWorkout?: boolean
 }) {
   const { top, height } = getSessionPosition(session, 40)
   const colors = SESSION_COLORS[session.type]
@@ -420,7 +435,10 @@ function DaySessionOverlay({
           <User size={14} style={{ color: colors.text }} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-white text-sm font-semibold truncate">{session.clientName}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-white text-sm font-semibold truncate">{session.clientName}</p>
+            {hasWorkout && <CheckCircle2 size={10} className="text-success flex-shrink-0" />}
+          </div>
           <p className="text-[10px] opacity-80" style={{ color: colors.text }}>{session.type}</p>
         </div>
         <span className="text-[10px] text-[light-muted] font-mono">{format(session.startTime, 'HH:mm')}</span>
@@ -481,13 +499,16 @@ function DayView({
   filterType,
   onSlotClick,
   onEventClick,
+  getWorkoutForSession,
 }: {
   date: Date
   sessions: CalendarSession[]
   filterType: SessionType | 'All'
   onSlotClick: (date: Date, hour: number, minute: number) => void
   onEventClick: (session: CalendarSession) => void
+  getWorkoutForSession?: (session: CalendarSession) => import('@/types/entities').WorkoutSessionLog | undefined
 }) {
+  const _getWorkout = getWorkoutForSession
   const now = useCurrentTime()
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -517,7 +538,12 @@ function DayView({
                 />
               ))}
               {filtered.map((session) => (
-                <DaySessionOverlay key={session.id} session={session} onEventClick={onEventClick} />
+                <DaySessionOverlay
+                  key={session.id}
+                  session={session}
+                  onEventClick={onEventClick}
+                  hasWorkout={!!_getWorkout?.(session)}
+                />
               ))}
             </DayTimeGrid>
             {isTodayDate && <CurrentTimeLine top={timeIndicatorTop} />}
@@ -996,49 +1022,141 @@ function SessionDetailModal({
   session,
   isOpen,
   onClose,
+  onDelete,
+  onEdit,
+  hasWorkout,
 }: {
   session: CalendarSession | null
   isOpen: boolean
   onClose: () => void
+  onDelete?: (id: string) => void
+  onEdit?: (session: CalendarSession) => void
+  hasWorkout?: boolean
 }) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editType, setEditType] = useState<SessionType>('Personal Training')
+  const [editDuration, setEditDuration] = useState(60)
+
+  useEffect(() => {
+    if (session) {
+      setEditType(session.type)
+      setEditDuration(session.duration)
+    }
+  }, [session])
+
+  if (!session) return null
+
+  const colors = SESSION_COLORS[session.type]
+
+  const handleSaveEdit = () => {
+    onEdit?.({ ...session, type: editType, duration: editDuration })
+    setIsEditing(false)
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-[white] border-[light-border] text-[light-primary] max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">Session Details</DialogTitle>
+          <DialogTitle className="text-lg font-semibold flex items-center gap-2">
+            {isEditing ? 'Edit Session' : 'Session Details'}
+            {hasWorkout && !isEditing && (
+              <span className="flex items-center gap-1 text-xs bg-success/10 text-success px-2 py-0.5 rounded-full">
+                <CheckCircle2 size={12} />
+                Workout logged
+              </span>
+            )}
+          </DialogTitle>
         </DialogHeader>
-        {session && (
-          <div className="space-y-4 mt-2">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: SESSION_COLORS[session.type].border }}>
-                <User size={18} style={{ color: SESSION_COLORS[session.type].text }} />
+        <div className="space-y-4 mt-2">
+          {isEditing ? (
+            <>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs text-[light-muted] mb-1 block">Session Type</label>
+                  <Select value={editType} onValueChange={(v) => setEditType(v as SessionType)}>
+                    <SelectTrigger className="bg-[light-surface] border-[light-border]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SESSION_TYPE_LABELS.map((t) => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-xs text-[light-muted] mb-1 block">Duration (minutes)</label>
+                  <div className="flex gap-2">
+                    {[30, 45, 60, 90].map((d) => (
+                      <button
+                        key={d}
+                        onClick={() => setEditDuration(d)}
+                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          editDuration === d
+                            ? 'bg-cyan text-white'
+                            : 'bg-[light-surface] text-[light-secondary] hover:bg-[light-hover]'
+                        }`}
+                      >
+                        {d}m
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-[light-primary] font-semibold">{session.clientName}</p>
-                <p className="text-[light-muted] text-xs">{session.type}</p>
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" onClick={() => setIsEditing(false)} className="text-[light-secondary]">Cancel</Button>
+                <Button onClick={handleSaveEdit} className="bg-cyan text-white hover:bg-cyan-dark">Save</Button>
               </div>
-            </div>
-            <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border] space-y-2">
-              <div className="flex justify-between">
-                <span className="text-[light-muted] text-xs">Date</span>
-                <span className="text-[light-primary] text-xs font-medium">{format(session.startTime, 'EEEE, d MMMM yyyy')}</span>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: colors.border }}>
+                  <User size={18} style={{ color: colors.text }} />
+                </div>
+                <div>
+                  <p className="text-[light-primary] font-semibold">{session.clientName}</p>
+                  <p className="text-[light-muted] text-xs">{session.type}</p>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[light-muted] text-xs">Time</span>
-                <span className="text-[light-primary] text-xs font-medium font-mono">
-                  {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
-                </span>
+              <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border] space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-[light-muted] text-xs">Date</span>
+                  <span className="text-[light-primary] text-xs font-medium">{format(session.startTime, 'EEEE, d MMMM yyyy')}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[light-muted] text-xs">Time</span>
+                  <span className="text-[light-primary] text-xs font-medium font-mono">
+                    {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[light-muted] text-xs">Duration</span>
+                  <span className="text-[light-primary] text-xs font-medium">{session.duration} minutes</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[light-muted] text-xs">Duration</span>
-                <span className="text-[light-primary] text-xs font-medium">{session.duration} minutes</span>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => onDelete?.(session.id)}
+                  className="text-danger hover:text-danger hover:bg-danger/10"
+                >
+                  <Trash2 size={14} className="mr-1" />
+                  Delete
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsEditing(true)}
+                  className="text-[light-secondary] hover:text-[light-primary]"
+                >
+                  <Pencil size={14} className="mr-1" />
+                  Edit
+                </Button>
+                <Button variant="ghost" onClick={onClose} className="text-[light-secondary] hover:text-[light-primary]">Close</Button>
               </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={onClose} className="text-[light-secondary] hover:text-[light-primary]">Close</Button>
-            </div>
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   )
@@ -1056,6 +1174,9 @@ export default function CalendarPage() {
   const storeSessions = useSessionList()
   const clients = useClientList()
   const addSession = useAppDataStore((s) => s.addSession)
+  const updateSession = useAppDataStore((s) => s.updateSession)
+  const deleteSession = useAppDataStore((s) => s.deleteSession)
+  const workoutSessions = useAppDataStore((s) => s.workoutSessions)
 
   // Seed demo data if store is empty
   useEffect(() => {
@@ -1145,6 +1266,37 @@ export default function CalendarPage() {
     [addSession, clients]
   )
 
+  const handleUpdateSession = useCallback(
+    (session: CalendarSession) => {
+      const client = clients.find((c) => c.name === session.clientName)
+      const storeSession = pageSessionToStore(session, client?.id)
+      updateSession(session.id, storeSession)
+    },
+    [updateSession, clients]
+  )
+
+  const handleDeleteSession = useCallback(
+    (id: string) => {
+      deleteSession(id)
+      setSelectedSession(null)
+    },
+    [deleteSession]
+  )
+
+  // Check if a calendar session has a completed workout
+  const getWorkoutForSession = useCallback(
+    (session: CalendarSession) => {
+      const sessionDate = format(session.startTime, 'yyyy-MM-dd')
+      return Object.values(workoutSessions).find(
+        (ws) =>
+          ws.clientId ===
+            (clients.find((c) => c.name === session.clientName)?.id || '') &&
+          ws.date.startsWith(sessionDate)
+      )
+    },
+    [workoutSessions, clients]
+  )
+
   const dateDisplay = useMemo(() => {
     switch (view) {
       case 'week': {
@@ -1202,6 +1354,7 @@ export default function CalendarPage() {
                 filterType={filterType}
                 onSlotClick={handleSlotClick}
                 onEventClick={handleEventClick}
+                getWorkoutForSession={getWorkoutForSession}
               />
             )}
             {view === 'day' && (
@@ -1211,6 +1364,7 @@ export default function CalendarPage() {
                 filterType={filterType}
                 onSlotClick={handleSlotClick}
                 onEventClick={handleEventClick}
+                getWorkoutForSession={getWorkoutForSession}
               />
             )}
             {view === 'month' && (
@@ -1235,7 +1389,14 @@ export default function CalendarPage() {
       {/* New Session Modal */}
       <NewSessionModal isOpen={showNewSession} onClose={() => setShowNewSession(false)} selectedSlot={newSessionDate} onSubmit={handleCreateSession} />
 
-      <SessionDetailModal session={selectedSession} isOpen={!!selectedSession} onClose={() => setSelectedSession(null)} />
+      <SessionDetailModal
+        session={selectedSession}
+        isOpen={!!selectedSession}
+        onClose={() => setSelectedSession(null)}
+        onDelete={handleDeleteSession}
+        onEdit={handleUpdateSession}
+        hasWorkout={selectedSession ? !!getWorkoutForSession(selectedSession) : false}
+      />
     </motion.div>
   )
 }

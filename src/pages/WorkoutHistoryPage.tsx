@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Calendar, Clock, Dumbbell, ChevronLeft, ChevronRight, Search, X } from 'lucide-react'
+import { Calendar, Clock, Dumbbell, ChevronLeft, ChevronRight, Search, X, BarChart3 } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
 import { useSyncWorkoutSessions } from '../hooks/useWorkoutSync'
 import {
@@ -12,6 +12,7 @@ import {
   formatDate,
   formatDuration,
 } from '../lib/workoutAnalytics'
+import WorkoutAnalytics from '../components/workout/WorkoutAnalytics'
 
 export default function WorkoutHistoryPage() {
   const { clientId } = useParams<{ clientId: string }>()
@@ -19,6 +20,7 @@ export default function WorkoutHistoryPage() {
   const { workoutSessions, clients } = useAppDataStore()
   const [search, setSearch] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [showAnalytics, setShowAnalytics] = useState(true)
 
   useSyncWorkoutSessions(clientId)
 
@@ -65,6 +67,22 @@ export default function WorkoutHistoryPage() {
             </button>
           )}
         </div>
+
+        {/* Analytics Toggle */}
+        {sessions.length > 0 && (
+          <button
+            onClick={() => setShowAnalytics(!showAnalytics)}
+            className="flex items-center gap-2 text-sm text-cyan hover:text-cyan-dark transition-colors"
+          >
+            <BarChart3 size={16} />
+            {showAnalytics ? 'Hide Analytics' : 'Show Analytics'}
+          </button>
+        )}
+
+        {/* Analytics Charts */}
+        {showAnalytics && clientId && (
+          <WorkoutAnalytics sessions={sessions} clientId={clientId} />
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

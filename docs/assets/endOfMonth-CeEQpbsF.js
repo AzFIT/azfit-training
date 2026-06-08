@@ -1,1 +1,0 @@
-import{c as r,t as s}from"./useAppDataStore-RtKZogLo.js";function a(o){return r(o,Date.now())}function u(o,n){const t=s(o,n?.in),e=t.getMonth();return t.setFullYear(t.getFullYear(),e+1,0),t.setHours(23,59,59,999),t}export{a as c,u as e};

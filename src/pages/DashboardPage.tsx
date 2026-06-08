@@ -17,6 +17,8 @@ import {
   ChevronDown,
   Eye,
   DollarSign,
+  Activity,
+  Flame,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import RingMetricCard, { StatusSegmentBar } from '../components/dashboard/RingMetricCard'
@@ -28,7 +30,7 @@ import {
   useUnresolvedAlerts,
   useDashboardKPIs,
 } from '../stores/useAppDataStore.selectors'
-import type { CalendarSession, ClientAlert, Client } from '../types/entities'
+import type { CalendarSession, ClientAlert, Client, WorkoutSessionLog } from '../types/entities'
 import { format, formatDistanceToNow } from 'date-fns'
 import ClientIntakeWizard from '../components/ClientIntakeWizard'
 
@@ -205,16 +207,76 @@ function alertBorderColor(type: AlertItem['type']) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Status Dot                                                         */
+/*  1FIT-Style Status Badge                                            */
 /* ------------------------------------------------------------------ */
-function StatusDot({ status }: { status: ClientData['status'] }) {
-  const color = status === 'active' ? '#22C55E' : status === 'warning' ? '#EAB308' : '#EF4444'
+function ClientStatusBadge({ status }: { status: ClientData['status'] }) {
+  const config = {
+    active: { label: 'On Track', color: 'text-success', bg: 'bg-success/10', dot: 'bg-success', border: 'border-success/30' },
+    warning: { label: 'Needs Attention', color: 'text-warning', bg: 'bg-warning/10', dot: 'bg-warning', border: 'border-warning/30' },
+    alert: { label: 'At Risk', color: 'text-danger', bg: 'bg-danger/10', dot: 'bg-danger', border: 'border-danger/30' },
+  }
+  const c = config[status]
   return (
-    <span
-      className="absolute top-3 right-3 w-2 h-2 rounded-full"
-      style={{ backgroundColor: color }}
-      title={status === 'active' ? 'Active' : status === 'warning' ? 'Attention' : 'Alert'}
-    />
+    <span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full ${c.bg} ${c.color} border ${c.border}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
+      {c.label}
+    </span>
+  )
+}
+
+
+
+/* ------------------------------------------------------------------ */
+/*  Recent Activity Feed                                               */
+/* ------------------------------------------------------------------ */
+function RecentActivityFeed({ sessions }: { sessions: WorkoutSessionLog[] }) {
+  const recent = [...sessions]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 6)
+
+  if (recent.length === 0) return null
+
+  return (
+    <div className="space-y-2">
+      {recent.map((session) => {
+        const completedSets = session.exercises.reduce(
+          (t, e) => t + e.sets.filter((s) => s.completed).length,
+          0
+        )
+        const totalSets = session.exercises.reduce((t, e) => t + e.sets.length, 0)
+        const volume = session.exercises.reduce(
+          (t, e) =>
+            t +
+            e.sets.reduce(
+              (st, s) => (s.completed && s.actualLoad && s.actualReps ? st + s.actualLoad * s.actualReps : st),
+              0
+            ),
+          0
+        )
+
+        return (
+          <div
+            key={session.id}
+            className="flex items-center gap-3 p-3 bg-light-surface rounded-lg border border-light-border hover:bg-light-hover transition-colors"
+          >
+            <div className="w-8 h-8 rounded-full bg-cyan/10 flex items-center justify-center flex-shrink-0">
+              <Flame size={14} className="text-cyan" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-light-primary font-medium truncate">
+                {session.programName || 'Workout'}
+              </p>
+              <p className="text-[10px] text-light-muted">
+                {session.exercises.length} exercises · {completedSets}/{totalSets} sets · {Math.round(volume)}kg volume
+              </p>
+            </div>
+            <span className="text-[10px] text-light-muted whitespace-nowrap">
+              {formatDistanceToNow(new Date(session.date), { addSuffix: true })}
+            </span>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
@@ -228,6 +290,7 @@ export default function DashboardPage() {
   const [wizardOpen, setWizardOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState('All')
+  const workoutSessions = useAppDataStore((s) => s.workoutSessions)
   const [hideRevenue, setHideRevenue] = useState(false)
 
   /* Seed demo data */
@@ -266,8 +329,9 @@ export default function DashboardPage() {
     }
     if (filterStatus !== 'All') {
       filtered = filtered.filter((c) => {
-        if (filterStatus === 'Active') return c.status === 'active'
-        if (filterStatus === 'Inactive') return c.status === 'alert'
+        if (filterStatus === 'On Track') return c.status === 'active'
+        if (filterStatus === 'Needs Attention') return c.status === 'warning'
+        if (filterStatus === 'At Risk') return c.status === 'alert'
         if (filterStatus === 'New This Month') return c.sessions < 12
         return true
       })
@@ -494,6 +558,30 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
+      {/* ── Recent Activity ── */}
+      {Object.values(workoutSessions).length > 0 && (
+        <motion.div
+          {...motionEnter(reduceMotion, { opacity: 0, y: 20 }, { duration: 0.5, delay: 0.45, ease: easeOut })}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white border border-light-border rounded-xl p-5 lg:p-6 shadow-sm"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Activity size={18} className="text-cyan" />
+              <h2 className="text-light-primary text-lg font-semibold">Recent Workouts</h2>
+            </div>
+            <Link
+              to="/clients"
+              className="text-cyan text-xs font-medium hover:text-cyan-dark transition-colors flex items-center gap-1"
+            >
+              View All
+              <ChevronRight size={14} />
+            </Link>
+          </div>
+          <RecentActivityFeed sessions={Object.values(workoutSessions)} />
+        </motion.div>
+      )}
+
       {/* ── Your Clients ── */}
       <motion.div
         {...motionEnter(reduceMotion, { opacity: 0, y: 20 }, { duration: 0.5, delay: 0.5, ease: easeOut })}
@@ -522,8 +610,9 @@ export default function DashboardPage() {
                 className="appearance-none bg-white border border-light-border rounded-lg pl-3 pr-8 py-2 text-xs text-light-primary focus:outline-none focus:border-cyan transition-colors cursor-pointer shadow-sm"
               >
                 <option value="All">All</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="On Track">On Track</option>
+                <option value="Needs Attention">Needs Attention</option>
+                <option value="At Risk">At Risk</option>
                 <option value="New This Month">New This Month</option>
               </select>
               <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-light-muted pointer-events-none" />
@@ -550,7 +639,9 @@ export default function DashboardPage() {
                 onClick={() => navigate(`/clients/${client.id}`)}
                 className="bg-white border border-light-border rounded-xl p-5 relative cursor-pointer hover:border-cyan/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-250 shadow-sm"
               >
-                <StatusDot status={client.status} />
+                <div className="absolute top-3 right-3">
+                  <ClientStatusBadge status={client.status} />
+                </div>
 
                 <div className="flex items-center gap-3 mb-4">
                   <img
