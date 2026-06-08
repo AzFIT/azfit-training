@@ -49,7 +49,7 @@ export default function LoginPage() {
       {/* Background image */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-20 pointer-events-none"
-        style={{ backgroundImage: 'url(/hero-bg.jpg)' }}
+        style={{ backgroundImage: 'url(./AZFIT_BACKGROUND_2.png)' }}
       />
       {/* Noise texture */}
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
