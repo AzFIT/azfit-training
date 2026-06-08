@@ -1,22 +1,22 @@
 /**
- * Auth Store — Central authentication state (LocalStorage Mode)
+ * Auth Store — Central authentication state
  *
  * Uses Zustand for reactive auth state.
- * Local auth handles session persistence via localStorage.
- * This store mirrors the local session + adds coach profile/role.
+ * Tries Supabase Auth first (when configured), falls back to localStorage.
  */
 
 import { create } from 'zustand'
 import type { CoachProfile } from '../lib/auth'
 import {
-  signIn,
-  signUp,
-  signOut,
-  getSession,
-  getCoachProfile,
+  signIn as localSignIn,
+  signUp as localSignUp,
+  signOut as localSignOut,
+  getSession as localGetSession,
+  getCoachProfile as localGetCoachProfile,
   onAuthStateChange,
 } from '../lib/localAuth'
 import type { LocalSession } from '../lib/localAuth'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
 export type UserRole = 'admin' | 'coach'
 
@@ -61,7 +61,58 @@ export const useAuthStore = create<AuthState>((set) => ({
   // ── Login ──────────────────────────────────────────────────────
   login: async (email, password) => {
     set({ isLoading: true })
-    const { session, error } = await signIn(email, password)
+
+    // Try Supabase Auth first if configured
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (!error && data.user) {
+        const role = (data.user.user_metadata?.role as UserRole) || 'coach'
+        const fullName = (data.user.user_metadata?.full_name as string) || email.split('@')[0]
+
+        set({
+          user: {
+            id: data.user.id,
+            email: data.user.email || email,
+            user_metadata: { full_name: fullName },
+          },
+          session: {
+            user: {
+              id: data.user.id,
+              email: data.user.email || email,
+              user_metadata: { full_name: fullName },
+            },
+            coachId: data.user.id,
+          },
+          profile: {
+            id: data.user.id,
+            full_name: fullName,
+            email: data.user.email || email,
+            role,
+            created_at: data.user.created_at || new Date().toISOString(),
+          },
+          isAuthenticated: true,
+          isLoading: false,
+          role,
+          isDemoMode: false,
+        })
+
+        return { error: null }
+      }
+
+      // If Supabase login failed with "Invalid login credentials", try local fallback
+      // Otherwise return the Supabase error
+      if (error && !error.message.includes('Invalid login credentials')) {
+        set({ isLoading: false })
+        return { error: error.message }
+      }
+    }
+
+    // Fallback to local auth
+    const { session, error } = await localSignIn(email, password)
 
     if (error || !session) {
       set({ isLoading: false })
@@ -69,7 +120,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
 
     // Fetch coach profile
-    const { profile: coachProfile } = await getCoachProfile(session.coachId)
+    const { profile: coachProfile } = await localGetCoachProfile(session.coachId)
 
     set({
       user: session.user,
@@ -87,7 +138,59 @@ export const useAuthStore = create<AuthState>((set) => ({
   // ── Register ───────────────────────────────────────────────────
   register: async (email, password, metadata) => {
     set({ isLoading: true })
-    const { user, error } = await signUp(email, password, metadata)
+
+    // Try Supabase first if configured
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: metadata.full_name,
+            role: 'coach',
+          },
+        },
+      })
+
+      if (!error && data.user) {
+        const role: UserRole = 'coach'
+        set({
+          user: {
+            id: data.user.id,
+            email: data.user.email || email,
+            user_metadata: { full_name: metadata.full_name },
+          },
+          session: {
+            user: {
+              id: data.user.id,
+              email: data.user.email || email,
+              user_metadata: { full_name: metadata.full_name },
+            },
+            coachId: data.user.id,
+          },
+          profile: {
+            id: data.user.id,
+            full_name: metadata.full_name,
+            email: data.user.email || email,
+            role,
+            created_at: data.user.created_at || new Date().toISOString(),
+          },
+          isAuthenticated: true,
+          isLoading: false,
+          role,
+          isDemoMode: false,
+        })
+        return { error: null }
+      }
+
+      if (error) {
+        set({ isLoading: false })
+        return { error: error.message }
+      }
+    }
+
+    // Fallback to local auth
+    const { user, error } = await localSignUp(email, password, metadata)
 
     if (error) {
       set({ isLoading: false })
@@ -99,15 +202,15 @@ export const useAuthStore = create<AuthState>((set) => ({
       return { error: 'Registration failed' }
     }
 
-    // Auto-login after signup (local auth does this automatically)
-    const { session, error: signInError } = await signIn(email, password)
+    // Auto-login after signup
+    const { session, error: signInError } = await localSignIn(email, password)
 
     if (signInError || !session) {
       set({ isLoading: false })
       return { error: signInError?.message || 'Auto-login failed' }
     }
 
-    const { profile: coachProfile } = await getCoachProfile(session.coachId)
+    const { profile: coachProfile } = await localGetCoachProfile(session.coachId)
 
     set({
       user: session.user,
@@ -124,7 +227,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   // ── Logout ─────────────────────────────────────────────────────
   logout: async () => {
-    await signOut()
+    if (isSupabaseConfigured) {
+      await supabase.auth.signOut()
+    }
+    await localSignOut()
     set({
       user: null,
       session: null,
@@ -139,14 +245,54 @@ export const useAuthStore = create<AuthState>((set) => ({
   // ── Load Session ───────────────────────────────────────────────
   loadSession: async () => {
     set({ isLoading: true })
-    const { session } = await getSession()
+
+    // Try Supabase session first
+    if (isSupabaseConfigured) {
+      const { data } = await supabase.auth.getSession()
+      if (data.session?.user) {
+        const user = data.session.user
+        const role = (user.user_metadata?.role as UserRole) || 'coach'
+        const fullName = (user.user_metadata?.full_name as string) || user.email?.split('@')[0] || 'User'
+
+        set({
+          user: {
+            id: user.id,
+            email: user.email || '',
+            user_metadata: { full_name: fullName },
+          },
+          session: {
+            user: {
+              id: user.id,
+              email: user.email || '',
+              user_metadata: { full_name: fullName },
+            },
+            coachId: user.id,
+          },
+          profile: {
+            id: user.id,
+            full_name: fullName,
+            email: user.email || '',
+            role,
+            created_at: user.created_at || new Date().toISOString(),
+          },
+          isAuthenticated: true,
+          isLoading: false,
+          role,
+          isDemoMode: false,
+        })
+        return
+      }
+    }
+
+    // Fallback to local session
+    const { session } = await localGetSession()
 
     if (!session) {
       set({ isLoading: false })
       return
     }
 
-    const { profile: coachProfile } = await getCoachProfile(session.coachId)
+    const { profile: coachProfile } = await localGetCoachProfile(session.coachId)
 
     set({
       user: session.user,

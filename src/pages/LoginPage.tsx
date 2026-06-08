@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
-import { LogIn, Eye, EyeOff, AlertTriangle } from 'lucide-react'
+import { LogIn, Eye, EyeOff, AlertTriangle, Shield, Dumbbell } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number]
@@ -42,6 +42,20 @@ export default function LoginPage() {
   const handleDemoMode = () => {
     enableDemoMode()
     navigate('/dashboard')
+  }
+
+  const handleQuickLogin = async (quickEmail: string, quickPassword: string) => {
+    setEmail(quickEmail)
+    setPassword(quickPassword)
+    setError('')
+    setIsLoading(true)
+    const { error: loginError } = await login(quickEmail, quickPassword)
+    setIsLoading(false)
+    if (loginError) {
+      setError(loginError)
+    } else {
+      navigate('/dashboard')
+    }
   }
 
   return (
@@ -177,6 +191,36 @@ export default function LoginPage() {
               )}
               Sign In
             </button>
+
+            {/* Divider */}
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-dark-border" />
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-[az-black-card] px-3 text-dark-muted">quick login</span>
+              </div>
+            </div>
+
+            {/* Quick Login Buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => handleQuickLogin('admin@azfit.fit', 'azwar1988azfit')}
+                disabled={isLoading}
+                className="flex items-center justify-center gap-2 bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.3)] hover:border-[rgba(139,92,246,0.6)] text-[#A78BFA] hover:text-[#C4B5FD] font-medium py-2.5 rounded-xl transition-all duration-200 text-sm disabled:opacity-50"
+              >
+                <Shield size={14} />
+                Admin
+              </button>
+              <button
+                onClick={() => handleQuickLogin('trainer@azfit.fit', 'azwar1988azfit')}
+                disabled={isLoading}
+                className="flex items-center justify-center gap-2 bg-[rgba(6,182,212,0.1)] border border-[rgba(6,182,212,0.3)] hover:border-[rgba(6,182,212,0.6)] text-cyan hover:text-[cyan-light] font-medium py-2.5 rounded-xl transition-all duration-200 text-sm disabled:opacity-50"
+              >
+                <Dumbbell size={14} />
+                Trainer
+              </button>
+            </div>
 
             {/* Divider */}
             <div className="relative my-4">
