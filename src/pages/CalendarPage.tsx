@@ -81,7 +81,7 @@ const SESSION_TYPE_LABELS: SessionType[] = [
   'Consultation',
 ]
 
-const HK_TIME_SLOTS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+const HK_TIME_SLOTS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
 
 const HOUR_HEIGHT = 64
 const MS_PER_MINUTE = 60000
@@ -847,7 +847,7 @@ function NewSessionModal({
               <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
                 <SelectValue placeholder="Select client" />
               </SelectTrigger>
-              <SelectContent className="bg-[light-surface] border-[light-border]">
+              <SelectContent position="popper" className="bg-[light-surface] border-[light-border] z-[100] max-h-60">
                 {clients.map((c) => (
                   <SelectItem key={c.id} value={c.name} className="text-[light-primary]">
                     {c.name}
