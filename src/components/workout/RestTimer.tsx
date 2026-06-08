@@ -12,7 +12,7 @@ interface RestTimerProps {
   durationSeconds: number
   isRunning: boolean
   onComplete: () => void
-  onAddTime: (seconds: number) => void
+  onAddTime?: (seconds: number) => void
   onSkip: () => void
 }
 
@@ -23,13 +23,19 @@ export default function RestTimer({
   onAddTime,
   onSkip,
 }: RestTimerProps) {
+  const [baseDuration, setBaseDuration] = useState(durationSeconds)
   const [remaining, setRemaining] = useState(durationSeconds)
   const [paused, setPaused] = useState(false)
 
+  // Reset when a new rest period starts (isRunning flips from false -> true)
+  // or when durationSeconds prop changes meaningfully
   useEffect(() => {
-    setRemaining(durationSeconds)
-    setPaused(false)
-  }, [durationSeconds])
+    if (isRunning) {
+      setBaseDuration(durationSeconds)
+      setRemaining(durationSeconds)
+      setPaused(false)
+    }
+  }, [isRunning, durationSeconds])
 
   useEffect(() => {
     if (!isRunning || paused || remaining <= 0) return
@@ -54,11 +60,17 @@ export default function RestTimer({
     return `${m}:${s.toString().padStart(2, '0')}`
   }
 
-  const progress = durationSeconds > 0 ? ((durationSeconds - remaining) / durationSeconds) * 100 : 0
+  const handleAddTime = (seconds: number) => {
+    setRemaining((prev) => prev + seconds)
+    setBaseDuration((prev) => prev + seconds)
+    onAddTime?.(seconds)
+  }
+
+  const progress = baseDuration > 0 ? ((baseDuration - remaining) / baseDuration) * 100 : 0
   const circumference = 2 * Math.PI * 18
   const strokeDashoffset = circumference - (progress / 100) * circumference
 
-  if (!isRunning && remaining === durationSeconds) return null
+  if (!isRunning && remaining === baseDuration) return null
 
   return (
     <motion.div
@@ -110,7 +122,7 @@ export default function RestTimer({
       {/* Controls */}
       <div className="flex items-center gap-1.5">
         <button
-          onClick={() => onAddTime(15)}
+          onClick={() => handleAddTime(15)}
           className="flex items-center gap-1 px-2 py-1 rounded-lg bg-light-surface hover:bg-light-hover text-light-secondary text-xs transition-colors"
         >
           <Plus size={10} />

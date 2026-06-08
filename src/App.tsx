@@ -97,6 +97,7 @@ export default function App() {
       <Route path="/program-matcher" element={<Protected><ProgramMatcherPage /></Protected>} />
       <Route path="/tools/1rm-calculator" element={<Protected><OneRMCalculatorPage /></Protected>} />
       <Route path="/clients/:clientId/workout/:programId" element={<Protected><WorkoutSessionPage /></Protected>} />
+      <Route path="/workout/:programId/:sessionId" element={<Protected><WorkoutSessionPage /></Protected>} />
       <Route path="/workout/live" element={<Protected><WorkoutSessionLivePage /></Protected>} />
       <Route path="/clients/:clientId/workouts" element={<Protected><WorkoutHistoryPage /></Protected>} />
       <Route path="/clients/:clientId/exercises/:exerciseId" element={<Protected><ExerciseDetailPage /></Protected>} />

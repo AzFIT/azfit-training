@@ -1,256 +1,249 @@
-import { useState, useMemo, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+/**
+ * Workout Session Page — Strong-inspired in-workout logging screen
+ *
+ * Route: /workout/:programId/:sessionId
+ *
+ * Features:
+ * - Live session timer
+ * - Exercise blocks with A1/A2/B1/B2 CoachRx notation
+ * - Previous session data inline
+ * - Target values (prescribed weight/reps/RPE)
+ * - Set rows with weight/reps/RPE inputs + checkmark completion
+ * - Auto-starting rest timer with circular countdown
+ * - Superset grouping (SS badge)
+ * - Phase context header with program progress bar
+ * - Bottom actions: Finish Session, Log Photo, Adjust
+ */
+
+import { useState, useMemo } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Loader2, Save, Timer } from 'lucide-react'
+import {
+  Camera,
+  SlidersHorizontal,
+  Clock,
+  ChevronLeft,
+  Flag,
+} from 'lucide-react'
 import { toast } from 'sonner'
-import { cn } from '../lib/utils'
-import { useAppDataStore } from '../stores/useAppDataStore'
-import { useProgramDetails } from '../hooks/usePrograms'
-import { saveWorkoutSessionLog } from '../services/workoutApi'
-import { computeLetterNotation } from '../utils/notation'
-import WorkoutExerciseLog from '../components/workout/WorkoutExerciseLog'
-import type { WorkoutSessionLog } from '../types/entities'
+import ExerciseBlock from '../components/workout/ExerciseBlock'
+import { useWorkoutSession } from '../hooks/useWorkoutSession'
+import type { ExerciseBlockData } from '../components/workout/ExerciseBlock'
+
+// ── Demo workout data ─────────────────────────────────────────────
+
+function createDemoWorkout(): ExerciseBlockData[] {
+  return [
+    {
+      id: 'ex-1',
+      notation: 'A1',
+      name: 'Bench Press',
+      previousSession: { weight: 60, reps: [10, 10, 9], rpe: 8 },
+      target: { weight: 62.5, reps: 10, sets: 3, rpe: 8 },
+      sets: [
+        { setNumber: 1, targetWeight: 62.5, targetReps: 10, targetRpe: 8, completed: true, actualWeight: 62.5, actualReps: 10, actualRpe: 8 },
+        { setNumber: 2, targetWeight: 62.5, targetReps: 10, targetRpe: 8, completed: true, actualWeight: 62.5, actualReps: 10, actualRpe: 8 },
+        { setNumber: 3, targetWeight: 62.5, targetReps: 10, targetRpe: 8, completed: false },
+      ],
+      videoUrl: 'https://youtube.com/vthMCtgVtFw',
+    },
+    {
+      id: 'ex-2',
+      notation: 'A2',
+      name: 'Barbell Row',
+      supersetWith: 'A1',
+      previousSession: { weight: 55, reps: [10, 10, 10], rpe: 7 },
+      target: { weight: 57.5, reps: 10, sets: 3, rpe: 8 },
+      sets: [
+        { setNumber: 1, targetWeight: 57.5, targetReps: 10, targetRpe: 8, completed: false },
+        { setNumber: 2, targetWeight: 57.5, targetReps: 10, targetRpe: 8, completed: false },
+        { setNumber: 3, targetWeight: 57.5, targetReps: 10, targetRpe: 8, completed: false },
+      ],
+    },
+    {
+      id: 'ex-3',
+      notation: 'B1',
+      name: 'Dumbbell Shoulder Press',
+      previousSession: { weight: 20, reps: [10, 10, 9], rpe: 7 },
+      target: { weight: 22.5, reps: 10, sets: 3, rpe: 8 },
+      sets: [
+        { setNumber: 1, targetWeight: 22.5, targetReps: 10, targetRpe: 8, completed: false },
+        { setNumber: 2, targetWeight: 22.5, targetReps: 10, targetRpe: 8, completed: false },
+        { setNumber: 3, targetWeight: 22.5, targetReps: 10, targetRpe: 8, completed: false },
+      ],
+    },
+    {
+      id: 'ex-4',
+      notation: 'B2',
+      name: 'Lateral Raise',
+      supersetWith: 'B1',
+      target: { weight: 12, reps: 12, sets: 3, rpe: 9 },
+      sets: [
+        { setNumber: 1, targetWeight: 12, targetReps: 12, targetRpe: 9, completed: false },
+        { setNumber: 2, targetWeight: 12, targetReps: 12, targetRpe: 9, completed: false },
+        { setNumber: 3, targetWeight: 12, targetReps: 12, targetRpe: 9, completed: false },
+      ],
+    },
+  ]
+}
+
+// ── Main Page ─────────────────────────────────────────────────────
 
 export default function WorkoutSessionPage() {
-  const { clientId, programId: programIdParam } = useParams<{
-    clientId: string
-    programId: string
-  }>()
-  const programId = programIdParam ? parseInt(programIdParam, 10) : null
+  const navigate = useNavigate()
+  const { programId, sessionId } = useParams<{ programId: string; sessionId: string }>()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  void programId; void sessionId
 
-  const { data: programData, isLoading } = useProgramDetails(programId)
-  const { addWorkoutSession, workoutSessions } = useAppDataStore()
+  const [showFinishConfirm, setShowFinishConfirm] = useState(false)
 
-  const [activeDay, setActiveDay] = useState(1)
-  const [loggedSets, setLoggedSets] = useState<Record<string, Record<number, { load?: number; reps?: number; rpe?: number; completed: boolean }>>>({})
-  const [sessionStartTime] = useState(Date.now())
-  const [elapsedSeconds, setElapsedSeconds] = useState(0)
-  const [isSaving, setIsSaving] = useState(false)
+  const initialExercises = useMemo(() => createDemoWorkout(), [])
+  const {
+    exercises,
+    elapsedFormatted,
+    updateExerciseSets,
+    getCompletedSetsCount,
+    getTotalSetsCount,
+    finishSession,
+  } = useWorkoutSession(initialExercises)
 
-  // Session timer
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - sessionStartTime) / 1000))
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [sessionStartTime])
+  const completedSets = getCompletedSetsCount()
+  const totalSets = getTotalSetsCount()
+  const progressPercent = totalSets > 0 ? (completedSets / totalSets) * 100 : 0
 
-  const formatElapsed = (s: number) => {
-    const m = Math.floor(s / 60)
-    const sec = s % 60
-    return `${m}:${sec.toString().padStart(2, '0')}`
-  }
-
-  const currentDayExercises = useMemo(() => {
-    if (!programData) return []
-    const day = programData.days.find((d) => d.day_number === activeDay)
-    return day?.exercises || []
-  }, [programData, activeDay])
-
-  const notationMap = useMemo(() => {
-    return computeLetterNotation(
-      currentDayExercises.map((e) => ({ exercise_order: e.exercise_order, set_type_id: e.set_type_id }))
-    )
-  }, [currentDayExercises])
-
-  const handleLogSet = (exerciseId: number, setNumber: number, data: { load?: number; reps?: number; rpe?: number; completed: boolean }) => {
-    setLoggedSets((prev) => ({
-      ...prev,
-      [exerciseId]: {
-        ...prev[exerciseId],
-        [setNumber]: data,
-      },
-    }))
-  }
-
-  // Find previous session for this program/day
-  const previousSession = useMemo(() => {
-    const sessions = Object.values(workoutSessions)
-      .filter((s) => s.programId === String(programId) && s.dayNumber === activeDay)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    return sessions[0] || null
-  }, [workoutSessions, programId, activeDay])
-
-  const previousSetsByExercise = useMemo(() => {
-    const map: Record<string, Record<number, { load: number; reps: number; rpe: number }>> = {}
-    if (!previousSession) return map
-    previousSession.exercises.forEach((ex) => {
-      map[ex.exerciseId] = {}
-      ex.sets.forEach((set) => {
-        if (set.actualLoad !== undefined && set.actualReps !== undefined) {
-          map[ex.exerciseId][set.setNumber] = {
-            load: set.actualLoad,
-            reps: set.actualReps,
-            rpe: set.actualRpe || 0,
-          }
-        }
-      })
-    })
-    return map
-  }, [previousSession])
-
-  const handleSaveWorkout = async () => {
-    if (!clientId || !programId || !programData) return
-    setIsSaving(true)
-
-    const session: WorkoutSessionLog = {
-      id: `ws_${Date.now()}`,
-      clientId,
-      programId: String(programId),
-      programName: programData.program.program_name,
-      dayNumber: activeDay,
-      weekNumber: 1,
-      date: new Date().toISOString(),
-      durationSeconds: elapsedSeconds,
-      exercises: currentDayExercises.map((ex, idx) => ({
-        exerciseId: String(ex.exercise_id),
-        exerciseName: ex.exercise_name || '',
-        notation: notationMap[idx] || String.fromCharCode(65 + idx),
-        sets: Array.from({ length: ex.sets }).map((_, setIdx) => {
-          const setNumber = setIdx + 1
-          const log = loggedSets[ex.program_exercise_id]?.[setNumber] || { completed: false }
-          return {
-            setNumber,
-            prescribedSets: ex.sets,
-            prescribedReps: ex.reps,
-            prescribedLoad: undefined,
-            prescribedRpe: ex.rpe_target,
-            actualLoad: log.load,
-            actualReps: log.reps,
-            actualRpe: log.rpe,
-            completed: log.completed,
-          }
-        }),
-      })),
-    }
-
-    try {
-      const saved = await saveWorkoutSessionLog(session)
-      addWorkoutSession(saved)
-      toast.success('Workout saved!')
-    } catch (err) {
-      // If Supabase fails, still save locally so data isn't lost
-      addWorkoutSession(session)
-      toast.success('Workout saved locally')
-      // eslint-disable-next-line no-console
-      console.warn('Supabase save failed, kept local copy:', err)
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  const completedExercises = currentDayExercises.filter((ex) => {
-    const exLogs = loggedSets[ex.program_exercise_id] || {}
-    return Array.from({ length: ex.sets }).every((_, i) => exLogs[i + 1]?.completed)
-  }).length
-
-  if (isLoading) {
-    return (
-      <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black] flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-[cyan]" />
-      </div>
-    )
-  }
-
-  if (!programData) {
-    return (
-      <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black] flex items-center justify-center">
-        <p className="text-slate-500 dark:text-slate-400">Program not found.</p>
-      </div>
-    )
+  const handleFinish = () => {
+    const result = finishSession()
+    // eslint-disable-next-line no-console
+    console.log('Session finished:', result)
+    toast.success(`Session complete! ${completedSets}/${totalSets} sets in ${elapsedFormatted}`)
+    navigate('/dashboard')
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Today's Workout
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {programData.program.program_name} • Week 1 • Day {activeDay}
-          </p>
-
-          {/* Session timer + Progress */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-xs text-slate-400 bg-white dark:bg-slate-800 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
-              <Timer size={12} />
-              <span className="font-mono">{formatElapsed(elapsedSeconds)}</span>
+    <div className="min-h-[calc(100dvh-64px)] bg-light-surface pb-24">
+      {/* Header */}
+      <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-light-border">
+        <div className="max-w-3xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 rounded-lg text-light-muted hover:text-light-primary hover:bg-light-surface transition-colors"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <div>
+                <h1 className="text-light-primary font-semibold text-sm">Upper Body A</h1>
+                <p className="text-light-muted text-xs">Sarah Chen</p>
+              </div>
             </div>
-            <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+
+            <div className="flex items-center gap-3">
+              {/* Live timer */}
+              <div className="flex items-center gap-1.5 bg-cyan/10 text-cyan px-3 py-1.5 rounded-lg">
+                <Clock size={14} />
+                <span className="text-sm font-semibold" style={{ fontFamily: '"Space Mono", monospace' }}>
+                  {elapsedFormatted}
+                </span>
+              </div>
+
+              {/* Phase badge */}
+              <span className="hidden sm:inline-flex text-xs bg-violet/10 text-violet px-2 py-1 rounded-lg font-medium">
+                Phase: Intensification
+              </span>
+            </div>
+          </div>
+
+          {/* Week/Day + Progress */}
+          <div className="flex items-center gap-3 mt-2">
+            <span className="text-xs text-light-muted whitespace-nowrap">Week 6, Day 2</span>
+            <div className="flex-1 h-1.5 bg-light-surface rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[cyan] to-[indigo] rounded-full"
                 initial={{ width: 0 }}
-                animate={{ width: `${currentDayExercises.length > 0 ? (completedExercises / currentDayExercises.length) * 100 : 0}%` }}
+                animate={{ width: `${progressPercent}%` }}
+                className="h-full rounded-full bg-cyan"
               />
             </div>
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-              {completedExercises}/{currentDayExercises.length}
-            </span>
+            <span className="text-xs text-light-muted w-8 text-right">{Math.round(progressPercent)}%</span>
           </div>
         </div>
+      </div>
 
-        {/* Day selector */}
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {programData.days.map((day) => (
-            <button
-              key={day.day_number}
-              onClick={() => setActiveDay(day.day_number)}
-              className={cn(
-                'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all',
-                activeDay === day.day_number
-                  ? 'bg-[cyan] text-white'
-                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
-              )}
-            >
-              Day {day.day_number}
-            </button>
-          ))}
-        </div>
+      {/* Exercise Blocks */}
+      <div className="max-w-3xl mx-auto px-4 py-4 space-y-4">
+        {exercises.map((exercise) => (
+          <ExerciseBlock
+            key={exercise.id}
+            exercise={exercise}
+            onUpdateSets={(sets) => updateExerciseSets(exercise.id, sets)}
+            restTimerDuration={90}
+          />
+        ))}
+      </div>
 
-        {/* Exercise logs */}
-        <div className="space-y-4">
-          {currentDayExercises.map((exercise, idx) => (
-            <WorkoutExerciseLog
-              key={exercise.program_exercise_id}
-              exercise={exercise}
-              notation={notationMap[idx] || String.fromCharCode(65 + idx)}
-              onLogSet={(setNum, data) => handleLogSet(exercise.program_exercise_id, setNum, data)}
-              loggedSets={loggedSets[exercise.program_exercise_id] || {}}
-              previousSets={previousSetsByExercise[String(exercise.exercise_id)]}
-              restSeconds={exercise.rest_seconds}
-            />
-          ))}
-        </div>
-
-        {/* Save button */}
-        <div className="sticky bottom-4 z-10">
-          <button
-            onClick={handleSaveWorkout}
-            disabled={isSaving}
-            className={cn(
-              'w-full py-4 rounded-2xl font-bold text-white text-lg',
-              'bg-gradient-to-r from-[cyan] to-[indigo]',
-              'hover:shadow-lg transition-all',
-              'flex items-center justify-center gap-2',
-              'disabled:opacity-50 disabled:cursor-not-allowed'
-            )}
+      {/* Bottom Actions */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/80 backdrop-blur-md border-t border-light-border">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowFinishConfirm(true)}
+            className="flex-1 bg-cyan text-white font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-cyan-dark transition-colors"
           >
-            {isSaving ? (
-              <>
-                <Loader2 size={20} className="animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save size={20} />
-                Save Workout
-              </>
-            )}
+            <Flag size={16} />
+            Finish Session
+          </motion.button>
+          <button
+            onClick={() => toast.info('Photo logging coming in Phase 6.2')}
+            className="px-4 py-2.5 rounded-xl bg-light-surface text-light-secondary text-sm font-medium hover:bg-light-hover transition-colors"
+            aria-label="Log Photo"
+          >
+            <Camera size={16} />
+          </button>
+          <button
+            onClick={() => toast.info('Adjust workout coming in Phase 6.2')}
+            className="px-4 py-2.5 rounded-xl bg-light-surface text-light-secondary text-sm font-medium hover:bg-light-hover transition-colors"
+            aria-label="Adjust Workout"
+          >
+            <SlidersHorizontal size={16} />
           </button>
         </div>
       </div>
+
+      {/* Finish Confirmation Modal */}
+      {showFinishConfirm && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+          onClick={() => setShowFinishConfirm(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl p-6 max-w-sm w-full"
+          >
+            <h3 className="text-light-primary font-semibold text-lg mb-2">Finish Session?</h3>
+            <p className="text-light-muted text-sm mb-4">
+              {completedSets} of {totalSets} sets completed. Duration: {elapsedFormatted}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowFinishConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl bg-light-surface text-light-secondary font-medium hover:bg-light-hover transition-colors"
+              >
+                Continue
+              </button>
+              <button
+                onClick={handleFinish}
+                className="flex-1 py-2.5 rounded-xl bg-cyan text-white font-medium hover:bg-cyan-dark transition-colors"
+              >
+                Finish
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   )
 }

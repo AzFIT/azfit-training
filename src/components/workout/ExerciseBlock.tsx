@@ -63,13 +63,6 @@ export default function ExerciseBlock({
     setActiveRestSet(null)
   }, [])
 
-  const handleAddTime = useCallback(
-    (_seconds: number) => {
-      // Timer component handles its own state
-    },
-    []
-  )
-
   const handleSkipRest = useCallback(() => {
     setActiveRestSet(null)
   }, [])
@@ -155,7 +148,6 @@ export default function ExerciseBlock({
           durationSeconds={restTimerDuration}
           isRunning={activeRestSet !== null}
           onComplete={handleRestComplete}
-          onAddTime={handleAddTime}
           onSkip={handleSkipRest}
         />
       </div>
