@@ -556,7 +556,7 @@ function ProgramCard({
         {/* Actions */}
         <div className="flex items-center gap-2 pt-2 border-t border-light-border">
           <button
-            onClick={() => onAction('start', program)}
+            onClick={() => window.location.hash = `/workout/live?program=${program.id}`}
             className="flex-1 h-8 text-xs font-semibold text-white hover:opacity-90 rounded-lg flex items-center justify-center gap-1 transition-opacity"
             style={{ background: program.colorBanner }}
           >

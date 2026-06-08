@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AzFIT Workflow Design — Strong + Freeletics + 1FIT Integration</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg-card: #111827;
+    --bg-elevated: #1f2937;
+    --bg-code: #0d1117;
+    --text: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --cyan: #06b6d4;
+    --green: #22c55e;
+    --purple: #8b5cf6;
+    --orange: #f97316;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+    --border: #374151;
+    --strong-green: #00d4aa;
+    --freeletics-blue: #0076ff;
+    --fit-purple: #6366f1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'SF Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .container { max-width: 1300px; margin: 0 auto; padding: 40px 20px; }
+  header {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 12px; }
+  header h1 span.cyan { color: var(--cyan); }
+  header h1 span.green { color: var(--strong-green); }
+  header h1 span.blue { color: var(--freeletics-blue); }
+  header h1 span.purple { color: var(--fit-purple); }
+  header p { color: var(--text-secondary); font-size: 1rem; max-width: 700px; margin: 0 auto; }
+  .badge {
+    display: inline-block;
+    background: rgba(6,182,212,0.15);
+    color: var(--cyan);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid rgba(6,182,216,0.3);
+  }
+  h2 { font-size: 1.5rem; margin: 50px 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  h3 { font-size: 1.2rem; margin: 32px 0 14px; }
+  h4 { font-size: 1rem; margin: 24px 0 10px; color: var(--cyan); }
+
+  .app-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 24px 0;
+  }
+  .app-section h3 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
+
+  .ascii-wireframe {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    overflow-x: auto;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #e6edf3;
+  }
+  .ascii-wireframe .title { color: var(--cyan); font-weight: bold; }
+  .ascii-wireframe .label { color: var(--green); }
+  .ascii-wireframe .value { color: var(--orange); }
+  .ascii-wireframe .highlight { color: var(--purple); }
+  .ascii-wireframe .dim { color: var(--text-muted); }
+  .ascii-wireframe .action { color: var(--yellow); }
+  .ascii-wireframe .success { color: var(--green); }
+  .ascii-wireframe .brand-strong { color: var(--strong-green); }
+  .ascii-wireframe .brand-free { color: var(--freeletics-blue); }
+  .ascii-wireframe .brand-fit { color: var(--fit-purple); }
+  .ascii-wireframe .separator { color: var(--border); }
+
+  .flow-arrow {
+    text-align: center;
+    color: var(--cyan);
+    font-size: 1.5rem;
+    margin: 12px 0;
+  }
+
+  .insight-box {
+    background: linear-gradient(135deg, rgba(6,182,212,0.08), rgba(139,92,246,0.08));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .insight-box h4 { margin-top: 0; }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.88rem;
+  }
+  .comparison-table th {
+    background: var(--bg-elevated);
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  .comparison-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .comparison-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .tag-port { background: rgba(6,182,212,0.15); color: var(--cyan); }
+  .tag-azfit { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag-must { background: rgba(249,115,22,0.15); color: var(--orange); }
+  .tag-new { background: rgba(139,92,246,0.15); color: var(--purple); }
+
+  .recommendation {
+    background: var(--bg-card);
+    border: 2px solid var(--green);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 30px 0;
+  }
+
+  .nav { position: sticky; top: 0; background: rgba(10,14,23,0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; gap: 8px; padding: 12px 20px; overflow-x: auto; }
+  .nav a { color: var(--text-secondary); text-decoration: none; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; white-space: nowrap; transition: all 0.2s; }
+  .nav a:hover, .nav a.active { background: rgba(6,182,212,0.1); color: var(--cyan); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+  footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="active">Overview</a>
+    <a href="#strong">Strong</a>
+    <a href="#freeletics">Freeletics</a>
+    <a href="#onefit">1FIT</a>
+    <a href="#azfit-draft">AzFIT Draft</a>
+    <a href="#integration">Integration Plan</a>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="badge">WORKFLOW DESIGN RESEARCH</div>
+  <h1><span class="green">Strong</span> + <span class="blue">Freeletics</span> + <span class="purple">1FIT</span> <span class="cyan">= AzFIT</span></h1>
+  <p>Deep research into the three most innovative fitness app workflows, with ASCII wireframes and a complete draft of how to integrate their best patterns into AzFIT's design.</p>
+</header>
+
+<div class="container">
+
+<!-- ===================== STRONG ===================== -->
+<section id="strong">
+  <h2><span style="color:var(--strong-green)">&#9632;</span> Strong — Workout Tracker Gym Log</h2>
+
+  <div class="insight-box">
+    <h4>What Makes Strong Unique</h4>
+    <p>Strong is the gold standard for <strong>in-workout logging UX</strong>. It balances speed (log a set in 2 taps) with depth (tap any exercise for rich analytics). The dark mode with green accents is optimized for gym lighting. 4.8 rating, 150K downloads, $500K/mo revenue.</p>
+  </div>
+
+  <h4>1. Workout Logging Flow (The Core Experience)</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">STRONG — Active Workout Screen (In-Workout Logging)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-strong">&#9664; Workout</span>         Back & Biceps Day       47:32  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  1. <span class="highlight">Barbell Row</span>                              [i]  &#9474;
+&#9474;     <span class="dim">Previous: 80kg x 8, 8, 7</span>                        &#9474;
+&#9474;                                                        &#9474;
+&#9474;     Set 1    <span class="value">80.0</span> kg    <span class="value">8</span> reps    &#10003;           &#9474;
+&#9474;     Set 2    <span class="value">80.0</span> kg    <span class="value">8</span> reps    &#10003;           &#9474;
+&#9474;     Set 3    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps   [ ]  <span class="dim">&#8592; active</span>&#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472; Rest Timer &#9472;&#9472;&#9472;  <span class="brand-strong">&#9201; 1:30</span> remaining &#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;              <span class="dim">[=======&gt;    ] 60%</span>                     &#9474;
+&#9474;                                                        &#9474;
+&#9474;  2. <span class="highlight">Pull-Up</span>                                [i]  &#9474;
+&#9474;     <span class="dim">Previous: BW x 10, 10, 8</span>                        &#9474;
+&#9474;                                                        &#9474;
+&#9474;     Set 1    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps   [ ]          &#9474;
+&#9474;     Set 2    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps   [ ]          &#9474;
+&#9474;     Set 3    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps   [ ]          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  3. <span class="highlight">Dumbbell Curl</span>    <span class="yellow">&#9733; SS</span> with Hammer Curl    [i] &#9474;
+&#9474;     <span class="dim">Previous: 14kg x 12, 12, 10</span>                     &#9474;
+&#9474;                                                        &#9474;
+&#9474;  + Add Exercise                                          &#9474;
+&#9474;  + Add Set                                               &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="brand-strong">&#9632; Finish Workout</span>]  [&#9881;]  [&#128247;]                    &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">KEY PATTERNS:</span>
+  1. <span class="value">Previous session data always visible</span> (left of input fields)
+  2. <span class="value">Auto-starting rest timer</span> between sets (circular progress)
+  3. <span class="value">Checkmark [&#10003;] to complete set</span> — triggers timer + saves
+  4. <span class="value">Superset indicator [&#9733; SS]</span> — grouped exercises
+  5. <span class="value">Tap exercise name for detail screen</span> (charts, PRs, history)
+  6. <span class="value">Minimal text input</span> — number pad only, no typing
+  7. <span class="value">Dark background + green accent</span> — gym-optimized
+</span>
+  </div>
+
+  <div class="flow-arrow">&#8595;</div>
+
+  <div class="ascii-wireframe">
+<span class="title">STRONG — Plate Calculator (Tap Weight Field)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;           <span class="brand-strong">Plate Calculator</span>                     [X]  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  Target: <span class="value">80.0 kg</span>    Bar: <span class="value">20.0 kg</span> (Olympic)       &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;       <span class="dim">[ 20kg plate ]</span>  <span class="dim">[ 20kg plate ]</span>             &#9474;
+&#9474;            &#9474;                &#9474;                      &#9474;
+&#9474;       <span class="dim">[ 10kg plate ]</span>  <span class="dim">[ 10kg plate ]</span>             &#9474;
+&#9474;            &#9474;                &#9474;   <span class="dim">&#8592; PER SIDE</span>         &#9474;
+&#9474;       <span class="dim">[= 5kg plate =]</span> <span class="dim">[= 5kg plate =]</span>           &#9474;
+&#9474;            &#9474;                &#9474;                      &#9474;
+&#9474;          =====            =====                     &#9474;
+&#9474;            &#9474;                &#9474;                      &#9474;
+&#9474;          <span class="dim">[&#8212;&#8212; BAR &#8212;&#8212;]</span>                         &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  Each side: <span class="value">20 + 10 + 5</span> = <span class="value">35 kg per side</span>         &#9474;
+&#9474;  Total: (35 x 2) + 20 bar = <span class="brand-strong">80.0 kg &#10003;</span>              &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="brand-strong">Use This Weight</span>]  [Customize Plates...]          &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">WHY THIS IS BRILLIANT:</span>
+  - Visual representation of plates removes ALL mental math
+  - Shows "per side" — exactly how trainers think
+  - Accounts for bar weight automatically
+  - Works for any plate inventory (customizable)
+</span>
+  </div>
+
+  <div class="flow-arrow">&#8595;</div>
+
+  <div class="ascii-wireframe">
+<span class="title">STRONG — Exercise Detail Screen (Tap Exercise Name)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-strong">&#9664;</span>  <span class="highlight">Barbell Row</span>                        [&#9881;]  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="brand-strong">Instructions</span>] [<span class="dim">History</span>] [<span class="dim">Records</span>] [<span class="dim">Charts</span>] &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">[animated gif: barbell row form demo]</span>              &#9474;
+&#9474;                                                        &#9474;
+&#9474;  1. Hinge at hips, keep back straight                    &#9474;
+&#9474;  2. Grip bar just outside knees                          &#9474;
+&#9474;  3. Pull to lower chest, squeeze shoulder blades         &#9474;
+&#9474;  4. Lower with control                                   &#9474;
+&#9474;                                                        &#9474;
+&#9474;  Muscles: <span class="label">Back (latissimus)</span>, <span class="label">Biceps</span>, <span class="label">Rear Delt</span>     &#9474;
+&#9474;  Equipment: <span class="value">Barbell</span>                                    &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-strong">&#9733; Personal Records</span>                                &#9474;
+&#9474;  Best Weight: <span class="value">85.0 kg</span>   Best Reps: <span class="value">10 reps</span>         &#9474;
+&#9474;  Est. 1RM: <span class="value">113 kg</span>                                     &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-strong">&#128200; Volume Trend (Last 8 Weeks)</span>                      &#9474;
+&#9474;  <span class="dim">  /\    /\      /\\                                   </span>&#9474;
+&#9474;  <span class="dim"> /  \  /  \    /  \\     /\                           </span>&#9474;
+&#9474;  <span class="dim">/    \/    \/\/    \\___/                             </span>&#9474;
+&#9474;  <span class="dim">W1  W2  W3  W4  W5  W6  W7  W8</span>                     &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+</span>
+  </div>
+
+  <div class="insight-box">
+    <h4>What AzFIT Should Take From Strong</h4>
+    <ul>
+      <li><strong>Previous session data inline</strong> — always show last workout's weight/reps next to input fields</li>
+      <li><strong>Auto rest timer</strong> — circular countdown between sets, auto-starts on completion</li>
+      <li><strong>Visual plate calculator</strong> — when a trainer prescribes 80kg, show the client which plates to load</li>
+      <li><strong>Checkmark to complete</strong> — satisfying single-tap to finish a set</li>
+      <li><strong>Layered information</strong> — keep workout screen minimal, tap for detail (charts, PRs, history)</li>
+      <li><strong>Superset grouping</strong> — visual indicator when exercises are paired</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== FREELETICS ===================== -->
+<section id="freeletics">
+  <h2><span style="color:var(--freeletics-blue)">&#9632;</span> Freeletics — AI Conversational Training</h2>
+
+  <div class="insight-box">
+    <h4>What Makes Freeletics Unique</h4>
+    <p>Freeletics pioneered <strong>conversational AI program generation</strong>. Instead of complex forms, the AI asks one question at a time: "How much time do you have?" "Any equipment?" "How much space?" Each answer adapts the next question and the final workout. 59 million users. The Coach+ feature adds ChatGPT-style conversational guidance.</p>
+  </div>
+
+  <h4>2. AI Conversational Workout Builder Flow</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">FREELETICS — Coach AI Chat: Program Generation (Conversational)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-free">&#9664; Coach</span>                              <span class="brand-free">&#9776;</span>  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-free">&#9679; Coach</span>                                           &#9474;
+&#9474;  Hey! Ready to train? I'll build the perfect            &#9474;
+&#9474;  workout for you. First question:                      &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">How much time do you have?</span>                           &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">&#9200; 10 min</span>]  [<span class="action">&#9200; 20 min</span>]  [<span class="action">&#9200; 30 min</span>]            &#9474;
+&#9474;  [<span class="action">&#9200; 45 min</span>]  [<span class="action">&#9200; 60 min</span>]  [<span class="action">No limit</span>]          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  You: <span class="value">30 min</span>                                         &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-free">&#9679; Coach</span>                                           &#9474;
+&#9474;  Great! 30 minutes is perfect. Next:                   &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">What equipment do you have?</span>                          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">&#127947; Full Gym</span>]  [<span class="action">&#127947; Dumbbells Only</span>]              &#9474;
+&#9474;  [<span class="action">&#127947; Pull-up Bar</span>]  [<span class="action">&#127947; No Equipment</span>]              &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  You: <span class="value">Full Gym</span>                                       &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-free">&#9679; Coach</span>                                           &#9474;
+&#9474;  Awesome. Last question:                               &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">What's your focus today?</span>                             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">&#128170; Strength</span>]  [<span class="action">&#127947; Hypertrophy</span>]  [<span class="action">&#128293; Conditioning</span>]   &#9474;
+&#9474;  [<span class="action">&#127939; Endurance</span>]  [<span class="action">&#129336; Mobility</span>]  [<span class="action">&#128170; Full Body</span>]      &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  You: <span class="value">Hypertrophy</span>                                    &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="success">&#10003; Generating your workout...</span>                         &#9474;
+&#9474;  <span class="brand-free">&#9679; Coach</span>                                           &#9474;
+&#9474;  Here's your <span class="value">30-min Hypertrophy</span> workout!               &#9474;
+&#9474;  [<span class="action">&#9654; Start Workout</span>]                                  &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">KEY PATTERNS:</span>
+  1. <span class="value">One question at a time</span> — no overwhelming forms
+  2. <span class="value">Tappable pill buttons</span> — no typing, just tap
+  3. <span class="value">Progressive disclosure</span> — each answer narrows the next
+  4. <span class="value">AI personality</span> — "Hey! Ready to train?" feels human
+  5. <span class="value">Instant generation</span> — workout appears immediately after last answer
+  6. <span class="value">Context-aware icons</span> — &#9200; for time, &#127947; for equipment, &#128170; for goals
+</span>
+  </div>
+
+  <div class="flow-arrow">&#8595;</div>
+
+  <div class="ascii-wireframe">
+<span class="title">FREELETICS — Training Journey Roadmap (Program Progress)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-free">&#9664; Training Journey</span>        God Strength        [i]  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  Week 8 of 12  <span class="brand-free">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;</span>  67%          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="success">&#10003;</span> <span class="dim">Phase 1: Foundation</span>      Weeks 1-4     <span class="success">COMPLETE</span>  &#9474;
+&#9474;  <span class="success">&#10003;</span> <span class="dim">Phase 2: Development</span>     Weeks 5-8     <span class="success">COMPLETE</span>  &#9474;
+&#9474;  <span class="brand-free">&#9654;</span> <span class="highlight">Phase 3: Intensification</span> Weeks 9-12    <span class="brand-free">ACTIVE</span>    &#9474;
+&#9474;     <span class="dim">&#9492;&#9472; Week 9: Strength Focus</span>   <span class="dim">Mon &#10003; Wed &#10003; Fri &#9654;</span>        &#9474;
+&#9474;     <span class="dim">&#9492;&#9472; Week 10: Volume Peak</span>   <span class="dim">pending</span>                 &#9474;
+&#9474;     <span class="dim">&#9492;&#9472; Week 11: Deload</span>        <span class="dim">pending</span>                 &#9474;
+&#9474;     <span class="dim">&#9492;&#9472; Week 12: Max Test</span>      <span class="dim">pending</span>                 &#9474;
+&#9474;  <span class="dim">&#9679; Phase 4: Peak</span>            Weeks 13-16   <span class="dim">locked</span>    &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-free">&#127942; Next Milestone:</span> Week 12 1RM Test                &#9474;
+&#9474;  <span class="dim">Your estimated 1RM has improved 15% since Week 1.</span>     &#9474;
+&#9474;  [<span class="action">View Full Program</span>]                                  &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">KEY PATTERNS:</span>
+  1. <span class="value">Phased progression</span> — Foundation &#8594; Development &#8594; Intensification &#8594; Peak
+  2. <span class="value">Visual progress bar</span> — "Week 8 of 12" with filled blocks
+  3. <span class="value">Week-by-week breakdown</span> — each week has a theme/focus
+  4. <span class="value">Session markers</span> — Mon &#10003; Wed &#10003; Fri &#9654; shows what's done/upcoming
+  5. <span class="value">Locked future phases</span> — creates anticipation for what's coming
+  6. <span class="value">Milestone callout</span> — "Next: 1RM Test in 4 weeks" with improvement stat
+</span>
+  </div>
+
+  <div class="insight-box">
+    <h4>What AzFIT Should Take From Freeletics</h4>
+    <ul>
+      <li><strong>Conversational program builder</strong> — Chat-style wizard for program creation (one question at a time)</li>
+      <li><strong>Training journey roadmap</strong> — Visual phased timeline showing client progress</li>
+      <li><strong>Tappable pill buttons</strong> — No complex dropdowns, just tap to answer</li>
+      <li><strong>Week-by-week session markers</strong> — Show Mon/Wed/Fri completion status</li>
+      <li><strong>Milestone callouts</strong> — "Next: 1RM Test in 4 weeks" with improvement stats</li>
+      <li><strong>Progressive disclosure</strong> — Don't overwhelm, reveal one step at a time</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== 1FIT ===================== -->
+<section id="onefit">
+  <h2><span style="color:var(--fit-purple)">&#9632;</span> 1FIT — All-in-One Coaching Platform</h2>
+
+  <div class="insight-box">
+    <h4>What Makes 1FIT Unique</h4>
+    <p>1FIT is the most sophisticated <strong>coach-client management platform</strong>. It features client roadmaps with fully customizable phases, daily check-ins, recovery tracking (HRV, sleep, readiness), lead generation tools, and group management. The "Provide Clarity, Incentivise Accountability, Enhance Adherence, Achieve Results" framework is its design philosophy.</p>
+  </div>
+
+  <h4>3. Coach Dashboard & Client Roadmap Flow</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">1FIT — Coach Dashboard (Client Overview + Roadmaps)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-fit">1FIT</span>    Dashboard    Clients    Programs    Leads  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">Active Clients (24)</span>    [<span class="action">+ New Client</span>]             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">Sarah Chen</span>    <span class="success">&#9679; On Track</span>                         &#9474;
+&#9474;  <span class="dim">Fat Loss Program &#183; Week 6 of 12</span>                      &#9474;
+&#9474;  <span class="brand-fit">Roadmap:</span> [<span class="success">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span>] 50%                     &#9474;
+&#9474;  <span class="dim">Adherence: 92%  &#183; Weight: -3.2kg  &#183; Next check-in: Fri</span>&#9474;
+&#9474;  [<span class="action">View Details</span>]  [<span class="action">Check-in</span>]  [<span class="action">Message</span>]             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">Marcus Tan</span>    <span class="yellow">&#9679; Needs Attention</span>                   &#9474;
+&#9474;  <span class="dim">Muscle Gain &#183; Week 8 of 16</span>                           &#9474;
+&#9474;  <span class="brand-fit">Roadmap:</span> [<span class="success">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span>] 50%           &#9474;
+&#9474;  <span class="dim">Adherence: 64%  &#183; Weight: +1.8kg  &#183; Missed 2 sessions</span>&#9474;
+&#9474;  [<span class="action">View Details</span>]  [<span class="action">Check-in</span>]  [<span class="action">Message</span>]             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">David Lim</span>     <span class="red">&#9679; At Risk</span>                           &#9474;
+&#9474;  <span class="dim">Rehab Program &#183; Week 3 of 8</span>                          &#9474;
+&#9474;  <span class="brand-fit">Roadmap:</span> [<span class="success">&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;</span>] 38%                        &#9474;
+&#9474;  <span class="dim">Adherence: 45%  &#183; HRV: Low  &#183; No check-in 5 days</span>    &#9474;
+&#9474;  [<span class="action">View Details</span>]  [<span class="action">Check-in</span>]  [<span class="action">Message</span>]             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">&#128200; This Week's Insights</span>                            &#9474;
+&#9474;  &#8226; Avg adherence: 78% (<span class="red">-5%</span> vs last week)              &#9474;
+&#9474;  &#8226; 3 clients need attention this week                    &#9474;
+&#9474;  &#8226; 2 new leads from landing page                        &#9474;
+&#9474;  &#8226; Total sessions completed: 47                         &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">KEY PATTERNS:</span>
+  1. <span class="value">Status color dot</span> — Green = On Track, Yellow = Needs Attention, Red = At Risk
+  2. <span class="value">Roadmap progress bar per client</span> — visual phase completion
+  3. <span class="value">Key metrics at a glance</span> — adherence %, weight change, next check-in
+  4. <span class="value">Action buttons per client</span> — View / Check-in / Message (no navigation)
+  5. <span class="value">Weekly insights summary</span> — aggregates across all clients
+  6. <span class="value">Risk scoring</span> — automatic flags based on adherence + HRV + check-ins
+</span>
+  </div>
+
+  <div class="flow-arrow">&#8595;</div>
+
+  <div class="ascii-wireframe">
+<span class="title">1FIT — Client Detail: Full Roadmap View</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-fit">&#9664;</span>  <span class="highlight">Sarah Chen</span>     <span class="success">&#9679; On Track</span>     [&#9993;] [&#9881;]  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">Roadmap</span>] [<span class="dim">Training</span>] [<span class="dim">Nutrition</span>] [<span class="dim">Recovery</span>] [<span class="dim">Check-ins</span>]&#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">Fat Loss Transformation</span>   12-Week Program           &#9474;
+&#9474;  <span class="brand-fit">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span>  Week 6 of 12  50%              &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="success">&#9632;</span> <span class="success">PHASE 1: ASSESSMENT</span>        W1-W2     <span class="success">COMPLETE</span>  &#9474;
+&#9474;     Body composition, mobility, baseline strength       &#9474;
+&#9474;     <span class="dim">&#10003; Initial photos  &#10003; PAR-Q  &#10003; 1RM baseline</span>         &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="success">&#9632;</span> <span class="success">PHASE 2: FOUNDATION</span>        W3-W4     <span class="success">COMPLETE</span>  &#9474;
+&#9474;     Movement pattern mastery, work capacity build       &#9474;
+&#9474;     <span class="dim">&#10003; Squat pattern  &#10003; Hinge pattern  &#10003; Push/Pull</span>    &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">&#9654;</span> <span class="highlight">PHASE 3: INTENSIFICATION</span>   W5-W10    <span class="brand-fit">ACTIVE</span>    &#9474;
+&#9474;     Progressive overload, metabolic conditioning        &#9474;
+&#9474;     <span class="dim">&#10003; W5  &#10003; W6  &#9654; W7  &#9675; W8  &#9675; W9  &#9675; W10</span>              &#9474;
+&#9474;     Current focus: <span class="value">Increase training density</span>           &#9474;
+&#9474;     Target: <span class="value">-5kg bodyweight by end of Phase 3</span>          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9632; PHASE 4: PEAK</span>              W11-W12   <span class="dim">UPCOMING</span>  &#9474;
+&#9474;     Peak conditioning, final photos, re-assessment      &#9474;
+&#9474;     <span class="dim">Final body comp  &#183; Progress photos  &#183; 1RM re-test</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9632; PHASE 5: MAINTENANCE</span>       W13+      <span class="dim">UPCOMING</span>  &#9474;
+&#9474;     Sustainable habits, long-term adherence             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">&#128200; Progress Metrics</span>                                   &#9474;
+&#9474;  Weight: <span class="success">-3.2kg</span>  &#9474;  Body Fat: <span class="success">-2.1%</span>  &#9474;  1RM: <span class="success">+8%</span>      &#9474;
+&#9474;  Adherence: <span class="success">92%</span>  &#9474;  Sessions: <span class="value">18/20</span>  &#9474;  HRV: <span class="success">Good</span>    &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">KEY PATTERNS:</span>
+  1. <span class="value">Named phases with descriptions</span> — not just "Week 1-4" but "Foundation: Movement mastery"
+  2. <span class="value">Phase deliverables listed</span> — "&#10003; Initial photos &#10003; PAR-Q &#10003; 1RM baseline"
+  3. <span class="value">Active phase highlighted</span> — current week marker + focus description
+  4. <span class="value">Target metrics per phase</span> — "Target: -5kg by end of Phase 3"
+  5. <span class="value">Tabbed sections</span> — Roadmap / Training / Nutrition / Recovery / Check-ins
+  6. <span class="value">Progress metrics strip</span> — 6 key numbers at a glance
+</span>
+  </div>
+
+  <div class="flow-arrow">&#8595;</div>
+
+  <div class="ascii-wireframe">
+<span class="title">1FIT — Recovery Dashboard (Wearable Integration)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="brand-fit">&#9664;</span>  Recovery          Sarah Chen      Today     &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;        <span class="success">&#9679; READY</span>                                     &#9474;
+&#9474;     <span class="brand-fit">Recovery Score: 82/100</span>                          &#9474;
+&#9474;     <span class="dim">Green = go hard. Yellow = moderate. Red = deload.</span> &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">HRV</span>         <span class="success">72ms</span>     <span class="success">&#8593; +3ms</span> vs baseline          &#9474;
+&#9474;  <span class="dim">[=======&#9472;&#9472;&#9472;&#9472;]  Good range</span>                             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">Sleep</span>       <span class="success">7h 42m</span>   <span class="success">&#8593; +42m</span> vs average          &#9474;
+&#9474;  <span class="dim">[========&#9472;&#9472;&#9472;]  Deep: 1h 20m  REM: 1h 45m</span>           &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">Readiness</span>   <span class="success">85%</span>      <span class="success">&#8593; +5%</span> vs yesterday          &#9474;
+&#9474;  <span class="dim">[=========&#9472;&#9472;]  Based on HRV + sleep + previous load</span>&#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">Sleep Quality</span>  <span class="success">&#9733;&#9733;&#9733;&#9733;</span><span class="dim">&#9734;</span>  4/5                        &#9474;
+&#9474;  <span class="brand-fit">RHR</span>            <span class="success">58 bpm</span>     <span class="success">&#8595; -2</span> vs baseline          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="brand-fit">&#128200; 7-Day Trend</span>                                       &#9474;
+&#9474;  <span class="dim">  M    T    W    T    F    S    S</span>                     &#9474;
+&#9474;  <span class="success">&#9632;82 &#9632;78 &#9632;85 &#9632;80 &#9632;88 &#9632;75 &#9632;82</span>  <span class="dim">&#8592; Recovery scores</span>    &#9474;
+&#9474;  <span class="dim">  &#9632;8  &#9632;7  &#9632;9  &#9632;0  &#9632;8  &#9632;6  &#9632;7</span>   <span class="dim">&#8592; Sleep hours</span>       &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">Adjust Today's Training</span>]  [<span class="action">View History</span>]           &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">KEY PATTERNS:</span>
+  1. <span class="value">Single recovery score</span> — 82/100 is the headline metric
+  2. <span class="value">Color-coded readiness</span> — Green=go, Yellow=moderate, Red=deload
+  3. <span class="value">Trend over time</span> — 7-day chart shows patterns
+  4. <span class="value">Baseline comparison</span> — "+3ms vs baseline" not just raw number
+  5. <span class="value">Coach action button</span> — "Adjust Today's Training" based on score
+  6. <span class="value">Multiple data sources</span> — HRV, sleep, RHR combined into one score
+</span>
+  </div>
+
+  <div class="insight-box">
+    <h4>What AzFIT Should Take From 1FIT</h4>
+    <ul>
+      <li><strong>Client status color system</strong> — Green (On Track), Yellow (Needs Attention), Red (At Risk) dots</li>
+      <li><strong>Per-client roadmap progress bar</strong> — in the client list, show their phase completion</li>
+      <li><strong>Named phases with deliverables</strong> — "Foundation: &#10003; PAR-Q &#10003; 1RM baseline"</li>
+      <li><strong>Recovery score dashboard</strong> — Single number (HRV + sleep + readiness) with trend</li>
+      <li><strong>Weekly insights summary</strong> — "Avg adherence: 78% (-5% vs last week)"</li>
+      <li><strong>In-line action buttons</strong> — View / Check-in / Message per client card</li>
+      <li><strong>Phase target metrics</strong> — "Target: -5kg by end of Phase 3"</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== AZFIT DRAFT ===================== -->
+<section id="azfit-draft">
+  <h2><span style="color:var(--cyan)">&#9632;</span> AzFIT Integration Draft — The Best of All Three</h2>
+
+  <div class="recommendation">
+    <h4>Design Philosophy: "What if Strong's workout logger + Freeletics' AI conversation + 1FIT's coach dashboard had a baby?"</h4>
+    <p style="color:var(--text-secondary);margin-top:8px;">This draft merges the best patterns from all three apps into AzFIT's existing architecture, while keeping the portal's superior visual design (dark charcoal cards, multi-colored rings, severity-colored alerts).</p>
+  </div>
+
+  <h4>DRAFT 1: AzFIT Workout Session Logger (Strong-style)</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">AZFIT — Workout Session Page (Trainer + Client View)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="cyan">&#9664;</span> <span class="highlight">Upper Body A</span>      Sarah Chen     <span class="cyan">&#9201; 42:18</span>  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">Phase:</span> Intensification &#183; Week 6 &#183; Day 2             &#9474;
+&#9474;  <span class="dim">[=======&#9472;&#9472;&#9472;&#9472;] 60% of program complete</span>               &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="green">A1.</span> <span class="highlight">Bench Press</span>        <span class="dim">[i] [vid] [&#128200;]</span>                  &#9474;
+&#9474;      <span class="dim">Previous: 60kg x 10, 10, 9 (RPE 8)</span>               &#9474;
+&#9474;      <span class="purple">Target: 62.5kg x 10, 10, 10 (RPE 8)</span>               &#9474;
+&#9474;                                                        &#9474;
+&#9474;      Set 1    <span class="value">62.5</span> kg    <span class="value">10</span> reps   RPE <span class="value">8</span>    <span class="success">&#10003;</span>       &#9474;
+&#9474;      Set 2    <span class="value">62.5</span> kg    <span class="value">10</span> reps   RPE <span class="value">8</span>    <span class="success">&#10003;</span>       &#9474;
+&#9474;      Set 3    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps  RPE <span class="action">[_]</span>   [ ]      &#9474;
+&#9474;                                                        &#9474;
+&#9474;      <span class="dim">&#9472;&#9472;&#9472; Rest Timer &#9472;&#9472;&#9472; <span class="cyan">&#9201; 1:30</span> remaining &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;             <span class="dim">[=======&gt;    ]</span>  [<span class="action">+15s</span>] [<span class="action">&#9654; Skip</span>]          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="green">A2.</span> <span class="highlight">Barbell Row</span>        <span class="dim">[i] [vid] [&#128200;]</span>                  &#9474;
+&#9474;      <span class="dim">Previous: 55kg x 10, 10, 10 (RPE 7)</span>              &#9474;
+&#9474;      <span class="purple">Target: 57.5kg x 10, 10, 10 (RPE 8)</span>               &#9474;
+&#9474;                                                        &#9474;
+&#9474;      Set 1    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps  RPE <span class="action">[_]</span>   [ ]      &#9474;
+&#9474;      Set 2    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps  RPE <span class="action">[_]</span>   [ ]      &#9474;
+&#9474;      Set 3    <span class="action">[____]</span> kg   <span class="action">[__]</span> reps  RPE <span class="action">[_]</span>   [ ]      &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="green">B1.</span> <span class="highlight">Dumbbell Shoulder Press</span>   <span class="yellow">&#9733; SS</span> w/ Lateral Raise   &#9474;
+&#9474;      <span class="dim">Previous: 18kg x 12, 12, 10</span>                      &#9474;
+&#9474;      <span class="purple">Target: 20kg x 12, 12, 12 (RPE 8)</span>               &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="cyan">&#9632; Finish Session</span>]  [&#128247; Log Photo]  [&#9881; Adjust]   &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">MERGED FROM:</span>
+  <span class="brand-strong">Strong:</span> Previous session inline, checkmark completion, auto rest timer,
+          superset indicator, layered info (tap for charts/videos)
+  <span class="brand-fit">1FIT:</span>   Phase context ("Intensification, Week 6"), RPE tracking,
+          target vs actual comparison, program progress bar
+  Portal:  Cyan primary color, clean dark/light card design
+</span>
+  </div>
+
+  <h4>DRAFT 2: AzFIT Conversational Program Builder (Freeletics-style)</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">AZFIT — AI Program Builder (Conversational Wizard)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="cyan">&#9664;</span> <span class="highlight">Create Program</span>          <span class="cyan">&#9889; AI Coach</span>         [?]  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">&#9679; AzFIT AI Coach</span>                                    &#9474;
+&#9474;  I'll build a personalized program for your client.     &#9474;
+&#9474;  Let's start with the basics:                          &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">Step 1 of 6: Select Client</span>                           &#9474;
+&#9474;  <span class="dim">Who is this program for?</span>                             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">Sarah Chen</span>]  [<span class="action">Marcus Tan</span>]  [<span class="action">David Lim</span>]          &#9474;
+&#9474;  [<span class="action">+ New Client</span>]                                       &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">&#9679; AzFIT AI Coach</span>                                    &#9474;
+&#9474;  Great! Building a program for <span class="value">Sarah Chen</span>.              &#9474;
+&#9474;  Her current stats: Weight 68kg, BF 22%, 1RM bench 55kg&#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">Step 2 of 6: Training Goal</span>                           &#9474;
+&#9474;  <span class="dim">What's the primary goal?</span>                             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">&#128170; Strength</span>] [<span class="action">&#127947; Hypertrophy</span>] [<span class="action">&#9889; Fat Loss</span>]        &#9474;
+&#9474;  [<span class="action">&#127939; Endurance</span>] [<span class="action">&#129336; Mobility/Rehab</span>] [<span class="action">&#127942; Sport Specific</span>] &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  Step 3: Training Frequency  Step 4: Experience        &#9474;
+&#9474;  Step 5: Equipment          Step 6: Duration           &#9474;
+&#9474;  <span class="dim">(shown after previous steps are answered)</span>             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="dim">&#9664; Back</span>]              Progress: <span class="cyan">&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;</span> 2/6       &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">MERGED FROM:</span>
+  <span class="brand-free">Freeletics:</span> Conversational one-question-at-a-time format,
+              tappable pill buttons, progress indicator
+  <span class="brand-fit">1FIT:</span>       Client context auto-loaded (stats, history),
+              phased approach (goal &#8594; frequency &#8594; experience &#8594; equipment &#8594; duration)
+  Portal:      AI Chat component (already built) used as the interface,
+              @-commands for quick client selection
+</span>
+  </div>
+
+  <h4>DRAFT 3: AzFIT Client Roadmap (1FIT-style)</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">AZFIT — Client Profile: Training Roadmap Tab</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="cyan">&#9664;</span>  <span class="highlight">Sarah Chen</span>    <span class="green">&#9679; On Track</span>    [&#9993;] [&#128200;] [&#9881;]  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="cyan">Roadmap</span>] [<span class="dim">BioPrint</span>] [<span class="dim">BodyStats</span>] [<span class="dim">Sessions</span>] [<span class="dim">Photos</span>] &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">&#128170; Strength Foundation</span>    16-Week Program            &#9474;
+&#9474;  <span class="cyan">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span>  Week 6 of 16  38%            &#9474;
+&#9474;  Coach: <span class="dim">You</span>  &#183;  Started: <span class="dim">May 1, 2026</span>  &#183;  Est. end: <span class="dim">Aug 21</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="success">&#9632;</span> <span class="success">PHASE 1: ASSESSMENT</span>        W1-W2    <span class="success">COMPLETE</span>    &#9474;
+&#9474;     <span class="dim">&#10003; BioPrint baseline  &#10003; 1RM test (all lifts)</span>      &#9474;
+&#9474;     <span class="dim">&#10003; Body stats photos  &#10003; PAR-Q completed</span>           &#9474;
+&#9474;     <span class="dim">&#10003; Mobility screen    &#10003; Goal setting session</span>      &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="success">&#9632;</span> <span class="success">PHASE 2: FOUNDATION</span>        W3-W5    <span class="success">COMPLETE</span>    &#9474;
+&#9474;     <span class="dim">&#10003; Movement pattern mastery  &#10003; Work capacity build</span> &#9474;
+&#9474;     <span class="dim">&#10003; Technique refinement      &#10003; Core strength base</span>  &#9474;
+&#9474;     Result: <span class="success">+12% strength</span> across all movement patterns&#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">&#9654;</span> <span class="highlight">PHASE 3: INTENSIFICATION</span>   W6-W10   <span class="cyan">ACTIVE</span>      &#9474;
+&#9474;     Progressive overload with Poliquin methods          &#9474;
+&#9474;     <span class="dim">&#10003; W6: GVT 10x10        &#10003; W7: 5-4-3-2-1</span>         &#9474;
+&#9474;     <span class="dim">&#10003; W8: Rest-Pause       &#9654; W9: Cluster Sets</span>       &#9474;
+&#9474;     <span class="dim">&#9675; W10: Wave Loading</span>                               &#9474;
+&#9474;     <span class="cyan">Current method: Rest-Pause (Poliquin)</span>              &#9474;
+&#9474;     <span class="cyan">Target: Bench 1RM 65kg, Squat 1RM 90kg</span>            &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9632; PHASE 4: REALIZATION</span>     W11-W13  <span class="dim">UPCOMING</span>    &#9474;
+&#9474;     <span class="dim">Peak strength, 1RM retest, deload protocol</span>        &#9474;
+&#9474;     <span class="dim">&#9675; 1RM test week  &#9675; Progress photos  &#9675; BioPrint</span>    &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9632; PHASE 5: PEAK</span>            W14-W16  <span class="dim">UPCOMING</span>    &#9474;
+&#9474;     <span class="dim">Sport-specific peak, competition prep</span>             &#9474;
+&#9474;     <span class="dim">&#9675; Peak week  &#9675; Final assessment  &#9675; Next program</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">&#128200; Current Progress</span>                                  &#9474;
+&#9474;  1RM Bench: <span class="success">62kg &#8593; +7kg</span>  1RM Squat: <span class="success">85kg &#8593; +10kg</span>  &#9474;
+&#9474;  Weight: <span class="success">65.8kg &#8595; -2.2kg</span>  Body Fat: <span class="success">19.5% &#8595; -2.5%</span>  &#9474;
+&#9474;  Adherence: <span class="success">92%</span>  Sessions: <span class="value">18/20</span>  BioPrint: <span class="success">Improved</span> &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">View This Week's Sessions</span>]  [<span class="action">Adjust Program</span>]       &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">MERGED FROM:</span>
+  <span class="brand-fit">1FIT:</span>       Phased roadmap with deliverables, status indicators,
+              progress metrics strip, week-by-week breakdown
+  <span class="brand-free">Freeletics:</span> Named phases with themes, locked future phases creating anticipation
+  Portal:      BioPrint integration, Poliquin method naming, tabbed layout,
+              dark charcoal card design
+</span>
+  </div>
+
+  <h4>DRAFT 4: AzFIT Recovery Dashboard (1FIT-style)</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">AZFIT — Recovery Tab (Client Profile)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="cyan">&#9664;</span>  Recovery          Sarah Chen      Jun 8, 2026 &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;           <span class="green">&#9679; GO</span>                                        &#9474;
+&#9474;     <span class="cyan">Readiness Score: 82/100</span>                           &#9474;
+&#9474;     <span class="dim">Green = push hard. Yellow = moderate load.</span>        &#9474;
+&#9474;     <span class="dim">Red = deload day. Purple = skill work only.</span>       &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="purple">HRV</span>          <span class="value">72ms</span>      <span class="green">&#8593; +3ms</span> vs baseline         &#9474;
+&#9474;  <span class="dim">[=======&#9472;&#9472;&#9472;&#9472;]  Good &#183; Trending up</span>                    &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="purple">Sleep</span>        <span class="value">7h 42m</span>    <span class="green">&#8593; +42m</span> vs average          &#9474;
+&#9474;  <span class="dim">[========&#9472;&#9472;&#9472;]  Deep: 1h20m &#183; REM: 1h45m &#183; Score: 82</span>&#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="purple">RHR</span>          <span class="value">58 bpm</span>    <span class="green">&#8595; -2</span> vs baseline             &#9474;
+&#9474;  <span class="dim">[=========&#9472;&#9472;]  Excellent resting heart rate</span>        &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="purple">Sleep Quality</span>  <span class="green">&#9733;&#9733;&#9733;&#9733;</span><span class="dim">&#9734;</span>   4/5  &#183; Woke 1x              &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="purple">Stress</span>       <span class="value">Low</span>       <span class="green">&#8595; from Moderate</span>               &#9474;
+&#9474;  <span class="dim">Self-reported &#183; Last 7 days avg</span>                      &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="cyan">&#128200; 7-Day Readiness Trend</span>                             &#9474;
+&#9474;  <span class="dim">  M     T     W     T     F     S     S</span>              &#9474;
+&#9474;  <span class="green">&#9632;82  &#9632;78  &#9632;85  &#9632;80  &#9632;88  &#9632;75  &#9632;82</span>  <span class="dim">&#8592; Readiness</span>    &#9474;
+&#9474;  <span class="purple">&#9632;7.2 &#9632;6.8 &#9632;7.5 &#9632;7.0 &#9632;8.1 &#9632;6.5 &#9632;7.4</span>  <span class="dim">&#8592; Sleep hrs</span>   &#9474;
+&#9474;  <span class="orange">&#9632;62  &#9632;60  &#9632;58  &#9632;59  &#9632;57  &#9632;61  &#9632;58</span>  <span class="dim">&#8592; RHR</span>        &#9474;
+&#9474;                                                        &#9474;
+&#9474;  [<span class="action">Adjust Today's Training</span>]  [<span class="action">Sync Wearable</span>]          &#9474;
+&#9474;  <span class="dim">Data from: Oura Ring (connected Jun 1)</span>               &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">MERGED FROM:</span>
+  <span class="brand-fit">1FIT:</span>       Single readiness score headline, 7-day trend chart,
+              color-coded status, "Adjust Training" coach action
+  Portal:      Purple accent for recovery metrics, chart styling,
+              dark card design with colored metric rows
+  <span class="brand-strong">Strong:</span>     Baseline comparison ("+3ms vs baseline") for context
+</span>
+  </div>
+
+  <h4>DRAFT 5: AzFIT Coach Dashboard (1FIT + Portal merged)</h4>
+
+  <div class="ascii-wireframe">
+<span class="title">AZFIT — Dashboard (Final Design: Portal Visuals + 1FIT Data)</span>
+<span class="dim">
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;  <span class="cyan">Dashboard</span>                    Search...    <span class="cyan">&#9789; &#128276; &#128100;</span>  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472; KPI CARDS (Portal style: charcoal bg + multi rings) &#9472;&#9472;</span>  &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">[Dark Card: Sessions]</span>  <span class="dim">[Dark Card: Active Clients]</span>    &#9474;
+&#9474;  <span class="value">12/14</span> <span class="green">&#8630; +3</span>            <span class="value">18/24</span>  <span class="green">75%</span>                    &#9474;
+&#9474;  <span class="green">&#9711; 86%</span> ring             <span class="purple">&#9711; 75%</span> ring (multi-color)       &#9474;
+&#9474;  14 booked this week    18 seen, 4 semi, 2 need attn   &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">[Dark Card: New Signups]</span>  <span class="dim">[Dark Card: Weekly Revenue]</span>  &#9474;
+&#9474;  <span class="value">3/8</span> goal               <span class="value">$2,550</span> <span class="green">&#8630; +12%</span>                &#9474;
+&#9474;  <span class="orange">&#9711; 38%</span> ring             <span class="cyan">&#9711; 81%</span> ring                  &#9474;
+&#9474;  3 this month           +12% vs last month             &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472; CLIENT STATUS LIST (1FIT style: color dots + roadmaps) &#9472;&#9472;</span> &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="highlight">Your Clients (24)</span>  [All <span class="dim">&#9662;</span>]  Search...  [<span class="cyan">View All</span>]       &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="green">&#9679;</span> <span class="highlight">Sarah Chen</span>    <span class="green">On Track</span>                         &#9474;
+&#9474;    Strength &#183; W6/16  [<span class="cyan">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span>] 38%              &#9474;
+&#9474;    Adh:92% Wt:-2.2kg 1RM:+7kg Next:Fri                 &#9474;
+&#9474;    [<span class="cyan">View</span>] [<span class="cyan">Check-in</span>] [<span class="cyan">Msg</span>]                                &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="yellow">&#9679;</span> <span class="highlight">Marcus Tan</span>    <span class="yellow">Needs Attention</span>                  &#9474;
+&#9474;    Hypertrophy &#183; W8/12  [<span class="cyan">&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;</span>] 67%          &#9474;
+&#9474;    Adh:64% Wt:+1.8kg Missed:2 sessions                  &#9474;
+&#9474;    [<span class="cyan">View</span>] [<span class="yellow">Check-in</span>] [<span class="cyan">Msg</span>]                                &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="red">&#9679;</span> <span class="highlight">David Lim</span>     <span class="red">At Risk</span>                          &#9474;
+&#9474;    Rehab &#183; W3/8  [<span class="cyan">&#9632;&#9632;&#9632;</span><span class="dim">&#9632;&#9632;&#9632;&#9632;&#9632;</span>] 38%                      &#9474;
+&#9474;    Adh:45% HRV:Low No check-in:5 days                   &#9474;
+&#9474;    [<span class="cyan">View</span>] [<span class="red">Check-in</span>] [<span class="cyan">Msg</span>]                                &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="dim">&#9472;&#9472; ALERTS (Portal style: colored left borders) &#9472;&#9472;</span>     &#9474;
+&#9474;                                                        &#9474;
+&#9474;  <span class="red">&#9474;</span> <span class="red">Body stats overdue (7 days)</span>     Sarah Chen  2h ago &#9474;
+&#9474;  <span class="yellow">&#9474;</span> <span class="yellow">Nutrition log missing (5 days)</span>   Marcus Tan  1d ago &#9474;
+&#9474;  <span class="yellow">&#9474;</span> <span class="yellow">Session no-show yesterday</span>        David Lim   1d ago &#9474;
+&#9474;  <span class="red">&#9474;</span> <span class="red">PAR-Q assessment expired</span>         Jane Wong   4h ago &#9474;
+&#9474;  <span class="cyan">&#9474;</span> <span class="cyan">Bi-weekly assessment due</span>         Michael Lee 6d ago &#9474;
+&#9474;                                                        &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+
+<span class="label">FINAL MERGE:</span>
+  Portal:   Charcoal KPI cards, multi-colored rings, severity-colored alert borders
+  1FIT:     Client status dots (green/yellow/red), per-client roadmap bars,
+            inline action buttons, adherence metrics
+  All:      Clean, scannable, coach-optimized layout
+</span>
+  </div>
+
+</section>
+
+<!-- ===================== INTEGRATION PLAN ===================== -->
+<section id="integration">
+  <h2><span class="icon">&#128736;</span> Implementation Priority for AzFIT</h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Priority</th>
+        <th>Feature</th>
+        <th>Source</th>
+        <th>Effort</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-must">P0</span></td>
+        <td>KPI card redesign (charcoal + multi rings)</td>
+        <td>Portal</td>
+        <td>2h</td>
+        <td class="winner">High</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-must">P0</td>
+        <td>Alert severity borders + relative timestamps</td>
+        <td>Portal</td>
+        <td>1h</td>
+        <td class="winner">High</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-must">P0</td>
+        <td>Calendar time range 05:00 + color-coded events</td>
+        <td>Portal</td>
+        <td>1h</td>
+        <td class="winner">High</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-azfit">P1</td>
+        <td>Client status dots (On Track/Attention/At Risk)</td>
+        <td>1FIT</td>
+        <td>2h</td>
+        <td class="winner">High</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-azfit">P1</td>
+        <td>Per-client roadmap progress bars</td>
+        <td>1FIT</td>
+        <td>3h</td>
+        <td class="winner">High</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-azfit">P1</td>
+        <td>Workout logger: previous session inline + rest timer</td>
+        <td>Strong</td>
+        <td>4h</td>
+        <td class="winner">High</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-new">P2</td>
+        <td>Conversational program builder (AI chat style)</td>
+        <td>Freeletics</td>
+        <td>6h</td>
+        <td class="winner">Medium</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-new">P2</td>
+        <td>Visual plate calculator</td>
+        <td>Strong</td>
+        <td>3h</td>
+        <td class="winner">Medium</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-new">P2</td>
+        <td>Recovery dashboard (HRV + sleep + readiness)</td>
+        <td>1FIT</td>
+        <td>4h</td>
+        <td class="winner">Medium</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-new">P3</td>
+        <td>Client phased roadmap with deliverables</td>
+        <td>1FIT</td>
+        <td>6h</td>
+        <td class="winner">Medium</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-new">P3</td>
+        <td>Progress celebration moments (confetti on PR)</td>
+        <td>Strava/Nike</td>
+        <td>2h</td>
+        <td class="winner">Low</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-new">P3</td>
+        <td>Weekly coach insights summary</td>
+        <td>1FIT</td>
+        <td>2h</td>
+        <td class="winner">Medium</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="recommendation">
+    <h4>Total Estimated Effort: ~36 hours of focused work</h4>
+    <p style="color:var(--text-secondary);margin-top:8px;">Break into 4 sprints of ~9 hours each. The P0 items alone (portal visual fixes) will take ~4 hours and dramatically improve the current look. The P1 items (1FIT + Strong patterns) add the professional coach experience. P2/P3 items differentiate AzFIT from every competitor.</p>
+  </div>
+
+</section>
+
+<footer>
+  <p>Workflow design research compiled June 2026. Sources: Strong.app, Freeletics.com, 1FIT.com, ScreensDesign.com, UX case studies.</p>
+  <p style="margin-top:8px;">All ASCII wireframes are original drafts created for AzFIT integration planning.</p>
+</footer>
+
+</div>
+
+<script>
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    if (window.scrollY >= section.offsetTop - 100) current = section.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+
+</body>
+</html>

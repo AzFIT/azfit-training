@@ -28,6 +28,7 @@ const SmartProgramFinderPage = lazy(() => import('./pages/SmartProgramFinderPage
 const ProgramMatcherPage = lazy(() => import('./pages/ProgramMatcherPage'))
 const OneRMCalculatorPage = lazy(() => import('./pages/OneRMCalculatorPage'))
 const WorkoutSessionPage = lazy(() => import('./pages/WorkoutSessionPage'))
+const WorkoutSessionLivePage = lazy(() => import('./pages/WorkoutSessionLivePage'))
 const WorkoutHistoryPage = lazy(() => import('./pages/WorkoutHistoryPage'))
 const ExerciseDetailPage = lazy(() => import('./pages/ExerciseDetailPage'))
 const ProgressTrackingPage = lazy(() => import('./pages/ProgressTrackingPage'))
@@ -96,6 +97,7 @@ export default function App() {
       <Route path="/program-matcher" element={<Protected><ProgramMatcherPage /></Protected>} />
       <Route path="/tools/1rm-calculator" element={<Protected><OneRMCalculatorPage /></Protected>} />
       <Route path="/clients/:clientId/workout/:programId" element={<Protected><WorkoutSessionPage /></Protected>} />
+      <Route path="/workout/live" element={<Protected><WorkoutSessionLivePage /></Protected>} />
       <Route path="/clients/:clientId/workouts" element={<Protected><WorkoutHistoryPage /></Protected>} />
       <Route path="/clients/:clientId/exercises/:exerciseId" element={<Protected><ExerciseDetailPage /></Protected>} />
       <Route path="/clients/:clientId/progress" element={<Protected><ProgressTrackingPage /></Protected>} />

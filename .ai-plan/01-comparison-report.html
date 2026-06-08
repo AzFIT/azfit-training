@@ -1,0 +1,2614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AzFIT Repository Comparison Report</title>
+<style>
+  /* ============ CSS RESET & VARIABLES ============ */
+  :root {
+    --bg-primary: #0a0e17;
+    --bg-secondary: #111827;
+    --bg-card: #1a2235;
+    --bg-card-hover: #1e2a3f;
+    --bg-elevated: #243049;
+    --border-color: #2a3655;
+    --border-hover: #3a4a6f;
+    --text-primary: #f0f4f8;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-primary: #00AEEF;
+    --accent-primary-dim: rgba(0,174,239,0.15);
+    --accent-primary-glow: rgba(0,174,239,0.4);
+    --accent-teal: #14b8a6;
+    --accent-green: #22c55e;
+    --accent-green-dim: rgba(34,197,94,0.15);
+    --accent-red: #ef4444;
+    --accent-red-dim: rgba(239,68,68,0.15);
+    --accent-amber: #f59e0b;
+    --accent-amber-dim: rgba(245,158,11,0.15);
+    --accent-purple: #a78bfa;
+    --winner-green: #22c55e;
+    --loser-red: #ef4444;
+    --gradient-hero: linear-gradient(135deg, #0a0e17 0%, #111827 50%, #0f172a 100%);
+    --gradient-accent: linear-gradient(135deg, #00AEEF 0%, #14b8a6 100%);
+    --gradient-card: linear-gradient(145deg, #1a2235 0%, #162032 100%);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+    --shadow-glow: 0 0 20px rgba(0,174,239,0.15);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent-primary); color: #000; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+  ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(0,174,239,0.2); }
+    50% { box-shadow: 0 0 20px rgba(0,174,239,0.4), 0 0 40px rgba(0,174,239,0.1); }
+  }
+  @keyframes borderGlow {
+    0%, 100% { border-color: var(--border-color); }
+    50% { border-color: var(--accent-primary); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-fadeInUp { animation: fadeInUp 0.6s ease forwards; }
+  .animate-fadeIn { animation: fadeIn 0.5s ease forwards; }
+  .animate-slideInLeft { animation: slideInLeft 0.6s ease forwards; }
+  .animate-slideInRight { animation: slideInRight 0.6s ease forwards; }
+  .animate-glow { animation: glow 2s ease-in-out infinite; }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+  .delay-400 { animation-delay: 0.4s; }
+  .delay-500 { animation-delay: 0.5s; }
+  .opacity-0 { opacity: 0; }
+
+  /* ============ HERO HEADER ============ */
+  .hero {
+    background: var(--gradient-hero);
+    border-bottom: 1px solid var(--border-color);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(0,174,239,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(20,184,166,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-primary-dim);
+    border: 1px solid rgba(0,174,239,0.3);
+    color: var(--accent-primary);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-badge .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, #00AEEF 0%, #14b8a6 50%, #22c55e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-subtitle {
+    color: var(--text-secondary);
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    max-width: 700px;
+    margin: 0 auto 30px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ============ NAV ============ */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,14,23,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-link {
+    padding: 10px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    transition: var(--transition);
+    border: 1px solid transparent;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--accent-primary);
+    background: var(--accent-primary-dim);
+    border-color: rgba(0,174,239,0.2);
+  }
+
+  /* ============ LAYOUT ============ */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  section {
+    padding: 50px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  section:last-of-type { border-bottom: none; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .section-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    background: var(--accent-primary-dim);
+    border: 1px solid rgba(0,174,239,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+
+  /* ============ CARDS ============ */
+  .card {
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-accent);
+    opacity: 0;
+    transition: var(--transition);
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  .card:hover::before { opacity: 1; }
+  .card-grid {
+    display: grid;
+    gap: 20px;
+  }
+  .card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr)); }
+  .card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); }
+  .card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+
+  /* ============ SCORE CARD (Repo Header) ============ */
+  .repo-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .repo-card.portal { border-top: 3px solid var(--accent-amber); }
+  .repo-card.training { border-top: 3px solid var(--accent-primary); }
+  .repo-card .repo-tag {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .repo-card.portal .repo-tag { background: var(--accent-amber-dim); color: var(--accent-amber); }
+  .repo-card.training .repo-tag { background: var(--accent-primary-dim); color: var(--accent-primary); }
+  .repo-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    padding-right: 80px;
+  }
+  .repo-card .repo-url {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .repo-card .repo-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+  .repo-card .repo-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .repo-card .repo-meta-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .repo-card .repo-meta-value {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+
+  /* ============ SCORE BADGE ============ */
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .score-high { background: var(--accent-green-dim); color: var(--accent-green); }
+  .score-medium { background: var(--accent-amber-dim); color: var(--accent-amber); }
+  .score-low { background: var(--accent-red-dim); color: var(--accent-red); }
+
+  /* ============ VERDICT BANNER ============ */
+  .verdict-banner {
+    background: var(--gradient-card);
+    border: 2px solid var(--accent-primary);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-glow);
+  }
+  .verdict-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0,174,239,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .verdict-banner .verdict-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-primary);
+    color: #000;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .verdict-banner h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .verdict-banner p { color: var(--text-secondary); position: relative; }
+
+  /* ============ COMPARISON TABLE ============ */
+  .comparison-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+  }
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .comparison-table thead th {
+    background: var(--bg-secondary);
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .comparison-table thead th:first-child { min-width: 180px; }
+  .comparison-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+  .comparison-table tbody tr:last-child { border-bottom: none; }
+  .comparison-table tbody tr:hover { background: rgba(0,174,239,0.04); }
+  .comparison-table tbody td {
+    padding: 14px 18px;
+    vertical-align: top;
+  }
+  .comparison-table .dim-cell { color: var(--text-muted); font-style: italic; }
+  .comparison-table .winner-cell {
+    background: var(--accent-green-dim);
+    color: var(--accent-green);
+    font-weight: 600;
+  }
+  .comparison-table .loser-cell {
+    background: var(--accent-red-dim);
+    color: var(--accent-red);
+  }
+  .comparison-table .neutral-cell {
+    background: rgba(245,158,11,0.08);
+    color: var(--accent-amber);
+    font-weight: 500;
+  }
+  .comparison-table .draw-cell {
+    color: var(--text-muted);
+  }
+  .comparison-table .row-dimension {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* ============ FEATURE CHECKLIST ============ */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+    gap: 12px;
+  }
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+  }
+  .feature-item:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+  .feature-checkboxes {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .feature-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .feature-check.portal-check { background: var(--accent-amber-dim); color: var(--accent-amber); border: 1px solid rgba(245,158,11,0.3); }
+  .feature-check.training-check { background: var(--accent-primary-dim); color: var(--accent-primary); border: 1px solid rgba(0,174,239,0.3); }
+  .feature-check.empty-check { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
+  .feature-text { font-size: 0.85rem; line-height: 1.5; }
+  .feature-text strong { color: var(--text-primary); }
+  .feature-text .feature-note { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 2px; }
+
+  /* ============ METRICS ROW ============ */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .metric-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-align: center;
+    transition: var(--transition);
+  }
+  .metric-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+  .metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+  .metric-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+
+  /* ============ PROGRESS BARS ============ */
+  .progress-container { margin: 8px 0; }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    height: 8px;
+    background: var(--bg-secondary);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1s ease;
+    background: var(--gradient-accent);
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  /* ============ COLLAPSIBLE SECTIONS ============ */
+  .collapse-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: left;
+    margin-bottom: 12px;
+  }
+  .collapse-btn:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+  .collapse-btn[aria-expanded="true"] { border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin-bottom: 0; }
+  .collapse-btn .chevron {
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+  }
+  .collapse-btn[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+  .collapse-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .collapse-content.open { display: block; animation: fadeInUp 0.3s ease; }
+
+  /* ============ ISSUES LIST ============ */
+  .issue-list { list-style: none; }
+  .issue-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+  }
+  .issue-list li:last-child { border-bottom: none; }
+  .issue-severity {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .sev-critical { background: var(--accent-red-dim); color: var(--accent-red); }
+  .sev-high { background: rgba(239,68,68,0.1); color: #f87171; }
+  .sev-medium { background: var(--accent-amber-dim); color: var(--accent-amber); }
+  .sev-low { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+
+  /* ============ PHASE TIMELINE ============ */
+  .phase-timeline {
+    display: grid;
+    gap: 16px;
+  }
+  .phase-card {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+  }
+  .phase-card:hover { border-color: var(--border-hover); }
+  .phase-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--gradient-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    color: #000;
+  }
+  .phase-content h4 { font-size: 1.1rem; margin-bottom: 4px; }
+  .phase-content p { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 8px; }
+  .phase-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .phase-tag {
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: var(--accent-primary-dim);
+    color: var(--accent-primary);
+  }
+
+  /* ============ PROMPT BOX ============ */
+  .prompt-box {
+    position: relative;
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-primary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .prompt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--accent-primary-dim);
+    border-bottom: 1px solid rgba(0,174,239,0.2);
+  }
+  .prompt-header span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .copy-btn {
+    padding: 8px 16px;
+    background: var(--accent-primary);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .copy-btn:hover { background: #00c3ff; transform: scale(1.02); }
+  .copy-btn.copied { background: var(--accent-green); }
+  .prompt-body {
+    padding: 24px;
+    overflow-x: auto;
+  }
+  .prompt-body pre {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-body code { font-family: var(--font-mono); }
+
+  /* ============ TAGS ============ */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin: 2px;
+  }
+  .tag-cyan { background: var(--accent-primary-dim); color: var(--accent-primary); }
+  .tag-green { background: var(--accent-green-dim); color: var(--accent-green); }
+  .tag-amber { background: var(--accent-amber-dim); color: var(--accent-amber); }
+  .tag-red { background: var(--accent-red-dim); color: var(--accent-red); }
+  .tag-purple { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+
+  /* ============ TOOLTIP ============ */
+  .has-tooltip { position: relative; cursor: help; }
+  .has-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    padding: 6px 12px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 50;
+    box-shadow: var(--shadow-lg);
+  }
+  .has-tooltip:hover::after { opacity: 1; }
+
+  /* ============ FOOTER ============ */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 768px) {
+    .hero { padding: 40px 16px 35px; }
+    section { padding: 35px 0; }
+    .container { padding: 0 16px; }
+    .card { padding: 20px; }
+    .repo-card { padding: 24px; }
+    .repo-card .repo-meta-grid { grid-template-columns: 1fr; }
+    .phase-card { flex-direction: column; gap: 12px; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .comparison-table { font-size: 0.8rem; }
+    .comparison-table tbody td, .comparison-table thead th { padding: 10px 12px; }
+  }
+
+  /* ============ PRINT ============ */
+  @media print {
+    body { background: #fff; color: #000; }
+    .hero { background: #f5f5f5; }
+    .card, .repo-card, .metric-card { border: 1px solid #ccc; break-inside: avoid; }
+    .sticky-nav { display: none; }
+    .collapse-content { display: block !important; }
+    .prompt-box { border: 2px solid #333; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO HEADER ============ -->
+<header class="hero">
+  <div class="hero-badge animate-fadeInUp">
+    <span class="pulse-dot"></span>
+    Technical Analysis Report
+  </div>
+  <h1 class="animate-fadeInUp delay-100 opacity-0" style="animation-fill-mode:forwards;">
+    AzFIT Platform <span class="highlight">Repository Comparison</span>
+  </h1>
+  <p class="hero-subtitle animate-fadeInUp delay-200 opacity-0" style="animation-fill-mode:forwards;">
+    A comprehensive technical analysis comparing <strong>azfit-client-portal</strong> (GitHub Pages) and <strong>azfit-training</strong> (Production) to determine the optimal foundation for a unified fitness training platform build.
+  </p>
+  <div class="hero-meta animate-fadeIn delay-300 opacity-0" style="animation-fill-mode:forwards;">
+    <span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      January 2025
+    </span>
+    <span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      2 Repositories
+    </span>
+    <span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      React 19 + TypeScript
+    </span>
+  </div>
+</header>
+
+<!-- ============ STICKY NAVIGATION ============ -->
+<nav class="sticky-nav">
+  <div class="nav-inner">
+    <a href="#executive-summary" class="nav-link active">Executive Summary</a>
+    <a href="#comparison-matrix" class="nav-link">Comparison Matrix</a>
+    <a href="#feature-inventory" class="nav-link">Feature Inventory</a>
+    <a href="#code-quality" class="nav-link">Code Quality</a>
+    <a href="#visual-comparison" class="nav-link">Visual Comparison</a>
+    <a href="#recommendation" class="nav-link">Recommendation</a>
+    <a href="#merge-strategy" class="nav-link">Merge Strategy</a>
+    <a href="#kimi-prompt" class="nav-link" style="color:var(--accent-primary);">Kimi Code Prompt</a>
+  </div>
+</nav>
+
+<!-- ============ SECTION 1: EXECUTIVE SUMMARY ============ -->
+<section id="executive-summary" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9733;</div>
+    <div>
+      <div class="section-title">Executive Summary</div>
+      <div class="section-desc">At-a-glance verdict and key metrics</div>
+    </div>
+  </div>
+
+  <!-- Verdict Banner -->
+  <div class="verdict-banner animate-fadeInUp delay-100">
+    <div class="verdict-label">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Recommendation
+    </div>
+    <h2>Use <span class="highlight">azfit-training</span> (azfit.fit) as Foundation</h2>
+    <p>
+      The production repository at <strong>azfit.fit</strong> is the optimal foundation for the unified build. It features superior architecture (normalized Zustand + TanStack Query), more pages (26+ vs 20), production-hardened workout tracking, offline-first capability, and better code organization. The client portal's unique features (Admin Dashboard, AI Chat, Program Matcher, Excel/PDF export) should be ported into this foundation.
+    </p>
+  </div>
+
+  <!-- Key Metrics -->
+  <div class="metrics-row" style="margin-top:28px;">
+    <div class="metric-card animate-fadeInUp delay-100">
+      <div class="metric-value">26+</div>
+      <div class="metric-label">Training Pages</div>
+    </div>
+    <div class="metric-card animate-fadeInUp delay-200">
+      <div class="metric-value">20</div>
+      <div class="metric-label">Portal Pages</div>
+    </div>
+    <div class="metric-card animate-fadeInUp delay-300">
+      <div class="metric-value">50+</div>
+      <div class="metric-label">shadcn/ui Components</div>
+    </div>
+    <div class="metric-card animate-fadeInUp delay-400">
+      <div class="metric-value" style="font-size:1.5rem;">TanStack<br/>Query</div>
+      <div class="metric-label">Data Fetching Winner</div>
+    </div>
+  </div>
+
+  <!-- Repo Cards Side by Side -->
+  <div class="card-grid card-grid-2" style="margin-top:24px;">
+    <div class="repo-card portal animate-slideInLeft delay-200">
+      <span class="repo-tag">Portal</span>
+      <h3>azfit-client-portal</h3>
+      <span class="repo-url">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        github.com/AzFIT/azfit-client-portal
+      </span>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">
+        GitHub Pages deployment with full program builder, admin dashboard, AI chat assistant, and BioPrint analysis. Polished UX with Framer Motion animations.
+      </p>
+      <div class="repo-meta-grid">
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Deploy Target</span>
+          <span class="repo-meta-value">GitHub Pages</span>
+        </div>
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Supabase ID</span>
+          <span class="repo-meta-value">fodvpcwlpwfgmgvfczvb</span>
+        </div>
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Local Path</span>
+          <span class="repo-meta-value" style="font-size:0.75rem;">C:\Users\85254\Documents\azfit-client-portal</span>
+        </div>
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Router</span>
+          <span class="repo-meta-value">HashRouter</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="repo-card training animate-slideInRight delay-300">
+      <span class="repo-tag">Training</span>
+      <h3>azfit-training</h3>
+      <span class="repo-url">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        github.com/AzFIT/azfit-training
+      </span>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">
+        Production site at azfit.fit with workout session tracking, 1RM calculator, exercise library, progressive overload engine, and offline-first architecture.
+      </p>
+      <div class="repo-meta-grid">
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Deploy Target</span>
+          <span class="repo-meta-value">azfit.fit (Production)</span>
+        </div>
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Supabase ID</span>
+          <span class="repo-meta-value">mhwrqkfttjbxryhlmhti</span>
+        </div>
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Local Path</span>
+          <span class="repo-meta-value" style="font-size:0.75rem;">C:\Users\85254\Documents\azfit-training-main</span>
+        </div>
+        <div class="repo-meta-item">
+          <span class="repo-meta-label">Router</span>
+          <span class="repo-meta-value">HashRouter (needs fix)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: COMPARISON MATRIX ============ -->
+<section id="comparison-matrix" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9776;</div>
+    <div>
+      <div class="section-title">Side-by-Side Comparison Matrix</div>
+      <div class="section-desc">Detailed comparison across 10 technical dimensions</div>
+    </div>
+  </div>
+
+  <div class="comparison-table-wrapper animate-fadeInUp delay-100">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th style="min-width:260px;">Portal (GitHub Pages)</th>
+          <th style="min-width:260px;">Training (azfit.fit)</th>
+          <th style="text-align:center;">Winner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-dimension">Tech Stack</td>
+          <td>
+            React 19.2, TS 5.9, Vite 7.2, Tailwind 3.4<br/>
+            shadcn/ui 40+, Framer Motion 12, Recharts 2.15<br/>
+            Zustand 5, RHF + Zod 4, Supabase
+          </td>
+          <td>
+            React 19.2, TS 5.3, Vite 7.2.4, Tailwind 3.4<br/>
+            shadcn/ui 50+, Framer Motion 12, Recharts 2.15<br/>
+            Zustand 5 + persist, RHF + Zod 4, Supabase, <strong>pg</strong>
+          </td>
+          <td class="neutral-cell" style="text-align:center;">Training</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">State Management</td>
+          <td>Zustand 5, flat store structure, dual persistence (Supabase + localStorage), manual cache invalidation</td>
+          <td class="winner-cell">Zustand 5 + <strong>normalized store</strong> with selective persistence, well-engineered architecture, offline-first capable</td>
+          <td class="winner-cell" style="text-align:center;">Training</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Data Fetching</td>
+          <td class="loser-cell"><strong>Manual useEffect + useState</strong> everywhere. No caching, no deduplication, no stale-while-revalidate. Loading states handled manually.</td>
+          <td class="winner-cell"><strong>TanStack Query 5.101</strong> with proper caching, staleTime, deduplication, background refetching, optimistic updates</td>
+          <td class="winner-cell" style="text-align:center;">Training</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Pages / Features</td>
+          <td>20 pages</td>
+          <td class="winner-cell"><strong>26+ pages</strong></td>
+          <td class="winner-cell" style="text-align:center;">Training</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Code Organization</td>
+          <td>Flat structure, pages mixed with logic, no clear separation between services and UI, hardcoded colors, massive files</td>
+          <td class="winner-cell">Clear directory structure: <code>services/</code>, <code>utils/</code>, <code>stores/</code>, <code>hooks/</code>, <code>components/</code>. Better separation of concerns.</td>
+          <td class="winner-cell" style="text-align:center;">Training</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Unique Features</td>
+          <td>Admin Dashboard, AI Chat Assistant, Program Matcher, Excel/PDF Export, 8-Step Wizard, BioPrint (7-site)</td>
+          <td class="winner-cell">Workout Session Tracking, 1RM Calculator, Exercise Library, Progressive Overload Engine, Smart Program Finder, BioPrint (12-site), CoachRx Notation</td>
+          <td class="neutral-cell" style="text-align:center;">Tie</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Security</td>
+          <td class="loser-cell">Base64 password &quot;hashing&quot; (btoa). Hardcoded dev admin credentials (dev@azfit.app / dev123) auto-create. No Supabase Auth. Dev auto-login backdoor.</td>
+          <td class="loser-cell">No actual auth wired to Supabase. Hardcoded &quot;Sarah Johnson&quot; demo data. Global mutable ID counters. But: no base64 hashing, no dev backdoor.</td>
+          <td class="neutral-cell" style="text-align:center;">Neither</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Testing</td>
+          <td class="winner-cell"><strong>Playwright</strong> installed with E2E test setup (though minimal actual tests)</td>
+          <td>No testing framework installed. Zero tests.</td>
+          <td class="winner-cell" style="text-align:center;">Portal</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Production Readiness</td>
+          <td>GitHub Pages deploy script, HashRouter (correct for GH Pages), dev auto-login for DX</td>
+          <td class="winner-cell">Live production site with real users, offline-first capability, demo data seeding, subscription scaffolding</td>
+          <td class="winner-cell" style="text-align:center;">Training</td>
+        </tr>
+        <tr>
+          <td class="row-dimension">Auth / User Mgmt</td>
+          <td>Custom auth (insecure), multi-tenant patterns, role-based access, admin dashboard</td>
+          <td>No auth implementation, subscription/invitation scaffolding only</td>
+          <td class="winner-cell" style="text-align:center;">Portal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Score Summary -->
+  <div class="card-grid card-grid-2" style="margin-top:24px;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h4 style="font-size:1.1rem;">Portal Score</h4>
+        <span class="score-badge score-medium">6 / 10</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Feature Depth</span><span>70%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Architecture</span><span>45%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:45%;opacity:0.7"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Code Quality</span><span>40%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:40%;opacity:0.6"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Security</span><span>15%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:15%;opacity:0.4"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Production Ready</span><span>60%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:60%"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h4 style="font-size:1.1rem;">Training Score</h4>
+        <span class="score-badge score-high">8 / 10</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Feature Depth</span><span>85%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Architecture</span><span>80%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:80%"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Code Quality</span><span>70%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Security</span><span>30%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:30%;opacity:0.5"></div></div>
+      </div>
+      <div class="progress-container">
+        <div class="progress-header"><span>Production Ready</span><span>75%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: FEATURE INVENTORY ============ -->
+<section id="feature-inventory" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9636;</div>
+    <div>
+      <div class="section-title">Feature Inventory Comparison</div>
+      <div class="section-desc">Complete feature checklist across both repositories</div>
+    </div>
+  </div>
+
+  <div class="feature-grid animate-fadeInUp delay-100">
+    <!-- Auth & Onboarding -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check" title="Portal">P</span>
+        <span class="feature-check training-check" title="Training">T</span>
+      </div>
+      <div class="feature-text">
+        <strong>Landing Page</strong> — Both have animated particle hero, AzFIT branding
+        <span class="feature-note">Portal: generic "OS for PT"; Training: Hong Kong focused</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Login Page</strong> — Nearly identical forms with Demo Mode button</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Signup Page</strong> — Client registration flow</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Forgot Password</strong> — Password reset flow</div>
+    </div>
+
+    <!-- Dashboard & Core -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text">
+        <strong>Dashboard</strong> — KPI cards, Today's Schedule, client grid, alerts
+        <span class="feature-note">Training has more alert types (PAR-Q, body stats, nutrition)</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Calendar</strong> — Session scheduling and management</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Programs</strong> — Program listing and management</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Program Wizard</strong> — Multi-step program creation (8-step Portal, complex 2478-line Training)</div>
+    </div>
+
+    <!-- Program Features -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text">
+        <strong>AllInOneProgramPage</strong> — 90KB monster page with exercise DB, Excel export, PDF gen
+        <span class="feature-note">Portal's most powerful (and largest) program feature</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text"><strong>ProgramBuilder</strong> — 33KB standalone program builder page</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text"><strong>Program Matcher</strong> — Scoring algorithm matching clients to programs</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text"><strong>CreateProgram</strong> — Dedicated program creation page</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>WorkoutProgramBuilder</strong> — Training's program builder with live editing</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>ProgramLibrary</strong> — Browseable program collection</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>ProgramCard</strong> — Reusable program card component</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>SmartProgramFinder</strong> — Questionnaire wizard with match scoring</div>
+    </div>
+
+    <!-- Exercise & Workout -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text"><strong>Exercises</strong> — Basic exercise listing page</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>ExerciseLibrary</strong> — Comprehensive exercise database with search/filter</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>ExerciseDetail</strong> — Individual exercise view with instructions</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text">
+        <strong>WorkoutSession</strong> — Live set/rep/RPE logging with previous session comparison
+        <span class="feature-note">Training's crown jewel — progressive overload engine</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>WorkoutHistory</strong> — Historical workout log and trends</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text">
+        <strong>OneRMCalculator</strong> — 4 formulas (Epley, Brzycki, Lombardi, Mayhew) with % tables
+        <span class="feature-note">Critical strength training feature</span>
+      </div>
+    </div>
+
+    <!-- Client Management -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Clients / ClientDirectory</strong> — Client listing and management</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text">
+        <strong>ClientProfile</strong> — Multi-tab client detail view
+        <span class="feature-note">Portal: 7 tabs, 1000+ lines; Training: 13 tabs, 2000+ lines (both need splitting)</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text"><strong>AddClient</strong> — 4-step intake wizard (Portal unique)</div>
+    </div>
+
+    <!-- Body & Nutrition -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Nutrition</strong> — Nutrition tracking and logging</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Photos</strong> — Progress photo tracking</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text">
+        <strong>BioPrint (7-site)</strong> — Poliquin Key Ratios, JP7 body fat formula
+        <span class="feature-note">Portal's simplified skinfold assessment</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text">
+        <strong>BioPrintWizard (12-site)</strong> — Full Poliquin method skinfold assessment
+        <span class="feature-note">Training's more comprehensive body composition tool</span>
+      </div>
+    </div>
+
+    <!-- Admin & AI -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text">
+        <strong>AdminDashboard</strong> — Platform-wide analytics, coach management, multi-tenant
+        <span class="feature-note">Portal's most unique and valuable feature — must port</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text">
+        <strong>AI Chat Assistant</strong> — Fully offline, knowledge-based with @-commands
+        <span class="feature-note">More sophisticated than Training's version — must port</span>
+      </div>
+    </div>
+
+    <!-- Subscription & Settings -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Subscription</strong> — Subscription management scaffolding</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Invitation</strong> — Client invitation system</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Notifications</strong> — In-app notification center</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Settings</strong> — App configuration and preferences</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>PlannedFeatures</strong> — Roadmap and upcoming features</div>
+    </div>
+
+    <!-- Export & Special -->
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text">
+        <strong>Excel/Spreadsheet Export</strong> — Program data export via exceljs + xlsx
+        <span class="feature-note">Must-port feature for program portability</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check portal-check">P</span>
+        <span class="feature-check empty-check">&middot;</span>
+      </div>
+      <div class="feature-text"><strong>PDF Generation</strong> — Program PDF export capability</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>CoachRx Notation</strong> — Industry-standard workout notation (A, B1, B2)</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Progressive Overload Engine</strong> — Auto-suggests next load/reps based on RPE history</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-checkboxes">
+        <span class="feature-check empty-check">&middot;</span>
+        <span class="feature-check training-check">T</span>
+      </div>
+      <div class="feature-text"><strong>Demo Data Seeding</strong> — Realistic dataset auto-generated for testing</div>
+    </div>
+  </div>
+
+  <!-- Summary counts -->
+  <div class="card-grid card-grid-3" style="margin-top:28px;">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.5rem;font-weight:800;color:var(--accent-amber);">20</div>
+      <div style="color:var(--text-secondary);font-size:0.85rem;">Portal Pages</div>
+      <div style="margin-top:8px;">
+        <span class="tag tag-amber">6 Unique</span>
+      </div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.5rem;font-weight:800;color:var(--accent-primary);">26+</div>
+      <div style="color:var(--text-secondary);font-size:0.85rem;">Training Pages</div>
+      <div style="margin-top:8px;">
+        <span class="tag tag-cyan">12 Unique</span>
+      </div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.5rem;font-weight:800;color:var(--accent-green);">~14</div>
+      <div style="color:var(--text-secondary);font-size:0.85rem;">Shared Pages</div>
+      <div style="margin-top:8px;">
+        <span class="tag tag-green">Core Features</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: CODE QUALITY ============ -->
+<section id="code-quality" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9829;</div>
+    <div>
+      <div class="section-title">Code Quality Comparison</div>
+      <div class="section-desc">Architecture patterns, TypeScript strictness, and technical debt analysis</div>
+    </div>
+  </div>
+
+  <div class="card-grid card-grid-2">
+    <!-- TypeScript Strictness -->
+    <div class="card animate-fadeInUp delay-100">
+      <h4 style="font-size:1.1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <span style="color:var(--accent-primary);">&#9654;</span> TypeScript Strictness
+      </h4>
+      <ul class="issue-list">
+        <li>
+          <span class="issue-severity sev-critical">CRITICAL</span>
+          <span>Portal: Heavy <code>any</code> usage in DB layer undermines type safety</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-high">HIGH</span>
+          <span>Portal: Duplicate Client interfaces across files — type definitions diverged</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-high">HIGH</span>
+          <span>Portal: TS 5.9 with lax config — strict mode not enforced</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-medium">MED</span>
+          <span>Training: TS 5.3 (older) but more consistent typing patterns</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-medium">MED</span>
+          <span>Training: Service layer coupled to store (<code>workoutApi.ts</code> calls <code>useAppDataStore.getState()</code>)</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-low">LOW</span>
+          <span>Both: No strict null checks enabled, implicit any allowed in places</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Component Organization -->
+    <div class="card animate-fadeInUp delay-200">
+      <h4 style="font-size:1.1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <span style="color:var(--accent-primary);">&#9654;</span> Component Organization
+      </h4>
+      <ul class="issue-list">
+        <li>
+          <span class="issue-severity sev-critical">CRITICAL</span>
+          <span>Portal: <code>ClientProfile</code> 1000+ lines, 7 inline tabs — unmaintainable</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-critical">CRITICAL</span>
+          <span>Portal: <code>AllInOneProgramPage</code> 90KB — massive monolith</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-critical">CRITICAL</span>
+          <span>Training: <code>ClientProfilePage</code> 2000+ lines, 13 inline tabs — worse</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-critical">CRITICAL</span>
+          <span>Training: <code>ProgramWizardPage</code> 2478 lines — most complex page</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-high">HIGH</span>
+          <span>Portal: <code>ProgramBuilder</code> 33KB single file</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-medium">MED</span>
+          <span>Training: Better directory structure (<code>services/</code>, <code>utils/</code>, <code>stores/</code>)</span>
+        </li>
+        <li>
+          <span class="issue-severity sev-low">LOW</span>
+          <span>Both: No code splitting — every page in main bundle</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- State Management -->
+    <div class="card animate-fadeInUp delay-100">
+      <h4 style="font-size:1.1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <span style="color:var(--accent-primary);">&#9654;</span> State Management Patterns
+      </h4>
+      <div style="margin-bottom:16px;">
+        <div style="font-weight:600;margin-bottom:8px;color:var(--accent-amber);">Portal (Flat Store)</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">
+          Simple Zustand store with flat structure. Dual persistence to Supabase + localStorage. Manual cache invalidation with useEffect hooks. Easier to understand but doesn't scale well.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="tag tag-amber">Flat Structure</span>
+          <span class="tag tag-amber">Manual Cache</span>
+          <span class="tag tag-amber">Dual Persistence</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:600;margin-bottom:8px;color:var(--accent-primary);">Training (Normalized Store)</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">
+          Normalized Zustand store with selective persistence. Entities stored by ID for O(1) lookups. Derived selectors compute view models. Offline-first capable. Better for complex data relationships.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          <span class="tag tag-cyan">Normalized</span>
+          <span class="tag tag-cyan">Entity Map</span>
+          <span class="tag tag-cyan">Offline-First</span>
+          <span class="tag tag-cyan">TanStack Query</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Debt -->
+    <div class="card animate-fadeInUp delay-200">
+      <h4 style="font-size:1.1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+        <span style="color:var(--accent-primary);">&#9654;</span> Technical Debt Severity
+      </h4>
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-weight:600;color:var(--accent-amber);">Portal Debt Level</span>
+          <span class="score-badge score-medium">HIGH</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">Security</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:90%;background:var(--accent-red);opacity:0.8;"></div></div>
+            <span style="color:var(--accent-red);font-weight:600;">Critical</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">File Size</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:85%;background:var(--accent-red);opacity:0.7;"></div></div>
+            <span style="color:var(--accent-red);font-weight:600;">Critical</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">Hardcoded</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:75%;background:var(--accent-amber);opacity:0.8;"></div></div>
+            <span style="color:var(--accent-amber);font-weight:600;">High</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">Testing</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:60%;background:var(--accent-amber);opacity:0.7;"></div></div>
+            <span style="color:var(--accent-amber);font-weight:600;">Med</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-weight:600;color:var(--accent-primary);">Training Debt Level</span>
+          <span class="score-badge score-medium">MEDIUM</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">File Size</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:95%;background:var(--accent-red);opacity:0.8;"></div></div>
+            <span style="color:var(--accent-red);font-weight:600;">Critical</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">Hardcoded</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:60%;background:var(--accent-amber);opacity:0.7;"></div></div>
+            <span style="color:var(--accent-amber);font-weight:600;">High</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">Testing</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:85%;background:var(--accent-red);opacity:0.8;"></div></div>
+            <span style="color:var(--accent-red);font-weight:600;">Critical</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:80px;flex-shrink:0;color:var(--text-muted);">Mutability</span>
+            <div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:50%;background:var(--accent-amber);opacity:0.7;"></div></div>
+            <span style="color:var(--accent-amber);font-weight:600;">Med</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Critical Issues Comparison -->
+  <div class="card" style="margin-top:24px;">
+    <h4 style="font-size:1.1rem;margin-bottom:20px;">Critical Issues Face-Off</h4>
+    <div class="comparison-table-wrapper">
+      <table class="comparison-table" style="font-size:0.82rem;">
+        <thead>
+          <tr>
+            <th>Issue</th>
+            <th>Portal</th>
+            <th>Training</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-dimension">Password Hashing</td>
+            <td class="loser-cell"><strong>Base64 (btoa)</strong> — trivially reversible</td>
+            <td class="winner-cell">None implemented (relies on Supabase)</td>
+            <td><span class="tag tag-red">Critical</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Dev Backdoor</td>
+            <td class="loser-cell">Hardcoded <code>dev@azfit.app / dev123</code> auto-creates on startup</td>
+            <td class="winner-cell">No backdoor found</td>
+            <td><span class="tag tag-red">Critical</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Hardcoded Data</td>
+            <td>Generic stats (&quot;500+ coaches&quot;)</td>
+            <td class="loser-cell"><strong>&quot;Sarah Johnson&quot;</strong> hardcoded in ClientProfile</td>
+            <td><span class="tag tag-amber">High</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Router</td>
+            <td class="winner-cell">HashRouter (correct for GH Pages)</td>
+            <td class="loser-cell">HashRouter on <code>azfit.fit</code> (should be BrowserRouter)</td>
+            <td><span class="tag tag-amber">High</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">react-router</td>
+            <td class="winner-cell">v6 only</td>
+            <td class="loser-cell"><strong>Both v6 AND v7</strong> installed — conflict</td>
+            <td><span class="tag tag-amber">High</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Global Counters</td>
+            <td class="winner-cell">Not found</td>
+            <td class="loser-cell">Global mutable ID counters (not thread-safe, reset on HMR)</td>
+            <td><span class="tag tag-amber">High</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Error Boundaries</td>
+            <td class="loser-cell">None</td>
+            <td class="loser-cell">None</td>
+            <td><span class="tag tag-amber">High</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Code Splitting</td>
+            <td class="loser-cell">None — all pages in main bundle</td>
+            <td class="loser-cell">None — all pages in main bundle</td>
+            <td><span class="tag tag-amber">High</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Hardcoded Colors</td>
+            <td class="loser-cell"><code>#00AEEF</code>, <code>#8B5CF6</code>, <code>#22C55E</code> everywhere</td>
+            <td>Some hardcoded but less prevalent</td>
+            <td><span class="tag tag-amber">Med</span></td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Testing</td>
+            <td class="winner-cell">Playwright installed, E2E setup</td>
+            <td>None</td>
+            <td><span class="tag tag-amber">Med</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: VISUAL COMPARISON ============ -->
+<section id="visual-comparison" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9670;</div>
+    <div>
+      <div class="section-title">Visual Comparison</div>
+      <div class="section-desc">Differences observed from live site analysis</div>
+    </div>
+  </div>
+
+  <!-- Landing Page Comparison -->
+  <div class="card-grid card-grid-2">
+    <div class="card animate-slideInLeft delay-100">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span style="background:var(--accent-amber-dim);color:var(--accent-amber);padding:4px 12px;border-radius:100px;font-size:0.7rem;font-weight:700;">PORTAL</span>
+        <h4 style="font-size:1rem;">Landing Page — azfit.github.io</h4>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:20px;margin-bottom:16px;">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Brand Messaging</div>
+        <blockquote style="font-style:italic;color:var(--text-primary);border-left:3px solid var(--accent-amber);padding-left:16px;font-size:0.95rem;line-height:1.6;">
+          &quot;The Operating System for Modern Personal Training&quot;
+        </blockquote>
+      </div>
+      <ul style="list-style:none;font-size:0.85rem;color:var(--text-secondary);line-height:2;">
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-amber);">&#9733;</span> Generic/global branding — no geographic focus
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-amber);">&#9733;</span> Stats: &quot;500+ coaches, 50,010+ workouts, 99.9% uptime&quot;
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-amber);">&#9733;</span> Dark theme with animated particles
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-amber);">&#9733;</span> AzFIT logo with conic-ring animation
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--text-muted);">&times;</span> Fewer content sections below fold
+        </li>
+      </ul>
+    </div>
+
+    <div class="card animate-slideInRight delay-200">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span style="background:var(--accent-primary-dim);color:var(--accent-primary);padding:4px 12px;border-radius:100px;font-size:0.7rem;font-weight:700;">TRAINING</span>
+        <h4 style="font-size:1rem;">Landing Page — azfit.fit</h4>
+      </div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:20px;margin-bottom:16px;">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">Brand Messaging</div>
+        <blockquote style="font-style:italic;color:var(--text-primary);border-left:3px solid var(--accent-primary);padding-left:16px;font-size:0.95rem;line-height:1.6;">
+          &quot;Train Smarter. Train AzFIT.&quot; — AzTechFit Hong Kong Presents
+        </blockquote>
+      </div>
+      <ul style="list-style:none;font-size:0.85rem;color:var(--text-secondary);line-height:2;">
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-primary);">&#9733;</span> Hong Kong focused — local market targeting
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-primary);">&#9733;</span> Stats: &quot;116+ clients&quot; (more realistic/honest)
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-primary);">&#9733;</span> Dark theme with animated particles (same)
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-primary);">&#9733;</span> Same AzFIT logo treatment
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--accent-green);">&#10003;</span> More polished content sections (AI feature showcase with scrolling text)
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Login & Dashboard Comparison -->
+  <div class="card" style="margin-top:24px;">
+    <h4 style="font-size:1.1rem;margin-bottom:20px;">Login &amp; Dashboard Comparison</h4>
+    <div class="comparison-table-wrapper">
+      <table class="comparison-table" style="font-size:0.85rem;">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Portal (GitHub Pages)</th>
+            <th>Training (azfit.fit)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-dimension">Login</td>
+            <td>Same form layout, fields, Demo Mode button. No background image.</td>
+            <td>Virtually identical form. Has gym background image for visual polish.</td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Sidebar Nav</td>
+            <td>Dashboard, Calendar, Programs, <strong>Program Creator</strong>, <strong>Exercises</strong>, Nutrition, Clients, Photos, Settings</td>
+            <td>Dashboard, Calendar, Programs, <strong>Program Builder</strong>, <strong>Exercise Library</strong>, Nutrition, Clients, Photos, Settings</td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Dashboard KPIs</td>
+            <td>Sessions This Week, Active Clients, <strong>New Signups</strong>, Weekly Revenue</td>
+            <td>Sessions This Week, Active Clients, <strong>Adherence Score</strong>, Weekly Revenue</td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Today&apos;s Schedule</td>
+            <td>Session cards with client name, time, type</td>
+            <td>Same layout + more detail per session</td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Alerts</td>
+            <td>Basic follow-up alerts</td>
+            <td>PAR-Q expired, body stats overdue, nutrition log missing + more alert types</td>
+          </tr>
+          <tr>
+            <td class="row-dimension">Client Grid</td>
+            <td>Avatar + name cards, clickable to profile</td>
+            <td>Same pattern with additional status indicators</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Branding Summary -->
+  <div class="card" style="margin-top:24px;">
+    <h4 style="font-size:1.1rem;margin-bottom:16px;">Branding Strategy Difference</h4>
+    <div class="card-grid card-grid-2" style="gap:16px;">
+      <div style="padding:16px;background:var(--bg-secondary);border-radius:var(--radius-md);border-left:4px solid var(--accent-amber);">
+        <div style="font-weight:600;color:var(--accent-amber);margin-bottom:8px;">Portal: Global/SaaS Positioning</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Positions as a global platform (&quot;OS for Modern PT&quot;). Inflated stats (&quot;500+ coaches&quot;) suggest a product targeting the broader fitness industry. More suitable for a SaaS landing page but less authentic.
+        </p>
+      </div>
+      <div style="padding:16px;background:var(--bg-secondary);border-radius:var(--radius-md);border-left:4px solid var(--accent-primary);">
+        <div style="font-weight:600;color:var(--accent-primary);margin-bottom:8px;">Training: Local/Studio Positioning</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Hong Kong focused (&quot;AzTechFit Hong Kong Presents&quot;). More realistic stats (&quot;116+ clients&quot;). Honest local-studio branding that builds trust. Better conversion for actual coaching business.
+        </p>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px 16px;background:var(--accent-green-dim);border-radius:var(--radius-md);border:1px solid rgba(34,197,94,0.2);">
+      <strong style="color:var(--accent-green);font-size:0.9rem;">Recommendation:</strong>
+      <span style="font-size:0.85rem;color:var(--text-secondary);"> Adopt the Training site's honest local-studio branding approach. It converts better and builds more trust than inflated SaaS positioning.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: RECOMMENDATION ============ -->
+<section id="recommendation" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9733;</div>
+    <div>
+      <div class="section-title">Final Recommendation</div>
+      <div class="section-desc">Verdict, port list, fix list, and rationale</div>
+    </div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="verdict-banner animate-fadeInUp delay-100" style="margin-bottom:28px;">
+    <div class="verdict-label">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Final Verdict
+    </div>
+    <h2>Use <span class="highlight">azfit-training</span> (azfit.fit) as the Foundation</h2>
+    <p style="margin-bottom:16px;">
+      The production repository is the clear winner due to superior architecture, more features, better code organization, and real-world production usage. The client portal's unique features should be ported into this foundation rather than the reverse.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;position:relative;">
+      <span class="tag tag-cyan">Normalized Zustand Store</span>
+      <span class="tag tag-cyan">TanStack Query</span>
+      <span class="tag tag-cyan">26+ Pages</span>
+      <span class="tag tag-cyan">Offline-First</span>
+      <span class="tag tag-cyan">Production Hardened</span>
+      <span class="tag tag-cyan">Progressive Overload</span>
+      <span class="tag tag-cyan">1RM Calculator</span>
+      <span class="tag tag-cyan">Exercise Library</span>
+    </div>
+  </div>
+
+  <!-- Rationale Cards -->
+  <h4 style="font-size:1.1rem;margin-bottom:16px;color:var(--text-primary);">Why Training Wins</h4>
+  <div class="card-grid card-grid-3" style="margin-bottom:32px;">
+    <div class="card animate-fadeInUp delay-100">
+      <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-primary-dim);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem;">1</div>
+      <h5 style="margin-bottom:8px;">Real Production Site</h5>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Already serving real users at azfit.fit. Proven in production, not just a demo deployment.</p>
+    </div>
+    <div class="card animate-fadeInUp delay-200">
+      <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-primary-dim);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem;">2</div>
+      <h5 style="margin-bottom:8px;">Superior Architecture</h5>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Normalized Zustand + TanStack Query + selective persistence + offline-first. Best-in-class patterns.</p>
+    </div>
+    <div class="card animate-fadeInUp delay-300">
+      <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-primary-dim);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem;">3</div>
+      <h5 style="margin-bottom:8px;">More Feature-Rich</h5>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">26+ pages including Workout Session, 1RM Calculator, Exercise Library, Progressive Overload Engine.</p>
+    </div>
+    <div class="card animate-fadeInUp delay-100">
+      <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-primary-dim);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem;">4</div>
+      <h5 style="margin-bottom:8px;">Better Code Organization</h5>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Clear directory structure: services/, utils/, stores/, hooks/, components/. Separation of concerns.</p>
+    </div>
+    <div class="card animate-fadeInUp delay-200">
+      <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-primary-dim);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem;">5</div>
+      <h5 style="margin-bottom:8px;">Offline-First Capability</h5>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">Dual-mode data layer works offline (localStorage) or online (Supabase). Resilient to connectivity issues.</p>
+    </div>
+    <div class="card animate-fadeInUp delay-300">
+      <div style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-primary-dim);display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem;">6</div>
+      <h5 style="margin-bottom:8px;">Professional Workout Notation</h5>
+      <p style="font-size:0.85rem;color:var(--text-secondary);">CoachRx Letter Notation (A, B1, B2) is industry-standard. Progressive overload engine auto-suggests loads.</p>
+    </div>
+  </div>
+
+  <!-- What to Port -->
+  <h4 style="font-size:1.1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+    <span style="color:var(--accent-green);">&#8594;</span> Features to PORT from Portal into Training
+  </h4>
+  <div class="card" style="margin-bottom:24px;border-color:rgba(34,197,94,0.3);">
+    <div style="display:grid;gap:12px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">1</span>
+        <div>
+          <strong style="font-size:0.9rem;">AdminDashboard Page</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Platform-wide analytics, coach management, multi-tenant patterns — Portal's most valuable unique feature</p>
+        </div>
+        <span class="tag tag-red" style="margin-left:auto;flex-shrink:0;">Must Port</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">2</span>
+        <div>
+          <strong style="font-size:0.9rem;">AllInOneProgramPage (Excel/PDF Export)</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">90KB monster with exercise DB integration, Excel export via exceljs, PDF generation — extract the export logic</p>
+        </div>
+        <span class="tag tag-red" style="margin-left:auto;flex-shrink:0;">Must Port</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">3</span>
+        <div>
+          <strong style="font-size:0.9rem;">Program Matcher Algorithm</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Scoring algorithm that matches clients to optimal programs based on goals, experience, constraints</p>
+        </div>
+        <span class="tag tag-amber" style="margin-left:auto;flex-shrink:0;">Should Port</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">4</span>
+        <div>
+          <strong style="font-size:0.9rem;">AI Chat Assistant</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Fully offline, knowledge-based with @-commands for client messaging — more sophisticated than Training's</p>
+        </div>
+        <span class="tag tag-red" style="margin-left:auto;flex-shrink:0;">Must Port</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">5</span>
+        <div>
+          <strong style="font-size:0.9rem;">Playwright Testing Setup</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">E2E test infrastructure — install and configure Playwright in Training repo</p>
+        </div>
+        <span class="tag tag-amber" style="margin-left:auto;flex-shrink:0;">Should Port</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">6</span>
+        <div>
+          <strong style="font-size:0.9rem;">gh-pages Deploy Script</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">GitHub Pages deployment configuration for easy hosting</p>
+        </div>
+        <span class="tag tag-purple" style="margin-left:auto;flex-shrink:0;">Nice to Have</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">7</span>
+        <div>
+          <strong style="font-size:0.9rem;">Client Intake Wizard (4-step)</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">AddClient flow from Portal — smoother onboarding experience</p>
+        </div>
+        <span class="tag tag-amber" style="margin-left:auto;flex-shrink:0;">Should Port</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+        <span style="background:var(--accent-green);color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:2px;">8</span>
+        <div>
+          <strong style="font-size:0.9rem;">Supabase RLS + Multi-Tenant Patterns</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Row Level Security policies and tenant isolation from Portal's auth system</p>
+        </div>
+        <span class="tag tag-red" style="margin-left:auto;flex-shrink:0;">Must Port</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- What to Fix -->
+  <h4 style="font-size:1.1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+    <span style="color:var(--accent-red);">&#9888;</span> Issues to FIX in Training Before/During Merge
+  </h4>
+  <div class="card" style="border-color:rgba(239,68,68,0.3);">
+    <div style="display:grid;gap:10px;">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--accent-red-dim);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-critical">CRITICAL</span>
+        <strong style="font-size:0.88rem;">Replace HashRouter with BrowserRouter</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">for azfit.fit production domain</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--accent-red-dim);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-critical">CRITICAL</span>
+        <strong style="font-size:0.88rem;">Remove react-router v7</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">keep only v6, resolve conflict</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--accent-red-dim);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-critical">CRITICAL</span>
+        <strong style="font-size:0.88rem;">Split ClientProfilePage (2000+ lines, 13 tabs)</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">into separate tab components</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--accent-red-dim);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-critical">CRITICAL</span>
+        <strong style="font-size:0.88rem;">Split ProgramWizardPage (2478 lines)</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">into step components</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-high">HIGH</span>
+        <strong style="font-size:0.88rem;">Replace global mutable counters with UUID</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">not thread-safe, reset on HMR</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-high">HIGH</span>
+        <strong style="font-size:0.88rem;">Remove hardcoded &quot;Sarah Johnson&quot; demo data</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">from ClientProfile</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-high">HIGH</span>
+        <strong style="font-size:0.88rem;">Upgrade password hashing (both repos)</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">use bcrypt/argon2 via Supabase Auth</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-high">HIGH</span>
+        <strong style="font-size:0.88rem;">Remove dev auto-login backdoor</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">from Portal code being merged</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-medium">MED</span>
+        <strong style="font-size:0.88rem;">Implement proper Supabase Auth</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">replace all custom auth</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-medium">MED</span>
+        <strong style="font-size:0.88rem;">Add React Error Boundaries</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">neither repo has any</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(245,158,11,0.08);border-radius:var(--radius-md);">
+        <span class="issue-severity sev-medium">MED</span>
+        <strong style="font-size:0.88rem;">Add code splitting (React.lazy + Suspense)</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:auto;">reduce initial bundle size</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: MERGE STRATEGY ============ -->
+<section id="merge-strategy" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9733;</div>
+    <div>
+      <div class="section-title">Merge Strategy</div>
+      <div class="section-desc">4-phase approach to unifying both repositories</div>
+    </div>
+  </div>
+
+  <div class="phase-timeline">
+    <!-- Phase 1 -->
+    <div class="phase-card animate-fadeInUp delay-100">
+      <div class="phase-number">1</div>
+      <div class="phase-content">
+        <h4>Foundation Cleanup (Week 1)</h4>
+        <p>Prepare the azfit-training codebase before merging any new features. Focus on structural fixes that affect the entire app.</p>
+        <div class="phase-tags">
+          <span class="phase-tag">Replace HashRouter with BrowserRouter</span>
+          <span class="phase-tag">Remove react-router v7</span>
+          <span class="phase-tag">Split ClientProfilePage into tabs</span>
+          <span class="phase-tag">Split ProgramWizardPage into steps</span>
+          <span class="phase-tag">Replace global counters with UUID</span>
+          <span class="phase-tag">Remove hardcoded demo data</span>
+          <span class="phase-tag">Consolidate hardcoded colors into Tailwind config</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase-card animate-fadeInUp delay-200">
+      <div class="phase-number">2</div>
+      <div class="phase-content">
+        <h4>Port Unique Portal Features (Week 2-3)</h4>
+        <p>Bring over the client portal's unique features, adapting them to Training's architecture patterns (TanStack Query, normalized store).</p>
+        <div class="phase-tags">
+          <span class="phase-tag">AdminDashboard page + coach management</span>
+          <span class="phase-tag">AI Chat Assistant (offline, @-commands)</span>
+          <span class="phase-tag">Excel/PDF export (extract from AllInOneProgramPage)</span>
+          <span class="phase-tag">Program Matcher algorithm</span>
+          <span class="phase-tag">Client Intake Wizard (4-step)</span>
+          <span class="phase-tag">Supabase RLS + multi-tenant patterns</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase-card animate-fadeInUp delay-300">
+      <div class="phase-number">3</div>
+      <div class="phase-content">
+        <h4>Security Hardening (Week 3-4)</h4>
+        <p>Address all critical security issues before production deployment. Both repos have significant security debt.</p>
+        <div class="phase-tags">
+          <span class="phase-tag">Implement Supabase Auth (replace custom)</span>
+          <span class="phase-tag">Remove base64 password hashing</span>
+          <span class="phase-tag">Remove dev auto-login backdoor</span>
+          <span class="phase-tag">Add Row Level Security policies</span>
+          <span class="phase-tag">Add input sanitization</span>
+          <span class="phase-tag">Rate limiting on auth endpoints</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase-card animate-fadeInUp delay-400">
+      <div class="phase-number">4</div>
+      <div class="phase-content">
+        <h4>Testing &amp; Optimization (Week 4-5)</h4>
+        <p>Add testing infrastructure, error boundaries, code splitting, and performance optimizations.</p>
+        <div class="phase-tags">
+          <span class="phase-tag">Install & configure Playwright</span>
+          <span class="phase-tag">Add React Error Boundaries</span>
+          <span class="phase-tag">Code splitting (React.lazy + Suspense)</span>
+          <span class="phase-tag">Bundle analysis and optimization</span>
+          <span class="phase-tag">gh-pages deploy script</span>
+          <span class="phase-tag">E2E test coverage for critical flows</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk Mitigation -->
+  <div class="card" style="margin-top:28px;">
+    <h4 style="font-size:1.1rem;margin-bottom:16px;">Risk Mitigation</h4>
+    <div class="card-grid card-grid-2" style="gap:16px;">
+      <div style="padding:16px;background:var(--accent-red-dim);border-radius:var(--radius-md);border:1px solid rgba(239,68,68,0.2);">
+        <div style="font-weight:600;color:var(--accent-red);margin-bottom:8px;">High Risk: File Size Refactoring</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Splitting 2000+ line files risks introducing bugs. Approach: extract one tab at a time, test after each extraction. Keep the original file as a composite wrapper during transition.
+        </p>
+      </div>
+      <div style="padding:16px;background:var(--accent-amber-dim);border-radius:var(--radius-md);border:1px solid rgba(245,158,11,0.2);">
+        <div style="font-weight:600;color:var(--accent-amber);margin-bottom:8px;">Medium Risk: Data Model Differences</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Portal and Training may have different DB schemas. Audit Supabase tables from both projects (fodvpcwlpwfgmgvfczvb vs mhwrqkfttjbxryhlmhti) before merging.
+        </p>
+      </div>
+      <div style="padding:16px;background:var(--accent-amber-dim);border-radius:var(--radius-md);border:1px solid rgba(245,158,11,0.2);">
+        <div style="font-weight:600;color:var(--accent-amber);margin-bottom:8px;">Medium Risk: Auth System Migration</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Switching from custom auth to Supabase Auth will require UI changes and data migration. Plan a migration path for existing user accounts if any exist in the target Supabase project.
+        </p>
+      </div>
+      <div style="padding:16px;background:var(--accent-green-dim);border-radius:var(--radius-md);border:1px solid rgba(34,197,94,0.2);">
+        <div style="font-weight:600;color:var(--accent-green);margin-bottom:8px;">Low Risk: Styling Inconsistencies</div>
+        <p style="font-size:0.85rem;color:var(--text-secondary);">
+          Both use Tailwind 3.4 with similar dark theme. Consolidating hardcoded colors into the Tailwind config is mechanical work with low regression risk.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 8: KIMI CODE PROMPT ============ -->
+<section id="kimi-prompt" class="container">
+  <div class="section-header animate-fadeInUp">
+    <div class="section-icon">&#9998;</div>
+    <div>
+      <div class="section-title">The Kimi Code Prompt</div>
+      <div class="section-desc">Copy-paste this comprehensive prompt into Kimi Code to execute the merge</div>
+    </div>
+  </div>
+
+  <div class="prompt-box animate-fadeInUp delay-100">
+    <div class="prompt-header">
+      <span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Copy-Paste Prompt for Kimi Code
+      </span>
+      <button class="copy-btn" onclick="copyPrompt()" id="copyBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Clipboard
+      </button>
+    </div>
+    <div class="prompt-body">
+      <pre id="kimiPrompt">You are tasked with merging two AzFIT fitness training platform repositories into a single unified build. This is a React 19 + TypeScript + Vite project.
+
+---
+
+## GOAL
+Create a unified AzFIT fitness training platform by using azfit-training (azfit.fit) as the foundation and porting unique features from azfit-client-portal (GitHub Pages).
+
+---
+
+## REPOSITORY INFORMATION
+
+### Foundation Repo (use this as base):
+- <strong>Repository</strong>: https://github.com/AzFIT/azfit-training
+- <strong>Live URL</strong>: https://azfit.fit
+- <strong>Supabase Project ID</strong>: mhwrqkfttjbxryhlmhti
+- <strong>Local Path</strong>: C:\Users\85254\Documents\azfit-training-main
+
+### Source Repo (port features FROM this):
+- <strong>Repository</strong>: https://github.com/AzFIT/azfit-client-portal
+- <strong>Live URL</strong>: https://azfit.github.io/azfit-client-portal
+- <strong>Supabase Project ID</strong>: fodvpcwlpwfgmgvfczvb
+- <strong>Local Path</strong>: C:\Users\85254\Documents\azfit-client-portal
+
+---
+
+## FOUNDATION TECH STACK (preserve these)
+- React 19.2, TypeScript 5.x, Vite 7.2, Tailwind CSS 3.4
+- shadcn/ui (50+ components)
+- Framer Motion 12, Recharts 2.15
+- Zustand 5 WITH normalized store pattern + selective persistence
+- TanStack Query 5.101 (React Query) for ALL data fetching
+- React Hook Form + Zod 4 for form validation
+- Supabase (js client) for backend
+- HashRouter (TO BE CHANGED to BrowserRouter — see fixes below)
+- react-router-dom v6 only (remove v7)
+
+---
+
+## PHASE 1: FOUNDATION CLEANUP (Do these first)
+
+1. <strong>Replace HashRouter with BrowserRouter</strong>
+   - In App.tsx (or main router file), replace HashRouter with BrowserRouter
+   - Update all route definitions to work with BrowserRouter
+   - Ensure proper basename configuration if deploying to subdirectory
+
+2. <strong>Remove react-router v7</strong>
+   - Uninstall react-router v7 package
+   - Keep only react-router-dom v6
+   - Verify no imports reference v7 APIs
+
+3. <strong>Split ClientProfilePage into separate tab components</strong>
+   - Current: ClientProfilePage is 2000+ lines with 13 inline tab renders
+   - Create: ClientProfileTabs/ directory with one component per tab
+   - Main page becomes a shell that renders the active tab component
+   - Tabs: Overview, Body Stats, BioPrint, Nutrition, Photos, Programs, Workouts, Notes, Documents, Calendar, Goals, Settings, Communication
+
+4. <strong>Split ProgramWizardPage into step components</strong>
+   - Current: ProgramWizardPage is 2478 lines — the most complex page
+   - Create: ProgramWizardSteps/ directory with one component per step
+   - Keep step navigation logic in the main wizard shell
+
+5. <strong>Replace global mutable ID counters with UUID</strong>
+   - Find all global mutable counter variables (let id = 0; id++)
+   - Replace with crypto.randomUUID() or uuidv4() from uuid package
+   - This fixes thread-safety and HMR reset issues
+
+6. <strong>Remove hardcoded &quot;Sarah Johnson&quot; demo data</strong>
+   - Find all instances of &quot;Sarah Johnson&quot; in ClientProfilePage and related files
+   - Replace with dynamic data from the client record
+   - If demo data is needed, pull from the demo data seeding system
+
+7. <strong>Consolidate hardcoded colors into Tailwind config</strong>
+   - Search for all hardcoded hex colors (#00AEEF, #8B5CF6, #22C55E, etc.)
+   - Move them to tailwind.config.js extend colors
+   - Replace all inline hex values with Tailwind classes
+   - Primary: cyan-500 (#00AEEF), Success: green-500 (#22C55E), Accent: violet-500 (#8B5CF6)
+
+8. <strong>Remove any remaining hardcoded demo credentials</strong>
+   - Scan for hardcoded passwords, API keys, tokens
+   - Move to environment variables (.env file)
+   - Add .env to .gitignore
+
+---
+
+## PHASE 2: PORT UNIQUE PORTAL FEATURES
+
+Port these features from azfit-client-portal into the azfit-training codebase. Adapt them to use TanStack Query and the normalized Zustand store pattern.
+
+### 2A. AdminDashboard Page (HIGHEST PRIORITY)
+- Port from: Portal's AdminDashboard page
+- Features: Platform-wide analytics, coach management, multi-tenant views
+- Adapt to: Use TanStack Query for analytics data, normalized store for coach list
+- Add to: Sidebar navigation under a new &quot;Admin&quot; section (role-gated)
+
+### 2B. AI Chat Assistant
+- Port from: Portal's AI Chat component (fully offline, knowledge-based)
+- Features: @-commands for client messaging, fitness knowledge base responses
+- Adapt to: Keep offline architecture, integrate with Training's client data store
+- The Portal version is MORE sophisticated than Training's — port the better one
+
+### 2C. Excel &amp; PDF Export System
+- Port from: Portal's AllInOneProgramPage export logic (NOT the whole 90KB page)
+- Features: Program data export as .xlsx (via exceljs), PDF generation
+- Extract: Just the export utility functions and file generation logic
+- Add to: Program pages as export buttons
+
+### 2D. Program Matcher Algorithm
+- Port from: Portal's ProgramMatcher page/component
+- Features: Scoring algorithm that matches clients to optimal programs
+- Inputs: Client goals, experience level, constraints, preferences
+- Output: Ranked program recommendations with match scores
+
+### 2E. Client Intake Wizard
+- Port from: Portal's AddClient page (4-step wizard)
+- Features: Multi-step client onboarding — Personal Info &gt; Goals &gt; Health &gt; Review
+- Adapt to: Use React Hook Form + Zod for validation at each step
+- Add to: ClientDirectory page as &quot;Add Client&quot; flow
+
+### 2F. Supabase RLS + Multi-Tenant Patterns
+- Port from: Portal's auth system and RLS policies
+- Features: Row Level Security policies, tenant isolation, role-based access
+- Adapt to: Work with Supabase Auth (Phase 3), not the custom auth system
+- Note: These are SQL policies — extract from the Portal Supabase project (fodvpcwlpwfgmgvfczvb)
+
+---
+
+## PHASE 3: SECURITY HARDENING
+
+1. <strong>Implement Supabase Auth</strong>
+   - Replace ALL custom authentication with @supabase/supabase-js Auth
+   - Use signUp(), signInWithPassword(), signOut(), resetPasswordForEmail()
+   - Implement proper session management with onAuthStateChange()
+   - Add protected route guards that check auth state
+
+2. <strong>Remove base64 password hashing</strong>
+   - Find all uses of btoa() for password &quot;hashing&quot;
+   - Replace with Supabase Auth (handles hashing internally with bcrypt)
+   - NEVER implement client-side password hashing
+
+3. <strong>Remove dev auto-login backdoor</strong>
+   - Find and delete all dev auto-login code
+   - Remove hardcoded dev credentials (dev@azfit.app / dev123)
+   - Add a proper .env-based demo mode if needed for development
+
+4. <strong>Add Row Level Security</strong>
+   - Enable RLS on all Supabase tables
+   - Create policies for: coaches can only see their own clients
+   - Admins can see all data
+   - Clients can only see their own profile data
+
+5. <strong>Input sanitization</strong>
+   - Add Zod validation for ALL user inputs (already partially done)
+   - Sanitize text inputs to prevent XSS
+   - Validate file uploads (photos, documents)
+
+---
+
+## PHASE 4: TESTING &amp; OPTIMIZATION
+
+1. <strong>Install Playwright</strong>
+   - npm init playwright@latest
+   - Configure playwright.config.ts
+   - Add test scripts to package.json
+
+2. <strong>Add Error Boundaries</strong>
+   - Create a global ErrorBoundary component
+   - Wrap all routes in ErrorBoundary
+   - Add fallback UI with error reporting
+
+3. <strong>Code Splitting</strong>
+   - Use React.lazy() + Suspense for all route-level components
+   - Add loading fallbacks (skeleton screens preferred over spinners)
+   - Verify with npm run build bundle analysis
+
+4. <strong>Performance</strong>
+   - Add React.memo() to expensive components (tables, charts)
+   - Use useMemo/useCallback where beneficial (don't over-optimize)
+   - Verify TanStack Query cache settings are optimal
+
+5. <strong>gh-pages deploy</strong>
+   - Add gh-pages npm package
+   - Configure deploy script in package.json
+   - Ensure BrowserRouter handles the subdirectory path correctly
+
+---
+
+## DESIGN SYSTEM REQUIREMENTS
+
+1. <strong>Use Tailwind CSS exclusively</strong> — no inline styles for theming
+2. <strong>All colors via Tailwind config</strong> — no hardcoded hex values
+3. <strong>Primary accent</strong>: cyan-500 (#00AEEF)
+4. <strong>Success</strong>: green-500 (#22C55E)
+5. <strong>Warning</strong>: amber-500 (#F59E0B)
+6. <strong>Error</strong>: red-500 (#EF4444)
+7. <strong>Accent</strong>: violet-500 (#8B5CF6)
+8. <strong>Dark theme</strong>: bg-gray-950 (#0a0e17) for background
+9. <strong>Maintain shadcn/ui component styling</strong> — customize via CSS variables in globals.css
+10. <strong>Use Framer Motion</strong> for page transitions and micro-interactions
+
+---
+
+## FINAL ARCHITECTURE TARGET
+
+```
+src/
+  components/           # Reusable UI components
+    ui/                 # shadcn/ui components (auto-generated)
+    layout/             # Sidebar, Header, Footer
+    forms/              # Form field wrappers
+    charts/             # Rechart wrappers
+    motion/             # Framer Motion wrappers
+  pages/                # Route-level page components
+    dashboard/
+    calendar/
+    programs/
+    exercises/
+    workouts/
+    clients/
+    nutrition/
+    photos/
+    admin/              # NEW: from Portal
+    settings/
+  features/             # Feature-specific modules
+    admin-dashboard/    # NEW: from Portal
+    ai-chat/            # NEW: from Portal
+    export/             # NEW: from Portal (Excel/PDF)
+    program-matcher/    # NEW: from Portal
+    intake-wizard/      # NEW: from Portal
+    workout-session/    # Existing Training
+    1rm-calculator/     # Existing Training
+    progressive-overload/ # Existing Training
+  stores/               # Zustand stores (normalized)
+    appStore.ts
+    authStore.ts
+    workoutStore.ts
+    programStore.ts
+  hooks/                # Custom React hooks
+    useAuth.ts
+    useClients.ts
+    usePrograms.ts
+    useWorkouts.ts
+  services/             # API service layer
+    supabase.ts
+    workoutApi.ts
+    programApi.ts
+    clientApi.ts
+    exportApi.ts        # NEW: from Portal
+  utils/                # Utility functions
+    formatting.ts
+    calculations.ts
+    validation.ts
+    uuid.ts
+  types/                # Shared TypeScript types
+    database.ts         # Supabase DB types
+    models.ts           # App model types
+  lib/                  # Third-party config
+    queryClient.ts      # TanStack Query client
+    supabaseClient.ts   # Supabase client
+```
+
+---
+
+## IMPORTANT NOTES
+
+1. Keep ALL existing Training features intact: WorkoutSession, 1RMCalculator, ExerciseLibrary, BioPrintWizard, SmartProgramFinder, ProgressiveOverloadEngine, CoachRx Notation, Demo Data Seeding, Subscription scaffolding
+2. Do NOT port the Portal's custom auth system — use Supabase Auth instead
+3. Do NOT port the AllInOneProgramPage as a whole — extract only the export functionality
+4. The Portal's AI Chat is better than Training's — replace Training's with Portal's
+5. Use the Training Supabase project (mhwrqkfttjbxryhlmhti) as the database
+6. Audit both Supabase schemas and create a unified migration if needed
+7. Both repos have no error boundaries — add them as part of Phase 4
+8. Both repos have no code splitting — add as part of Phase 4
+9. Maintain the Training site's Hong Kong branding (&quot;Train Smarter. Train AzFIT.&quot;)
+10. The final deployment target is azfit.fit (production) with gh-pages as backup
+
+Execute Phase 1 first, then proceed sequentially. Confirm completion of each phase before moving to the next.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <p>AzFIT Repository Comparison Report &middot; Generated January 2025</p>
+  <p style="margin-top:4px;">Comparing azfit-client-portal (GitHub Pages) vs azfit-training (azfit.fit) for unified platform merge</p>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const offset = 60; // sticky nav height
+        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Active nav link on scroll
+  window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 80;
+      if (window.pageYOffset >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+
+  // Copy to clipboard
+  function copyPrompt() {
+    const promptText = document.getElementById('kimiPrompt').innerText;
+    navigator.clipboard.writeText(promptText).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard';
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(err => {
+      console.error('Copy failed:', err);
+      // Fallback
+      const textarea = document.createElement('textarea');
+      textarea.value = promptText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    });
+  }
+
+  // Collapsible sections
+  document.querySelectorAll('.collapse-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !expanded);
+      const content = this.nextElementSibling;
+      if (content && content.classList.contains('collapse-content')) {
+        content.classList.toggle('open');
+      }
+    });
+  });
+
+  // Animate progress bars on scroll
+  const progressObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fills = entry.target.querySelectorAll('.progress-fill');
+        fills.forEach(fill => {
+          const width = fill.style.width;
+          fill.style.width = '0%';
+          setTimeout(() => { fill.style.width = width; }, 100);
+        });
+        progressObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.card:has(.progress-fill)').forEach(card => {
+    progressObserver.observe(card);
+  });
+</script>
+
+</body>
+</html>

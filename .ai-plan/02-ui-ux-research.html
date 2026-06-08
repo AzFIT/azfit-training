@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Fitness & Personal Training UI/UX Design Research 2026</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg-card: #111827;
+    --bg-elevated: #1f2937;
+    --text: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --cyan: #06b6d4;
+    --green: #22c55e;
+    --purple: #8b5cf6;
+    --orange: #f97316;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+    --border: #374151;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+  header {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 12px; }
+  header h1 span { color: var(--cyan); }
+  header p { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+  .badge {
+    display: inline-block;
+    background: rgba(6,182,212,0.15);
+    color: var(--cyan);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid rgba(6,182,212,0.3);
+  }
+  h2 { font-size: 1.6rem; margin: 50px 0 24px; display: flex; align-items: center; gap: 12px; }
+  h2 .icon { font-size: 1.4rem; }
+  h3 { font-size: 1.2rem; color: var(--cyan); margin: 28px 0 12px; }
+  h4 { font-size: 1rem; color: var(--text); margin: 20px 0 8px; }
+
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+  }
+  .platform-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .platform-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--cyan);
+  }
+  .platform-card .name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .platform-card .category {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+  }
+  .platform-card .feature {
+    background: rgba(6,182,212,0.1);
+    border-left: 3px solid var(--cyan);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 10px 0;
+    font-size: 0.9rem;
+  }
+  .platform-card .rating {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  .star { color: var(--yellow); }
+
+  .insight-box {
+    background: linear-gradient(135deg, rgba(6,182,212,0.08), rgba(139,92,246,0.08));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 24px 0;
+  }
+  .insight-box h4 { color: var(--cyan); margin-top: 0; }
+  .insight-box ul { margin: 12px 0; padding-left: 20px; }
+  .insight-box li { margin: 8px 0; color: var(--text-secondary); }
+  .insight-box li strong { color: var(--text); }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 0.9rem;
+  }
+  .comparison-table th {
+    background: var(--bg-elevated);
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  .comparison-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .comparison-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .comparison-table .winner { color: var(--green); font-weight: 600; }
+  .comparison-table .highlight { color: var(--cyan); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .tag-unique { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag-trend { background: rgba(6,182,212,0.15); color: var(--cyan); }
+  .tag-must { background: rgba(249,115,22,0.15); color: var(--orange); }
+
+  .recommendation {
+    background: var(--bg-card);
+    border: 1px solid var(--green);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 30px 0;
+  }
+  .recommendation h4 { color: var(--green); margin-top: 0; }
+
+  .nav { position: sticky; top: 0; background: rgba(10,14,23,0.95); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 8px; padding: 12px 20px; overflow-x: auto; }
+  .nav a { color: var(--text-secondary); text-decoration: none; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; white-space: nowrap; transition: all 0.2s; }
+  .nav a:hover, .nav a.active { background: rgba(6,182,212,0.1); color: var(--cyan); }
+
+  .metric { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+  .metric-green { color: var(--green); }
+  .metric-cyan { color: var(--cyan); }
+  .metric-orange { color: var(--orange); }
+
+  footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 60px; }
+
+  @media (max-width: 768px) {
+    header h1 { font-size: 1.8rem; }
+    .platform-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="active">Overview</a>
+    <a href="#platforms">Top Platforms</a>
+    <a href="#patterns">Unique Patterns</a>
+    <a href="#trends">2026 Trends</a>
+    <a href="#azfit-recommendations">For AzFIT</a>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="badge">DESIGN RESEARCH 2026</div>
+  <h1>Best Fitness & Personal Training <span>UI/UX Designs</span></h1>
+  <p>Comprehensive research into the most unique, innovative, and effective interface designs for personal training software, workout programs, and fitness coaching platforms.</p>
+</header>
+
+<div class="container">
+
+<section id="platforms">
+  <h2><span class="icon">🏆</span> Top 10 Platforms with Standout Design</h2>
+
+  <div class="platform-grid">
+
+    <div class="platform-card">
+      <div class="name">1. <span style="color:#00d4aa">Strong</span></div>
+      <div class="category">Strength Training / Workout Logger</div>
+      <div class="feature">
+        <strong>Visual Plate Calculator:</strong> When you enter a weight, a popup shows exactly which plates to add to the barbell. Removes all guesswork.
+      </div>
+      <div class="feature">
+        <strong>Data-Dense Dark Logbook:</strong> Dark mode with green/blue accents optimized for gym lighting. Sets, reps, weight clearly displayed with built-in rest timer.
+      </div>
+      <div class="rating"><span class="star">★★★★★</span> <span style="color:var(--text-muted)">Best for: In-workout UX</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">2. <span style="color:#fc4c02">Strava</span></div>
+      <div class="category">Activity Tracking / Community</div>
+      <div class="feature">
+        <strong>Social Storytelling with Data:</strong> Turns workout stats into shareable social graphics. Achievements glow with brand orange.
+      </div>
+      <div class="feature">
+        <strong>Segment Competition:</strong> Visual leaderboard on route maps creates gamified competition without complex UI.
+      </div>
+      <div class="rating"><span class="star">★★★★★</span> <span style="color:var(--text-muted)">Best for: Data visualization + community</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">3. <span style="color:#f85f73">Freeletics</span></div>
+      <div class="category">AI Personalized Training</div>
+      <div class="feature">
+        <strong>AI Coaching Conversational UI:</strong> Clean black/white/blue high-contrast interface. The AI asks about available time, equipment, space and adjusts workouts in real-time.
+      </div>
+      <div class="feature">
+        <strong>Adaptive "Training Journeys":</strong> Visual roadmap showing program progression with clear milestones.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: AI-guided UX</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">4. <span style="color:#fa6400">Headspace</span></div>
+      <div class="category">Mindfulness / Wellness</div>
+      <div class="feature">
+        <strong>Color Psychology as Design System:</strong> Warm oranges, soft blues, gentle gradients that shift subtly through the user journey. Colors literally slow the user down.
+      </div>
+      <div class="feature">
+        <strong>Full-Bleed Illustration:</strong> Every session opens with immersive artwork that sets emotional tone before audio begins.
+      </div>
+      <div class="rating"><span class="star">★★★★★</span> <span style="color:var(--text-muted)">Best for: Emotional design</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">5. <span style="color:#005eb8">MyFitnessPal</span></div>
+      <div class="category">Nutrition Tracking</div>
+      <div class="feature">
+        <strong>Approachable Data Presentation:</strong> Circular macro charts break complex nutrition data into simple, scannable visuals. Blue and white palette keeps it clean.
+      </div>
+      <div class="feature">
+        <strong>One-Screen Meal Logging:</strong> Log entire meals from one screen. Swipe to see nutrient details. Balance of efficiency and depth.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: Data simplification</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">6. <span style="color:#ff5a5f">ZRX (Zombies, Run!)</span></div>
+      <div class="category">Gamified Fitness</div>
+      <div class="feature">
+        <strong>Immersive Audio Storytelling:</strong> Transforms runs into zombie escape missions. Dark theme with high-contrast mission screens.
+      </div>
+      <div class="feature">
+        <strong>Progress Unlocks Story:</strong> Exercise progress unlocks narrative chapters — fitness becomes RPG progression.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: Gamification</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">7. <span style="color:#e91e8c">Sweat</span></div>
+      <div class="category">Women's Fitness Programs</div>
+      <div class="feature">
+        <strong>Goal-Oriented Program Cards:</strong> Clear program cards with trainer photos, workout style tags, difficulty badges, and weekly schedule previews.
+      </div>
+      <div class="feature">
+        <strong>Community Integration:</strong> Built-in forum and progress sharing creates accountability loops within the app.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: Program presentation</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">8. <span style="color:#6366f1">Kaia Health</span></div>
+      <div class="category">Pain Management / Form Correction</div>
+      <div class="feature">
+        <strong>AI Motion Coach (Computer Vision):</strong> Uses phone camera for real-time form feedback. 3D movement tracking with posture overlay.
+      </div>
+      <div class="feature">
+        <strong>Calming Clinical UI:</strong> Clean light design with blues and greens. Daily plan cards feel medical yet approachable.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: Real-time feedback UI</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">9. <span style="color:#00c853">1FIT</span></div>
+      <div class="category">All-in-One Coaching Platform</div>
+      <div class="feature">
+        <strong>Unified Client Roadmaps:</strong> Visual journey maps showing client progress through program phases with milestones. Reduces drop-offs.
+      </div>
+      <div class="feature">
+        <strong>Recovery Dashboard:</strong> HRV, sleep, readiness metrics auto-synced from wearables displayed in unified recovery score.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: Coach dashboards</span></div>
+    </div>
+
+    <div class="platform-card">
+      <div class="name">10. <span style="color:#ff6d00">Nike Run Club</span></div>
+      <div class="category">Running / Activity Tracking</div>
+      <div class="feature">
+        <strong>Glance-Optimized Interface:</strong> Bold typography, focused layouts. Key stats (pace, distance, HR) visible at a literal glance while running.
+      </div>
+      <div class="feature">
+        <strong>Celebration Moments:</strong> Achievements trigger full-screen celebration animations with shareable graphics.
+      </div>
+      <div class="rating"><span class="star">★★★★☆</span> <span style="color:var(--text-muted)">Best for: In-motion UX</span></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="patterns">
+  <h2><span class="icon">🎨</span> Most Unique UI/UX Patterns in Fitness</h2>
+
+  <div class="insight-box">
+    <h4>1. Strong's Visual Plate Calculator</h4>
+    <p>The most clever fitness UI element I've found. When logging weight, it shows a visual representation of plates on a barbell. This is <strong>domain-specific micro-UX</strong> — it solves a real problem ("what plates do I load?") with zero friction. It's the kind of detail that makes users feel the app was built by people who actually lift.</p>
+    <p><span class="tag tag-must">MUST-HAVE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>2. Strava's Segment Leaderboard Overlay</h4>
+    <p>GPS route maps with colored segments where users compete for PRs. The UI layers competition on top of exploration naturally. Orange brand color draws the eye to key stats. The genius is making <strong>data feel like a game without adding game UI clutter</strong>.</p>
+    <p><span class="tag tag-unique">UNIQUE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>3. Freeletics' Conversational Workout Generator</h4>
+    <p>Instead of a form with dropdowns, the AI asks questions conversationally: "How much time do you have?" "Any equipment?" "How much space?" Each answer narrows the next workout. This is <strong>progressive disclosure done right</strong> — no overwhelm, just one question at a time.</p>
+    <p><span class="tag tag-trend">2026 TREND</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>4. Headspace's Color-Shift Emotional Journey</h4>
+    <p>Colors shift from warm orange (energizing morning sessions) to soft blue (evening wind-down) to deep purple (sleep). The entire UI is an <strong>emotional thermostat</strong>. This is advanced design psychology — using color to prime the user's mental state before content begins.</p>
+    <p><span class="tag tag-unique">UNIQUE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>5. 1FIT's Client Roadmap Visualization</h4>
+    <p>Shows each client's full coaching journey as a visual timeline with phases (Assessment → Foundation → Progression → Peak) and milestones. Clients always know where they are and what's next. This dramatically reduces the "what am I paying for?" churn reason.</p>
+    <p><span class="tag tag-trend">2026 TREND</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>6. Sweat's Program Preview Cards</h4>
+    <p>Each program card shows: trainer photo, program name, workout style tags, difficulty badge, equipment needed, AND a mini weekly schedule preview (Mon/Wed/Fri icons). Users can evaluate a full program at a glance without clicking in.</p>
+    <p><span class="tag tag-must">MUST-HAVE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>7. Kaia's Real-Time Pose Overlay</h4>
+    <p>Phone camera shows the user's silhouette overlaid with a "ghost" reference pose. Real-time feedback on form quality with color coding (green = good, red = adjust). This is <strong>augmented reality fitness coaching</strong> — no extra hardware needed.</p>
+    <p><span class="tag tag-unique">UNIQUE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>8. Strong's Rest Timer Integration</h4>
+    <p>Rest timer is built directly into the workout log. Between sets, it auto-starts counting down. The UI shows remaining time as a circular progress ring. When time's up, a subtle vibration/notification. <strong>One less thing to think about during training.</strong></p>
+    <p><span class="tag tag-must">MUST-HAVE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>9. MyFitnessPal's Circular Macro Charts</h4>
+    <p>Donut charts for calories, protein, carbs, fats. Each chart fills as the user logs meals. The visual is instantly scannable — "my protein ring is only half full, I need more." Turns abstract numbers into <strong>intuitive visual progress</strong>.</p>
+    <p><span class="tag tag-must">MUST-HAVE PATTERN</span></p>
+  </div>
+
+  <div class="insight-box">
+    <h4>10. Nike Run Club's Audio-Guided Run Player</h4>
+    <p>During a run, the screen shows only 3 things: current pace, distance, and a large pause button. Everything else is hidden. Coach audio plays over music. After the run, a rich summary with route map, splits, and achievement badges appears. <strong>Context-aware simplicity.</strong></p>
+    <p><span class="tag tag-unique">UNIQUE PATTERN</span></p>
+  </div>
+
+</section>
+
+<section id="trends">
+  <h2><span class="icon">📈</span> Fitness UI/UX Trends Dominating 2026</h2>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Trend</th>
+        <th>Description</th>
+        <th>Impact</th>
+        <th>Example Platforms</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="highlight">AI Conversational UI</td>
+        <td>Chat-style interfaces for program generation, not forms</td>
+        <td class="winner">High</td>
+        <td>Freeletics, 1FIT</td>
+      </tr>
+      <tr>
+        <td class="highlight">Wearable Data Integration</td>
+        <td>HRV, sleep, recovery scores displayed in coach dashboards</td>
+        <td class="winner">High</td>
+        <td>1FIT, Strava, Whoop</td>
+      </tr>
+      <tr>
+        <td class="highlight">Visual Program Roadmaps</td>
+        <td>Client journey timelines with phases and milestones</td>
+        <td class="winner">High</td>
+        <td>1FIT, Sweat</td>
+      </tr>
+      <tr>
+        <td class="highlight">Gamification Layers</td>
+        <td>Progress unlocks, streaks, achievement badges</td>
+        <td class="winner">Medium</td>
+        <td>ZRX, Strava, Nike</td>
+      </tr>
+      <tr>
+        <td class="highlight">Real-Time Form Feedback</td>
+        <td>Camera-based pose analysis with overlay guidance</td>
+        <td class="winner">Medium</td>
+        <td>Kaia Health</td>
+      </tr>
+      <tr>
+        <td class="highlight">Recovery as First-Class UI</td>
+        <td>Dedicated recovery dashboards, not an afterthought</td>
+        <td class="winner">High</td>
+        <td>1FIT, Whoop</td>
+      </tr>
+      <tr>
+        <td class="highlight">Micro-Interactions</td>
+        <td>Confetti on PR, pulse on new data, haptic feedback</td>
+        <td class="winner">Medium</td>
+        <td>Strava, Strong</td>
+      </tr>
+      <tr>
+        <td class="highlight">Hybrid Training Support</td>
+        <td>In-person + remote session management in one view</td>
+        <td class="winner">High</td>
+        <td>TrueCoach, Trainerize</td>
+      </tr>
+      <tr>
+        <td class="highlight">Color-Coded Everything</td>
+        <td>Every session type, alert severity, metric has a color</td>
+        <td class="winner">High</td>
+        <td>Portal (AzFIT), Sweat</td>
+      </tr>
+      <tr>
+        <td class="highlight">Social Accountability</td>
+        <td>Share progress, compete with friends, coach visibility</td>
+        <td class="winner">Medium</td>
+        <td>Strava, Sweat</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight-box">
+    <h4>Key Design Principle: "Gym-Optimized UX"</h4>
+    <p>The best fitness apps are designed for <strong>the environment where they're used</strong>:</p>
+    <ul>
+      <li><strong>Dark modes</strong> with high contrast (gyms have varied lighting)</li>
+      <li><strong>Large tap targets</strong> (users may have sweaty hands or be mid-workout)</li>
+      <li><strong>Minimal text input</strong> during workouts (taps, swipes, voice preferred)</li>
+      <li><strong>Timer integration</strong> everywhere (rest periods are sacred)</li>
+      <li><strong>One-glance readability</strong> (users shouldn't need to focus on the screen)</li>
+    </ul>
+  </div>
+
+</section>
+
+<section id="azfit-recommendations">
+  <h2><span class="icon">🎯</span> Specific Recommendations for AzFIT</h2>
+
+  <div class="recommendation">
+    <h4>Immediate Wins (Apply Now)</h4>
+    <ol style="margin:12px 0;padding-left:20px;color:var(--text-secondary);">
+      <li><strong style="color:var(--text)">Adopt the portal's KPI card design</strong> — charcoal background, white numbers, multi-colored rings. This single change will make the dashboard feel premium.</li>
+      <li><strong style="color:var(--text)">Color-code all session types</strong> — Cyan=PT, Purple=Group, Green=Assessment, Orange=Online. Apply to calendar AND schedule views.</li>
+      <li><strong style="color:var(--text)">Add severity-colored alert borders</strong> — Red=urgent, Yellow=warning, Blue=info, Green=success. With relative timestamps ("2h ago" not "5 day").</li>
+      <li><strong style="color:var(--text)">Calendar starts at 05:00</strong> — remove 5 hours of dead space. Personal trainers don't book sessions at 2am.</li>
+      <li><strong style="color:var(--text)">Rich program cards with templates</strong> — Port the portal's program template grid (GVT, GBC, HIIT, PPL, etc.) and rich program stat cards.</li>
+    </ol>
+  </div>
+
+  <div class="recommendation">
+    <h4>Medium-Term Differentiators (Stand Out from Competitors)</h4>
+    <ol style="margin:12px 0;padding-left:20px;color:var(--text-secondary);">
+      <li><strong style="color:var(--text)">Client Roadmap Visualization</strong> (from 1FIT) — Show each client's journey as a phased timeline. Reduces churn by making progress visible.</li>
+      <li><strong style="color:var(--text)">Visual Rest Timer</strong> (from Strong) — Circular countdown timer between sets, integrated into the workout logger. Auto-starts between sets.</li>
+      <li><strong style="color:var(--text)">Progress Celebration Moments</strong> (from Strava/Nike) — When a client hits a PR or completes a program, trigger a full-screen celebration with confetti animation.</li>
+      <li><strong style="color:var(--text)">Recovery Dashboard</strong> (from 1FIT/Whoop) — If integrating wearables, show HRV, sleep quality, and readiness score as a unified "green/yellow/red" recovery indicator.</li>
+      <li><strong style="color:var(--text)">Conversational Program Builder</strong> (from Freeletics) — Instead of a complex form, use a chat-style wizard: "What's the client's goal?" → "How many days per week?" → "Any injuries?"</li>
+    </ol>
+  </div>
+
+  <div class="recommendation">
+    <h4>Long-Term Innovation (Be the First)</h4>
+    <ol style="margin:12px 0;padding-left:20px;color:var(--text-secondary);">
+      <li><strong style="color:var(--text)">AI Form Check via Camera</strong> (from Kaia) — Use the phone camera to analyze client's exercise form during remote sessions. Real-time feedback overlay.</li>
+      <li><strong style="color:var(--text)">Visual Weight/Plate Calculator</strong> (from Strong) — Show plate loading visualization when trainers prescribe weights. Especially useful for beginners.</li>
+      <li><strong style="color:var(--text)">Social Accountability Feed</strong> (from Strava) — Optional client feed where they can share achievements, creating community within your coaching business.</li>
+    </ol>
+  </div>
+
+  <div class="insight-box">
+    <h4>Competitive Positioning: Where AzFIT Can Win</h4>
+    <p>After analyzing 15+ platforms, here's the gap AzFIT can own:</p>
+    <ul>
+      <li><strong>TrueCoach</strong> = Simple workout delivery (weak on nutrition, recovery, automation)</li>
+      <li><strong>Trainerize</strong> = Fragmented, lots of add-ons, clunky at scale</li>
+      <li><strong>1FIT</strong> = Best all-in-one but UK-focused, limited customization</li>
+      <li><strong>Strong</strong> = Best workout logger but no coaching features</li>
+      <li><strong>Strava</strong> = Best for cardio/tracking, not for program design</li>
+    </ul>
+    <p style="margin-top:12px;"><strong style="color:var(--green)">AzFIT's opportunity:</strong> The only platform that combines <strong>deep program design</strong> (Poliquin methods, BioPrint, 1RM calc, periodization) with <strong>beautiful coach dashboard UX</strong> and <strong>client-facing progress visualization</strong>. No competitor serves the high-end strength coach market with this level of sophistication AND design quality.</p>
+  </div>
+
+</section>
+
+<footer>
+  <p>Research compiled June 2026 from 15+ fitness platforms, design publications, and industry reports.</p>
+  <p style="margin-top:8px;">Sources: DesignRush, Dribbble, Awwwards, MyPTHUB, 1FIT, Trainerize, TrueCoach, ResearchNester, IBISWorld</p>
+</footer>
+
+</div>
+
+<script>
+// Sticky nav active state
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    if (window.scrollY >= section.offsetTop - 100) current = section.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+
+</body>
+</html>
