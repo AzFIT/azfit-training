@@ -1,1 +1,0 @@
-function s(o){const r=[];let e=0;for(let t=0;t<o.length;t++){const l=o[t].set_type_id;if(l===1)r.push(String.fromCharCode(65+e)),e++;else{const p=t;for(;t<o.length&&o[t].set_type_id===l;)t++;const h=t-p;t--;const i=String.fromCharCode(65+e);for(let n=1;n<=h;n++)r.push(`${i}${n}`);e++}}return r}export{s as c};
