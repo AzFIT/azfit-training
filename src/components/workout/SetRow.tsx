@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { Check, History } from 'lucide-react'
 import PlateCalculator from './PlateCalculator'
 
 export interface SetData {
@@ -27,7 +27,7 @@ interface SetRowProps {
   previousSet?: SetData
 }
 
-export default function SetRow({ set, onUpdate, previousSet: _previousSet }: SetRowProps) {
+export default function SetRow({ set, onUpdate, previousSet }: SetRowProps) {
   const [weight, setWeight] = useState(set.actualWeight?.toString() || '')
   const [reps, setReps] = useState(set.actualReps?.toString() || '')
   const [rpe, setRpe] = useState(set.actualRpe?.toString() || '')
@@ -98,9 +98,18 @@ export default function SetRow({ set, onUpdate, previousSet: _previousSet }: Set
         animate={{ opacity: 1 }}
         className="flex items-center gap-2 py-1.5"
       >
-        <span className="text-xs text-light-muted w-10 text-right flex-shrink-0">
-          Set {set.setNumber}
-        </span>
+        <div className="w-10 flex-shrink-0 text-right">
+          <span className="text-xs text-light-muted block">Set {set.setNumber}</span>
+          {previousSet && (previousSet.actualWeight || previousSet.targetWeight) ? (
+            <span className="inline-flex items-center gap-0.5 text-[10px] text-amber-600 mt-0.5" title="Previous session">
+              <History size={9} />
+              {previousSet.actualWeight || previousSet.targetWeight}kg
+              {previousSet.actualReps || previousSet.targetReps ? (
+                <span>×{previousSet.actualReps || previousSet.targetReps}</span>
+              ) : null}
+            </span>
+          ) : null}
+        </div>
 
         {/* Weight input — tap to open plate calculator */}
         <div className="relative flex-1 max-w-[90px]">

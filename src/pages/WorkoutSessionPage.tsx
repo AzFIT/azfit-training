@@ -42,6 +42,9 @@ import PhotoLogger, { PhotoCaptureButton } from '../components/workout/PhotoLogg
 import AdjustWorkoutDrawer from '../components/workout/AdjustWorkoutDrawer'
 import type { SessionPhoto } from '../components/workout/PhotoLogger'
 import type { ExerciseBlockData } from '../components/workout/ExerciseBlock'
+import type { SetData } from '../components/workout/SetRow'
+import { PRCelebrationModal } from '../components/workout/pr/PRCelebrationModal'
+import { detectPersonalRecords, type PersonalRecord } from '../components/workout/pr/prDetection'
 
 // ── Main Page ─────────────────────────────────────────────────────
 
@@ -108,10 +111,37 @@ export default function WorkoutSessionPage() {
   const [showFinishConfirm, setShowFinishConfirm] = useState(false)
   const [sessionPhotos, setSessionPhotos] = useState<SessionPhoto[]>([])
   const [showAdjustDrawer, setShowAdjustDrawer] = useState(false)
+  const [prRecords, setPrRecords] = useState<PersonalRecord[]>([])
+  const [showPrModal, setShowPrModal] = useState(false)
+  const [isScaled, setIsScaled] = useState(false)
+  const scalePercent = 0.8 // 80% for scaled mode
 
   const completedSets = getCompletedSetsCount()
   const totalSets = getTotalSetsCount()
   const progressPercent = totalSets > 0 ? (completedSets / totalSets) * 100 : 0
+
+  // Rx / Scaled target adjustment (display only — original Rx is preserved in logs)
+  const scaleSet = useCallback((s: SetData): SetData => {
+    if (!isScaled) return s
+    return {
+      ...s,
+      targetWeight: Math.round(s.targetWeight * scalePercent * 2) / 2,
+      targetReps: Math.max(1, Math.round(s.targetReps * scalePercent)),
+    }
+  }, [isScaled])
+
+  const displayExercises: ExerciseBlockData[] = useMemo(() => {
+    if (!isScaled) return exercises
+    return exercises.map((ex) => ({
+      ...ex,
+      target: {
+        ...ex.target,
+        weight: Math.round(ex.target.weight * scalePercent * 2) / 2,
+        reps: Math.max(1, Math.round(ex.target.reps * scalePercent)),
+      },
+      sets: ex.sets.map(scaleSet),
+    }))
+  }, [exercises, isScaled, scaleSet])
 
   // Photo handlers
   const handleAddPhoto = useCallback((photo: SessionPhoto) => {
@@ -166,8 +196,17 @@ export default function WorkoutSessionPage() {
     }
 
     addWorkoutSession(sessionLog)
-    toast.success(`Session complete! ${completedSets}/${totalSets} sets in ${elapsedFormatted}`)
-    navigate('/dashboard')
+
+    // Detect personal records
+    const allHistory = Object.values(workoutSessions)
+    const records = detectPersonalRecords(sessionLog, allHistory)
+    if (records.length > 0) {
+      setPrRecords(records)
+      setShowPrModal(true)
+    } else {
+      toast.success(`Session complete! ${completedSets}/${totalSets} sets in ${elapsedFormatted}`)
+      navigate('/dashboard')
+    }
   }
 
   if (isLoading) {
@@ -200,6 +239,20 @@ export default function WorkoutSessionPage() {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Rx / Scaled toggle */}
+              <button
+                onClick={() => setIsScaled((v) => !v)}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  isScaled
+                    ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                    : 'bg-light-surface text-light-secondary border border-light-border hover:bg-light-hover'
+                }`}
+                title={isScaled ? 'Targets scaled to 80%' : 'Targets as prescribed (Rx)'}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                {isScaled ? 'Scaled 80%' : 'Rx'}
+              </button>
+
               {/* Live timer */}
               <div className="flex items-center gap-1.5 bg-cyan/10 text-cyan px-3 py-1.5 rounded-lg">
                 <Clock size={14} />
@@ -244,7 +297,7 @@ export default function WorkoutSessionPage() {
         />
 
         {/* Exercise Blocks */}
-        {exercises.map((exercise) => (
+        {displayExercises.map((exercise) => (
           <ExerciseBlock
             key={exercise.id}
             exercise={exercise}
@@ -330,6 +383,17 @@ export default function WorkoutSessionPage() {
           onClose={() => setShowAdjustDrawer(false)}
         />
       )}
+
+      {/* PR Celebration */}
+      <PRCelebrationModal
+        open={showPrModal}
+        records={prRecords}
+        onClose={() => {
+          setShowPrModal(false)
+          toast.success(`Session complete! ${completedSets}/${totalSets} sets in ${elapsedFormatted}`)
+          navigate('/dashboard')
+        }}
+      />
     </div>
   )
 }

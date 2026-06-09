@@ -21,6 +21,7 @@ export interface ExerciseBlockData {
     reps: number[]
     rpe: number
   }
+  previousSets?: SetData[]
   target: {
     weight: number
     reps: number

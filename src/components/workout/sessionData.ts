@@ -8,6 +8,7 @@
 import type { ProgramWithExercises, ProgramExercise } from '../../types/workout'
 import type { ExerciseBlockData } from './ExerciseBlock'
 import type { SetData } from './SetRow'
+import type { WorkoutSet } from '../../types/entities'
 import type { WorkoutSessionLog } from '../../types/entities'
 import { computeLetterNotation, isPlainLetter, getBaseLetter } from '../../utils/notation'
 
@@ -119,6 +120,19 @@ function getSyntheticExercises(split: string, dayNumber: number): ProgramExercis
 
 // ── Previous session lookup ───────────────────────────────────────
 
+function workoutSetToSetData(s: WorkoutSet, fallbackRpe: number): SetData {
+  return {
+    setNumber: s.setNumber,
+    targetWeight: s.prescribedLoad ?? 0,
+    targetReps: parseInt(s.prescribedReps, 10) || 0,
+    targetRpe: s.prescribedRpe ?? fallbackRpe,
+    actualWeight: s.actualLoad,
+    actualReps: s.actualReps,
+    actualRpe: s.actualRpe,
+    completed: s.completed,
+  }
+}
+
 function getPreviousSessionData(
   exerciseId: number,
   previousSession: WorkoutSessionLog | null
@@ -138,6 +152,21 @@ function getPreviousSessionData(
     reps: completedSets.map((s) => s.actualReps ?? 0),
     rpe: completedSets[0].actualRpe ?? prevEx.sets[0]?.prescribedRpe ?? 8,
   }
+}
+
+function getPreviousSets(
+  exerciseId: number,
+  previousSession: WorkoutSessionLog | null
+): SetData[] | undefined {
+  if (!previousSession) return undefined
+
+  const prevEx = previousSession.exercises.find(
+    (e) => e.exerciseId === String(exerciseId)
+  )
+  if (!prevEx) return undefined
+
+  const fallbackRpe = prevEx.sets[0]?.prescribedRpe ?? 8
+  return prevEx.sets.map((s) => workoutSetToSetData(s, fallbackRpe))
 }
 
 // ── Main converter ────────────────────────────────────────────────
@@ -201,6 +230,7 @@ export function buildSessionFromProgram(options: SessionBuildOptions): SessionIn
 
     // Build previous session data
     const previousData = getPreviousSessionData(ex.exercise_id, previousSession || null)
+    const previousSets = getPreviousSets(ex.exercise_id, previousSession || null)
 
     // Determine target weight: previous session + 2.5kg progression, or default
     const targetWeight = previousData ? previousData.weight + 2.5 : 0
@@ -220,6 +250,7 @@ export function buildSessionFromProgram(options: SessionBuildOptions): SessionIn
       name: ex.exercise_name || `Exercise ${ex.exercise_id}`,
       supersetWith,
       previousSession: previousData,
+      previousSets,
       target: {
         weight: targetWeight,
         reps: repsNum,
@@ -256,6 +287,11 @@ export function createDemoSessionInfo(): SessionInfo {
         notation: 'A1',
         name: 'Bench Press',
         previousSession: { weight: 60, reps: [10, 10, 9], rpe: 8 },
+        previousSets: [
+          { setNumber: 1, targetWeight: 60, targetReps: 10, targetRpe: 8, completed: true, actualWeight: 60, actualReps: 10, actualRpe: 8 },
+          { setNumber: 2, targetWeight: 60, targetReps: 10, targetRpe: 8, completed: true, actualWeight: 60, actualReps: 10, actualRpe: 8 },
+          { setNumber: 3, targetWeight: 60, targetReps: 10, targetRpe: 8, completed: true, actualWeight: 60, actualReps: 9, actualRpe: 8 },
+        ],
         target: { weight: 62.5, reps: 10, sets: 3, rpe: 8 },
         sets: [
           { setNumber: 1, targetWeight: 62.5, targetReps: 10, targetRpe: 8, completed: true, actualWeight: 62.5, actualReps: 10, actualRpe: 8 },
@@ -270,6 +306,11 @@ export function createDemoSessionInfo(): SessionInfo {
         name: 'Barbell Row',
         supersetWith: 'A1',
         previousSession: { weight: 55, reps: [10, 10, 10], rpe: 7 },
+        previousSets: [
+          { setNumber: 1, targetWeight: 55, targetReps: 10, targetRpe: 7, completed: true, actualWeight: 55, actualReps: 10, actualRpe: 7 },
+          { setNumber: 2, targetWeight: 55, targetReps: 10, targetRpe: 7, completed: true, actualWeight: 55, actualReps: 10, actualRpe: 7 },
+          { setNumber: 3, targetWeight: 55, targetReps: 10, targetRpe: 7, completed: true, actualWeight: 55, actualReps: 10, actualRpe: 7 },
+        ],
         target: { weight: 57.5, reps: 10, sets: 3, rpe: 8 },
         sets: [
           { setNumber: 1, targetWeight: 57.5, targetReps: 10, targetRpe: 8, completed: false },
@@ -282,6 +323,11 @@ export function createDemoSessionInfo(): SessionInfo {
         notation: 'B1',
         name: 'Dumbbell Shoulder Press',
         previousSession: { weight: 20, reps: [10, 10, 9], rpe: 7 },
+        previousSets: [
+          { setNumber: 1, targetWeight: 20, targetReps: 10, targetRpe: 7, completed: true, actualWeight: 20, actualReps: 10, actualRpe: 7 },
+          { setNumber: 2, targetWeight: 20, targetReps: 10, targetRpe: 7, completed: true, actualWeight: 20, actualReps: 10, actualRpe: 7 },
+          { setNumber: 3, targetWeight: 20, targetReps: 10, targetRpe: 7, completed: true, actualWeight: 20, actualReps: 9, actualRpe: 7 },
+        ],
         target: { weight: 22.5, reps: 10, sets: 3, rpe: 8 },
         sets: [
           { setNumber: 1, targetWeight: 22.5, targetReps: 10, targetRpe: 8, completed: false },
