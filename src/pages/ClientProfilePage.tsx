@@ -37,6 +37,21 @@ export default function ClientProfilePage() {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
+  // Force dark mode on this page — all tabs are dark-mode only
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.remove('light')
+    root.classList.add('dark')
+    return () => {
+      // Restore user's preferred theme on unmount
+      const saved = localStorage.getItem('azfit-theme')
+      if (saved === 'light') {
+        root.classList.remove('dark')
+        root.classList.add('light')
+      }
+    }
+  }, [])
+
   useSyncWorkoutSessions(clientId);
 
   const clientData = clientId ? clients[clientId] : null;

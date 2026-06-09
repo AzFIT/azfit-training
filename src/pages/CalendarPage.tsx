@@ -66,11 +66,11 @@ function motionEnter<T extends Record<string, unknown>>(
 }
 
 const SESSION_COLORS: Record<SessionType, { bg: string; border: string; text: string }> = {
-  'Personal Training': { bg: 'rgba(0,174,239,0.2)', border: 'rgba(0,174,239,0.5)', text: 'cyan' },
-  'Group Class': { bg: 'rgba(139,92,246,0.2)', border: 'rgba(139,92,246,0.5)', text: 'violet' },
-  'Assessment': { bg: 'rgba(34,197,94,0.2)', border: 'rgba(34,197,94,0.5)', text: 'success' },
-  'Online': { bg: 'rgba(249,115,22,0.2)', border: 'rgba(249,115,22,0.5)', text: 'orange' },
-  'Consultation': { bg: 'rgba(59,130,246,0.2)', border: 'rgba(59,130,246,0.5)', text: 'info' },
+  'Personal Training': { bg: 'rgba(0,174,239,0.15)', border: 'rgba(0,174,239,0.5)', text: '#0284C7' },
+  'Group Class': { bg: 'rgba(139,92,246,0.15)', border: 'rgba(139,92,246,0.5)', text: '#7C3AED' },
+  'Assessment': { bg: 'rgba(34,197,94,0.15)', border: 'rgba(34,197,94,0.5)', text: '#16A34A' },
+  'Online': { bg: 'rgba(249,115,22,0.15)', border: 'rgba(249,115,22,0.5)', text: '#EA580C' },
+  'Consultation': { bg: 'rgba(59,130,246,0.15)', border: 'rgba(59,130,246,0.5)', text: '#2563EB' },
 }
 
 const SESSION_TYPE_LABELS: SessionType[] = [

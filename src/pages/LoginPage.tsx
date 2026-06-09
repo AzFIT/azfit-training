@@ -60,11 +60,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center p-4">
-      {/* Background image */}
+      {/* Background image with dark overlay for contrast */}
       <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-20 pointer-events-none"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-30 pointer-events-none"
         style={{ backgroundImage: 'url(./AZFIT_BACKGROUND_2.png)' }}
       />
+      <div className="fixed inset-0 bg-[az-black]/60 pointer-events-none" />
       {/* Noise texture */}
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
       {/* Ambient glow */}
