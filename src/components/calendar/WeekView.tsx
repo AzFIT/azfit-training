@@ -29,7 +29,7 @@ export function WeekView({
   onEventClick,
   getWorkoutForSession,
 }: WeekViewProps) {
-  void getWorkoutForSession
+  // void getWorkoutForSession — now wired below
   const now = useCurrentTime()
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -74,6 +74,7 @@ export function WeekView({
                         session={session}
                         onEventClick={onEventClick}
                         minHeight={32}
+                        hasWorkout={!!getWorkoutForSession(session)}
                       />
                     ))}
                 </div>

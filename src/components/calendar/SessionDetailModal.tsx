@@ -26,6 +26,7 @@ export function SessionDetailModal({
   hasWorkout,
 }: SessionDetailModalProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [editType, setEditType] = useState<SessionType>('Personal Training')
   const [editDuration, setEditDuration] = useState(60)
 
@@ -33,6 +34,7 @@ export function SessionDetailModal({
     if (session) {
       setEditType(session.type)
       setEditDuration(session.duration)
+      setShowCancelConfirm(false)
     }
   }, [session])
 
@@ -43,6 +45,15 @@ export function SessionDetailModal({
   const handleSaveEdit = () => {
     onEdit?.({ ...session, type: editType, duration: editDuration })
     setIsEditing(false)
+  }
+
+  const handleDeleteClick = () => {
+    setShowCancelConfirm(true)
+  }
+
+  const handleConfirmDelete = () => {
+    onDelete?.(session.id)
+    setShowCancelConfirm(false)
   }
 
   return (
@@ -127,25 +138,36 @@ export function SessionDetailModal({
                   <span className="text-[light-primary] text-xs font-medium">{session.duration} minutes</span>
                 </div>
               </div>
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="ghost"
-                  onClick={() => onDelete?.(session.id)}
-                  className="text-danger hover:text-danger hover:bg-danger/10"
-                >
-                  <Trash2 size={14} className="mr-1" />
-                  Delete
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setIsEditing(true)}
-                  className="text-[light-secondary] hover:text-[light-primary]"
-                >
-                  <Pencil size={14} className="mr-1" />
-                  Edit
-                </Button>
-                <Button variant="ghost" onClick={onClose} className="text-[light-secondary] hover:text-[light-primary]">Close</Button>
-              </div>
+              {showCancelConfirm ? (
+                <div className="bg-danger/5 border border-danger/20 rounded-xl p-4 space-y-3">
+                  <p className="text-danger text-sm font-medium">Cancel this session?</p>
+                  <p className="text-[light-secondary] text-xs">This will remove "{session.clientName}" from {format(session.startTime, 'EEEE, d MMMM')} at {format(session.startTime, 'HH:mm')}.</p>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" onClick={() => setShowCancelConfirm(false)} className="text-[light-secondary] hover:text-[light-primary] text-xs">Keep Session</Button>
+                    <Button onClick={handleConfirmDelete} className="bg-danger hover:bg-danger/90 text-white text-xs">Yes, Cancel Session</Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    onClick={handleDeleteClick}
+                    className="text-danger hover:text-danger hover:bg-danger/10"
+                  >
+                    <Trash2 size={14} className="mr-1" />
+                    Delete
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setIsEditing(true)}
+                    className="text-[light-secondary] hover:text-[light-primary]"
+                  >
+                    <Pencil size={14} className="mr-1" />
+                    Edit
+                  </Button>
+                  <Button variant="ghost" onClick={onClose} className="text-[light-secondary] hover:text-[light-primary]">Close</Button>
+                </div>
+              )}
             </>
           )}
         </div>

@@ -21,7 +21,7 @@ export function NewSessionModal({
   onSubmit,
 }: NewSessionModalProps) {
   const clients = useClientList()
-  const [client, setClient] = useState('')
+  const [clientId, setClientId] = useState('')
   const [type, setType] = useState<SessionType>('Personal Training')
   const [duration, setDuration] = useState('60')
   const [dateStr, setDateStr] = useState('')
@@ -39,12 +39,14 @@ export function NewSessionModal({
     }
   }, [selectedSlot, isOpen])
 
+  const selectedClient = clients.find((c) => c.id === clientId)
+
   const handleSubmit = () => {
-    if (!client || !dateStr || !timeStr) return
+    if (!clientId || !dateStr || !timeStr) return
     const startTime = new Date(`${dateStr}T${timeStr}`)
     const session: CalendarSession = {
       id: `session-${Date.now()}`,
-      clientName: client,
+      clientName: selectedClient?.name || 'Unknown',
       type,
       startTime,
       duration: Number(duration),
@@ -64,13 +66,13 @@ export function NewSessionModal({
         <div className="space-y-4 mt-2">
           <div>
             <label className="text-xs text-[light-secondary] mb-1 block">Client</label>
-            <Select value={client} onValueChange={setClient}>
+            <Select value={clientId} onValueChange={setClientId}>
               <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
                 <SelectValue placeholder="Select client" />
               </SelectTrigger>
               <SelectContent position="popper" className="bg-[light-surface] border-[light-border] z-[100] max-h-60">
                 {clients.map((c) => (
-                  <SelectItem key={c.id} value={c.name} className="text-[light-primary]">
+                  <SelectItem key={c.id} value={c.id} className="text-[light-primary]">
                     {c.name}
                   </SelectItem>
                 ))}

@@ -46,6 +46,7 @@ export default function ProgramsPage() {
   const [selectedGoals, setSelectedGoals] = useState<string[]>([])
   const [selectedMethod, setSelectedMethod] = useState<string>('')
   const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([])
+  const [selectedEquipment, setSelectedEquipment] = useState<string[]>([])
   const [showArchived, setShowArchived] = useState(false)
   const [templateFilter, setTemplateFilter] = useState<string | null>(null)
   const [showFilters, setShowFilters] = useState(false)
@@ -73,6 +74,17 @@ export default function ProgramsPage() {
     const methods = new Set<string>()
     programs.forEach((p) => methods.add(p.method))
     return Array.from(methods).sort()
+  }, [programs])
+
+  const equipmentOptions = useMemo(() => {
+    const eq = new Set<string>()
+    programs.forEach((p) => {
+      p.equipment.split(',').forEach((e) => {
+        const trimmed = e.trim()
+        if (trimmed) eq.add(trimmed)
+      })
+    })
+    return Array.from(eq).sort()
   }, [programs])
 
   // Stats
@@ -134,6 +146,14 @@ export default function ProgramsPage() {
       result = result.filter(p => selectedDifficulties.includes(p.difficulty))
     }
 
+    // Equipment filter
+    if (selectedEquipment.length > 0) {
+      result = result.filter(p => {
+        const progEq = p.equipment.split(',').map(e => e.trim().toLowerCase())
+        return selectedEquipment.some(se => progEq.includes(se.toLowerCase()))
+      })
+    }
+
     // Template filter
     if (templateFilter) {
       result = result.filter(p => (p.template || 'Custom') === templateFilter)
@@ -153,13 +173,13 @@ export default function ProgramsPage() {
     }
 
     return result
-  }, [programs, searchQuery, selectedGoals, selectedMethod, selectedDifficulties, showArchived, templateFilter, sortBy])
+  }, [programs, searchQuery, selectedGoals, selectedMethod, selectedDifficulties, selectedEquipment, showArchived, templateFilter, sortBy])
 
   const totalPages = Math.ceil(filtered.length / pageSize)
   const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
   // Reset page on filter change
-  useEffect(() => { setCurrentPage(1) }, [searchQuery, selectedGoals, selectedMethod, selectedDifficulties, showArchived, templateFilter, sortBy])
+  useEffect(() => { setCurrentPage(1) }, [searchQuery, selectedGoals, selectedMethod, selectedDifficulties, selectedEquipment, showArchived, templateFilter, sortBy])
 
   // Actions
   const handleAction = useCallback((action: string, program: DisplayProgram) => {
@@ -188,13 +208,14 @@ export default function ProgramsPage() {
   }, [navigate, deleteProgram])
 
   // Active filter count
-  const activeFilterCount = selectedGoals.length + (selectedMethod ? 1 : 0) + selectedDifficulties.length + (showArchived ? 1 : 0) + (templateFilter ? 1 : 0)
+  const activeFilterCount = selectedGoals.length + (selectedMethod ? 1 : 0) + selectedDifficulties.length + selectedEquipment.length + (showArchived ? 1 : 0) + (templateFilter ? 1 : 0)
 
   const clearFilters = () => {
     setSearchQuery('')
     setSelectedGoals([])
     setSelectedMethod('')
     setSelectedDifficulties([])
+    setSelectedEquipment([])
     setShowArchived(false)
     setTemplateFilter(null)
   }
@@ -205,6 +226,9 @@ export default function ProgramsPage() {
   }
   const toggleDifficulty = (diff: string) => {
     setSelectedDifficulties(prev => prev.includes(diff) ? prev.filter(d => d !== diff) : [...prev, diff])
+  }
+  const toggleEquipment = (eq: string) => {
+    setSelectedEquipment(prev => prev.includes(eq) ? prev.filter(e => e !== eq) : [...prev, eq])
   }
 
   return (
@@ -398,6 +422,51 @@ export default function ProgramsPage() {
             </div>
           </div>
 
+          {/* Equipment Filter */}
+          <div className="relative group">
+            <button className="flex items-center gap-2 bg-light-surface border border-light-border hover:border-cyan text-light-secondary text-sm px-4 py-2 rounded-lg transition-colors">
+              <SlidersHorizontal size={14} />
+              Equipment
+              {selectedEquipment.length > 0 && (
+                <span className="bg-cyan text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {selectedEquipment.length}
+                </span>
+              )}
+              <ChevronDown size={14} />
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-56 bg-light-surface border border-light-border rounded-lg shadow-glass opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-30 py-1 max-h-60 overflow-y-auto">
+              <button
+                onClick={() => setSelectedEquipment([])}
+                className={cn(
+                  'w-full text-left px-3 py-2 text-sm transition-colors',
+                  selectedEquipment.length === 0 ? 'text-cyan bg-cyan/10' : 'text-light-secondary hover:text-light-primary hover:bg-light-hover'
+                )}
+              >
+                All Equipment
+              </button>
+              {equipmentOptions.map((eq) => (
+                <button
+                  key={eq}
+                  onClick={() => toggleEquipment(eq)}
+                  className={cn(
+                    'w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors',
+                    selectedEquipment.includes(eq)
+                      ? 'text-cyan bg-cyan/10'
+                      : 'text-light-secondary hover:text-light-primary hover:bg-light-hover'
+                  )}
+                >
+                  <div className={cn(
+                    'w-4 h-4 rounded border flex items-center justify-center transition-colors',
+                    selectedEquipment.includes(eq) ? 'bg-cyan border-cyan' : 'border-light-muted'
+                  )}>
+                    {selectedEquipment.includes(eq) && <CheckCircle size={10} className="text-white" />}
+                  </div>
+                  {eq}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Difficulty Filter */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {DIFFICULTY_OPTIONS.map((diff) => (
@@ -428,8 +497,8 @@ export default function ProgramsPage() {
           )}
         </div>
 
-        {/* Selected goal pills */}
-        {selectedGoals.length > 0 && (
+        {/* Selected filter pills */}
+        {(selectedGoals.length > 0 || selectedEquipment.length > 0) && (
           <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-light-border">
             {selectedGoals.map((goal) => {
               const label = GOAL_OPTIONS.find(g => g.value === goal)?.label || goal
@@ -440,6 +509,12 @@ export default function ProgramsPage() {
                 </span>
               )
             })}
+            {selectedEquipment.map((eq) => (
+              <span key={eq} className="inline-flex items-center gap-1 bg-cyan/10 text-cyan text-xs px-2.5 py-1 rounded-full">
+                {eq}
+                <button onClick={() => toggleEquipment(eq)} className="hover:text-white"><X size={10} /></button>
+              </span>
+            ))}
           </div>
         )}
       </div>
