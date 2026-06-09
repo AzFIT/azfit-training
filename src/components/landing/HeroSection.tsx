@@ -52,7 +52,7 @@ export default function HeroSection({ logoSrc, headline, subheadline }: HeroSect
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.5, ease: EASE }}
-                className="text-[dark-secondary] text-base sm:text-lg max-w-[560px] mx-auto lg:mx-0 mb-8 leading-relaxed"
+                className="text-white/80 text-base sm:text-lg max-w-[560px] mx-auto lg:mx-0 mb-8 leading-relaxed"
               >
                 {subheadline}
               </motion.p>
@@ -72,7 +72,7 @@ export default function HeroSection({ logoSrc, headline, subheadline }: HeroSect
                 </Link>
                 <button
                   onClick={handleTryDemo}
-                  className="inline-flex items-center gap-2 text-[dark-secondary] hover:text-white font-medium px-7 py-3.5 rounded-xl border border-white/10 hover:bg-white/5 transition-all text-sm"
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-white font-medium px-7 py-3.5 rounded-xl border border-white/20 hover:bg-white/10 transition-all text-sm"
                 >
                   <Sparkles size={16} />
                   Try Demo
@@ -83,7 +83,7 @@ export default function HeroSection({ logoSrc, headline, subheadline }: HeroSect
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.5, ease: EASE }}
-                className="text-[dark-muted] text-sm"
+                className="text-white/60 text-sm"
               >
                 Trusted by 116+ clients across Hong Kong
               </motion.p>
@@ -113,7 +113,7 @@ export default function HeroSection({ logoSrc, headline, subheadline }: HeroSect
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <ChevronDown size={24} className="text-[dark-muted]" />
+          <ChevronDown size={24} className="text-white/50" />
         </motion.div>
       </motion.div>
 
