@@ -12,8 +12,8 @@ const ACCENT_COLORS = [
   { name: 'Cyan', value: 'cyan', tw: 'bg-cyan' },
   { name: 'Violet', value: 'violet', tw: 'bg-violet' },
   { name: 'Green', value: 'success', tw: 'bg-success' },
-  { name: 'Pink', value: 'trainer-accent', tw: 'bg-trainer-accent' }
-  { name: 'Purple', value: 'admin-accent', tw: 'bg-admin-accent' }
+  { name: 'Pink', value: 'trainer-accent', tw: 'bg-trainer-accent' },
+  { name: 'Purple', value: 'admin-accent', tw: 'bg-admin-accent' },
   { name: 'Orange', value: 'warning', tw: 'bg-warning' },
   { name: 'Red', value: 'danger', tw: 'bg-danger' },
   { name: 'Blue', value: 'blue-500', tw: 'bg-blue-500' },

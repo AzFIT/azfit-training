@@ -71,7 +71,7 @@ export interface BuilderSession {
 export interface ExerciseModification {
   orderNotation: string
   sessionNumber: number
-  field: 'sets' | 'reps' | 'tempo' | 'restSeconds' | 'notes'
+  field: 'sets' | 'reps' | 'tempo' | 'restSeconds' | 'notes' | 'multi'
   oldValue: unknown
   newValue: unknown
 }
