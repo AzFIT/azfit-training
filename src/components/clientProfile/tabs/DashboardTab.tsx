@@ -10,6 +10,7 @@ import { useAppDataStore } from '@/stores/useAppDataStore';
 import { formatDate } from '@/lib/workoutAnalytics';
 import { KpiCard, SectionCard } from '../shared';
 import TodaysSessionWidget from './TodaysSessionWidget';
+import LeaderboardWidget from '@/components/dashboard/LeaderboardWidget';
 
 export default function DashboardTab() {
   const { id: clientId } = useParams<{ id: string }>();
@@ -53,6 +54,7 @@ export default function DashboardTab() {
       {/* Left Column */}
       <div className="lg:col-span-3 space-y-5">
         {client && <TodaysSessionWidget client={client} />}
+        {client && <LeaderboardWidget />}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <KpiCard label="Current Weight" value={latest?.weight || client?.weight || 0} unit="kg" change={weightChange} icon={Scale} inverse />
           <KpiCard label="Body Fat %" value={latest?.bodyFat || client?.bodyFat || 0} unit="%" change={bfChange} icon={Activity} inverse />

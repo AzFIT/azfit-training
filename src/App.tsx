@@ -45,6 +45,7 @@ const PlannedFeaturesPage = lazy(() => import('./pages/PlannedFeaturesPage'))
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'))
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'))
 const ProgramLibraryPage = lazy(() => import('./pages/ProgramLibraryPage'))
+const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
 
 /* ── Admin pages ── */
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'))
@@ -119,6 +120,7 @@ export default function App() {
       <Route path="/notifications" element={<Protected><NotificationsPage /></Protected>} />
       <Route path="/subscription" element={<Protected><SubscriptionPage /></Protected>} />
       <Route path="/programs/library" element={<Protected><ProgramLibraryPage /></Protected>} />
+      <Route path="/leaderboard" element={<Protected><LeaderboardPage /></Protected>} />
 
       {/* Admin routes */}
       <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
