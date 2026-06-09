@@ -8,7 +8,7 @@
 
 import { useMemo } from 'react'
 import { useAppDataStore } from './useAppDataStore'
-import type { Client, Program, CalendarSession, ClientAlert, AppNotification } from '../types/entities'
+import type { Client, Program, CalendarSession, ClientAlert, AppNotification, BodyStatsEntry, ProgressEntry } from '../types/entities'
 
 // ── Client Selectors ───────────────────────────────────────────────
 
@@ -72,6 +72,43 @@ export function useClientStats() {
         : 0
     return { total, active, inactive, avgCompliance }
   }, [list])
+}
+
+// ── Body Stats & Progress Selectors ────────────────────────────────
+
+export function useLatestBodyStats(clientId: string | null): BodyStatsEntry | undefined {
+  const entries = useAppDataStore((s) => s.bodyStatsEntries)
+  return useMemo(() => {
+    if (!clientId) return undefined
+    const clientEntries = Object.values(entries).filter((e) => e.clientId === clientId)
+    if (clientEntries.length === 0) return undefined
+    return clientEntries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
+  }, [entries, clientId])
+}
+
+export function useLatestProgressEntry(clientId: string | null): ProgressEntry | undefined {
+  const entries = useAppDataStore((s) => s.progressEntries)
+  return useMemo(() => {
+    if (!clientId) return undefined
+    const clientEntries = Object.values(entries).filter((e) => e.clientId === clientId)
+    if (clientEntries.length === 0) return undefined
+    return clientEntries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
+  }, [entries, clientId])
+}
+
+export function useClientProgramGoal(clientId: string | null): string | undefined {
+  const client = useClientById(clientId)
+  const programs = useProgramsForClient(clientId)
+  return useMemo(() => {
+    if (!client) return undefined
+    // First try client's explicit goal field
+    if (client.goal) return client.goal
+    // Fallback to assigned program's goal/tags
+    if (programs.length > 0 && programs[0]?.tags?.length) {
+      return programs[0].tags[0]
+    }
+    return undefined
+  }, [client, programs])
 }
 
 // ── Program Selectors ──────────────────────────────────────────────

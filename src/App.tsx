@@ -22,6 +22,9 @@ const CalendarPage = lazy(() => import('./pages/CalendarPage'))
 const ProgramsPage = lazy(() => import('./pages/ProgramsPage'))
 const ProgramWizardPage = lazy(() => import('./pages/ProgramWizard'))
 const WorkoutProgramBuilderPage = lazy(() => import('./pages/WorkoutProgramBuilderPage'))
+const ProgramBuilderLandingPage = lazy(() => import('./pages/program-builder/ProgramBuilderLandingPage'))
+const ProgramBuilderConfiguratorPage = lazy(() => import('./pages/program-builder/ProgramBuilderConfiguratorPage'))
+const ProgramBuilderReviewPage = lazy(() => import('./pages/program-builder/ProgramBuilderReviewPage'))
 const ProgramCardPage = lazy(() => import('./pages/ProgramCardPage'))
 const ExerciseLibraryPage = lazy(() => import('./pages/ExerciseLibraryPage'))
 const SmartProgramFinderPage = lazy(() => import('./pages/SmartProgramFinderPage'))
@@ -90,7 +93,10 @@ export default function App() {
       <Route path="/calendar" element={<Protected><CalendarPage /></Protected>} />
       <Route path="/programs" element={<Protected><ProgramsPage /></Protected>} />
       <Route path="/programs/new" element={<Protected><ProgramWizardPage /></Protected>} />
-      <Route path="/program-builder" element={<Protected><WorkoutProgramBuilderPage /></Protected>} />
+      <Route path="/program-builder" element={<Protected><ProgramBuilderLandingPage /></Protected>} />
+      <Route path="/program-builder/phase/:phaseCode" element={<Protected><ProgramBuilderConfiguratorPage /></Protected>} />
+      <Route path="/program-builder/review" element={<Protected><ProgramBuilderReviewPage /></Protected>} />
+      <Route path="/program-builder/legacy" element={<Protected><WorkoutProgramBuilderPage /></Protected>} />
       <Route path="/program-builder/card/:programId" element={<Protected><ProgramCardPage /></Protected>} />
       <Route path="/exercise-library" element={<Protected><ExerciseLibraryPage /></Protected>} />
       <Route path="/smart-finder" element={<Protected><SmartProgramFinderPage /></Protected>} />

@@ -58,7 +58,7 @@ export default function LandingFooter({ logoSrc }: LandingFooterProps) {
             <h4 className="text-white font-semibold text-sm mb-4">Product</h4>
             <ul className="space-y-3">
               {PRODUCT_LINKS.map((l) => (
-                <li key={l.label}><Link to={l.href} className="text-white/50 hover:text-white/80 text-sm transition-colors">{l.label}</Link></li>
+                <li key={l.label}><Link to={l.href} className="text-gray-400 hover:text-white text-sm transition-colors">{l.label}</Link></li>
               ))}
             </ul>
           </motion.div>
@@ -67,7 +67,7 @@ export default function LandingFooter({ logoSrc }: LandingFooterProps) {
             <h4 className="text-white font-semibold text-sm mb-4">Resources</h4>
             <ul className="space-y-3">
               {RESOURCE_LINKS.map((l) => (
-                <li key={l.label}><Link to={l.href} className="text-[dark-muted] hover:text-[dark-secondary] text-sm transition-colors">{l.label}</Link></li>
+                <li key={l.label}><Link to={l.href} className="text-gray-400 hover:text-white text-sm transition-colors">{l.label}</Link></li>
               ))}
             </ul>
           </motion.div>
@@ -76,7 +76,7 @@ export default function LandingFooter({ logoSrc }: LandingFooterProps) {
             <h4 className="text-white font-semibold text-sm mb-4">Company</h4>
             <ul className="space-y-3">
               {COMPANY_LINKS.map((l) => (
-                <li key={l.label}><Link to={l.href} className="text-[dark-muted] hover:text-[dark-secondary] text-sm transition-colors">{l.label}</Link></li>
+                <li key={l.label}><Link to={l.href} className="text-gray-400 hover:text-white text-sm transition-colors">{l.label}</Link></li>
               ))}
             </ul>
           </motion.div>

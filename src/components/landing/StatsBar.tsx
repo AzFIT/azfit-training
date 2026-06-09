@@ -31,7 +31,7 @@ function AnimatedCounter({ target, suffix }: { target: number; suffix: string })
   }, [inView, target])
 
   return (
-    <span ref={ref} className="font-mono text-3xl sm:text-4xl font-bold text-[gray-950] tabular-nums">
+    <span ref={ref} className="font-mono text-3xl sm:text-4xl font-bold text-white tabular-nums">
       {count.toLocaleString()}{suffix}
     </span>
   )
@@ -39,7 +39,7 @@ function AnimatedCounter({ target, suffix }: { target: number; suffix: string })
 
 export default function StatsBar() {
   return (
-    <section className="bg-[off-white-2] border-t border-[gray-200] py-12 sm:py-16">
+    <section className="bg-az-black border-y border-gray-800 py-12 sm:py-16">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
           {STATS.map((stat, i) => (
@@ -49,10 +49,10 @@ export default function StatsBar() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: i * 0.15, duration: 0.5, ease: EASE }}
-              className={`flex flex-col items-center text-center ${i < STATS.length - 1 ? 'lg:border-r lg:border-[gray-200]' : ''}`}
+              className={`flex flex-col items-center text-center ${i < STATS.length - 1 ? 'lg:border-r lg:border-gray-800' : ''}`}
             >
               <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-              <span className="text-[gray-550] text-sm mt-2">{stat.label}</span>
+              <span className="text-gray-400 text-sm mt-2">{stat.label}</span>
             </motion.div>
           ))}
         </div>
