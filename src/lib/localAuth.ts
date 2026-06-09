@@ -4,14 +4,58 @@
  * Replaces Supabase auth for MVP deployment to GitHub Pages.
  * No backend required. Data persists in browser localStorage.
  *
- * Phase 1 spec:
- *   - Coach signup/login with localStorage persistence
- *   - Password "hashing" via btoa (not secure, but meets spec)
- *   - Auto-login via "azfit-auth-token" = coach ID
- *   - Logout clears token
+ * Security: Uses PBKDF2 (Web Crypto API) for password hashing.
+ * Not as secure as bcrypt/argon2, but far better than btoa().
  */
 
 import type { CoachProfile } from './auth'
+
+/* ── Crypto Helpers ──────────────────────────────────────────────── */
+
+const SALT_LENGTH = 16
+const ITERATIONS = 100000
+const HASH_LENGTH = 32
+
+async function generateSalt(): Promise<string> {
+  const buf = crypto.getRandomValues(new Uint8Array(SALT_LENGTH))
+  return Array.from(buf, (b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+async function hashPassword(password: string, salt: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const passwordBuffer = encoder.encode(password)
+  const saltBuffer = encoder.encode(salt)
+
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    passwordBuffer,
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  )
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: saltBuffer,
+      iterations: ITERATIONS,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    HASH_LENGTH * 8
+  )
+
+  const hashArray = Array.from(new Uint8Array(derivedBits))
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  return `${salt}:${hashHex}`
+}
+
+async function verifyPassword(password: string, storedHash: string): Promise<boolean> {
+  const [salt, hash] = storedHash.split(':')
+  if (!salt || !hash) return false
+  const computed = await hashPassword(password, salt)
+  return computed === storedHash
+}
 
 export interface AuthError {
   message: string
@@ -78,11 +122,14 @@ export async function signUp(
     return { user: null, error: { message: 'An account with this email already exists' } }
   }
 
+  const salt = await generateSalt()
+  const passwordHash = await hashPassword(password, salt)
+
   const coach: StoredCoach = {
     id: 'coach_' + Date.now(),
     fullName: metadata.full_name,
     email: email.toLowerCase(),
-    passwordHash: btoa(password),
+    passwordHash,
     businessName: metadata.business_name || '',
     specialty: metadata.specialty || '',
     createdAt: new Date().toISOString(),
@@ -123,7 +170,8 @@ export async function signIn(
     return { session: null, error: { message: 'Invalid email or password' } }
   }
 
-  if (coach.passwordHash !== btoa(password)) {
+  const isValid = await verifyPassword(password, coach.passwordHash)
+  if (!isValid) {
     return { session: null, error: { message: 'Invalid email or password' } }
   }
 

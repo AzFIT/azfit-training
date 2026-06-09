@@ -807,7 +807,7 @@ function DataSection() {
 function IntegrationsSection() {
   const [googleSheets, setGoogleSheets] = useState(false)
   const [icalUrl] = useState('https://azfit.app/api/calendar/ical/abc123')
-  const [apiKey, setApiKey] = useState('sk_live_abc123_xyz789')
+  const [apiKey, setApiKey] = useState('')
   const [showKey, setShowKey] = useState(false)
   const [copied, setCopied] = useState(false)
   const [webhookUrl, setWebhookUrl] = useState('')
