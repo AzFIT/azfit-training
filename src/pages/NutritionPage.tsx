@@ -1,1006 +1,20 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Utensils,
-  Search,
-  Droplets,
-  Pill,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  X,
-  Check,
-  Info,
-  Save,
+  Utensils, Search, Droplets, Pill, Info, Save,
 } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
 import type { NutritionEntry } from '../types/entities'
 import {
-  format,
-  addDays,
-  subDays,
-} from 'date-fns'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
-/* ═══════════════════════════════════════════
-   TYPES
-   ═══════════════════════════════════════════ */
-type Gender = 'male' | 'female'
-type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'extreme'
-type Goal = 'maintain' | 'lose' | 'gain'
-type FoodCategory = 'Protein' | 'Carbs' | 'Fats' | 'Vegetables' | 'Fruits' | 'Dairy' | 'Grains' | 'Snacks' | 'Beverages'
-type MealType = 'Breakfast' | 'Lunch' | 'Dinner' | 'Snacks'
-
-interface FoodItem {
-  id: number
-  name: string
-  category: FoodCategory
-  calories: number
-  protein: number
-  carbs: number
-  fats: number
-  serving: string
-}
-
-interface MealEntry {
-  id: string
-  foodId: number
-  quantity: number
-  mealType: MealType
-}
-
-interface Supplement {
-  id: string
-  name: string
-  dosage: string
-  timing: string
-  frequency: string
-  taken: boolean
-}
-
-/* ═══════════════════════════════════════════
-   DEMO DATA — 120 HK FOODS
-   ═══════════════════════════════════════════ */
-function generateFoodDatabase(): FoodItem[] {
-  const foods: Omit<FoodItem, 'id'>[] = [
-    // Proteins
-    { name: 'Chicken Breast', category: 'Protein', calories: 165, protein: 31, carbs: 0, fats: 3.6, serving: '100g' },
-    { name: 'Salmon Fillet', category: 'Protein', calories: 208, protein: 20, carbs: 0, fats: 13, serving: '100g' },
-    { name: 'Beef Sirloin', category: 'Protein', calories: 206, protein: 26, carbs: 0, fats: 11, serving: '100g' },
-    { name: 'Pork Tenderloin', category: 'Protein', calories: 143, protein: 26, carbs: 0, fats: 3.5, serving: '100g' },
-    { name: 'Eggs', category: 'Protein', calories: 155, protein: 13, carbs: 1.1, fats: 11, serving: '100g' },
-    { name: 'Tuna (canned)', category: 'Protein', calories: 132, protein: 28, carbs: 0, fats: 1, serving: '100g' },
-    { name: 'Shrimp', category: 'Protein', calories: 99, protein: 24, carbs: 0.2, fats: 0.3, serving: '100g' },
-    { name: 'Tofu (firm)', category: 'Protein', calories: 144, protein: 17, carbs: 3, fats: 7, serving: '100g' },
-    { name: 'Whey Protein', category: 'Protein', calories: 120, protein: 24, carbs: 3, fats: 1, serving: '30g scoop' },
-    { name: 'Turkey Breast', category: 'Protein', calories: 135, protein: 30, carbs: 0, fats: 1, serving: '100g' },
-    { name: 'Cod Fish', category: 'Protein', calories: 82, protein: 18, carbs: 0, fats: 0.7, serving: '100g' },
-    { name: 'Duck Breast', category: 'Protein', calories: 337, protein: 19, carbs: 0, fats: 28, serving: '100g' },
-    { name: 'Chicken Thigh', category: 'Protein', calories: 226, protein: 25, carbs: 0, fats: 14, serving: '100g' },
-    { name: 'Minced Pork', category: 'Protein', calories: 263, protein: 17, carbs: 0, fats: 21, serving: '100g' },
-
-    // Carbs
-    { name: 'White Rice (cooked)', category: 'Carbs', calories: 130, protein: 2.7, carbs: 28, fats: 0.3, serving: '100g' },
-    { name: 'Brown Rice (cooked)', category: 'Carbs', calories: 112, protein: 2.6, carbs: 24, fats: 0.9, serving: '100g' },
-    { name: 'Egg Noodles', category: 'Carbs', calories: 138, protein: 4.5, carbs: 25, fats: 2.1, serving: '100g' },
-    { name: 'Rice Noodles', category: 'Carbs', calories: 109, protein: 1.8, carbs: 24, fats: 0.2, serving: '100g' },
-    { name: 'Udon Noodles', category: 'Carbs', calories: 124, protein: 3.5, carbs: 25, fats: 0.5, serving: '100g' },
-    { name: 'Ramen Noodles', category: 'Carbs', calories: 196, protein: 5, carbs: 31, fats: 6, serving: '100g' },
-    { name: 'Sweet Potato', category: 'Carbs', calories: 86, protein: 1.6, carbs: 20, fats: 0.1, serving: '100g' },
-    { name: 'Oats', category: 'Carbs', calories: 389, protein: 16.9, carbs: 66, fats: 6.9, serving: '100g' },
-    { name: 'Congee (plain)', category: 'Carbs', calories: 33, protein: 0.8, carbs: 7, fats: 0.1, serving: '100g' },
-    { name: 'Pasta (cooked)', category: 'Carbs', calories: 131, protein: 5, carbs: 25, fats: 1.1, serving: '100g' },
-    { name: 'Bread (white)', category: 'Carbs', calories: 265, protein: 9, carbs: 49, fats: 3.2, serving: '100g' },
-    { name: 'Whole Wheat Bread', category: 'Carbs', calories: 247, protein: 13, carbs: 41, fats: 3.4, serving: '100g' },
-    { name: 'Potato', category: 'Carbs', calories: 77, protein: 2, carbs: 17, fats: 0.1, serving: '100g' },
-    { name: 'Quinoa (cooked)', category: 'Carbs', calories: 120, protein: 4.4, carbs: 21, fats: 1.9, serving: '100g' },
-    { name: 'Couscous (cooked)', category: 'Carbs', calories: 112, protein: 3.8, carbs: 23, fats: 0.2, serving: '100g' },
-
-    // Fats
-    { name: 'Olive Oil', category: 'Fats', calories: 884, protein: 0, carbs: 0, fats: 100, serving: '100ml' },
-    { name: 'Peanut Butter', category: 'Fats', calories: 588, protein: 25, carbs: 20, fats: 50, serving: '100g' },
-    { name: 'Almonds', category: 'Fats', calories: 579, protein: 21, carbs: 22, fats: 50, serving: '100g' },
-    { name: 'Cashews', category: 'Fats', calories: 553, protein: 18, carbs: 30, fats: 44, serving: '100g' },
-    { name: 'Walnuts', category: 'Fats', calories: 654, protein: 15, carbs: 14, fats: 65, serving: '100g' },
-    { name: 'Avocado', category: 'Fats', calories: 160, protein: 2, carbs: 9, fats: 15, serving: '100g' },
-    { name: 'Sesame Oil', category: 'Fats', calories: 884, protein: 0, carbs: 0, fats: 100, serving: '100ml' },
-    { name: 'Peanuts', category: 'Fats', calories: 567, protein: 26, carbs: 16, fats: 49, serving: '100g' },
-    { name: 'Chia Seeds', category: 'Fats', calories: 486, protein: 17, carbs: 42, fats: 31, serving: '100g' },
-    { name: 'Flax Seeds', category: 'Fats', calories: 534, protein: 18, carbs: 29, fats: 42, serving: '100g' },
-    { name: 'Coconut Oil', category: 'Fats', calories: 862, protein: 0, carbs: 0, fats: 100, serving: '100ml' },
-
-    // Vegetables
-    { name: 'Bok Choy', category: 'Vegetables', calories: 13, protein: 1.5, carbs: 2.2, fats: 0.2, serving: '100g' },
-    { name: 'Chinese Broccoli (Gai Lan)', category: 'Vegetables', calories: 22, protein: 1.8, carbs: 3.3, fats: 0.4, serving: '100g' },
-    { name: 'Choy Sum', category: 'Vegetables', calories: 20, protein: 1.5, carbs: 3, fats: 0.3, serving: '100g' },
-    { name: 'Broccoli', category: 'Vegetables', calories: 34, protein: 2.8, carbs: 7, fats: 0.4, serving: '100g' },
-    { name: 'Spinach', category: 'Vegetables', calories: 23, protein: 2.9, carbs: 3.6, fats: 0.4, serving: '100g' },
-    { name: 'Bell Peppers', category: 'Vegetables', calories: 31, protein: 1, carbs: 6, fats: 0.3, serving: '100g' },
-    { name: 'Tomato', category: 'Vegetables', calories: 18, protein: 0.9, carbs: 3.9, fats: 0.2, serving: '100g' },
-    { name: 'Cucumber', category: 'Vegetables', calories: 15, protein: 0.7, carbs: 3.6, fats: 0.1, serving: '100g' },
-    { name: 'Mushroom', category: 'Vegetables', calories: 22, protein: 3.1, carbs: 3.3, fats: 0.3, serving: '100g' },
-    { name: 'Carrot', category: 'Vegetables', calories: 41, protein: 0.9, carbs: 10, fats: 0.2, serving: '100g' },
-    { name: 'Eggplant', category: 'Vegetables', calories: 25, protein: 1, carbs: 6, fats: 0.2, serving: '100g' },
-    { name: 'Cabbage', category: 'Vegetables', calories: 25, protein: 1.3, carbs: 6, fats: 0.1, serving: '100g' },
-    { name: 'Lettuce', category: 'Vegetables', calories: 15, protein: 1.4, carbs: 2.9, fats: 0.2, serving: '100g' },
-    { name: 'Snow Peas', category: 'Vegetables', calories: 42, protein: 2.8, carbs: 7.6, fats: 0.2, serving: '100g' },
-    { name: 'Bean Sprouts', category: 'Vegetables', calories: 30, protein: 3, carbs: 6, fats: 0.2, serving: '100g' },
-    { name: 'Water Spinach (Kong Xin Cai)', category: 'Vegetables', calories: 19, protein: 2.6, carbs: 3.2, fats: 0.2, serving: '100g' },
-
-    // Fruits
-    { name: 'Apple', category: 'Fruits', calories: 52, protein: 0.3, carbs: 14, fats: 0.2, serving: '100g' },
-    { name: 'Banana', category: 'Fruits', calories: 89, protein: 1.1, carbs: 23, fats: 0.3, serving: '100g' },
-    { name: 'Orange', category: 'Fruits', calories: 47, protein: 0.9, carbs: 12, fats: 0.1, serving: '100g' },
-    { name: 'Mango', category: 'Fruits', calories: 60, protein: 0.8, carbs: 15, fats: 0.4, serving: '100g' },
-    { name: 'Dragon Fruit', category: 'Fruits', calories: 57, protein: 1.1, carbs: 13, fats: 0.4, serving: '100g' },
-    { name: 'Papaya', category: 'Fruits', calories: 43, protein: 0.5, carbs: 11, fats: 0.3, serving: '100g' },
-    { name: 'Watermelon', category: 'Fruits', calories: 30, protein: 0.6, carbs: 8, fats: 0.2, serving: '100g' },
-    { name: 'Grapes', category: 'Fruits', calories: 69, protein: 0.7, carbs: 18, fats: 0.2, serving: '100g' },
-    { name: 'Strawberry', category: 'Fruits', calories: 32, protein: 0.7, carbs: 7.7, fats: 0.3, serving: '100g' },
-    { name: 'Blueberry', category: 'Fruits', calories: 57, protein: 0.7, carbs: 14, fats: 0.3, serving: '100g' },
-    { name: 'Kiwi', category: 'Fruits', calories: 61, protein: 1.1, carbs: 15, fats: 0.5, serving: '100g' },
-    { name: 'Pear', category: 'Fruits', calories: 57, protein: 0.4, carbs: 15, fats: 0.1, serving: '100g' },
-
-    // Dairy
-    { name: 'Greek Yogurt', category: 'Dairy', calories: 59, protein: 10, carbs: 3.6, fats: 0.4, serving: '100g' },
-    { name: 'Whole Milk', category: 'Dairy', calories: 61, protein: 3.2, carbs: 4.8, fats: 3.3, serving: '100ml' },
-    { name: 'Skim Milk', category: 'Dairy', calories: 34, protein: 3.4, carbs: 5, fats: 0.1, serving: '100ml' },
-    { name: 'Cheddar Cheese', category: 'Dairy', calories: 402, protein: 25, carbs: 1.3, fats: 33, serving: '100g' },
-    { name: 'Mozzarella', category: 'Dairy', calories: 280, protein: 28, carbs: 2.2, fats: 17, serving: '100g' },
-    { name: 'Butter', category: 'Dairy', calories: 717, protein: 0.9, carbs: 0.1, fats: 81, serving: '100g' },
-    { name: 'Cottage Cheese', category: 'Dairy', calories: 98, protein: 11, carbs: 3.4, fats: 4.3, serving: '100g' },
-    { name: 'HK Milk Tea', category: 'Dairy', calories: 65, protein: 1.5, carbs: 10, fats: 2.3, serving: '100ml' },
-
-    // Grains
-    { name: 'Plain Congee', category: 'Grains', calories: 33, protein: 0.8, carbs: 7, fats: 0.1, serving: '100g' },
-    { name: 'Century Egg Congee', category: 'Grains', calories: 52, protein: 2.5, carbs: 8, fats: 1, serving: '100g' },
-    { name: 'Pork & Preserved Egg Congee', category: 'Grains', calories: 78, protein: 4, carbs: 10, fats: 2.5, serving: '100g' },
-    { name: 'Steamed Bun (Mantou)', category: 'Grains', calories: 223, protein: 6.5, carbs: 46, fats: 0.8, serving: '100g' },
-    { name: 'Char Siu Bun', category: 'Grains', calories: 260, protein: 8, carbs: 42, fats: 7, serving: '100g' },
-    { name: 'Turnip Cake (Lo Bak Go)', category: 'Grains', calories: 145, protein: 3, carbs: 22, fats: 5, serving: '100g' },
-    { name: 'Rice Roll (Cheung Fun)', category: 'Grains', calories: 85, protein: 1.5, carbs: 18, fats: 0.5, serving: '100g' },
-    { name: 'Toast (HK Style)', category: 'Grains', calories: 264, protein: 8, carbs: 49, fats: 3.5, serving: '100g' },
-    { name: 'Pineapple Bun', category: 'Grains', calories: 320, protein: 6, carbs: 52, fats: 10, serving: '100g' },
-    { name: 'Egg Tart', category: 'Grains', calories: 288, protein: 5, carbs: 30, fats: 17, serving: '100g' },
-
-    // Snacks
-    { name: 'Siu Mai (Dim Sum)', category: 'Snacks', calories: 185, protein: 8, carbs: 20, fats: 8, serving: '100g' },
-    { name: 'Har Gow (Shrimp Dumpling)', category: 'Snacks', calories: 160, protein: 10, carbs: 18, fats: 5, serving: '100g' },
-    { name: 'Spring Roll', category: 'Snacks', calories: 250, protein: 5, carbs: 28, fats: 14, serving: '100g' },
-    { name: 'Fish Balls', category: 'Snacks', calories: 112, protein: 13, carbs: 7, fats: 3.5, serving: '100g' },
-    { name: 'Curry Fish Balls', category: 'Snacks', calories: 145, protein: 12, carbs: 10, fats: 6, serving: '100g' },
-    { name: 'Jerky (Bak Kwa)', category: 'Snacks', calories: 370, protein: 20, carbs: 45, fats: 12, serving: '100g' },
-    { name: 'Seaweed Snack', category: 'Snacks', calories: 35, protein: 2.5, carbs: 3, fats: 1.5, serving: '100g' },
-    { name: 'Rice Crackers', category: 'Snacks', calories: 392, protein: 7, carbs: 82, fats: 2.5, serving: '100g' },
-    { name: 'Mixed Nuts', category: 'Snacks', calories: 607, protein: 20, carbs: 21, fats: 54, serving: '100g' },
-    { name: 'Protein Bar', category: 'Snacks', calories: 250, protein: 20, carbs: 25, fats: 8, serving: '60g' },
-
-    // Beverages
-    { name: 'Black Coffee', category: 'Beverages', calories: 2, protein: 0.1, carbs: 0, fats: 0, serving: '100ml' },
-    { name: 'Yuan Yang (Coffee+Tea)', category: 'Beverages', calories: 55, protein: 1.5, carbs: 8, fats: 1.8, serving: '100ml' },
-    { name: 'Lemon Tea', category: 'Beverages', calories: 35, protein: 0, carbs: 8.5, fats: 0, serving: '100ml' },
-    { name: 'Red Bean Soup', category: 'Beverages', calories: 85, protein: 3, carbs: 16, fats: 0.5, serving: '100ml' },
-    { name: 'Green Tea', category: 'Beverages', calories: 1, protein: 0, carbs: 0.2, fats: 0, serving: '100ml' },
-    { name: 'Coconut Water', category: 'Beverages', calories: 19, protein: 0.7, carbs: 3.7, fats: 0.2, serving: '100ml' },
-    { name: 'Protein Shake', category: 'Beverages', calories: 160, protein: 25, carbs: 8, fats: 2, serving: '300ml' },
-  ]
-
-  return foods.map((f, i) => ({ ...f, id: i + 1 }))
-}
-
-const FOOD_DB = generateFoodDatabase()
-
-const CATEGORY_COLORS: Record<FoodCategory, string> = {
-  Protein: 'cyan',
-  Carbs: 'violet',
-  Fats: 'orange',
-  Vegetables: 'success',
-  Fruits: 'trainer-accent',
-  Dairy: 'info',
-  Grains: 'warning',
-  Snacks: 'orange',
-  Beverages: 'teal',
-}
-
-const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, { label: string; value: number }> = {
-  sedentary: { label: 'Sedentary', value: 1.2 },
-  light: { label: 'Lightly Active', value: 1.375 },
-  moderate: { label: 'Moderately Active', value: 1.55 },
-  active: { label: 'Very Active', value: 1.725 },
-  extreme: { label: 'Extremely Active', value: 1.9 },
-}
-
-const GOAL_LABELS: Record<Goal, { label: string; adjustment: number }> = {
-  maintain: { label: 'Maintain', adjustment: 0 },
-  lose: { label: 'Lose Weight', adjustment: -500 },
-  gain: { label: 'Gain Muscle', adjustment: 300 },
-}
-
-/* ─── Diet Presets ─── */
-type DietPreset = 'balanced' | 'low-carb' | 'high-carb' | 'high-protein'
-
-const DIET_PRESETS: Record<DietPreset, { label: string; proteinPct: number; carbPct: number; fatPct: number; desc: string }> = {
-  balanced: { label: 'Balanced', proteinPct: 30, carbPct: 35, fatPct: 35, desc: 'Even distribution for general health' },
-  'low-carb': { label: 'Low Carb', proteinPct: 35, carbPct: 15, fatPct: 50, desc: 'Higher fat for fat loss and keto' },
-  'high-carb': { label: 'High Carb', proteinPct: 25, carbPct: 55, fatPct: 20, desc: 'High energy for endurance athletes' },
-  'high-protein': { label: 'High Protein', proteinPct: 40, carbPct: 30, fatPct: 30, desc: 'Max muscle retention and growth' },
-}
-
-function calcMacros(targetCalories: number, weight: number, preset: DietPreset) {
-  const p = DIET_PRESETS[preset]
-  const proteinGrams = Math.round(Math.max(weight * 1.6, (targetCalories * p.proteinPct) / 100 / 4))
-  const fatGrams = Math.round((targetCalories * p.fatPct) / 100 / 9)
-  const carbGrams = Math.round((targetCalories - proteinGrams * 4 - fatGrams * 9) / 4)
-  return { proteinGrams, carbGrams, fatGrams }
-}
-
-/* ═══════════════════════════════════════════
-   MACRO RING COMPONENT
-   ═══════════════════════════════════════════ */
-function MacroRing({
-  label,
-  value,
-  target,
-  color,
-  unit,
-  delay = 0,
-}: {
-  label: string
-  value: number
-  target: number
-  color: string
-  unit: string
-  delay?: number
-}) {
-  const [animated, setAnimated] = useState(false)
-  const percentage = target > 0 ? Math.min((value / target) * 100, 100) : 0
-
-  useEffect(() => {
-    const timer = setTimeout(() => setAnimated(true), delay)
-    return () => clearTimeout(timer)
-  }, [delay])
-
-  const circumference = 2 * Math.PI * 45
-  const offset = circumference - (animated ? percentage / 100 : 0) * circumference
-
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-[100px] h-[100px]">
-        <svg width="100" height="100" viewBox="0 0 100 100" className="-rotate-90">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="dark-border" strokeWidth="8" />
-          <circle
-            cx="50"
-            cy="50"
-            r="45"
-            fill="none"
-            stroke={color}
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            style={{ transition: 'stroke-dashoffset 1s ease-out' }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-dark-primary text-base font-bold font-mono">{Math.round(value)}</span>
-          <span className="text-dark-muted text-[10px]">{unit}</span>
-        </div>
-      </div>
-      <p className="text-dark-secondary text-xs mt-2 font-medium">{label}</p>
-      <p className="text-dark-muted text-[10px] font-mono">
-        {Math.round(percentage)}% of {Math.round(target)}g
-      </p>
-    </div>
-  )
-}
-
-/* ═══════════════════════════════════════════
-   MEAL PLANNER TAB
-   ═══════════════════════════════════════════ */
-function MealPlannerTab({
-  meals,
-  onAddFood,
-  onRemoveFood,
-  foodDb,
-  date,
-  onDateChange,
-}: {
-  meals: MealEntry[]
-  onAddFood: (mealType: MealType, foodId: number, qty: number) => void
-  onRemoveFood: (entryId: string) => void
-  foodDb: FoodItem[]
-  date: Date
-  onDateChange: (d: Date) => void
-}) {
-  const [addingToMeal, setAddingToMeal] = useState<MealType | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedFood, setSelectedFood] = useState('')
-  const [quantity, setQuantity] = useState(100)
-
-  const mealTypes: { type: MealType; time: string; target: number }[] = [
-    { type: 'Breakfast', time: '7:00 AM', target: 600 },
-    { type: 'Lunch', time: '12:30 PM', target: 700 },
-    { type: 'Dinner', time: '7:00 PM', target: 700 },
-    { type: 'Snacks', time: '3:00 PM', target: 400 },
-  ]
-
-  const filteredFoods = useMemo(() => {
-    if (!searchTerm) return []
-    return foodDb.filter((f) => f.name.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 8)
-  }, [searchTerm, foodDb])
-
-  interface MealEntryWithFood extends MealEntry {
-    food: FoodItem
-  }
-
-  const getMealFoods = (type: MealType): MealEntryWithFood[] =>
-    meals
-      .filter((m) => m.mealType === type)
-      .map((m) => {
-        const food = foodDb.find((f) => f.id === m.foodId)
-        return food ? { ...m, food } : null
-      })
-      .filter((m): m is MealEntryWithFood => m !== null)
-
-  const getMealTotals = (type: MealType) => {
-    const foods = getMealFoods(type)
-    return foods.reduce(
-      (acc, f) => ({
-        calories: acc.calories + (f.food.calories * f.quantity) / 100,
-        protein: acc.protein + (f.food.protein * f.quantity) / 100,
-        carbs: acc.carbs + (f.food.carbs * f.quantity) / 100,
-        fats: acc.fats + (f.food.fats * f.quantity) / 100,
-      }),
-      { calories: 0, protein: 0, carbs: 0, fats: 0 }
-    )
-  }
-
-  const dailyTotals = useMemo(() => {
-    return mealTypes.reduce(
-      (acc, m) => {
-        const t = getMealTotals(m.type)
-        return {
-          calories: acc.calories + t.calories,
-          protein: acc.protein + t.protein,
-          carbs: acc.carbs + t.carbs,
-          fats: acc.fats + t.fats,
-        }
-      },
-      { calories: 0, protein: 0, carbs: 0, fats: 0 }
-    )
-  }, [meals])
-
-  const handleAddFood = (mealType: MealType) => {
-    if (selectedFood) {
-      onAddFood(mealType, parseInt(selectedFood), quantity)
-      setSelectedFood('')
-      setSearchTerm('')
-      setQuantity(100)
-      setAddingToMeal(null)
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      {/* Date selector */}
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={() => onDateChange(subDays(date, 1))}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-dark-secondary hover:text-dark-primary hover:bg-dark-hover transition-colors"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        <h3 className="text-dark-primary font-semibold text-sm min-w-[180px] text-center">
-          {format(date, 'EEEE, d MMMM')}
-        </h3>
-        <button
-          onClick={() => onDateChange(addDays(date, 1))}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-dark-secondary hover:text-dark-primary hover:bg-dark-hover transition-colors"
-        >
-          <ChevronRight size={16} />
-        </button>
-        <button
-          onClick={() => onDateChange(new Date())}
-          className="ml-1 px-3 py-1.5 rounded-lg text-xs text-dark-secondary hover:text-dark-primary hover:bg-dark-hover border border-dark-border transition-colors"
-        >
-          Today
-        </button>
-      </div>
-
-      {/* Meal cards */}
-      {mealTypes.map((mealType, idx) => {
-        const foods = getMealFoods(mealType.type)
-        const totals = getMealTotals(mealType.type)
-        const progress = mealType.target > 0 ? Math.min((totals.calories / mealType.target) * 100, 100) : 0
-
-        return (
-          <motion.div
-            key={mealType.type}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1 }}
-            className="bg-[az-black-card] border border-dark-border rounded-xl p-5"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Utensils size={16} className="text-cyan" />
-                <h4 className="text-dark-primary font-semibold text-sm">{mealType.type}</h4>
-                <span className="text-dark-muted text-xs font-mono">{mealType.time}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-dark-secondary text-xs font-mono">
-                  {Math.round(totals.calories)} / {mealType.target} kcal
-                </span>
-              </div>
-            </div>
-
-            {/* Progress bar */}
-            <div className="w-full h-1 bg-[az-black-elevated] rounded-full mb-3">
-              <motion.div
-                className="h-full rounded-full"
-                style={{
-                  background:
-                    progress > 100
-                      ? 'danger'
-                      : progress > 80
-                        ? 'success'
-                        : 'cyan',
-                }}
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.min(progress, 100)}%` }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-              />
-            </div>
-
-            {/* Food items */}
-            <div className="space-y-2 mb-3">
-              <AnimatePresence>
-                {foods.map((f) => (
-                  <motion.div
-                    key={f.id}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="flex items-center justify-between py-1.5 px-2 bg-[az-black-elevated] rounded-lg"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-dark-primary text-xs font-medium truncate">{f.food.name}</span>
-                        <span className="text-dark-muted text-[10px] font-mono flex-shrink-0">{f.quantity}g</span>
-                      </div>
-                      <span className="text-dark-muted text-[10px] font-mono">
-                        P:{Math.round((f.food.protein * f.quantity) / 100)} C:
-                        {Math.round((f.food.carbs * f.quantity) / 100)} F:
-                        {Math.round((f.food.fats * f.quantity) / 100)}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-dark-secondary text-xs font-mono">
-                        {Math.round((f.food.calories * f.quantity) / 100)} kcal
-                      </span>
-                      <button
-                        onClick={() => onRemoveFood(f.id)}
-                        className="text-dark-muted hover:text-danger transition-colors"
-                      >
-                        <X size={12} />
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-
-            {/* Add food */}
-            {addingToMeal === mealType.type ? (
-              <div className="bg-[az-black-elevated] rounded-lg p-3 space-y-2">
-                <input
-                  type="text"
-                  placeholder="Search foods..."
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value)
-                    setSelectedFood('')
-                  }}
-                  className="w-full h-9 bg-dark-hover border border-dark-border rounded-lg px-3 text-dark-primary text-xs placeholder:text-dark-subtle focus:outline-none focus:border-cyan"
-                  autoFocus
-                />
-                {filteredFoods.length > 0 && (
-                  <div className="max-h-32 overflow-auto space-y-1">
-                    {filteredFoods.map((f) => (
-                      <button
-                        key={f.id}
-                        onClick={() => {
-                          setSelectedFood(String(f.id))
-                          setSearchTerm(f.name)
-                        }}
-                        className={`w-full text-left px-2 py-1.5 rounded text-xs transition-colors ${
-                          selectedFood === String(f.id)
-                            ? 'bg-cyan-glow text-cyan'
-                            : 'text-dark-secondary hover:bg-dark-hover'
-                        }`}
-                      >
-                        <span className="font-medium">{f.name}</span>
-                        <span className="text-dark-muted ml-2">{f.calories} kcal/100g</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                    className="w-20 h-8 bg-dark-hover border border-dark-border rounded-lg px-2 text-dark-primary text-xs focus:outline-none focus:border-cyan"
-                    min={1}
-                  />
-                  <span className="text-dark-muted text-xs">grams</span>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleAddFood(mealType.type)}
-                    className="px-3 py-1.5 bg-cyan hover:bg-cyan-hover text-white rounded-lg text-xs font-semibold transition-colors"
-                  >
-                    Add
-                  </button>
-                  <button
-                    onClick={() => {
-                      setAddingToMeal(null)
-                      setSearchTerm('')
-                      setSelectedFood('')
-                    }}
-                    className="px-3 py-1.5 text-dark-muted hover:text-dark-primary rounded-lg text-xs transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => setAddingToMeal(mealType.type)}
-                className="flex items-center gap-1 text-cyan hover:text-[cyan-light] text-xs font-medium transition-colors"
-              >
-                <Plus size={14} />
-                Add Food
-              </button>
-            )}
-          </motion.div>
-        )
-      })}
-
-      {/* Daily summary bar */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <span className="text-dark-primary text-sm font-semibold">Daily Totals</span>
-          <div className="flex items-center gap-6">
-            <div className="text-center">
-              <p className="text-dark-muted text-[10px]">Calories</p>
-              <p className="text-dark-primary text-xs font-bold font-mono">
-                {Math.round(dailyTotals.calories)}
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-cyan text-[10px]">Protein</p>
-              <p className="text-cyan text-xs font-bold font-mono">{Math.round(dailyTotals.protein)}g</p>
-            </div>
-            <div className="text-center">
-              <p className="text-violet text-[10px]">Carbs</p>
-              <p className="text-violet text-xs font-bold font-mono">{Math.round(dailyTotals.carbs)}g</p>
-            </div>
-            <div className="text-center">
-              <p className="text-orange text-[10px]">Fats</p>
-              <p className="text-orange text-xs font-bold font-mono">{Math.round(dailyTotals.fats)}g</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* ═══════════════════════════════════════════
-   FOOD DATABASE TAB
-   ═══════════════════════════════════════════ */
-function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
-  const [search, setSearch] = useState('')
-  const [activeCategories, setActiveCategories] = useState<FoodCategory[]>([])
-
-  const categories: FoodCategory[] = [
-    'Protein',
-    'Carbs',
-    'Fats',
-    'Vegetables',
-    'Fruits',
-    'Dairy',
-    'Grains',
-    'Snacks',
-    'Beverages',
-  ]
-
-  const toggleCategory = (cat: FoodCategory) => {
-    setActiveCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
-    )
-  }
-
-  const filtered = useMemo(() => {
-    return foodDb.filter((f) => {
-      const matchSearch = !search || f.name.toLowerCase().includes(search.toLowerCase())
-      const matchCat = activeCategories.length === 0 || activeCategories.includes(f.category)
-      return matchSearch && matchCat
-    })
-  }, [foodDb, search, activeCategories])
-
-  return (
-    <div className="space-y-4">
-      {/* Search */}
-      <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-muted" />
-        <input
-          type="text"
-          placeholder="Search 120+ foods..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full h-10 bg-[az-black-card] border border-dark-border rounded-xl pl-10 pr-4 text-dark-primary text-sm placeholder:text-dark-subtle focus:outline-none focus:border-cyan"
-        />
-      </div>
-
-      {/* Category filters */}
-      <div className="flex flex-wrap gap-2">
-        {categories.map((cat) => {
-          const active = activeCategories.includes(cat)
-          return (
-            <button
-              key={cat}
-              onClick={() => toggleCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                active
-                  ? 'bg-cyan-glow text-cyan border border-[rgba(0,174,239,0.3)]'
-                  : 'bg-[az-black-elevated] text-dark-secondary border border-dark-border hover:text-dark-primary'
-              }`}
-            >
-              {cat}
-            </button>
-          )
-        })}
-      </div>
-
-      <p className="text-dark-muted text-xs">{filtered.length} results</p>
-
-      {/* Food grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        <AnimatePresence>
-          {filtered.map((food, idx) => (
-            <motion.div
-              key={food.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ delay: idx * 0.02 }}
-              className="bg-[az-black-card] border border-dark-border rounded-xl p-4 hover:border-dark-subtle transition-colors"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="text-dark-primary text-sm font-semibold truncate">{food.name}</h4>
-              </div>
-              <div className="flex items-center gap-2 mb-3">
-                <span
-                  className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-                  style={{
-                    background: `${CATEGORY_COLORS[food.category]}20`,
-                    color: CATEGORY_COLORS[food.category],
-                  }}
-                >
-                  {food.category}
-                </span>
-                <span className="text-dark-muted text-[10px]">{food.serving}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-dark-primary text-sm font-bold font-mono">{food.calories} kcal</span>
-                <span className="text-dark-muted text-[10px] font-mono">
-                  P:{food.protein} C:{food.carbs} F:{food.fats}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-    </div>
-  )
-}
-
-/* ═══════════════════════════════════════════
-   WATER TRACKER TAB
-   ═══════════════════════════════════════════ */
-function WaterTrackerTab() {
-  const [glasses, setGlasses] = useState(5)
-  const targetGlasses = 8
-  const mlPerGlass = 250
-  const totalMl = glasses * mlPerGlass
-  const targetMl = targetGlasses * mlPerGlass
-
-  const handleGlassClick = (index: number) => {
-    if (index < glasses) {
-      setGlasses(index)
-    } else {
-      setGlasses(index + 1)
-    }
-  }
-
-  const weeklyData = [
-    { day: 'Mon', amount: 2000 },
-    { day: 'Tue', amount: 2250 },
-    { day: 'Wed', amount: 1750 },
-    { day: 'Thu', amount: 2500 },
-    { day: 'Fri', amount: 1500 },
-    { day: 'Sat', amount: 2000 },
-    { day: 'Sun', amount: totalMl },
-  ]
-
-  const ringPercentage = Math.min((totalMl / targetMl) * 100, 100)
-  const circumference = 2 * Math.PI * 35
-  const ringOffset = circumference - (ringPercentage / 100) * circumference
-
-  return (
-    <div className="space-y-8">
-      {/* Stats */}
-      <div className="flex flex-col items-center">
-        <div className="relative w-24 h-24 mb-3">
-          <svg width="96" height="96" viewBox="0 0 96 96" className="-rotate-90">
-            <circle cx="48" cy="48" r="35" fill="none" stroke="dark-border" strokeWidth="6" />
-            <circle
-              cx="48"
-              cy="48"
-              r="35"
-              fill="none"
-              stroke="cyan"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={ringOffset}
-              style={{ transition: 'stroke-dashoffset 0.5s ease-out' }}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-cyan text-lg font-bold">{Math.round(ringPercentage)}%</span>
-          </div>
-        </div>
-        <div className="text-center">
-          <span className="text-cyan text-2xl font-bold font-mono">{totalMl}</span>
-          <span className="text-dark-muted text-base font-mono ml-1">/ {targetMl} ml</span>
-        </div>
-        <p className="text-dark-secondary text-sm mt-1">
-          {glasses}/{targetGlasses} glasses
-        </p>
-      </div>
-
-      {/* Glasses */}
-      <div className="flex items-center justify-center gap-3">
-        {Array.from({ length: targetGlasses }, (_, i) => (
-          <motion.button
-            key={i}
-            onClick={() => handleGlassClick(i)}
-            whileTap={{ scale: 0.9 }}
-            className="relative flex flex-col items-center"
-          >
-            <div className="relative w-9 h-12">
-              {/* Empty glass outline */}
-              <svg width="36" height="48" viewBox="0 0 36 48">
-                <path
-                  d="M4 4 L8 44 Q8 46 10 46 L26 46 Q28 46 28 44 L32 4"
-                  fill="none"
-                  stroke="dark-border"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {/* Filled portion */}
-              {i < glasses && (
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: '80%' }}
-                  transition={{ duration: 0.3, ease: [0.175, 0.885, 0.32, 1.275] as [number, number, number, number] }}
-                  className="absolute bottom-[10%] left-[13%] right-[13%] rounded-b-lg overflow-hidden"
-                  style={{ background: 'rgba(0, 174, 239, 0.6)' }}
-                >
-                  <div
-                    className="absolute inset-x-0 top-0 h-1"
-                    style={{ background: 'rgba(0, 174, 239, 0.9)' }}
-                  />
-                </motion.div>
-              )}
-            </div>
-          </motion.button>
-        ))}
-      </div>
-
-      {/* Quick add buttons */}
-      <div className="flex items-center justify-center gap-2">
-        {[250, 500, 1000].map((ml) => (
-          <button
-            key={ml}
-            onClick={() => setGlasses((g) => Math.min(g + ml / 250, 20))}
-            className="px-3 py-1.5 bg-[az-black-elevated] border border-dark-border rounded-lg text-xs text-cyan hover:bg-dark-hover transition-colors"
-          >
-            +{ml}ml
-          </button>
-        ))}
-        <button
-          onClick={() => setGlasses(0)}
-          className="px-3 py-1.5 text-dark-muted hover:text-dark-primary text-xs transition-colors"
-        >
-          Reset
-        </button>
-      </div>
-
-      {/* Weekly chart */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
-        <h4 className="text-dark-primary font-semibold text-sm mb-4">This Week</h4>
-        <div className="h-40">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weeklyData} barSize={24}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis
-                dataKey="day"
-                tick={{ fill: 'var(--dark-muted)', fontSize: 11 }}
-                axisLine={{ stroke: 'dark-border' }}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fill: 'var(--dark-muted)', fontSize: 10 }}
-                axisLine={false}
-                tickLine={false}
-                domain={[0, 3000]}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: 'az-black-elevated',
-                  border: '1px solid dark-border',
-                  borderRadius: '8px',
-                  color: 'dark-primary',
-                  fontSize: '12px',
-                }}
-              />
-              <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
-                {weeklyData.map((entry, index) => (
-                  <Cell
-                    key={index}
-                    fill={entry.amount >= targetMl ? 'cyan' : entry.amount >= 1500 ? 'violet' : 'orange'}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* ═══════════════════════════════════════════
-   SUPPLEMENTS TAB
-   ═══════════════════════════════════════════ */
-function SupplementsTab() {
-  const [supplements, setSupplements] = useState<Supplement[]>([
-    { id: '1', name: 'Whey Protein', dosage: '1 scoop (30g)', timing: 'Post-workout', frequency: 'Daily', taken: true },
-    { id: '2', name: 'Creatine Monohydrate', dosage: '5g', timing: 'Morning', frequency: 'Daily', taken: true },
-    { id: '3', name: 'BCAAs', dosage: '10g', timing: 'Pre-workout', frequency: 'Training days', taken: false },
-    { id: '4', name: 'Omega-3 Fish Oil', dosage: '2 capsules (1000mg)', timing: 'With meals', frequency: 'Daily', taken: true },
-    { id: '5', name: 'Multivitamin', dosage: '1 tablet', timing: 'Morning', frequency: 'Daily', taken: true },
-    { id: '6', name: 'Vitamin D3', dosage: '2000 IU', timing: 'Morning', frequency: 'Daily', taken: false },
-    { id: '7', name: 'Magnesium', dosage: '400mg', timing: 'Before bed', frequency: 'Daily', taken: false },
-    { id: '8', name: 'Zinc', dosage: '15mg', timing: 'Morning', frequency: 'Daily', taken: true },
-  ])
-
-  const toggleTaken = (id: string) => {
-    setSupplements((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, taken: !s.taken } : s))
-    )
-  }
-
-  const timingOrder = ['Morning', 'Pre-workout', 'Post-workout', 'With meals', 'Evening', 'Before bed']
-
-  const supplementsByTiming = useMemo(() => {
-    const groups: Record<string, Supplement[]> = {}
-    supplements.forEach((s) => {
-      if (!groups[s.timing]) groups[s.timing] = []
-      groups[s.timing].push(s)
-    })
-    return timingOrder
-      .filter((t) => groups[t]?.length > 0)
-      .map((t) => ({ timing: t, items: groups[t] }))
-  }, [supplements])
-
-  const takenCount = supplements.filter((s) => s.taken).length
-
-  return (
-    <div className="space-y-6">
-      {/* Progress */}
-      <div className="flex items-center justify-between bg-[az-black-card] border border-dark-border rounded-xl p-4">
-        <div>
-          <p className="text-dark-primary font-semibold text-sm">Today&apos;s Supplements</p>
-          <p className="text-dark-muted text-xs mt-0.5">
-            {takenCount}/{supplements.length} taken
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-32 h-2 bg-[az-black-elevated] rounded-full overflow-hidden">
-            <motion.div
-              className="h-full rounded-full"
-              style={{
-                background: takenCount === supplements.length ? 'success' : 'cyan',
-              }}
-              animate={{ width: `${(takenCount / supplements.length) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
-          <span className="text-dark-secondary text-xs font-mono">
-            {Math.round((takenCount / supplements.length) * 100)}%
-          </span>
-        </div>
-      </div>
-
-      {/* Timeline */}
-      <div className="space-y-6">
-        {supplementsByTiming.map(({ timing, items }) => (
-          <div key={timing}>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-cyan" />
-              <h4 className="text-cyan text-xs font-semibold uppercase">{timing}</h4>
-              <div className="flex-1 h-px bg-dark-border" />
-            </div>
-
-            <div className="space-y-2 ml-4">
-              {items.map((supp) => (
-                <motion.div
-                  key={supp.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex items-center justify-between bg-[az-black-card] border rounded-xl p-4 transition-colors ${
-                    supp.taken ? 'border-[rgba(34,197,94,0.3)]' : 'border-dark-border'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => toggleTaken(supp.id)}
-                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                        supp.taken
-                          ? 'bg-success border-success'
-                          : 'border-dark-border hover:border-cyan'
-                      }`}
-                    >
-                      {supp.taken && <Check size={14} className="text-white" />}
-                    </button>
-                    <div>
-                      <p className={`text-sm font-medium ${supp.taken ? 'text-dark-muted line-through' : 'text-dark-primary'}`}>
-                        {supp.name}
-                      </p>
-                      <p className="text-dark-muted text-xs">
-                        {supp.dosage} · {supp.frequency}
-                      </p>
-                    </div>
-                  </div>
-                  <Pill size={16} className={supp.taken ? 'text-success' : 'text-dark-border'} />
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
+import {
+  MacroRing, MealPlannerTab, FoodDatabaseTab, WaterTrackerTab, SupplementsTab,
+  type Gender, type ActivityLevel, type Goal, type DietPreset, type MealType, type MealEntry,
+  ACTIVITY_MULTIPLIERS, GOAL_LABELS, MACRO_TARGETS, calcMacros, FOOD_DB,
+} from '@/components/nutrition'
 
 /* ═══════════════════════════════════════════
    MAIN NUTRITION PAGE
@@ -1011,35 +25,39 @@ export default function NutritionPage() {
   const [age, setAge] = useState(32)
   const [weight, setWeight] = useState(78.5)
   const [height, setHeight] = useState(183)
+  const [bodyFatPct, setBodyFatPct] = useState(0)
   const [activity, setActivity] = useState<ActivityLevel>('moderate')
   const [goal, setGoal] = useState<Goal>('maintain')
   const [dietPreset, setDietPreset] = useState<DietPreset>('balanced')
   const [mealDate, setMealDate] = useState(new Date())
   const [meals, setMeals] = useState<MealEntry[]>([
-    // Breakfast demo items
     { id: 'm1', foodId: 1, quantity: 80, mealType: 'Breakfast' },
     { id: 'm2', foodId: 5, quantity: 120, mealType: 'Breakfast' },
     { id: 'm3', foodId: 86, quantity: 250, mealType: 'Breakfast' },
-    // Lunch
     { id: 'm4', foodId: 1, quantity: 150, mealType: 'Lunch' },
     { id: 'm5', foodId: 15, quantity: 150, mealType: 'Lunch' },
     { id: 'm6', foodId: 31, quantity: 200, mealType: 'Lunch' },
-    // Dinner
     { id: 'm7', foodId: 2, quantity: 150, mealType: 'Dinner' },
     { id: 'm8', foodId: 17, quantity: 200, mealType: 'Dinner' },
     { id: 'm9', foodId: 30, quantity: 150, mealType: 'Dinner' },
-    // Snacks
     { id: 'm10', foodId: 47, quantity: 200, mealType: 'Snacks' },
     { id: 'm11', foodId: 55, quantity: 100, mealType: 'Snacks' },
     { id: 'm12', foodId: 39, quantity: 30, mealType: 'Snacks' },
   ])
 
-  /* ─── TDEE Calculation (Mifflin-St Jeor) ─── */
+  /* ─── BMR Calculation (Mifflin-St Jeor OR Katch-McArdle) ─── */
+  const useKatchMcArdle = bodyFatPct > 0
+
   const bmr = useMemo(() => {
+    if (useKatchMcArdle) {
+      // Katch-McArdle: 370 + (21.6 × LBM)
+      const lbm = weight * (1 - bodyFatPct / 100)
+      return 370 + (21.6 * lbm)
+    }
     // Mifflin-St Jeor: 10*weight + 6.25*height - 5*age + 5 (male) / -161 (female)
     const base = 10 * weight + 6.25 * height - 5 * age
     return gender === 'male' ? base + 5 : base - 161
-  }, [gender, age, weight, height])
+  }, [gender, age, weight, height, bodyFatPct, useKatchMcArdle])
 
   const tdee = useMemo(() => {
     return Math.round(bmr * ACTIVITY_MULTIPLIERS[activity].value)
@@ -1079,6 +97,11 @@ export default function NutritionPage() {
   const handleRemoveFood = useCallback((entryId: string) => {
     setMeals((prev) => prev.filter((m) => m.id !== entryId))
   }, [])
+
+  // Percentage display (calculated from actual grams)
+  const proteinPct = Math.round((proteinTarget * 4 / targetCalories) * 100)
+  const carbPct = Math.round((carbTarget * 4 / targetCalories) * 100)
+  const fatPct = Math.round((fatTarget * 9 / targetCalories) * 100)
 
   // Adherence data
   const adherenceData = [
@@ -1176,6 +199,24 @@ export default function NutritionPage() {
                   max={300}
                 />
               </div>
+              {/* Body Fat % */}
+              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3 col-span-2">
+                <span className="text-dark-muted text-[10px] mr-2">Body Fat %</span>
+                <input
+                  type="number"
+                  value={bodyFatPct || ''}
+                  onChange={(e) => setBodyFatPct(Number(e.target.value))}
+                  placeholder="optional"
+                  className="w-full bg-transparent text-dark-primary text-xs text-right focus:outline-none"
+                  min={0}
+                  max={60}
+                  step={0.1}
+                />
+                <span className="text-dark-muted text-[10px] ml-1">%</span>
+                {bodyFatPct > 0 && (
+                  <span className="text-cyan text-[10px] ml-2">Katch-McArdle</span>
+                )}
+              </div>
             </div>
 
             {/* Activity Level */}
@@ -1221,7 +262,7 @@ export default function NutritionPage() {
             <div className="space-y-2">
               <p className="text-xs text-dark-muted">Diet Preset</p>
               <div className="grid grid-cols-2 gap-2">
-                {(Object.entries(DIET_PRESETS) as [DietPreset, { label: string; desc: string }][]).map(
+                {(Object.entries(MACRO_TARGETS) as [DietPreset, { label: string; desc: string }][]).map(
                   ([key, { label, desc }]) => (
                     <button
                       key={key}
@@ -1277,8 +318,10 @@ export default function NutritionPage() {
               {/* Formula */}
               <div className="pt-2 border-t border-dark-border">
                 <p className="text-dark-subtle text-[10px] font-mono">
-                  {gender === 'male' ? '10' : '10'} × {weight}kg + 6.25 × {height}cm − 5 × {age}{' '}
-                  {gender === 'male' ? '+ 5' : '− 161'} = {Math.round(bmr)} kcal
+                  {useKatchMcArdle
+                    ? `Katch-McArdle: 370 + 21.6 × ${Math.round(weight * (1 - bodyFatPct / 100))}kg LBM = ${Math.round(bmr)} kcal`
+                    : `${gender === 'male' ? '10' : '10'} × ${weight}kg + 6.25 × ${height}cm − 5 × ${age} ${gender === 'male' ? '+ 5' : '− 161'} = ${Math.round(bmr)} kcal`
+                  }
                 </p>
               </div>
               {/* Save */}
@@ -1347,17 +390,17 @@ export default function NutritionPage() {
               </div>
               <div className="flex items-center gap-6 text-center">
                 <div>
-                  <p className="text-cyan text-xs font-bold">{Math.round((proteinTarget * 4 / targetCalories) * 100)}%</p>
+                  <p className="text-cyan text-xs font-bold">{proteinPct}%</p>
                   <p className="text-dark-muted text-[10px]">Protein</p>
                   <p className="text-dark-subtle text-[10px] font-mono">{proteinTarget * 4} kcal</p>
                 </div>
                 <div>
-                  <p className="text-violet text-xs font-bold">{Math.round((carbTarget * 4 / targetCalories) * 100)}%</p>
+                  <p className="text-violet text-xs font-bold">{carbPct}%</p>
                   <p className="text-dark-muted text-[10px]">Carbs</p>
                   <p className="text-dark-subtle text-[10px] font-mono">{carbTarget * 4} kcal</p>
                 </div>
                 <div>
-                  <p className="text-orange text-xs font-bold">{Math.round((fatTarget * 9 / targetCalories) * 100)}%</p>
+                  <p className="text-orange text-xs font-bold">{fatPct}%</p>
                   <p className="text-dark-muted text-[10px]">Fats</p>
                   <p className="text-dark-subtle text-[10px] font-mono">{fatTarget * 9} kcal</p>
                 </div>
@@ -1370,31 +413,19 @@ export default function NutritionPage() {
       {/* ═══ Tabs ═══ */}
       <Tabs defaultValue="planner" className="w-full">
         <TabsList className="bg-[az-black-card] border border-dark-border p-1 rounded-xl w-full justify-start gap-1">
-          <TabsTrigger
-            value="planner"
-            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
-          >
+          <TabsTrigger value="planner" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Utensils size={14} className="mr-1.5" />
             Meal Planner
           </TabsTrigger>
-          <TabsTrigger
-            value="database"
-            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
-          >
+          <TabsTrigger value="database" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Search size={14} className="mr-1.5" />
             Food DB
           </TabsTrigger>
-          <TabsTrigger
-            value="water"
-            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
-          >
+          <TabsTrigger value="water" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Droplets size={14} className="mr-1.5" />
             Water
           </TabsTrigger>
-          <TabsTrigger
-            value="supplements"
-            className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all"
-          >
+          <TabsTrigger value="supplements" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Pill size={14} className="mr-1.5" />
             Supplements
           </TabsTrigger>
@@ -1402,52 +433,22 @@ export default function NutritionPage() {
 
         <AnimatePresence mode="wait">
           <TabsContent value="planner" className="mt-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              <MealPlannerTab
-                meals={meals}
-                onAddFood={handleAddFood}
-                onRemoveFood={handleRemoveFood}
-                foodDb={FOOD_DB}
-                date={mealDate}
-                onDateChange={setMealDate}
-              />
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+              <MealPlannerTab meals={meals} onAddFood={handleAddFood} onRemoveFood={handleRemoveFood} foodDb={FOOD_DB} date={mealDate} onDateChange={setMealDate} />
             </motion.div>
           </TabsContent>
-
           <TabsContent value="database" className="mt-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <FoodDatabaseTab foodDb={FOOD_DB} />
             </motion.div>
           </TabsContent>
-
           <TabsContent value="water" className="mt-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <WaterTrackerTab />
             </motion.div>
           </TabsContent>
-
           <TabsContent value="supplements" className="mt-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <SupplementsTab />
             </motion.div>
           </TabsContent>
@@ -1460,33 +461,13 @@ export default function NutritionPage() {
           <Info size={16} className="text-cyan" />
           <h3 className="text-dark-primary font-semibold text-base">This Week&apos;s Adherence</h3>
         </div>
-
         <div className="h-40 mb-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={adherenceData} barSize={28}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis
-                dataKey="day"
-                tick={{ fill: 'var(--dark-muted)', fontSize: 11 }}
-                axisLine={{ stroke: 'dark-border' }}
-                tickLine={false}
-              />
-              <YAxis
-                tick={{ fill: 'var(--dark-muted)', fontSize: 10 }}
-                axisLine={false}
-                tickLine={false}
-                domain={[0, 100]}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: 'az-black-elevated',
-                  border: '1px solid dark-border',
-                  borderRadius: '8px',
-                  color: 'dark-primary',
-                  fontSize: '12px',
-                }}
-                formatter={(value: number) => [`${value}%`, 'Adherence']}
-              />
+              <XAxis dataKey="day" tick={{ fill: 'var(--dark-muted)', fontSize: 11 }} axisLine={{ stroke: 'dark-border' }} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--dark-muted)', fontSize: 10 }} axisLine={false} tickLine={false} domain={[0, 100]} />
+              <Tooltip contentStyle={{ background: 'az-black-elevated', border: '1px solid dark-border', borderRadius: '8px', color: 'dark-primary', fontSize: '12px' }} formatter={(value: number) => [`${value}%`, 'Adherence']} />
               <Bar dataKey="adherence" radius={[6, 6, 0, 0]}>
                 {adherenceData.map((entry, index) => (
                   <Cell key={index} fill={getBarColor(entry.adherence)} />
@@ -1495,31 +476,22 @@ export default function NutritionPage() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-
         <div className="flex flex-wrap items-center gap-6 text-sm">
           <div>
             <span className="text-dark-muted text-xs">Weekly Average</span>
-            <p className={`font-bold font-mono ${getBarColor(avgAdherence)}`} style={{ color: getBarColor(avgAdherence) }}>
-              {avgAdherence}%
-            </p>
+            <p className="font-bold font-mono" style={{ color: getBarColor(avgAdherence) }}>{avgAdherence}%</p>
           </div>
           <div>
             <span className="text-dark-muted text-xs">Best Day</span>
-            <p className="text-success font-medium text-xs">
-              Tuesday — 98%
-            </p>
+            <p className="text-success font-medium text-xs">Tuesday — 98%</p>
           </div>
           <div>
             <span className="text-dark-muted text-xs">Needs Improvement</span>
-            <p className="text-warning font-medium text-xs">
-              Saturday — 62%
-            </p>
+            <p className="text-warning font-medium text-xs">Saturday — 62%</p>
           </div>
           <div>
             <span className="text-dark-muted text-xs">Calorie Avg</span>
-            <p className="text-dark-secondary font-mono text-xs">
-              2,280 / {targetCalories.toLocaleString()} kcal
-            </p>
+            <p className="text-dark-secondary font-mono text-xs">2,280 / {targetCalories.toLocaleString()} kcal</p>
           </div>
         </div>
       </div>
