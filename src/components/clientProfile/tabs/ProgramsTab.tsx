@@ -19,7 +19,7 @@ function formatDuration(weeks: number): string {
   return weeks === 1 ? '1 week' : `${weeks} weeks`;
 }
 
-export function ProgramsTab() {
+export default function ProgramsTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 

@@ -1,14 +1,31 @@
-export { BioPrintTab } from './BioPrintTab';
-export { ProgramsTab } from './ProgramsTab';
-export { GoalsTab } from './GoalsTab';
-export { CalendarView } from './CalendarView';
-export { DashboardTab } from './DashboardTab';
-export { BodyStatsTab } from './BodyStatsTab';
-export { RecordsTab } from './RecordsTab';
-export { SessionsTab } from './SessionsTab';
-export { DatabaseTab } from './DatabaseTab';
-export { DietTab } from './DietTab';
-export { LifestyleTab } from './LifestyleTab';
-export { NotesTab } from './NotesTab';
-export { PhotosTab } from './PhotosTab';
-export { RoadmapTab } from './RoadmapTab';
+import BioPrintTab from './BioPrintTab';
+import ProgramsTab from './ProgramsTab';
+import GoalsTab from './GoalsTab';
+import CalendarView from './CalendarView';
+import DashboardTab from './DashboardTab';
+import BodyStatsTab from './BodyStatsTab';
+import RecordsTab from './RecordsTab';
+import SessionsTab from './SessionsTab';
+import DatabaseTab from './DatabaseTab';
+import DietTab from './DietTab';
+import LifestyleTab from './LifestyleTab';
+import NotesTab from './NotesTab';
+import PhotosTab from './PhotosTab';
+import RoadmapTab from './RoadmapTab';
+
+export {
+  BioPrintTab,
+  ProgramsTab,
+  GoalsTab,
+  CalendarView,
+  DashboardTab,
+  BodyStatsTab,
+  RecordsTab,
+  SessionsTab,
+  DatabaseTab,
+  DietTab,
+  LifestyleTab,
+  NotesTab,
+  PhotosTab,
+  RoadmapTab,
+};

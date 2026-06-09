@@ -14,11 +14,36 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          if (id.includes('node_modules/recharts')) return 'vendor-recharts'
-          if (id.includes('node_modules/framer-motion')) return 'vendor-framer-motion'
-          if (id.includes('node_modules/lucide-react')) return 'vendor-ui'
-          if (id.includes('node_modules/@radix-ui')) return 'vendor-ui'
-          if (id.includes('node_modules/class-variance-authority') || id.includes('node_modules/clsx') || id.includes('node_modules/tailwind-merge')) return 'vendor-ui'
+          /* ── Framework core ── */
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/scheduler')) {
+            return 'vendor-react'
+          }
+          if (id.includes('node_modules/react-router') || id.includes('node_modules/@remix-run/router')) {
+            return 'vendor-router'
+          }
+
+          /* ── Animation ── */
+          if (id.includes('node_modules/framer-motion')) {
+            return 'vendor-framer-motion'
+          }
+
+          /* ── Charts (keep isolated — large library) ── */
+          if (id.includes('node_modules/recharts')) {
+            return 'vendor-recharts'
+          }
+
+          /* ── Icons ── */
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-lucide'
+          }
+
+          /* ── UI primitives (Radix + styling utils) ── */
+          if (id.includes('node_modules/@radix-ui')) {
+            return 'vendor-radix'
+          }
+          if (id.includes('node_modules/class-variance-authority') || id.includes('node_modules/clsx') || id.includes('node_modules/tailwind-merge')) {
+            return 'vendor-radix'
+          }
         },
       },
     },

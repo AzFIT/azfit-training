@@ -18,7 +18,7 @@ function statusClass(status: ClientGoal['status']) {
   return 'text-success bg-[rgba(34,197,94,0.1)]';
 }
 
-export function GoalsTab() {
+export default function GoalsTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const goals = useAppDataStore((s) => s.goals);
 

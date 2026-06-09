@@ -31,7 +31,7 @@ function formatDateDMY(isoDate: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export function BioPrintTab() {
+export default function BioPrintTab() {
   const navigate = useNavigate();
   const { id: clientId } = useParams<{ id: string }>();
   const bioPrintEntries = useAppDataStore((s) => s.bioPrintEntries);

@@ -15,7 +15,7 @@ function formatDateDMY(isoDate: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export function DietTab() {
+export default function DietTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const nutritionEntries = useAppDataStore((s) => s.nutritionEntries);

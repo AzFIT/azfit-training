@@ -11,7 +11,7 @@ import { getAllExerciseHistories, formatShortDate } from '@/lib/workoutAnalytics
 import { SectionCard } from '../shared';
 import { COLORS } from '../tabsConfig';
 
-export function DatabaseTab() {
+export default function DatabaseTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const { workoutSessions, exercises } = useAppDataStore();
   const navigate = useNavigate();

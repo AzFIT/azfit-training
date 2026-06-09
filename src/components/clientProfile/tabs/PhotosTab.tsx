@@ -13,7 +13,7 @@ function parsePhotoDate(date: string) {
   return new Date(date).getTime();
 }
 
-export function PhotosTab() {
+export default function PhotosTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const { photos } = useAppDataStore();
 

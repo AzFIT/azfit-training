@@ -4,7 +4,7 @@ import { Search, Plus, X, Edit3, Save } from 'lucide-react';
 import { useAppDataStore } from '@/stores/useAppDataStore';
 import type { ClientNote } from '@/types/entities';
 
-export function NotesTab() {
+export default function NotesTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const { notes, addNote } = useAppDataStore();
   const clientNotes = Object.values(notes)

@@ -7,7 +7,7 @@ import {
 import { useAppDataStore } from '@/stores/useAppDataStore';
 import { KpiCard, SectionCard, ChangePill } from '../shared';
 
-export function BodyStatsTab() {
+export default function BodyStatsTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { progressEntries, clients } = useAppDataStore();

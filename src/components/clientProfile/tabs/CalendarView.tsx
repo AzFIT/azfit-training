@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppDataStore } from '../../../stores/useAppDataStore';
 
-export function CalendarView() {
+export default function CalendarView() {
   const { id: clientId } = useParams<{ id: string }>();
   const { sessions } = useAppDataStore();
   const today = new Date();

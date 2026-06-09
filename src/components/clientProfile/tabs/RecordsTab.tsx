@@ -12,7 +12,7 @@ import {
 } from '@/lib/workoutAnalytics';
 import { SectionCard, ChangePill } from '../shared';
 
-export function RecordsTab() {
+export default function RecordsTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const { workoutSessions } = useAppDataStore();
   const [filter, setFilter] = useState<'all' | 'prs' | 'recent'>('all');

@@ -24,7 +24,7 @@ function formatDateDMY(dateStr: string): string {
   return `${day}/${month}/${year}`;
 }
 
-export function LifestyleTab() {
+export default function LifestyleTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const notes = useAppDataStore((s) => s.notes);
   const progressEntries = useAppDataStore((s) => s.progressEntries);

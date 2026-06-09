@@ -319,7 +319,7 @@ function MetricCard({ metric }: { metric: ClientMetric }) {
 
 // ── Main Tab Component ────────────────────────────────────────────
 
-export function RoadmapTab() {
+export default function RoadmapTab() {
   return (
     <div className="space-y-6">
       {/* Program Header */}
@@ -392,4 +392,4 @@ export function RoadmapTab() {
   )
 }
 
-export default RoadmapTab
+

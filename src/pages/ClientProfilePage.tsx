@@ -1,15 +1,30 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Scale, CalendarPlus, MessageSquare, MoreVertical, ChevronLeft, ChevronRight } from 'lucide-react';
 import { tabsConfig, type TabKey } from '../components/clientProfile/tabsConfig';
-import { RoadmapTab } from '../components/clientProfile/tabs';
-import {
-  DashboardTab, BioPrintTab, BodyStatsTab, RecordsTab, NotesTab, SessionsTab,
-  CalendarView, ProgramsTab, DietTab, LifestyleTab, DatabaseTab, GoalsTab, PhotosTab,
-} from '../components/clientProfile/tabs';
 import { useAppDataStore } from '../stores/useAppDataStore';
 import { useSyncWorkoutSessions } from '../hooks/useWorkoutSync';
+
+/* ── Lazy-loaded tab components ──
+ * Each tab is split into its own chunk. Only the active tab loads.
+ * Tabs that import recharts will pull in the vendor-recharts chunk
+ * only when that tab is first opened.
+ */
+const DashboardTab = lazy(() => import('../components/clientProfile/tabs/DashboardTab'));
+const BioPrintTab = lazy(() => import('../components/clientProfile/tabs/BioPrintTab'));
+const BodyStatsTab = lazy(() => import('../components/clientProfile/tabs/BodyStatsTab'));
+const RecordsTab = lazy(() => import('../components/clientProfile/tabs/RecordsTab'));
+const NotesTab = lazy(() => import('../components/clientProfile/tabs/NotesTab'));
+const SessionsTab = lazy(() => import('../components/clientProfile/tabs/SessionsTab'));
+const CalendarView = lazy(() => import('../components/clientProfile/tabs/CalendarView'));
+const ProgramsTab = lazy(() => import('../components/clientProfile/tabs/ProgramsTab'));
+const DietTab = lazy(() => import('../components/clientProfile/tabs/DietTab'));
+const LifestyleTab = lazy(() => import('../components/clientProfile/tabs/LifestyleTab'));
+const DatabaseTab = lazy(() => import('../components/clientProfile/tabs/DatabaseTab'));
+const GoalsTab = lazy(() => import('../components/clientProfile/tabs/GoalsTab'));
+const PhotosTab = lazy(() => import('../components/clientProfile/tabs/PhotosTab'));
+const RoadmapTab = lazy(() => import('../components/clientProfile/tabs/RoadmapTab'));
 
 const TAB_COMPONENTS: Record<TabKey, React.ComponentType> = {
   dashboard: DashboardTab,
@@ -27,6 +42,15 @@ const TAB_COMPONENTS: Record<TabKey, React.ComponentType> = {
   photos: PhotosTab,
   roadmap: RoadmapTab,
 };
+
+/** Lightweight spinner shown while a tab chunk loads */
+function TabLoader() {
+  return (
+    <div className="flex items-center justify-center py-20">
+      <div className="w-8 h-8 border-2 border-cyan border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 export default function ClientProfilePage() {
   const navigate = useNavigate();
@@ -182,7 +206,9 @@ export default function ClientProfilePage() {
       {/* Tab Content */}
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-          <ActiveTabComponent />
+          <Suspense fallback={<TabLoader />}>
+            <ActiveTabComponent />
+          </Suspense>
         </motion.div>
       </div>
     </motion.div>

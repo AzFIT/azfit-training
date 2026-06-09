@@ -13,9 +13,9 @@ import {
   formatDuration,
 } from '@/lib/workoutAnalytics';
 import { KpiCard } from '../shared';
-import { CalendarView } from './CalendarView';
+import CalendarView from './CalendarView';
 
-export function SessionsTab() {
+export default function SessionsTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const { workoutSessions } = useAppDataStore();
   const navigate = useNavigate();

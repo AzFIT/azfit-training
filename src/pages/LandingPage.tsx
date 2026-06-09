@@ -10,11 +10,9 @@ import CTASection from '../components/landing/CTASection'
 import LandingFooter from '../components/landing/LandingFooter'
 
 const HERO_IMAGES: SlideImage[] = [
-  { src: './AZFIT_BACKGROUND_2.png', filter: 'brightness-60 contrast-110' },
-  { src: './AZFIT_BACKGROUND_1.png', filter: 'brightness-75 contrast-125' },
-  { src: './AZFIT_BACKGROUND_2.png', filter: 'brightness-50 saturate-80' },
-  { src: './AZFIT_BACKGROUND_1.png', filter: 'brightness-75 hue-rotate-15' },
-  { src: './AZFIT_BACKGROUND_2.png', filter: 'brightness-60 contrast-130' },
+  { src: './hero-bg.jpg', alt: 'Modern gym with neon lighting' },
+  { src: './background_ai_landingpage.png', alt: 'AI-powered fitness lab' },
+  { src: './AZFIT_BACKGROUND_2.png', alt: 'Futuristic training interface' },
 ]
 
 const LOGO_TRANSPARENT = './AzFIT_LOGO_Transparent.png'
@@ -22,7 +20,7 @@ const LOGO_TRANSPARENT = './AzFIT_LOGO_Transparent.png'
 export default function LandingPage() {
   return (
     <div className="relative min-h-screen bg-az-black">
-      <BackgroundSlider images={HERO_IMAGES} interval={5000} overlayOpacity={0.6} />
+      <BackgroundSlider images={HERO_IMAGES} interval={6000} overlayOpacity={0.55} />
       <LandingNavbar logoSrc={LOGO_TRANSPARENT} />
       <HeroSection
         logoSrc={LOGO_TRANSPARENT}

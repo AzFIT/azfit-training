@@ -10,7 +10,7 @@ import { useAppDataStore } from '@/stores/useAppDataStore';
 import { formatDate } from '@/lib/workoutAnalytics';
 import { KpiCard, SectionCard } from '../shared';
 
-export function DashboardTab() {
+export default function DashboardTab() {
   const { id: clientId } = useParams<{ id: string }>();
   const { clients, progressEntries, workoutSessions, notes, sessions } = useAppDataStore();
   const client = clientId ? clients[clientId] : null;
