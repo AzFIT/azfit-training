@@ -1,16 +1,25 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Shield, Users, Dumbbell, Award, ChevronRight, BarChart3,
 } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
+import { useAuthStore } from '../stores/authStore'
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate()
+  const { role } = useAuthStore()
   const {
     clients, programs, exercises, workoutSessions, alerts,
   } = useAppDataStore()
+
+  // Belt-and-suspenders: redirect non-admins (AdminGuard should already handle this)
+  useEffect(() => {
+    if (role && role !== 'admin') {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [role, navigate])
 
   const stats = useMemo(() => {
     const clientList = Object.values(clients)
