@@ -1,1 +1,0 @@
-import{u as r,b as s,c as u}from"./workoutApi-DIsnTaZJ.js";function t(e){return r({queryKey:["programs",e],queryFn:()=>s(e)})}function n(e){return r({queryKey:["program-details",e],queryFn:()=>u(e),enabled:!!e})}export{n as a,t as u};

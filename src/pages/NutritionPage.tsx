@@ -1,9 +1,11 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Utensils, Search, Droplets, Pill, Info, Save,
+  Utensils, Search, Droplets, Pill, Info, Save, User,
 } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
+import { useClientById, useLatestBodyStats, useLatestProgressEntry, useClientProgramGoal } from '../stores/useAppDataStore.selectors'
 import type { NutritionEntry } from '../types/entities'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
@@ -18,9 +20,35 @@ import {
 
 /* ═══════════════════════════════════════════
    MAIN NUTRITION PAGE
+   Accepts optional :clientId param to auto-fill
+   from client profile data.
    ═══════════════════════════════════════════ */
 export default function NutritionPage() {
+  const { clientId } = useParams<{ clientId?: string }>()
   const { addNutritionEntry } = useAppDataStore()
+
+  // ── Client data selectors (auto-fill when clientId present) ──
+  const client = useClientById(clientId ?? null)
+  const latestBodyStats = useLatestBodyStats(clientId ?? null)
+  const latestProgress = useLatestProgressEntry(clientId ?? null)
+  const clientProgramGoal = useClientProgramGoal(clientId ?? null)
+
+  // Helper: map client goal string → Nutrition Goal type
+  function deriveGoal(clientGoal?: string): Goal {
+    if (!clientGoal) return 'maintain'
+    const g = clientGoal.toLowerCase()
+    if (g.includes('lose') || g.includes('fat') || g.includes('cut') || g.includes('deficit')) return 'lose'
+    if (g.includes('gain') || g.includes('bulk') || g.includes('muscle') || g.includes('surplus')) return 'gain'
+    return 'maintain'
+  }
+
+  // Helper: derive gender from client data (fallback to male)
+  // Note: Client entity doesn't have sex field; use goal context or default
+  function deriveGender(_client?: typeof client): Gender {
+    // Default to male; could be enhanced when sex field is added to Client
+    return 'male'
+  }
+
   const [gender, setGender] = useState<Gender>('male')
   const [age, setAge] = useState(32)
   const [weight, setWeight] = useState(78.5)
@@ -29,6 +57,17 @@ export default function NutritionPage() {
   const [activity, setActivity] = useState<ActivityLevel>('moderate')
   const [goal, setGoal] = useState<Goal>('maintain')
   const [dietPreset, setDietPreset] = useState<DietPreset>('balanced')
+
+  // Auto-fill from client profile when clientId is present
+  useEffect(() => {
+    if (!client) return
+    setGender(deriveGender(client))
+    setAge(client.age || 32)
+    setWeight(latestBodyStats?.weight ?? latestProgress?.weight ?? client.weight ?? 78.5)
+    setHeight(client.height ?? 183)
+    setBodyFatPct(latestBodyStats?.bodyFatPercent ?? latestProgress?.bodyFat ?? client.bodyFat ?? 0)
+    setGoal(deriveGoal(clientProgramGoal ?? client.goal))
+  }, [client, latestBodyStats, latestProgress, clientProgramGoal])
   const [mealDate, setMealDate] = useState(new Date())
   const [meals, setMeals] = useState<MealEntry[]>([
     { id: 'm1', foodId: 1, quantity: 80, mealType: 'Breakfast' },
@@ -129,6 +168,22 @@ export default function NutritionPage() {
       transition={{ duration: 0.4 }}
       className="space-y-6"
     >
+      {/* ═══ Client Header (when viewing specific client) ═══ */}
+      {client && (
+        <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-4 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-cyan/20 flex items-center justify-center">
+            <User size={16} className="text-cyan" />
+          </div>
+          <div>
+            <p className="text-dark-primary text-sm font-medium">{client.name}</p>
+            <p className="text-dark-muted text-[10px]">
+              {client.age} yrs · {Math.round(weight)}kg · {height}cm
+              {clientProgramGoal ? ` · Goal: ${clientProgramGoal}` : client.goal ? ` · Goal: ${client.goal}` : ''}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ═══ TDEE Summary + Macro Rings ═══ */}
       <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-6">
         <div className="flex flex-col xl:flex-row gap-8">
@@ -329,7 +384,7 @@ export default function NutritionPage() {
                 onClick={() => {
                   const entry: NutritionEntry = {
                     id: `nut_${Date.now()}`,
-                    clientId: 'demo-client',
+                    clientId: clientId ?? 'demo-client',
                     date: new Date().toISOString().split('T')[0],
                     gender,
                     age,

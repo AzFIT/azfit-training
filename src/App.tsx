@@ -112,6 +112,7 @@ export default function App() {
       <Route path="/clients/:id" element={<Protected><ClientProfilePage /></Protected>} />
       <Route path="/clients" element={<Protected><ClientDirectory /></Protected>} />
       <Route path="/nutrition" element={<Protected><NutritionPage /></Protected>} />
+      <Route path="/nutrition/:clientId" element={<Protected><NutritionPage /></Protected>} />
       <Route path="/settings" element={<Protected><SettingsPage /></Protected>} />
       <Route path="/photos" element={<Protected><PhotosPage /></Protected>} />
       <Route path="/roadmap" element={<Protected><PlannedFeaturesPage /></Protected>} />
