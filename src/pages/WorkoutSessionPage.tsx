@@ -45,6 +45,7 @@ import type { ExerciseBlockData } from '../components/workout/ExerciseBlock'
 import type { SetData } from '../components/workout/SetRow'
 import { PRCelebrationModal } from '../components/workout/pr/PRCelebrationModal'
 import { detectPersonalRecords, type PersonalRecord } from '../components/workout/pr/prDetection'
+import WorkoutShareCard, { type WorkoutShareCardData } from '../components/workout/WorkoutShareCard'
 
 // ── Main Page ─────────────────────────────────────────────────────
 
@@ -113,6 +114,8 @@ export default function WorkoutSessionPage() {
   const [showAdjustDrawer, setShowAdjustDrawer] = useState(false)
   const [prRecords, setPrRecords] = useState<PersonalRecord[]>([])
   const [showPrModal, setShowPrModal] = useState(false)
+  const [showShareCard, setShowShareCard] = useState(false)
+  const [shareCardData, setShareCardData] = useState<WorkoutShareCardData | null>(null)
   const [isScaled, setIsScaled] = useState(false)
   const scalePercent = 0.8 // 80% for scaled mode
 
@@ -197,15 +200,39 @@ export default function WorkoutSessionPage() {
 
     addWorkoutSession(sessionLog)
 
+    // Build share card data
+    const topSet = sessionLog.exercises
+      .flatMap((ex) => ex.sets.map((s) => ({ ...s, exerciseName: ex.exerciseName })))
+      .filter((s) => s.completed && s.actualLoad != null && s.actualReps != null)
+      .sort((a, b) => (b.actualLoad || 0) - (a.actualLoad || 0))[0]
+
+    const shareData: WorkoutShareCardData = {
+      workoutName: sessionLog.programName,
+      clientName: client?.name || sessionInfo.clientName || 'You',
+      resultLabel: topSet
+        ? `${topSet.actualLoad} kg × ${topSet.actualReps}`
+        : `${completedSets}/${totalSets} sets`,
+      resultType: topSet ? 'load' : 'reps',
+      duration: elapsedFormatted,
+      date: new Date().toLocaleDateString(),
+      prBadges: [],
+      isRx: !isScaled,
+    }
+    setShareCardData(shareData)
+
     // Detect personal records
     const allHistory = Object.values(workoutSessions)
     const records = detectPersonalRecords(sessionLog, allHistory)
     if (records.length > 0) {
       setPrRecords(records)
+      setShareCardData((prev) =>
+        prev
+          ? { ...prev, prBadges: records.map((r) => `${r.exerciseName} ${r.metric === 'load' ? 'Load' : 'Volume'} PR`) }
+          : prev
+      )
       setShowPrModal(true)
     } else {
-      toast.success(`Session complete! ${completedSets}/${totalSets} sets in ${elapsedFormatted}`)
-      navigate('/dashboard')
+      setShowShareCard(true)
     }
   }
 
@@ -391,9 +418,21 @@ export default function WorkoutSessionPage() {
         onClose={() => {
           setShowPrModal(false)
           toast.success(`Session complete! ${completedSets}/${totalSets} sets in ${elapsedFormatted}`)
-          navigate('/dashboard')
+          setShowShareCard(true)
         }}
       />
+
+      {/* Share Card */}
+      {shareCardData && (
+        <WorkoutShareCard
+          open={showShareCard}
+          data={shareCardData}
+          onClose={() => {
+            setShowShareCard(false)
+            navigate('/dashboard')
+          }}
+        />
+      )}
     </div>
   )
 }
