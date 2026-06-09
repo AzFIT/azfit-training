@@ -65,7 +65,6 @@ export default function BackgroundSlider({
           key={currentSlide.src}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
           transition={{ duration: CROSSFADE_DURATION, ease: 'easeInOut' }}
           className="absolute inset-0"
         >

@@ -31,17 +31,17 @@ export default function TestimonialsSection() {
     <section className="bg-[off-white-2] py-20 lg:py-24">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">Testimonials</motion.p>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-[gray-950]">What Our Clients Say</motion.h2>
+          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">Testimonials</motion.p>
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.6, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-[gray-950]">What Our Clients Say</motion.h2>
         </div>
 
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE }} className="relative" onMouseEnter={() => setIsAutoPlaying(false)} onMouseLeave={() => setIsAutoPlaying(true)}>
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE }} className="relative" onMouseEnter={() => setIsAutoPlaying(false)} onMouseLeave={() => setIsAutoPlaying(true)}>
           <button onClick={prev} className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 lg:-translate-x-6 w-12 h-12 rounded-full bg-white border border-[gray-200] items-center justify-center text-[gray-550] hover:text-[gray-950] hover:bg-[#F1F3F5] transition-colors z-10" aria-label="Previous"><ChevronLeft size={20} /></button>
           <button onClick={next} className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 lg:translate-x-6 w-12 h-12 rounded-full bg-white border border-[gray-200] items-center justify-center text-[gray-550] hover:text-[gray-950] hover:bg-[#F1F3F5] transition-colors z-10" aria-label="Next"><ChevronRight size={20} /></button>
 
           <div className="overflow-hidden">
             <AnimatePresence mode="wait">
-              <motion.div key={current} initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4, ease: EASE }} className="bg-white border border-[gray-200] rounded-2xl p-8 sm:p-10 min-h-[280px] flex flex-col justify-between">
+              <motion.div key={current} initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: EASE }} className="bg-white border border-[gray-200] rounded-2xl p-8 sm:p-10 min-h-[280px] flex flex-col justify-between">
                 <div>
                   <Quote size={48} className="text-cyan opacity-10 mb-4" />
                   <p className="text-[gray-950] text-base sm:text-lg italic leading-relaxed">&ldquo;{t.quote}&rdquo;</p>

@@ -26,7 +26,7 @@ const COMPANY_LINKS = [
 ]
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }
-const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } } }
+const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } } }
 
 interface LandingFooterProps {
   logoSrc: string

@@ -15,10 +15,10 @@ export default function HowItWorksSection() {
     <section id="how-it-works" className="bg-az-black py-20 lg:py-24">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">
+          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">
             How It Works
           </motion.p>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-white">
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.6, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-white">
             Your Journey to Better Results
           </motion.h2>
         </div>
@@ -35,7 +35,7 @@ export default function HowItWorksSection() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ delay: i * 0.2, duration: 0.5, ease: EASE }}
+                transition={{ delay: i * 0.2, duration: 0.6, ease: EASE }}
                 className="relative flex items-start mb-12 last:mb-0"
               >
                 <div className="hidden md:grid md:grid-cols-2 md:gap-8 md:w-full md:items-start">

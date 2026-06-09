@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Utensils, Search, Droplets, Pill, Info, Save, User,
+  Utensils, Search, Droplets, Pill, Info, Save, User, Sparkles,
 } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
 import { useClientById, useLatestBodyStats, useLatestProgressEntry, useClientProgramGoal } from '../stores/useAppDataStore.selectors'
@@ -13,9 +13,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
-  MacroRing, MealPlannerTab, FoodDatabaseTab, WaterTrackerTab, SupplementsTab,
+  MacroRing, MealPlannerTab, MealPlanDisplay, FoodDatabaseTab, WaterTrackerTab, SupplementsTab,
   type Gender, type ActivityLevel, type Goal, type DietPreset, type MealType, type MealEntry,
   ACTIVITY_MULTIPLIERS, GOAL_LABELS, MACRO_TARGETS, calcMacros, FOOD_DB,
+  generateMealPlan, type DailyMealPlan,
 } from '@/components/nutrition'
 
 /* ═══════════════════════════════════════════
@@ -68,6 +69,10 @@ export default function NutritionPage() {
     setBodyFatPct(latestBodyStats?.bodyFatPercent ?? latestProgress?.bodyFat ?? client.bodyFat ?? 0)
     setGoal(deriveGoal(clientProgramGoal ?? client.goal))
   }, [client, latestBodyStats, latestProgress, clientProgramGoal])
+  // ── Generated Meal Plan State ──
+  const [mealPlan, setMealPlan] = useState<DailyMealPlan | null>(null)
+  const [mealPlanDate, setMealPlanDate] = useState(new Date())
+
   const [mealDate, setMealDate] = useState(new Date())
   const [meals, setMeals] = useState<MealEntry[]>([
     { id: 'm1', foodId: 1, quantity: 80, mealType: 'Breakfast' },
@@ -108,6 +113,13 @@ export default function NutritionPage() {
 
   // Macro targets based on selected diet preset
   const { proteinGrams: proteinTarget, carbGrams: carbTarget, fatGrams: fatTarget } = calcMacros(targetCalories, weight, dietPreset)
+
+  // Generate meal plan when targets change
+  useEffect(() => {
+    const { proteinGrams, carbGrams, fatGrams } = calcMacros(targetCalories, weight, dietPreset)
+    const plan = generateMealPlan(targetCalories, proteinGrams, carbGrams, fatGrams, FOOD_DB, mealPlanDate)
+    setMealPlan(plan)
+  }, [targetCalories, weight, dietPreset, mealPlanDate])
 
   // Calculate current macros from meals
   const currentMacros = useMemo(() => {
@@ -466,11 +478,15 @@ export default function NutritionPage() {
       </div>
 
       {/* ═══ Tabs ═══ */}
-      <Tabs defaultValue="planner" className="w-full">
+      <Tabs defaultValue="plan" className="w-full">
         <TabsList className="bg-[az-black-card] border border-dark-border p-1 rounded-xl w-full justify-start gap-1">
+          <TabsTrigger value="plan" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+            <Sparkles size={14} className="mr-1.5" />
+            Meal Plan
+          </TabsTrigger>
           <TabsTrigger value="planner" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Utensils size={14} className="mr-1.5" />
-            Meal Planner
+            Manual
           </TabsTrigger>
           <TabsTrigger value="database" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Search size={14} className="mr-1.5" />
@@ -487,6 +503,19 @@ export default function NutritionPage() {
         </TabsList>
 
         <AnimatePresence mode="wait">
+          <TabsContent value="plan" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+              {mealPlan ? (
+                <MealPlanDisplay plan={mealPlan} onPlanChange={setMealPlan} onDateChange={setMealPlanDate} />
+              ) : (
+                <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-8 text-center">
+                  <Sparkles size={32} className="text-cyan mx-auto mb-3" />
+                  <p className="text-dark-primary text-sm font-medium">Generate a meal plan</p>
+                  <p className="text-dark-muted text-xs mt-1">Set your TDEE targets above to auto-generate</p>
+                </div>
+              )}
+            </motion.div>
+          </TabsContent>
           <TabsContent value="planner" className="mt-4">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <MealPlannerTab meals={meals} onAddFood={handleAddFood} onRemoveFood={handleRemoveFood} foodDb={FOOD_DB} date={mealDate} onDateChange={setMealDate} />

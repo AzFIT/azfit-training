@@ -36,7 +36,7 @@ export default function FeatureSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: EASE }}
+            transition={{ duration: 0.6, ease: EASE }}
             className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4"
           >
             Features
@@ -45,7 +45,7 @@ export default function FeatureSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.5, ease: EASE }}
+            transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
             className="font-playfair text-3xl sm:text-4xl font-bold text-[gray-950] mb-4"
           >
             Everything You Need to Train Smarter
@@ -54,7 +54,7 @@ export default function FeatureSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.5, ease: EASE }}
+            transition={{ delay: 0.2, duration: 0.6, ease: EASE }}
             className="text-[gray-550] text-base sm:text-lg max-w-[640px] mx-auto"
           >
             A complete toolkit for modern personal training management
@@ -68,7 +68,7 @@ export default function FeatureSection() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: i * 0.15, duration: 0.5, ease: EASE }}
+              transition={{ delay: i * 0.15, duration: 0.6, ease: EASE }}
               className="group bg-white border border-[gray-200] rounded-2xl overflow-hidden hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:border-cyan/20 transition-all duration-300"
             >
               <div className="h-[200px] overflow-hidden">

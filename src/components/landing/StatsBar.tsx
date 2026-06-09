@@ -48,7 +48,7 @@ export default function StatsBar() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ delay: i * 0.15, duration: 0.5, ease: EASE }}
+              transition={{ delay: i * 0.15, duration: 0.6, ease: EASE }}
               className={`flex flex-col items-center text-center ${i < STATS.length - 1 ? 'lg:border-r lg:border-gray-800' : ''}`}
             >
               <AnimatedCounter target={stat.value} suffix={stat.suffix} />

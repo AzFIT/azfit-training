@@ -1,14 +1,12 @@
 import {
-  Monitor,
+  User,
   Bell,
   Palette,
   Shield,
-  User,
   Database,
-  Plug,
 } from 'lucide-react'
 
-export type SectionId = 'display' | 'notifications' | 'appearance' | 'privacy' | 'account' | 'data' | 'integrations'
+export type SectionId = 'profile' | 'appearance' | 'notifications' | 'security' | 'data'
 
 export interface SectionDef {
   id: SectionId
@@ -17,13 +15,11 @@ export interface SectionDef {
 }
 
 export const sections: SectionDef[] = [
-  { id: 'display', label: 'Display', icon: Monitor },
-  { id: 'notifications', label: 'Notifications', icon: Bell },
+  { id: 'profile', label: 'Profile', icon: User },
   { id: 'appearance', label: 'Appearance', icon: Palette },
-  { id: 'privacy', label: 'Privacy', icon: Shield },
-  { id: 'account', label: 'Account', icon: User },
+  { id: 'notifications', label: 'Notifications', icon: Bell },
+  { id: 'security', label: 'Security', icon: Shield },
   { id: 'data', label: 'Data', icon: Database },
-  { id: 'integrations', label: 'Integrations', icon: Plug },
 ]
 
 export const accentColors = [

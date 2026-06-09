@@ -9,17 +9,17 @@ export default function RoleCardsSection() {
     <section id="pricing" className="bg-az-black py-20 lg:py-24">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">
+          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">
             For Everyone
           </motion.p>
-          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-white">
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.6, ease: EASE }} className="font-playfair text-3xl sm:text-4xl font-bold text-white">
             Built for Trainers & Clients
           </motion.h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Trainer Card */}
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.5, ease: EASE }} className="group relative min-h-[480px] rounded-[20px] overflow-hidden cursor-pointer">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.6, ease: EASE }} className="group relative min-h-[480px] rounded-[20px] overflow-hidden cursor-pointer">
             <img src="./trainer-role-card.jpg" alt="Trainer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms]" />
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,10,10,0.85)] via-[rgba(10,10,10,0.3)] to-transparent" />
             <div className="relative h-full min-h-[480px] flex flex-col justify-end p-8 sm:p-10">
@@ -33,7 +33,7 @@ export default function RoleCardsSection() {
           </motion.div>
 
           {/* Client Card */}
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: 0.2, duration: 0.5, ease: EASE }} className="group relative min-h-[480px] rounded-[20px] overflow-hidden cursor-pointer">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ delay: 0.2, duration: 0.6, ease: EASE }} className="group relative min-h-[480px] rounded-[20px] overflow-hidden cursor-pointer">
             <img src="./client-role-card.jpg" alt="Client" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[600ms]" />
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,10,10,0.85)] via-[rgba(10,10,10,0.3)] to-transparent" />
             <div className="relative h-full min-h-[480px] flex flex-col justify-end p-8 sm:p-10">

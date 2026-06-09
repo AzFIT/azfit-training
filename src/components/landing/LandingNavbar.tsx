@@ -104,14 +104,12 @@ export default function LandingNavbar({ logoSrc }: LandingNavbarProps) {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/50 z-50 md:hidden"
               onClick={() => setOpen(false)}
             />
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="fixed right-0 top-0 bottom-0 w-[280px] bg-az-black z-50 md:hidden flex flex-col"
             >

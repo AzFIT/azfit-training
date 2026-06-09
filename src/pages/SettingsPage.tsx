@@ -1,31 +1,27 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  DisplaySection,
-  NotificationsSection,
-  AppearanceSection,
-  PrivacySection,
-  AccountSection,
-  DataSection,
-  IntegrationsSection,
+  ProfileTab,
+  AppearanceTab,
+  NotificationsTab,
+  SecurityTab,
+  DataTab,
   sections,
   ease,
   type SectionId,
 } from '@/components/settings'
 
 export default function SettingsPage() {
-  const [active, setActive] = useState<SectionId>('display')
+  const [active, setActive] = useState<SectionId>('profile')
 
   const renderSection = () => {
     switch (active) {
-      case 'display': return <DisplaySection />
-      case 'notifications': return <NotificationsSection />
-      case 'appearance': return <AppearanceSection />
-      case 'privacy': return <PrivacySection />
-      case 'account': return <AccountSection />
-      case 'data': return <DataSection />
-      case 'integrations': return <IntegrationsSection />
-      default: return <DisplaySection />
+      case 'profile': return <ProfileTab />
+      case 'appearance': return <AppearanceTab />
+      case 'notifications': return <NotificationsTab />
+      case 'security': return <SecurityTab />
+      case 'data': return <DataTab />
+      default: return <ProfileTab />
     }
   }
 
@@ -74,7 +70,7 @@ export default function SettingsPage() {
             transition={{ duration: 0.2, ease }}
           >
             <h2 className="text-dark-primary text-2xl font-semibold mb-6">
-              {sections.find((s) => s.id === active)?.label} Preferences
+              {sections.find((s) => s.id === active)?.label} Settings
             </h2>
             {renderSection()}
           </motion.div>
