@@ -18,7 +18,7 @@ import {
 import type { LocalSession } from '../lib/localAuth'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
-export type UserRole = 'admin' | 'coach'
+export type UserRole = 'admin' | 'coach' | 'client'
 
 interface DemoUser {
   id: string

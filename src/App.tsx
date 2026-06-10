@@ -5,6 +5,8 @@ import AuthGuard from './components/AuthGuard'
 import AdminGuard from './components/AdminGuard'
 import PageLoader from './components/PageLoader'
 import ErrorBoundary from './components/ErrorBoundary'
+import ClientPortalGuard from './pages/client-portal/ClientPortalGuard'
+import ClientPortalLayout from './pages/client-portal/ClientPortalLayout'
 
 /* ── Public pages (eagerly loaded — small, needed immediately) ── */
 import LandingPage from './pages/LandingPage'
@@ -50,6 +52,13 @@ const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
 /* ── Admin pages ── */
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'))
 
+/* ── Client Portal pages ── */
+const ClientPortalPage = lazy(() => import('./pages/client-portal/ClientPortalPage'))
+const ClientPortalWorkoutPage = lazy(() => import('./pages/client-portal/ClientPortalWorkoutPage'))
+const ClientPortalNutritionPage = lazy(() => import('./pages/client-portal/ClientPortalNutritionPage'))
+const ClientPortalProgressPage = lazy(() => import('./pages/client-portal/ClientPortalProgressPage'))
+const ClientPortalAchievementsPage = lazy(() => import('./pages/client-portal/ClientPortalAchievementsPage'))
+
 /** Wrapper for protected routes: AuthGuard → Layout → Suspense → ErrorBoundary */
 function Protected({ children }: { children: React.ReactNode }) {
   return (
@@ -74,6 +83,21 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
           </Suspense>
         </Layout>
       </AdminGuard>
+    </AuthGuard>
+  )
+}
+
+/** Wrapper for client portal routes: AuthGuard → ClientPortalGuard → ClientPortalLayout → Suspense → ErrorBoundary */
+function ClientPortalRoute({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthGuard>
+      <ClientPortalGuard>
+        <ClientPortalLayout>
+          <Suspense fallback={<PageLoader />}>
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </Suspense>
+        </ClientPortalLayout>
+      </ClientPortalGuard>
     </AuthGuard>
   )
 }
@@ -124,6 +148,13 @@ export default function App() {
 
       {/* Admin routes */}
       <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
+
+      {/* Client Portal routes */}
+      <Route path="/client-portal" element={<ClientPortalRoute><ClientPortalPage /></ClientPortalRoute>} />
+      <Route path="/client-portal/workout" element={<ClientPortalRoute><ClientPortalWorkoutPage /></ClientPortalRoute>} />
+      <Route path="/client-portal/nutrition" element={<ClientPortalRoute><ClientPortalNutritionPage /></ClientPortalRoute>} />
+      <Route path="/client-portal/progress" element={<ClientPortalRoute><ClientPortalProgressPage /></ClientPortalRoute>} />
+      <Route path="/client-portal/achievements" element={<ClientPortalRoute><ClientPortalAchievementsPage /></ClientPortalRoute>} />
     </Routes>
   )
 }

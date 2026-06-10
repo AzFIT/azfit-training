@@ -19,7 +19,7 @@ export interface CoachProfile {
   email: string
   business_name?: string
   specialty?: string
-  role: 'admin' | 'coach'
+  role: 'admin' | 'coach' | 'client'
   created_at: string
 }
 
