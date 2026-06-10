@@ -146,14 +146,14 @@ function MatchResultCard({
 }) {
   const d = result.program.data
   const goalColors: Record<string, string> = {
-    strength: 'from-cyan to-[cyan-dark]',
+    strength: 'from-cyan to-cyan-dark',
     hypertrophy: 'from-[violet] to-[violet]',
     fatloss: 'from-success to-[success]',
     endurance: 'from-warning to-[amber-light]',
-    rehab: 'from-[gray-550] to-[gray-650]',
+    rehab: 'from-gray-550 to-gray-650',
     power: 'from-[warning] to-[amber]',
   }
-  const gradient = goalColors[d.goal?.toLowerCase()] || 'from-cyan to-[admin-accent]'
+  const gradient = goalColors[d.goal?.toLowerCase()] || 'from-cyan to-admin-accent'
   const activeDays = d.days?.length || d.split?.filter(s => s.active).length || 0
   const totalExercises = d.exercises?.length || 0
   const isTop = rank === 0
@@ -315,7 +315,7 @@ export default function ProgramMatcherPage() {
     <div className="w-full max-w-[900px] mx-auto py-6">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan to-[admin-accent] flex items-center justify-center mx-auto mb-4 shadow-[0_4px_20px_rgba(0,174,239,0.3)]">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan to-admin-accent flex items-center justify-center mx-auto mb-4 shadow-[0_4px_20px_rgba(0,174,239,0.3)]">
           <Sparkles size={28} className="text-white" />
         </div>
         <h1 className="text-dark-primary text-2xl font-bold">Smart Program Matcher</h1>
@@ -566,7 +566,7 @@ export default function ProgramMatcherPage() {
             <Button
               onClick={() => setStep(s => s + 1)}
               disabled={!canProceed}
-              className="h-10 px-6 bg-gradient-to-r from-cyan to-[admin-accent] text-white font-semibold"
+              className="h-10 px-6 bg-gradient-to-r from-cyan to-admin-accent text-white font-semibold"
             >
               Next
               <ArrowRight size={14} className="ml-2" />
@@ -575,7 +575,7 @@ export default function ProgramMatcherPage() {
             <Button
               onClick={handleFindMatches}
               disabled={!canProceed || loading || !loaded}
-              className="h-10 px-6 bg-gradient-to-r from-cyan to-[admin-accent] text-white font-semibold"
+              className="h-10 px-6 bg-gradient-to-r from-cyan to-admin-accent text-white font-semibold"
             >
               {loading ? 'Matching...' : 'Find My Program'}
               <Sparkles size={14} className="ml-2" />

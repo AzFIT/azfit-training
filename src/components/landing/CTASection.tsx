@@ -15,7 +15,7 @@ export default function CTASection() {
   }
 
   return (
-    <section className="relative bg-az-black py-24 lg:py-32 overflow-hidden">
+    <section className="relative bg-az-black py-20 md:py-28 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-cyan to-[violet] opacity-15" />
       <div className="noise-overlay noise-overlay-light" />
 

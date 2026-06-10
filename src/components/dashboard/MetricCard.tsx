@@ -144,9 +144,9 @@ export default function MetricCard({ data }: MetricCardProps) {
     'flex items-center gap-4 md:gap-5 lg:gap-6 p-4 md:p-5 lg:p-6 rounded-xl border transition-all duration-200 hover:border-[rgba(0,174,239,0.3)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.15)]'
 
   const labelClass =
-    'text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.05em] text-[light-muted] whitespace-nowrap overflow-hidden text-ellipsis'
+    'text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.05em] text-light-muted whitespace-nowrap overflow-hidden text-ellipsis'
 
-  const valueClass = 'text-[20px] md:text-[22px] lg:text-[24px] font-bold text-[light-hover] leading-[1.2]'
+  const valueClass = 'text-[20px] md:text-[22px] lg:text-[24px] font-bold text-light-hover leading-[1.2]'
 
   switch (data.kind) {
     case 'sessions': {
@@ -225,7 +225,7 @@ export default function MetricCard({ data }: MetricCardProps) {
               <div className={labelClass}>Weekly Revenue</div>
               <button
                 onClick={() => setHidden((h) => !h)}
-                className="text-[light-muted] hover:text-[light-hover] p-1 -mr-1 -mt-1 rounded transition-colors flex-shrink-0"
+                className="text-light-muted hover:text-light-hover p-1 -mr-1 -mt-1 rounded transition-colors flex-shrink-0"
                 title="Hide/Show"
               >
                 {hidden ? <EyeOff size={14} /> : <Eye size={14} />}

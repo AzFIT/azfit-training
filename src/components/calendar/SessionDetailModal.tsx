@@ -58,7 +58,7 @@ export function SessionDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-[white] border-[light-border] text-[light-primary] max-w-md">
+      <DialogContent className="bg-white border-light-border text-light-primary max-w-md">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold flex items-center gap-2">
             {isEditing ? 'Edit Session' : 'Session Details'}
@@ -75,9 +75,9 @@ export function SessionDetailModal({
             <>
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs text-[light-muted] mb-1 block">Session Type</label>
+                  <label className="text-xs text-light-muted mb-1 block">Session Type</label>
                   <Select value={editType} onValueChange={(v) => setEditType(v as SessionType)}>
-                    <SelectTrigger className="bg-[light-surface] border-[light-border]">
+                    <SelectTrigger className="bg-light-surface border-light-border">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -88,7 +88,7 @@ export function SessionDetailModal({
                   </Select>
                 </div>
                 <div>
-                  <label className="text-xs text-[light-muted] mb-1 block">Duration (minutes)</label>
+                  <label className="text-xs text-light-muted mb-1 block">Duration (minutes)</label>
                   <div className="flex gap-2">
                     {[30, 45, 60, 90].map((d) => (
                       <button
@@ -97,7 +97,7 @@ export function SessionDetailModal({
                         className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
                           editDuration === d
                             ? 'bg-cyan text-white'
-                            : 'bg-[light-surface] text-[light-secondary] hover:bg-[light-hover]'
+                            : 'bg-light-surface text-light-secondary hover:bg-light-hover'
                         }`}
                       >
                         {d}m
@@ -107,7 +107,7 @@ export function SessionDetailModal({
                 </div>
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="ghost" onClick={() => setIsEditing(false)} className="text-[light-secondary]">Cancel</Button>
+                <Button variant="ghost" onClick={() => setIsEditing(false)} className="text-light-secondary">Cancel</Button>
                 <Button onClick={handleSaveEdit} className="bg-cyan text-white hover:bg-cyan-dark">Save</Button>
               </div>
             </>
@@ -118,32 +118,32 @@ export function SessionDetailModal({
                   <User size={18} style={{ color: colors.text }} />
                 </div>
                 <div>
-                  <p className="text-[light-primary] font-semibold">{session.clientName}</p>
-                  <p className="text-[light-muted] text-xs">{session.type}</p>
+                  <p className="text-light-primary font-semibold">{session.clientName}</p>
+                  <p className="text-light-muted text-xs">{session.type}</p>
                 </div>
               </div>
-              <div className="bg-[light-surface] rounded-xl p-4 border border-[light-border] space-y-2">
+              <div className="bg-light-surface rounded-xl p-4 border border-light-border space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-[light-muted] text-xs">Date</span>
-                  <span className="text-[light-primary] text-xs font-medium">{format(session.startTime, 'EEEE, d MMMM yyyy')}</span>
+                  <span className="text-light-muted text-xs">Date</span>
+                  <span className="text-light-primary text-xs font-medium">{format(session.startTime, 'EEEE, d MMMM yyyy')}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[light-muted] text-xs">Time</span>
-                  <span className="text-[light-primary] text-xs font-medium font-mono">
+                  <span className="text-light-muted text-xs">Time</span>
+                  <span className="text-light-primary text-xs font-medium font-mono">
                     {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[light-muted] text-xs">Duration</span>
-                  <span className="text-[light-primary] text-xs font-medium">{session.duration} minutes</span>
+                  <span className="text-light-muted text-xs">Duration</span>
+                  <span className="text-light-primary text-xs font-medium">{session.duration} minutes</span>
                 </div>
               </div>
               {showCancelConfirm ? (
                 <div className="bg-danger/5 border border-danger/20 rounded-xl p-4 space-y-3">
                   <p className="text-danger text-sm font-medium">Cancel this session?</p>
-                  <p className="text-[light-secondary] text-xs">This will remove "{session.clientName}" from {format(session.startTime, 'EEEE, d MMMM')} at {format(session.startTime, 'HH:mm')}.</p>
+                  <p className="text-light-secondary text-xs">This will remove "{session.clientName}" from {format(session.startTime, 'EEEE, d MMMM')} at {format(session.startTime, 'HH:mm')}.</p>
                   <div className="flex justify-end gap-2">
-                    <Button variant="ghost" onClick={() => setShowCancelConfirm(false)} className="text-[light-secondary] hover:text-[light-primary] text-xs">Keep Session</Button>
+                    <Button variant="ghost" onClick={() => setShowCancelConfirm(false)} className="text-light-secondary hover:text-light-primary text-xs">Keep Session</Button>
                     <Button onClick={handleConfirmDelete} className="bg-danger hover:bg-danger/90 text-white text-xs">Yes, Cancel Session</Button>
                   </div>
                 </div>
@@ -160,12 +160,12 @@ export function SessionDetailModal({
                   <Button
                     variant="ghost"
                     onClick={() => setIsEditing(true)}
-                    className="text-[light-secondary] hover:text-[light-primary]"
+                    className="text-light-secondary hover:text-light-primary"
                   >
                     <Pencil size={14} className="mr-1" />
                     Edit
                   </Button>
-                  <Button variant="ghost" onClick={onClose} className="text-[light-secondary] hover:text-[light-primary]">Close</Button>
+                  <Button variant="ghost" onClick={onClose} className="text-light-secondary hover:text-light-primary">Close</Button>
                 </div>
               )}
             </>

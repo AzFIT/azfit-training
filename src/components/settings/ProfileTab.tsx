@@ -95,7 +95,7 @@ export function ProfileTab() {
               <Input
                 value={profile.fullName}
                 onChange={(e) => update('fullName', e.target.value)}
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary"
+                className="bg-az-black-elevated border-dark-border text-dark-primary"
               />
             </div>
             <div>
@@ -103,7 +103,7 @@ export function ProfileTab() {
               <Input
                 value={profile.businessName}
                 onChange={(e) => update('businessName', e.target.value)}
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary"
+                className="bg-az-black-elevated border-dark-border text-dark-primary"
               />
             </div>
           </div>
@@ -116,18 +116,18 @@ export function ProfileTab() {
               type="email"
               value={profile.email}
               onChange={(e) => update('email', e.target.value)}
-              className={`bg-[az-black-elevated] border-dark-border text-dark-primary ${emailError ? 'border-danger' : ''}`}
+              className={`bg-az-black-elevated border-dark-border text-dark-primary ${emailError ? 'border-danger' : ''}`}
             />
             {emailError && <p className="text-danger text-xs mt-1">{emailError}</p>}
           </div>
           <div>
             <Label className="text-dark-secondary text-xs mb-1">Phone</Label>
             <div className="flex items-center gap-2">
-              <span className="text-dark-secondary text-sm bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2">+852</span>
+              <span className="text-dark-secondary text-sm bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2">+852</span>
               <Input
                 value={profile.phone}
                 onChange={(e) => update('phone', e.target.value)}
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary flex-1"
+                className="bg-az-black-elevated border-dark-border text-dark-primary flex-1"
               />
             </div>
           </div>
@@ -136,7 +136,7 @@ export function ProfileTab() {
             <Textarea
               value={profile.bio}
               onChange={(e) => update('bio', e.target.value.slice(0, 200))}
-              className="bg-[az-black-elevated] border-dark-border text-dark-primary min-h-[80px]"
+              className="bg-az-black-elevated border-dark-border text-dark-primary min-h-[80px]"
             />
           </div>
           <Button

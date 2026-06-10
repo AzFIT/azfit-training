@@ -27,7 +27,7 @@ export default function ComparisonView({
       className="space-y-4"
     >
       {/* Header Bar */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="bg-az-black-card border border-dark-border rounded-xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4">
         {/* Left info */}
         <div className="text-center lg:text-left">
           <p className="text-dark-muted text-xs mb-1">Before</p>
@@ -73,17 +73,17 @@ export default function ComparisonView({
 
       {/* Photo Panes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-[az-black] border border-dark-border rounded-xl overflow-hidden">
+        <div className="bg-az-black border border-dark-border rounded-xl overflow-hidden">
           <div className="relative">
-            <img src={left.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[az-black]" />
+            <img src={left.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-az-black" />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded-md text-xs text-white font-medium">
               {left.category} · {fmtDate(left.date)}
             </div>
           </div>
         </div>
-        <div className="bg-[az-black] border border-dark-border rounded-xl overflow-hidden">
+        <div className="bg-az-black border border-dark-border rounded-xl overflow-hidden">
           <div className="relative">
-            <img src={right.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-[az-black]" />
+            <img src={right.url} alt="" className="w-full h-[400px] lg:h-[500px] object-contain bg-az-black" />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 rounded-md text-xs text-white font-medium">
               {right.category} · {fmtDate(right.date)}
             </div>

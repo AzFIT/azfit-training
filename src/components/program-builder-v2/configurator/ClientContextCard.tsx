@@ -56,7 +56,7 @@ export function ClientContextCard({ context, clients, onChange, className }: Cli
       >
         <div className="flex items-center gap-2">
           <User size={16} className="text-primary" />
-          <span className="text-sm font-semibold text-[light-primary]">Client Context</span>
+          <span className="text-sm font-semibold text-light-primary">Client Context</span>
           {selectedClient && (
             <span className="text-xs text-muted-foreground">— {selectedClient.name}</span>
           )}

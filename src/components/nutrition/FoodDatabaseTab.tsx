@@ -36,7 +36,7 @@ export default function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
           placeholder="Search 120+ foods..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full h-10 bg-[az-black-card] border border-dark-border rounded-xl pl-10 pr-4 text-dark-primary text-sm placeholder:text-dark-subtle focus:outline-none focus:border-cyan"
+          className="w-full h-10 bg-az-black-card border border-dark-border rounded-xl pl-10 pr-4 text-dark-primary text-sm placeholder:text-dark-subtle focus:outline-none focus:border-cyan"
         />
       </div>
 
@@ -51,7 +51,7 @@ export default function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 active
                   ? 'bg-cyan-glow text-cyan border border-[rgba(0,174,239,0.3)]'
-                  : 'bg-[az-black-elevated] text-dark-secondary border border-dark-border hover:text-dark-primary'
+                  : 'bg-az-black-elevated text-dark-secondary border border-dark-border hover:text-dark-primary'
               }`}
             >
               {cat}
@@ -72,7 +72,7 @@ export default function FoodDatabaseTab({ foodDb }: { foodDb: FoodItem[] }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ delay: idx * 0.02 }}
-              className="bg-[az-black-card] border border-dark-border rounded-xl p-4 hover:border-dark-subtle transition-colors"
+              className="bg-az-black-card border border-dark-border rounded-xl p-4 hover:border-dark-subtle transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-dark-primary text-sm font-semibold truncate">{food.name}</h4>

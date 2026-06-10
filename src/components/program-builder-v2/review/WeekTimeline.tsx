@@ -24,7 +24,7 @@ export function WeekTimeline({ phaseName, durationWeeks, startDate, className }:
 
   return (
     <div className={cn('rounded-xl border bg-card p-5 space-y-3', className)}>
-      <h3 className="text-sm font-semibold text-[light-primary]">Program Timeline</h3>
+      <h3 className="text-sm font-semibold text-light-primary">Program Timeline</h3>
 
       <div className="space-y-2">
         {weeks.map((week) => (
@@ -36,7 +36,7 @@ export function WeekTimeline({ phaseName, durationWeeks, startDate, className }:
               <span className="text-xs font-bold text-primary">{week.label}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-[light-primary] truncate">
+              <div className="text-sm font-medium text-light-primary truncate">
                 {phaseName}
               </div>
               <div className="text-xs text-muted-foreground">{week.dateRange}</div>

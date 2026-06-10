@@ -96,7 +96,7 @@ export function ExerciseSwapModal({
           {/* Current exercise */}
           <div className="p-3 rounded-lg bg-muted border">
             <div className="text-[10px] text-muted-foreground uppercase tracking-wide mb-1">Current</div>
-            <div className="text-sm font-semibold text-[light-primary]">{currentExercise.exerciseName}</div>
+            <div className="text-sm font-semibold text-light-primary">{currentExercise.exerciseName}</div>
             <div className="flex items-center gap-2 mt-1">
               <MotionCategoryBadge category={currentExercise.motionCategory || 'OTHER'} />
               <span className="text-xs text-muted-foreground">Motion category locked</span>
@@ -123,7 +123,7 @@ export function ExerciseSwapModal({
                   className="flex items-center justify-between p-3 rounded-lg border bg-card hover:border-primary/30 transition-colors"
                 >
                   <div className="min-w-0">
-                    <div className="text-sm font-medium text-[light-primary]">{alt.name}</div>
+                    <div className="text-sm font-medium text-light-primary">{alt.name}</div>
                     <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                       <MotionCategoryBadge category={alt.motionCategory || 'OTHER'} />
                       <span>{alt.muscleGroup}</span>

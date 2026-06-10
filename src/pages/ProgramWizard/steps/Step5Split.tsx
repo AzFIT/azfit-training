@@ -97,11 +97,11 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
               'relative rounded-xl p-3 text-center transition-all duration-200 border',
               selectedDay === i
                 ? day.isRest
-                  ? 'border-dark-border bg-[az-black-elevated]'
+                  ? 'border-dark-border bg-az-black-elevated'
                   : 'border-cyan bg-cyan-glow'
                 : day.isRest
-                  ? 'border-dashed border-dark-border bg-[az-black]'
-                  : 'border-dark-border bg-[az-black-card] hover:border-dark-subtle'
+                  ? 'border-dashed border-dark-border bg-az-black'
+                  : 'border-dark-border bg-az-black-card hover:border-dark-subtle'
             )}
           >
             <p className={cn('text-xs font-semibold mb-1', day.isRest ? 'text-dark-muted' : 'text-dark-primary')}>
@@ -126,7 +126,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="bg-[az-black-card] border border-dark-border rounded-xl p-6"
+          className="bg-az-black-card border border-dark-border rounded-xl p-6"
         >
           {/* Day Header */}
           <div className="flex items-center justify-between mb-6">
@@ -145,7 +145,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
                 <select
                   value={currentDay.focus}
                   onChange={(e) => updateFocus(e.target.value)}
-                  className="bg-[az-black-elevated] border border-dark-border text-dark-secondary text-xs px-3 py-2 rounded-lg outline-none focus:border-cyan"
+                  className="bg-az-black-elevated border border-dark-border text-dark-secondary text-xs px-3 py-2 rounded-lg outline-none focus:border-cyan"
                 >
                   {DAY_FOCUS_OPTIONS.map(f => <option key={f} value={f}>{f}</option>)}
                 </select>
@@ -179,7 +179,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.03 }}
-                    className="flex items-center gap-3 bg-[az-black] border border-dark-divider rounded-lg p-3"
+                    className="flex items-center gap-3 bg-az-black border border-dark-divider rounded-lg p-3"
                   >
                     <div className="text-dark-muted text-xs font-mono w-6 text-center">{idx + 1}</div>
                     <GripVertical size={14} className="text-dark-border flex-shrink-0" />
@@ -187,7 +187,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
                       placeholder="Exercise name"
                       value={ex.name}
                       onChange={(e) => updateExercise(ex.id, { name: e.target.value })}
-                      className="flex-1 min-w-0 bg-transparent text-dark-primary text-sm placeholder-[dark-muted] outline-none"
+                      className="flex-1 min-w-0 bg-transparent text-dark-primary text-sm placeholder:text-dark-muted outline-none"
                     />
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <div className="flex items-center gap-1">
@@ -198,7 +198,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
                           max={10}
                           value={ex.sets}
                           onChange={(e) => updateExercise(ex.id, { sets: parseInt(e.target.value) || 1 })}
-                          className="w-10 bg-[az-black-elevated] border border-dark-border text-dark-primary text-xs px-1 py-1 rounded text-center outline-none focus:border-cyan"
+                          className="w-10 bg-az-black-elevated border border-dark-border text-dark-primary text-xs px-1 py-1 rounded text-center outline-none focus:border-cyan"
                         />
                       </div>
                       <div className="flex items-center gap-1">
@@ -206,7 +206,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
                         <input
                           value={ex.reps}
                           onChange={(e) => updateExercise(ex.id, { reps: e.target.value })}
-                          className="w-14 bg-[az-black-elevated] border border-dark-border text-dark-primary text-xs px-1 py-1 rounded text-center outline-none focus:border-cyan"
+                          className="w-14 bg-az-black-elevated border border-dark-border text-dark-primary text-xs px-1 py-1 rounded text-center outline-none focus:border-cyan"
                         />
                       </div>
                       <div className="flex items-center gap-1">
@@ -214,7 +214,7 @@ export default function Step5Split({ weeklySplit, onChange, availableDays: _avai
                         <select
                           value={ex.rest}
                           onChange={(e) => updateExercise(ex.id, { rest: e.target.value })}
-                          className="w-16 bg-[az-black-elevated] border border-dark-border text-dark-primary text-xs px-1 py-1 rounded outline-none"
+                          className="w-16 bg-az-black-elevated border border-dark-border text-dark-primary text-xs px-1 py-1 rounded outline-none"
                         >
                           {['30s', '60s', '90s', '120s', '180s'].map(r => <option key={r} value={r}>{r}</option>)}
                         </select>

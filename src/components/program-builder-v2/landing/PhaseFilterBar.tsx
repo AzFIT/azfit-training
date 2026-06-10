@@ -51,7 +51,7 @@ export function PhaseFilterBar({ filters, onChange, resultCount, className }: Ph
           {filters.search && (
             <button
               onClick={() => update({ search: '' })}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-[light-primary]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-light-primary"
             >
               <X size={14} />
             </button>
@@ -104,7 +104,7 @@ export function PhaseFilterBar({ filters, onChange, resultCount, className }: Ph
         {activeCount > 0 && (
           <button
             onClick={clearAll}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-[light-primary] transition-colors"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-light-primary transition-colors"
           >
             <X size={12} />
             Clear ({activeCount})

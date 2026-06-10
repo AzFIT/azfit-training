@@ -58,21 +58,21 @@ export function NewSessionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-[white] border-[light-border] text-[light-primary] max-w-md">
+      <DialogContent className="bg-white border-light-border text-light-primary max-w-md">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Book New Session</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
           <div>
-            <label className="text-xs text-[light-secondary] mb-1 block">Client</label>
+            <label className="text-xs text-light-secondary mb-1 block">Client</label>
             <Select value={clientId} onValueChange={setClientId}>
-              <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
+              <SelectTrigger className="bg-light-surface border-light-border text-light-primary">
                 <SelectValue placeholder="Select client" />
               </SelectTrigger>
-              <SelectContent position="popper" className="bg-[light-surface] border-[light-border] z-[100] max-h-60">
+              <SelectContent position="popper" className="bg-light-surface border-light-border z-[100] max-h-60">
                 {clients.map((c) => (
-                  <SelectItem key={c.id} value={c.id} className="text-[light-primary]">
+                  <SelectItem key={c.id} value={c.id} className="text-light-primary">
                     {c.name}
                   </SelectItem>
                 ))}
@@ -82,20 +82,20 @@ export function NewSessionModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[light-secondary] mb-1 block">Date</label>
+              <label className="text-xs text-light-secondary mb-1 block">Date</label>
               <input
                 type="date"
                 value={dateStr}
                 onChange={(e) => setDateStr(e.target.value)}
-                className="w-full h-10 bg-[light-surface] border border-[light-border] rounded-lg px-3 text-[light-primary] text-sm"
+                className="w-full h-10 bg-light-surface border border-light-border rounded-lg px-3 text-light-primary text-sm"
               />
             </div>
             <div>
-              <label className="text-xs text-[light-secondary] mb-1 block">Time</label>
+              <label className="text-xs text-light-secondary mb-1 block">Time</label>
               <select
                 value={timeStr}
                 onChange={(e) => setTimeStr(e.target.value)}
-                className="w-full h-10 bg-[light-surface] border border-[light-border] rounded-lg px-3 text-[light-primary] text-sm"
+                className="w-full h-10 bg-light-surface border border-light-border rounded-lg px-3 text-light-primary text-sm"
               >
                 {HK_TIME_SLOTS.map((h) =>
                   [0, 30].map((m) => (
@@ -110,14 +110,14 @@ export function NewSessionModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[light-secondary] mb-1 block">Duration</label>
+              <label className="text-xs text-light-secondary mb-1 block">Duration</label>
               <Select value={duration} onValueChange={setDuration}>
-                <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
+                <SelectTrigger className="bg-light-surface border-light-border text-light-primary">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[light-surface] border-[light-border]">
+                <SelectContent className="bg-light-surface border-light-border">
                   {['30', '45', '60', '90', '120'].map((d) => (
-                    <SelectItem key={d} value={d} className="text-[light-primary]">
+                    <SelectItem key={d} value={d} className="text-light-primary">
                       {d} min
                     </SelectItem>
                   ))}
@@ -125,14 +125,14 @@ export function NewSessionModal({
               </Select>
             </div>
             <div>
-              <label className="text-xs text-[light-secondary] mb-1 block">Session Type</label>
+              <label className="text-xs text-light-secondary mb-1 block">Session Type</label>
               <Select value={type} onValueChange={(v) => setType(v as SessionType)}>
-                <SelectTrigger className="bg-[light-surface] border-[light-border] text-[light-primary]">
+                <SelectTrigger className="bg-light-surface border-light-border text-light-primary">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[light-surface] border-[light-border]">
+                <SelectContent className="bg-light-surface border-light-border">
                   {SESSION_TYPE_LABELS.map((t) => (
-                    <SelectItem key={t} value={t} className="text-[light-primary]">
+                    <SelectItem key={t} value={t} className="text-light-primary">
                       {t}
                     </SelectItem>
                   ))}
@@ -142,13 +142,13 @@ export function NewSessionModal({
           </div>
 
           <div>
-            <label className="text-xs text-[light-secondary] mb-1 block">Notes (optional)</label>
+            <label className="text-xs text-light-secondary mb-1 block">Notes (optional)</label>
             <textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add session notes..."
-              className="w-full bg-[light-surface] border border-[light-border] rounded-lg px-3 py-2 text-[light-primary] text-sm placeholder:text-[gray-300] resize-none focus:outline-none focus:border-cyan"
+              className="w-full bg-light-surface border border-light-border rounded-lg px-3 py-2 text-light-primary text-sm placeholder:text-gray-300 resize-none focus:outline-none focus:border-cyan"
             />
           </div>
         </div>
@@ -157,7 +157,7 @@ export function NewSessionModal({
           <Button
             variant="ghost"
             onClick={onClose}
-            className="text-[light-secondary] hover:text-[light-primary] hover:bg-[light-hover]"
+            className="text-light-secondary hover:text-light-primary hover:bg-light-hover"
           >
             Cancel
           </Button>

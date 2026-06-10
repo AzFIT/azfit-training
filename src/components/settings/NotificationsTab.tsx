@@ -137,7 +137,7 @@ export function NotificationsTab() {
                 type="time"
                 value={data.quietHoursStart}
                 onChange={(e) => updateQuiet('quietHoursStart', e.target.value)}
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary"
+                className="bg-az-black-elevated border-dark-border text-dark-primary"
               />
             </div>
             <span className="text-dark-muted text-sm pt-5">to</span>
@@ -147,7 +147,7 @@ export function NotificationsTab() {
                 type="time"
                 value={data.quietHoursEnd}
                 onChange={(e) => updateQuiet('quietHoursEnd', e.target.value)}
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary"
+                className="bg-az-black-elevated border-dark-border text-dark-primary"
               />
             </div>
           </div>

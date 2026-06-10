@@ -121,7 +121,7 @@ export default function InvitationPage() {
         <div className="text-center mb-4">
           <img src="./AzFIT_Logo_BlackBackground.png" alt="AzFIT" className="h-16 w-auto mx-auto mb-2" />
           <p className="text-cyan font-bold text-lg tracking-wider">AzFIT</p>
-          <span className="inline-block mt-2 px-3 py-1 bg-[admin-accent] text-white text-caption font-medium rounded-full">
+          <span className="inline-block mt-2 px-3 py-1 bg-admin-accent text-white text-caption font-medium rounded-full">
             Admin Invitation
           </span>
         </div>
@@ -133,10 +133,10 @@ export default function InvitationPage() {
               <div className="flex flex-col items-center">
                 <div
                   className={`w-3 h-3 rounded-full transition-colors ${
-                    step > i + 1 ? 'bg-success' : step === i + 1 ? 'bg-[admin-accent]' : 'bg-gray-300'
+                    step > i + 1 ? 'bg-success' : step === i + 1 ? 'bg-admin-accent' : 'bg-gray-300'
                   }`}
                 />
-                <span className={`text-[10px] mt-1 font-medium ${step === i + 1 ? 'text-[admin-accent]' : 'text-gray-400'}`}>
+                <span className={`text-[10px] mt-1 font-medium ${step === i + 1 ? 'text-admin-accent' : 'text-gray-400'}`}>
                   {label}
                 </span>
               </div>
@@ -166,7 +166,7 @@ export default function InvitationPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-caption text-gray-500">Role</span>
-                  <span className="inline-block px-2 py-0.5 bg-[rgba(168,85,247,0.1)] text-[admin-accent] text-caption font-semibold rounded-full">
+                  <span className="inline-block px-2 py-0.5 bg-[rgba(168,85,247,0.1)] text-admin-accent text-caption font-semibold rounded-full">
                     Administrator
                   </span>
                 </div>
@@ -185,12 +185,12 @@ export default function InvitationPage() {
                   type="checkbox"
                   checked={termsAccepted}
                   onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className="w-5 h-5 mt-0.5 rounded border-gray-300 text-[admin-accent] focus:ring-[admin-accent]"
+                  className="w-5 h-5 mt-0.5 rounded border-gray-300 text-admin-accent focus:ring-admin-accent"
                 />
                 <span className="text-body-sm text-gray-600">
                   I agree to the{' '}
-                  <span className="text-[admin-accent] cursor-pointer">Terms of Service</span> and{' '}
-                  <span className="text-[admin-accent] cursor-pointer">Privacy Policy</span>
+                  <span className="text-admin-accent cursor-pointer">Terms of Service</span> and{' '}
+                  <span className="text-admin-accent cursor-pointer">Privacy Policy</span>
                 </span>
               </label>
 
@@ -229,7 +229,7 @@ export default function InvitationPage() {
                     <input
                       type="text"
                       defaultValue="Admin User"
-                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-[admin-accent] outline-none"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-admin-accent outline-none"
                     />
                   </div>
                 </div>
@@ -243,7 +243,7 @@ export default function InvitationPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Create a password"
-                      className="w-full pl-10 pr-10 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-[admin-accent] outline-none"
+                      className="w-full pl-10 pr-10 py-3 bg-gray-50 border-[1.5px] border-gray-200 rounded-xl text-sm focus:border-admin-accent outline-none"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -270,7 +270,7 @@ export default function InvitationPage() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm password"
                       className={`w-full pl-10 pr-10 py-3 bg-gray-50 border-[1.5px] rounded-xl text-sm outline-none ${
-                        confirmPassword && password !== confirmPassword ? 'border-danger' : 'border-gray-200 focus:border-[admin-accent]'
+                        confirmPassword && password !== confirmPassword ? 'border-danger' : 'border-gray-200 focus:border-admin-accent'
                       }`}
                     />
                     <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -294,7 +294,7 @@ export default function InvitationPage() {
                   <button
                     type="button"
                     onClick={() => setEnableMfa(!enableMfa)}
-                    className={`w-12 h-7 rounded-full transition-colors relative ${enableMfa ? 'bg-[admin-accent]' : 'bg-gray-300'}`}
+                    className={`w-12 h-7 rounded-full transition-colors relative ${enableMfa ? 'bg-admin-accent' : 'bg-gray-300'}`}
                   >
                     <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform ${enableMfa ? 'translate-x-6' : 'translate-x-1'}`} />
                   </button>
@@ -338,7 +338,7 @@ export default function InvitationPage() {
                 animate={{ scale: [0, 1.1, 1] }}
                 transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] as [number, number, number, number] }}
               >
-                <CheckCircle size={56} className="text-[admin-accent] mx-auto mb-4" />
+                <CheckCircle size={56} className="text-admin-accent mx-auto mb-4" />
               </motion.div>
               <h2 className="text-heading-lg text-gray-900 font-semibold mb-2">Welcome to AzFIT!</h2>
               <p className="text-body-sm text-gray-500 mb-4">
@@ -350,7 +350,7 @@ export default function InvitationPage() {
                   initial={{ width: '100%' }}
                   animate={{ width: '0%' }}
                   transition={{ duration: 3, ease: 'linear' }}
-                  className="h-full bg-[admin-accent]"
+                  className="h-full bg-admin-accent"
                 />
               </div>
               <Link

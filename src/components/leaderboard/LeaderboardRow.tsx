@@ -24,7 +24,7 @@ export default function LeaderboardRow({ entry, isCurrentClient, onLike }: Leade
       className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${
         isCurrentClient
           ? 'bg-cyan/10 border-cyan/40'
-          : 'bg-[az-black-card] border-dark-border hover:border-dark-divider'
+          : 'bg-az-black-card border-dark-border hover:border-dark-divider'
       }`}
     >
       {/* Rank */}

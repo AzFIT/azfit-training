@@ -66,7 +66,7 @@ export function TrackingLinksCard({ onToggle, className }: TrackingLinksCardProp
   return (
     <div className={cn('rounded-xl border bg-card p-5 space-y-4', className)}>
       <div>
-        <h3 className="text-sm font-semibold text-[light-primary]">Linked Tracking</h3>
+        <h3 className="text-sm font-semibold text-light-primary">Linked Tracking</h3>
         <p className="text-xs text-muted-foreground">
           What the client will see and be asked to complete
         </p>
@@ -101,7 +101,7 @@ export function TrackingLinksCard({ onToggle, className }: TrackingLinksCardProp
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <Icon size={14} className="text-primary" />
-                  <span className="text-sm font-medium text-[light-primary]">{opt.label}</span>
+                  <span className="text-sm font-medium text-light-primary">{opt.label}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">{opt.description}</p>
               </div>

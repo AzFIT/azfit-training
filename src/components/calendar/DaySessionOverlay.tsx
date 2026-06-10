@@ -39,9 +39,9 @@ export function DaySessionOverlay({
           </div>
           <p className="text-[10px] opacity-80" style={{ color: colors.text }}>{session.type}</p>
         </div>
-        <span className="text-[10px] text-[light-muted] font-mono">{format(session.startTime, 'HH:mm')}</span>
+        <span className="text-[10px] text-light-muted font-mono">{format(session.startTime, 'HH:mm')}</span>
       </div>
-      <p className="text-[10px] text-[light-muted] mt-1">Duration: {session.duration} min</p>
+      <p className="text-[10px] text-light-muted mt-1">Duration: {session.duration} min</p>
       <div className="absolute bottom-1.5 left-2.5 right-2.5 h-[3px] rounded-full opacity-30" style={{ background: colors.text }} />
     </motion.div>
   )

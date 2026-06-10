@@ -1,0 +1,1 @@
+import{u as e}from"./useQuery-Dj5chM0l.js";import{b as s,c as u}from"./workoutApi-7Rbb6X1E.js";function t(r){return e({queryKey:["programs",r],queryFn:()=>s(r)})}function n(r){return e({queryKey:["program-details",r],queryFn:()=>u(r),enabled:!!r})}export{n as a,t as u};

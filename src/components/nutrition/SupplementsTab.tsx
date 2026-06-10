@@ -39,7 +39,7 @@ export default function SupplementsTab() {
   return (
     <div className="space-y-6">
       {/* Progress */}
-      <div className="flex items-center justify-between bg-[az-black-card] border border-dark-border rounded-xl p-4">
+      <div className="flex items-center justify-between bg-az-black-card border border-dark-border rounded-xl p-4">
         <div>
           <p className="text-dark-primary font-semibold text-sm">Today&apos;s Supplements</p>
           <p className="text-dark-muted text-xs mt-0.5">
@@ -47,7 +47,7 @@ export default function SupplementsTab() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-32 h-2 bg-[az-black-elevated] rounded-full overflow-hidden">
+          <div className="w-32 h-2 bg-az-black-elevated rounded-full overflow-hidden">
             <motion.div
               className="h-full rounded-full"
               style={{
@@ -79,7 +79,7 @@ export default function SupplementsTab() {
                   key={supp.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex items-center justify-between bg-[az-black-card] border rounded-xl p-4 transition-colors ${
+                  className={`flex items-center justify-between bg-az-black-card border rounded-xl p-4 transition-colors ${
                     supp.taken ? 'border-[rgba(34,197,94,0.3)]' : 'border-dark-border'
                   }`}
                 >

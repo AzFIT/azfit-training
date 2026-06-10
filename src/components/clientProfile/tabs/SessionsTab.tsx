@@ -47,7 +47,7 @@ export default function SessionsTab() {
           >
             View All <ChevronRight size={14} />
           </button>
-          <div className="flex gap-1 bg-[az-black-elevated] rounded-lg p-1">
+          <div className="flex gap-1 bg-az-black-elevated rounded-lg p-1">
             {([
               { key: 'list' as const, label: 'List View' },
               { key: 'calendar' as const, label: 'Calendar View' },
@@ -102,7 +102,7 @@ export default function SessionsTab() {
                   <motion.div
                     key={s.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="bg-[az-black-card] border border-dark-border rounded-xl p-4 flex items-center gap-4 hover:bg-[az-black-elevated] transition-colors cursor-pointer"
+                    className="bg-az-black-card border border-dark-border rounded-xl p-4 flex items-center gap-4 hover:bg-az-black-elevated transition-colors cursor-pointer"
                     onClick={() => navigate(`/clients/${clientId}/workouts`)}
                   >
                     <div className="flex-shrink-0 w-14 text-center">

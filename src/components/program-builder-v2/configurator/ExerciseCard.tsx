@@ -57,7 +57,7 @@ export function ExerciseCard({
       <div className="flex-1 min-w-0 space-y-1.5">
         {/* Name + badges */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-semibold text-[light-primary]">
+          <span className="text-sm font-semibold text-light-primary">
             {exercise.exerciseName}
           </span>
           {exercise.motionCategory && (
@@ -77,9 +77,9 @@ export function ExerciseCard({
 
         {/* Parameters row */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          <span className="font-medium text-[light-primary]">{exercise.sets} sets</span>
+          <span className="font-medium text-light-primary">{exercise.sets} sets</span>
           <span>×</span>
-          <span className="font-medium text-[light-primary]">{exercise.reps} reps</span>
+          <span className="font-medium text-light-primary">{exercise.reps} reps</span>
           <span className="text-border">|</span>
           <span>Tempo {tempoShort}</span>
           {tutDisplay && (

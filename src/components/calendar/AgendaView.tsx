@@ -44,15 +44,15 @@ export function AgendaView({
       <div className="max-w-[900px] mx-auto space-y-4">
         {grouped.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-[light-muted] text-sm">No sessions found</p>
+            <p className="text-light-muted text-sm">No sessions found</p>
           </div>
         )}
 
         {grouped.map(([dateStr, daySessions]) => (
           <div key={dateStr}>
-            <h3 className="text-[light-primary] font-semibold text-sm mb-2 px-1">
+            <h3 className="text-light-primary font-semibold text-sm mb-2 px-1">
               {getGroupLabel(dateStr)}
-              <span className="text-[light-muted] font-normal ml-2">
+              <span className="text-light-muted font-normal ml-2">
                 {format(new Date(dateStr), 'dd/MM/yyyy')}
               </span>
             </h3>
@@ -68,15 +68,15 @@ export function AgendaView({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.03 }}
-                    className="flex items-center gap-4 bg-[white] border border-[light-border] rounded-xl px-4 py-3 cursor-pointer hover:bg-[light-border] transition-colors"
+                    className="flex items-center gap-4 bg-white border border-light-border rounded-xl px-4 py-3 cursor-pointer hover:bg-light-border transition-colors"
                     onClick={() => onEventClick(session)}
                   >
                     {/* Time */}
                     <div className="w-20 flex-shrink-0">
-                      <p className="text-[light-primary] text-sm font-mono font-medium">
+                      <p className="text-light-primary text-sm font-mono font-medium">
                         {format(session.startTime, 'HH:mm')}
                       </p>
-                      <p className="text-[light-muted] text-xs font-mono">
+                      <p className="text-light-muted text-xs font-mono">
                         {format(endTime, 'HH:mm')}
                       </p>
                     </div>
@@ -89,10 +89,10 @@ export function AgendaView({
 
                     {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-[light-primary] text-sm font-semibold truncate">
+                      <p className="text-light-primary text-sm font-semibold truncate">
                         {session.clientName}
                       </p>
-                      <p className="text-[light-muted] text-xs">{session.duration} min</p>
+                      <p className="text-light-muted text-xs">{session.duration} min</p>
                     </div>
 
                     {/* Type badge */}

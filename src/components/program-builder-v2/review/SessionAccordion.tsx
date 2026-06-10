@@ -25,7 +25,7 @@ export function SessionAccordion({ sessions, className }: SessionAccordionProps)
   return (
     <div className={cn('rounded-xl border bg-card overflow-hidden', className)}>
       <div className="px-4 py-3 border-b bg-muted/50">
-        <h3 className="text-sm font-semibold text-[light-primary]">Session Breakdown</h3>
+        <h3 className="text-sm font-semibold text-light-primary">Session Breakdown</h3>
         <p className="text-xs text-muted-foreground">
           {sessions.length} sessions · Expand to review exercises
         </p>
@@ -49,7 +49,7 @@ export function SessionAccordion({ sessions, className }: SessionAccordionProps)
                     <span className="text-xs font-bold text-primary">S{session.sessionNumber}</span>
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-[light-primary]">
+                    <div className="text-sm font-medium text-light-primary">
                       {session.sessionName}
                     </div>
                     <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -93,7 +93,7 @@ export function SessionAccordion({ sessions, className }: SessionAccordionProps)
                       </span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-medium text-[light-primary]">
+                          <span className="text-sm font-medium text-light-primary">
                             {ex.exerciseName}
                           </span>
                           {ex.motionCategory && <MotionCategoryBadge category={ex.motionCategory} />}
@@ -109,9 +109,9 @@ export function SessionAccordion({ sessions, className }: SessionAccordionProps)
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground">
-                          <span className="font-medium text-[light-primary]">{ex.sets} sets</span>
+                          <span className="font-medium text-light-primary">{ex.sets} sets</span>
                           <span>×</span>
-                          <span className="font-medium text-[light-primary]">{ex.reps} reps</span>
+                          <span className="font-medium text-light-primary">{ex.reps} reps</span>
                           <span className="text-border">|</span>
                           <span>Tempo {ex.tempo}</span>
                           {ex.tut && (

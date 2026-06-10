@@ -68,7 +68,7 @@ export default function ExerciseDetailPage() {
 
   if (!history) {
     return (
-      <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-az-black flex items-center justify-center">
         <div className="text-center">
           <Dumbbell size={40} className="mx-auto text-dark-muted mb-3" />
           <p className="text-dark-secondary">No history for this exercise yet.</p>
@@ -84,7 +84,7 @@ export default function ExerciseDetailPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[az-black]">
+    <div className="min-h-[100dvh] bg-az-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -141,10 +141,10 @@ export default function ExerciseDetailPage() {
         )}
 
         {/* Chart */}
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-dark-primary">Progress Over Time</h2>
-            <div className="flex gap-1 bg-[az-black-elevated] rounded-lg p-1">
+            <div className="flex gap-1 bg-az-black-elevated rounded-lg p-1">
               {[
                 { key: 'load' as const, label: 'Load' },
                 { key: 'volume' as const, label: 'Volume' },
@@ -217,7 +217,7 @@ export default function ExerciseDetailPage() {
         </div>
 
         {/* Session history table */}
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
           <h2 className="text-sm font-semibold text-dark-primary mb-4">Set History</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -232,7 +232,7 @@ export default function ExerciseDetailPage() {
               </thead>
               <tbody>
                 {[...history.records].reverse().map((r, i) => (
-                  <tr key={i} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
+                  <tr key={i} className="border-b border-dark-divider hover:bg-az-black-elevated transition-colors">
                     <td className="py-2.5 px-3 text-xs text-dark-secondary font-mono whitespace-nowrap">
                       <Calendar size={12} className="inline mr-1" />
                       {r.date}
@@ -279,7 +279,7 @@ function PRCard({
   color: string
 }) {
   return (
-    <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+    <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon size={16} style={{ color }} />
         <span className="text-xs text-dark-muted">{label}</span>

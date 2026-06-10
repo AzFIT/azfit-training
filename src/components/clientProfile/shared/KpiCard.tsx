@@ -8,7 +8,7 @@ export function KpiCard({ label, value, unit, change, icon: Icon, inverse }: {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-cyan-glow to-[rgba(139,92,246,0.04)] bg-[az-black-card] border border-dark-border rounded-xl p-5 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,174,239,0.1)] transition-all duration-200"
+      className="bg-gradient-to-br from-cyan-glow to-[rgba(139,92,246,0.04)] bg-az-black-card border border-dark-border rounded-xl p-5 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,174,239,0.1)] transition-all duration-200"
     >
       <div className="flex items-center gap-3 mb-3">
         <div className="w-8 h-8 rounded-lg bg-cyan-glow flex items-center justify-center">

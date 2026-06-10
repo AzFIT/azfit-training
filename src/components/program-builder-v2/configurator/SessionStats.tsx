@@ -35,7 +35,7 @@ export function SessionStats({ session, className }: SessionStatsProps) {
         >
           <stat.icon size={14} className="text-primary" />
           <div>
-            <div className="text-xs font-semibold text-[light-primary]">{stat.value}</div>
+            <div className="text-xs font-semibold text-light-primary">{stat.value}</div>
             <div className="text-[10px] text-muted-foreground">{stat.label}</div>
           </div>
         </div>

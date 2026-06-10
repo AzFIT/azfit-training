@@ -11,7 +11,7 @@ export function EmptySessionState({ onAdd }: EmptySessionStateProps) {
       <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
         <Dumbbell size={20} className="text-muted-foreground" />
       </div>
-      <h3 className="text-sm font-medium text-[light-primary] mb-1">
+      <h3 className="text-sm font-medium text-light-primary mb-1">
         No exercises in this session
       </h3>
       <p className="text-xs text-muted-foreground mb-3 max-w-xs text-center">

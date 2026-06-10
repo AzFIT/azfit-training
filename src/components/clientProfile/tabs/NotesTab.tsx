@@ -49,15 +49,15 @@ export default function NotesTab() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 h-[calc(100vh-280px)] min-h-[500px]">
       {/* Left — Note List */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl flex flex-col overflow-hidden">
+      <div className="bg-az-black-card border border-dark-border rounded-xl flex flex-col overflow-hidden">
         <div className="p-4 border-b border-dark-border space-y-3">
           <div className="flex items-center gap-2">
-            <div className="flex-1 flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
+            <div className="flex-1 flex items-center bg-az-black-elevated rounded-lg border border-dark-border px-3">
               <Search size={14} className="text-dark-muted flex-shrink-0" />
               <input
                 type="text" placeholder="Search notes..." value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 bg-transparent text-sm text-dark-primary placeholder-[dark-muted] py-2 px-2 outline-none"
+                className="flex-1 bg-transparent text-sm text-dark-primary placeholder:text-dark-muted py-2 px-2 outline-none"
               />
             </div>
             <button onClick={() => setIsAdding(true)} className="w-8 h-8 rounded-lg bg-cyan hover:bg-cyan-hover flex items-center justify-center text-white transition-colors flex-shrink-0">
@@ -77,7 +77,7 @@ export default function NotesTab() {
           {filtered.map((note) => (
             <button
               key={note.id} onClick={() => { setSelected(note); setIsAdding(false); }}
-              className={`w-full text-left p-3 rounded-lg transition-all ${selected?.id === note.id && !isAdding ? 'bg-cyan-glow border border-[rgba(0,174,239,0.3)]' : 'bg-[az-black-elevated] border border-dark-divider hover:bg-dark-hover'}`}
+              className={`w-full text-left p-3 rounded-lg transition-all ${selected?.id === note.id && !isAdding ? 'bg-cyan-glow border border-[rgba(0,174,239,0.3)]' : 'bg-az-black-elevated border border-dark-divider hover:bg-dark-hover'}`}
             >
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-medium text-cyan">{note.category}</span>
@@ -94,7 +94,7 @@ export default function NotesTab() {
       </div>
 
       {/* Right — Note Viewer/Editor */}
-      <div className="lg:col-span-2 bg-[az-black-card] border border-dark-border rounded-xl p-5 overflow-y-auto">
+      <div className="lg:col-span-2 bg-az-black-card border border-dark-border rounded-xl p-5 overflow-y-auto">
         {isAdding ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -103,19 +103,19 @@ export default function NotesTab() {
             </div>
             <div>
               <label className="text-xs text-dark-secondary mb-1 block">Category</label>
-              <select value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan">
+              <select value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan">
                 {['General', 'Form Check', 'Nutrition', 'Goals', 'Progress'].map((c) => (<option key={c} value={c}>{c}</option>))}
               </select>
             </div>
             <div>
               <label className="text-xs text-dark-secondary mb-1 block">Title</label>
               <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Note title..."
-                className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary placeholder-[dark-muted] outline-none focus:border-cyan" />
+                className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary placeholder:text-dark-muted outline-none focus:border-cyan" />
             </div>
             <div>
               <label className="text-xs text-dark-secondary mb-1 block">Content</label>
               <textarea value={newContent} onChange={(e) => setNewContent(e.target.value)} placeholder="Write your note here..." rows={12}
-                className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary placeholder-[dark-muted] outline-none focus:border-cyan resize-none" />
+                className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary placeholder:text-dark-muted outline-none focus:border-cyan resize-none" />
             </div>
             <div className="flex justify-end gap-2">
               <button onClick={() => setIsAdding(false)} className="px-4 py-2 rounded-lg text-sm text-dark-secondary hover:bg-dark-hover transition-colors">Cancel</button>

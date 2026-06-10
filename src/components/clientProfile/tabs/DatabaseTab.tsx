@@ -53,13 +53,13 @@ export default function DatabaseTab() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-lg font-semibold text-dark-primary">Exercise Database</h2>
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
+          <div className="flex items-center bg-az-black-elevated rounded-lg border border-dark-border px-3">
             <Search size={14} className="text-dark-muted flex-shrink-0" />
             <input type="text" placeholder="Search exercises..." value={search} onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent text-sm text-dark-primary placeholder-[dark-muted] py-2 px-2 outline-none w-48" />
+              className="bg-transparent text-sm text-dark-primary placeholder:text-dark-muted py-2 px-2 outline-none w-48" />
           </div>
           <select value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none">
+            className="bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none">
             <option value="times">Most Frequent</option>
             <option value="weight">Heaviest</option>
             <option value="name">Name</option>
@@ -120,7 +120,7 @@ export default function DatabaseTab() {
             <tbody>
               {filtered.map((ex, i) => (
                 <motion.tr key={ex.exerciseId} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
-                  className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors cursor-pointer"
+                  className="border-b border-dark-divider hover:bg-az-black-elevated transition-colors cursor-pointer"
                   onClick={() => navigate(`/clients/${clientId}/exercises/${ex.exerciseId}`)}>
                   <td className="py-2.5 px-3 text-sm text-dark-primary font-medium">{ex.name}</td>
                   <td className="py-2.5 px-3"><span className="text-xs px-2 py-0.5 rounded-full bg-[rgba(0,174,239,0.1)] text-cyan">{ex.muscle}</span></td>

@@ -22,7 +22,7 @@ export default function LeaderboardWidget() {
   }, [])
 
   return (
-    <div className="rounded-2xl border border-dark-border bg-[az-black-card] p-5">
+    <div className="rounded-2xl border border-dark-border bg-az-black-card p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Trophy size={18} className="text-cyan" />

@@ -22,8 +22,8 @@ function DayTab({ dayNumber, dayLabel, exerciseCount, isActive, onClick }: DayTa
       onClick={onClick}
       className={`relative flex-shrink-0 min-w-[140px] rounded-lg border p-3 text-left transition-all ${
         isActive
-          ? 'bg-[az-black-elevated] border-cyan/50 ring-1 ring-[cyan]/20'
-          : 'bg-[az-black-card] border-dark-border hover:border-dark-subtle'
+          ? 'bg-az-black-elevated border-cyan/50 ring-1 ring-cyan/20'
+          : 'bg-az-black-card border-dark-border hover:border-dark-subtle'
       }`}
     >
       <div className="flex items-center justify-between mb-1">
@@ -33,7 +33,7 @@ function DayTab({ dayNumber, dayLabel, exerciseCount, isActive, onClick }: DayTa
       </div>
       <div className="text-dark-primary text-sm font-medium truncate">{dayLabel || `Day ${dayNumber}`}</div>
       <div className="flex items-center gap-2 mt-1">
-        <span className="text-[gray-600] text-[10px]">· {exerciseCount} exercises</span>
+        <span className="text-gray-600 text-[10px]">· {exerciseCount} exercises</span>
       </div>
     </button>
   )
@@ -50,7 +50,7 @@ export default function ProgramCardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-az-black flex items-center justify-center">
         <Loader2 size={32} className="animate-spin text-cyan" />
       </div>
     )
@@ -58,7 +58,7 @@ export default function ProgramCardPage() {
 
   if (error || !programData) {
     return (
-      <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center px-4">
+      <div className="min-h-[100dvh] bg-az-black flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-dark-secondary">
             {error ? 'Failed to load program. Please try again.' : 'Program not found.'}
@@ -81,11 +81,11 @@ export default function ProgramCardPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[az-black]">
+    <div className="min-h-[100dvh] bg-az-black">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Page Title */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[cyan] to-[admin-accent] flex items-center justify-center shadow-[0_4px_14px_rgba(0,174,239,0.3)]">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan to-admin-accent flex items-center justify-center shadow-[0_4px_14px_rgba(0,174,239,0.3)]">
             <Dumbbell size={20} className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
@@ -112,7 +112,7 @@ export default function ProgramCardPage() {
 
         {/* Day Selector Tabs */}
         {hasMultipleDays && (
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[dark-border] scrollbar-track-transparent">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-dark-border scrollbar-track-transparent">
             {days.map((day, idx) => (
               <DayTab
                 key={day.day_number}
@@ -128,7 +128,7 @@ export default function ProgramCardPage() {
 
         {/* Day info banner */}
         {currentDay && (
-          <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-[az-black-card] border border-dark-border/50">
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-az-black-card border border-dark-border/50">
             <div className="flex items-center gap-2">
               <span className="text-cyan text-sm font-medium">
                 Day {currentDay.day_number}: {currentDay.day_label || `Day ${currentDay.day_number}`}
@@ -185,14 +185,14 @@ export default function ProgramCardPage() {
         <div className="sticky bottom-4 z-10 flex gap-2">
           <button
             onClick={() => setShowAssignModal(true)}
-            className="flex-1 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[cyan] to-[admin-accent] hover:shadow-lg hover:shadow-[cyan]/20 transition-all flex items-center justify-center gap-2 text-sm"
+            className="flex-1 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan to-admin-accent hover:shadow-lg hover:shadow-cyan/20 transition-all flex items-center justify-center gap-2 text-sm"
           >
             <UserPlus size={18} />
             Assign to Client
           </button>
           <button
             onClick={handleStartWorkout}
-            className="px-4 py-3 rounded-xl font-semibold text-cyan bg-[az-black-card] border-2 border-cyan hover:bg-cyan/10 transition-all flex items-center justify-center gap-2 text-sm"
+            className="px-4 py-3 rounded-xl font-semibold text-cyan bg-az-black-card border-2 border-cyan hover:bg-cyan/10 transition-all flex items-center justify-center gap-2 text-sm"
           >
             <Play size={18} />
             <span className="hidden sm:inline">Start Workout</span>

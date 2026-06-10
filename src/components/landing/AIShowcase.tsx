@@ -145,7 +145,7 @@ export default function AIShowcase() {
       </div>
 
       {/* Data stream ticker */}
-      <div className="relative py-16 bg-[gray-950] overflow-hidden">
+      <div className="relative py-16 bg-gray-950 overflow-hidden">
         <div className="[mask-image:linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)]">
           {TICKER_ROWS.map((row, i) => (
             <div key={i} className="overflow-hidden mb-4 whitespace-nowrap">

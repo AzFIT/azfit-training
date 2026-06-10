@@ -15,7 +15,7 @@ export function ThemeCard({
     <button
       onClick={onClick}
       className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
-        selected ? 'border-cyan bg-cyan-glow' : 'border-dark-border bg-[az-black-elevated] hover:border-dark-subtle'
+        selected ? 'border-cyan bg-cyan-glow' : 'border-dark-border bg-az-black-elevated hover:border-dark-subtle'
       }`}
     >
       <Icon size={24} className={selected ? 'text-cyan' : 'text-dark-secondary'} />

@@ -13,7 +13,7 @@ export default function ToggleRowInline({
     <button
       onClick={() => onChange(!checked)}
       className={`w-full flex items-center justify-between p-2.5 rounded-lg border transition-all ${
-        checked ? 'border-cyan bg-cyan-glow' : 'border-dark-border bg-[az-black-elevated]'
+        checked ? 'border-cyan bg-cyan-glow' : 'border-dark-border bg-az-black-elevated'
       }`}
     >
       <div className="flex items-center gap-2">

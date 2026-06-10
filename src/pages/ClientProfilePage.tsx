@@ -118,13 +118,13 @@ export default function ClientProfilePage() {
       className="space-y-0"
     >
       {/* Client Header Bar */}
-      <div className="bg-[az-black-card] border-b border-dark-border px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+      <div className="bg-az-black-card border-b border-dark-border px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {/* Left: Avatar + Name */}
           <div className="flex items-center gap-4">
             <div className="relative flex-shrink-0">
               <img src={clientData?.avatar || '/avatar-placeholder.jpg'} alt={clientData?.name || 'Client'} className="w-14 h-14 rounded-full object-cover border-2 border-success" />
-              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-success border-2 border-[az-black-card]" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-success border-2 border-az-black-card" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -172,14 +172,14 @@ export default function ClientProfilePage() {
       </div>
 
       {/* Tab Bar */}
-      <div className="bg-[az-black] border-b border-dark-divider relative">
+      <div className="bg-az-black border-b border-dark-divider relative">
         {showLeftArrow && (
-          <button onClick={() => scrollTabs('left')} className="absolute left-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-r from-[az-black] to-transparent flex items-center justify-center text-dark-secondary hover:text-dark-primary">
+          <button onClick={() => scrollTabs('left')} className="absolute left-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-r from-az-black to-transparent flex items-center justify-center text-dark-secondary hover:text-dark-primary">
             <ChevronLeft size={16} />
           </button>
         )}
         {showRightArrow && (
-          <button onClick={() => scrollTabs('right')} className="absolute right-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-l from-[az-black] to-transparent flex items-center justify-center text-dark-secondary hover:text-dark-primary">
+          <button onClick={() => scrollTabs('right')} className="absolute right-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-l from-az-black to-transparent flex items-center justify-center text-dark-secondary hover:text-dark-primary">
             <ChevronRight size={16} />
           </button>
         )}
@@ -192,7 +192,7 @@ export default function ClientProfilePage() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 flex-shrink-0
-                  ${isActive ? 'bg-[az-black-card] text-dark-primary border border-dark-border' : 'text-dark-muted hover:text-dark-secondary hover:bg-dark-hover border border-transparent'}`}
+                  ${isActive ? 'bg-az-black-card text-dark-primary border border-dark-border' : 'text-dark-muted hover:text-dark-secondary hover:bg-dark-hover border border-transparent'}`}
                 style={isActive ? { borderLeft: '3px solid cyan' } : undefined}
               >
                 <Icon size={16} />

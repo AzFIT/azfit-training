@@ -43,7 +43,7 @@ export function SessionOverlay({
         )}
       </div>
       <p className="text-[9px] opacity-80 truncate" style={{ color: colors.text }}>{session.type}</p>
-      <p className="text-[9px] text-[light-muted] font-mono truncate">
+      <p className="text-[9px] text-light-muted font-mono truncate">
         {format(session.startTime, 'HH:mm')} - {format(addMinutes(session.startTime, session.duration), 'HH:mm')}
       </p>
       <div

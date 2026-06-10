@@ -38,7 +38,7 @@ export default function PortalNavbar() {
   const pathSegments = location.pathname.split('/').filter(Boolean);
 
   return (
-    <header className="h-14 flex items-center px-4 sm:px-6 bg-white dark:bg-[az-black-card] border-b border-gray-200 dark:border-white/5 sticky top-0 z-40">
+    <header className="h-14 flex items-center px-4 sm:px-6 bg-white dark:bg-az-black-card border-b border-gray-200 dark:border-white/5 sticky top-0 z-40">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         {/* Breadcrumb / Title */}
         <div className="flex items-center gap-2 min-w-0">
@@ -102,7 +102,7 @@ export default function PortalNavbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[az-black-elevated] rounded-xl border border-gray-200 dark:border-white/8 shadow-modal z-50 py-1"
+                  className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-az-black-elevated rounded-xl border border-gray-200 dark:border-white/8 shadow-modal z-50 py-1"
                 >
                   <div className="px-3 py-2 border-b border-gray-100 dark:border-white/5">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{profile?.full_name || user?.email?.split('@')[0] || 'User'}</p>

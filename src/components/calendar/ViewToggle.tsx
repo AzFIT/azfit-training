@@ -18,7 +18,7 @@ export function ViewToggle({
   ]
 
   return (
-    <div className="flex items-center gap-1 bg-[light-surface] rounded-lg p-1 border border-[light-border]">
+    <div className="flex items-center gap-1 bg-light-surface rounded-lg p-1 border border-light-border">
       {views.map((v) => {
         const active = view === v.key
         const Icon = v.icon
@@ -28,8 +28,8 @@ export function ViewToggle({
             onClick={() => setView(v.key)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
               active
-                ? 'bg-[light-hover] text-[light-primary] border border-[light-border]'
-                : 'text-[light-muted] hover:text-[light-secondary] hover:bg-[light-border]'
+                ? 'bg-light-hover text-light-primary border border-light-border'
+                : 'text-light-muted hover:text-light-secondary hover:bg-light-border'
             }`}
           >
             <Icon size={14} />

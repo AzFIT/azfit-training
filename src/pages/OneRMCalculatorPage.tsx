@@ -34,7 +34,7 @@ export default function OneRMCalculatorPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
+    <div className="min-h-[100dvh] bg-off-white dark:bg-az-black">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -111,7 +111,7 @@ export default function OneRMCalculatorPage() {
             className="space-y-4"
           >
             {/* Average 1RM highlight */}
-            <div className="bg-gradient-to-r from-[cyan] to-[indigo] rounded-2xl p-6 text-white text-center">
+            <div className="bg-gradient-to-r from-cyan to-[indigo] rounded-2xl p-6 text-white text-center">
               <p className="text-sm opacity-90">Estimated 1RM (Average)</p>
               <p className="text-5xl font-bold mt-1">{averageOneRM}</p>
               <p className="text-sm opacity-90">kg</p>

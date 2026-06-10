@@ -118,7 +118,7 @@ export default function DashboardTab() {
                 <div><p className="text-xs text-dark-muted mb-1">Start</p><p className="text-lg font-bold text-dark-primary font-mono">{entries[0]?.weight || 0}</p><p className="text-xs text-dark-secondary">kg</p></div>
                 <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[danger] via-[warning] to-[success] flex-1 mx-3 rounded-full" /><TrendingDown size={16} className="text-success flex-shrink-0" /></div>
                 <div><p className="text-xs text-dark-muted mb-1">Current</p><p className="text-lg font-bold text-cyan font-mono">{latest?.weight || 0}</p><p className="text-xs text-dark-secondary">kg</p></div>
-                <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[success] to-[cyan] flex-1 mx-3 rounded-full" /><Target size={16} className="text-cyan flex-shrink-0" /></div>
+                <div className="flex-1 flex items-center justify-center"><div className="h-0.5 bg-gradient-to-r from-[success] to-cyan flex-1 mx-3 rounded-full" /><Target size={16} className="text-cyan flex-shrink-0" /></div>
                 <div><p className="text-xs text-dark-muted mb-1">Goal</p><p className="text-lg font-bold text-success font-mono">{client?.weight || 0}</p><p className="text-xs text-dark-secondary">kg</p></div>
               </div>
               <div className="mt-3 pt-3 border-t border-dark-border">
@@ -150,7 +150,7 @@ export default function DashboardTab() {
           ) : (
             <div className="space-y-2">
               {upcomingSessions.map((s, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[az-black-elevated]">
+                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-az-black-elevated">
                   <div className="w-10 h-10 rounded-lg bg-cyan-glow flex items-center justify-center flex-shrink-0"><Calendar size={18} className="text-cyan" /></div>
                   <div className="flex-1 min-w-0"><p className="text-sm text-dark-primary font-medium truncate">{s.title}</p><p className="text-xs text-dark-muted">{s.date} {s.startTime}</p></div>
                 </div>
@@ -165,7 +165,7 @@ export default function DashboardTab() {
           ) : (
             <div className="space-y-2">
               {clientNotes.slice(0, 2).map((n) => (
-                <div key={n.id} className="p-3 rounded-lg bg-[az-black-elevated] border border-dark-border">
+                <div key={n.id} className="p-3 rounded-lg bg-az-black-elevated border border-dark-border">
                   <div className="flex items-center gap-2 mb-1"><span className="text-xs font-medium text-cyan">{n.category}</span><span className="text-xs text-dark-muted">{n.date}</span></div>
                   <p className="text-sm text-dark-primary font-medium">{n.title}</p>
                   <p className="text-xs text-dark-secondary line-clamp-2 mt-1">{n.content}</p>

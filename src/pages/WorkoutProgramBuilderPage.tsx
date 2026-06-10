@@ -62,7 +62,7 @@ export default function WorkoutProgramBuilderPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
+    <div className="min-h-[100dvh] bg-off-white dark:bg-az-black">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -301,7 +301,7 @@ export default function WorkoutProgramBuilderPage() {
               onClick={() => handleProgramSelect(programs[0].program_id)}
               className={cn(
                 'w-full py-4 rounded-2xl font-bold text-white text-lg',
-                'bg-gradient-to-r from-[cyan] to-[indigo]',
+                'bg-gradient-to-r from-cyan to-[indigo]',
                 'hover:shadow-lg hover:shadow-sky-200/50 dark:hover:shadow-sky-900/30',
                 'transition-all duration-200 flex items-center justify-center gap-2'
               )}

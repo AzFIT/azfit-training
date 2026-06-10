@@ -127,7 +127,7 @@ export default function MealPlannerTab({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-[az-black-card] border border-dark-border rounded-xl p-5"
+            className="bg-az-black-card border border-dark-border rounded-xl p-5"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
@@ -144,7 +144,7 @@ export default function MealPlannerTab({
             </div>
 
             {/* Progress bar */}
-            <div className="w-full h-1 bg-[az-black-elevated] rounded-full mb-3">
+            <div className="w-full h-1 bg-az-black-elevated rounded-full mb-3">
               <motion.div
                 className="h-full rounded-full"
                 style={{
@@ -170,7 +170,7 @@ export default function MealPlannerTab({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="flex items-center justify-between py-1.5 px-2 bg-[az-black-elevated] rounded-lg"
+                    className="flex items-center justify-between py-1.5 px-2 bg-az-black-elevated rounded-lg"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -201,7 +201,7 @@ export default function MealPlannerTab({
 
             {/* Add food */}
             {addingToMeal === mealType.type ? (
-              <div className="bg-[az-black-elevated] rounded-lg p-3 space-y-2">
+              <div className="bg-az-black-elevated rounded-lg p-3 space-y-2">
                 <input
                   type="text"
                   placeholder="Search foods..."
@@ -266,7 +266,7 @@ export default function MealPlannerTab({
             ) : (
               <button
                 onClick={() => setAddingToMeal(mealType.type)}
-                className="flex items-center gap-1 text-cyan hover:text-[cyan-light] text-xs font-medium transition-colors"
+                className="flex items-center gap-1 text-cyan hover:text-cyan-light text-xs font-medium transition-colors"
               >
                 <Plus size={14} />
                 Add Food
@@ -277,7 +277,7 @@ export default function MealPlannerTab({
       })}
 
       {/* Daily summary bar */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+      <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <span className="text-dark-primary text-sm font-semibold">Daily Totals</span>
           <div className="flex items-center gap-6">

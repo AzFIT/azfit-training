@@ -25,7 +25,7 @@ export default function PhotoCard({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.04, duration: 0.3, ease }}
-      className={`group relative bg-[az-black-card] border rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
+      className={`group relative bg-az-black-card border rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${
         selected ? 'border-cyan ring-2 ring-[rgba(0,174,239,0.3)]' : 'border-dark-border hover:border-[rgba(0,174,239,0.3)]'
       }`}
       onClick={() => {

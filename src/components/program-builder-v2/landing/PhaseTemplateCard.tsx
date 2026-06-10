@@ -85,7 +85,7 @@ export function PhaseTemplateCard({ phase, className }: PhaseTemplateCardProps) 
         {/* Header */}
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="min-w-0">
-            <h3 className="font-semibold text-sm leading-tight text-[light-primary] truncate">
+            <h3 className="font-semibold text-sm leading-tight text-light-primary truncate">
               {phase.phaseName}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">{phase.method}</p>

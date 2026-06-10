@@ -50,7 +50,7 @@ export function WeekView({
               return (
                 <div
                   key={day.toISOString()}
-                  className={`border-r border-[light-border] relative ${
+                  className={`border-r border-light-border relative ${
                     today ? 'bg-[rgba(0,174,239,0.03)]' : ''
                   }`}
                   style={today ? { borderLeft: '2px solid cyan' } : {}}
@@ -60,7 +60,7 @@ export function WeekView({
                     return (
                       <div
                         key={hour}
-                        className="h-16 border-b border-[light-border] hover:bg-[rgba(0,174,239,0.06)] transition-colors cursor-pointer"
+                        className="h-16 border-b border-light-border hover:bg-[rgba(0,174,239,0.06)] transition-colors cursor-pointer"
                         onClick={() => onSlotClick(day, hour, 0)}
                       />
                     )

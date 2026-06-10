@@ -63,25 +63,25 @@ export function AccountSection() {
           <div className="flex-1 space-y-3">
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Full Name</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
+              <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-az-black-elevated border-dark-border text-dark-primary" />
             </div>
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Email</Label>
               <div className="flex items-center gap-2">
-                <Input value={email} disabled className="bg-[az-black-elevated] border-dark-border text-dark-primary opacity-60" />
+                <Input value={email} disabled className="bg-az-black-elevated border-dark-border text-dark-primary opacity-60" />
                 <Button variant="ghost" size="sm" className="text-cyan hover:text-cyan-hover shrink-0">Change</Button>
               </div>
             </div>
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Phone</Label>
               <div className="flex items-center gap-2">
-                <span className="text-dark-secondary text-sm bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2">+852</span>
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-[az-black-elevated] border-dark-border text-dark-primary flex-1" />
+                <span className="text-dark-secondary text-sm bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2">+852</span>
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="bg-az-black-elevated border-dark-border text-dark-primary flex-1" />
               </div>
             </div>
             <div>
               <Label className="text-dark-secondary text-xs mb-1">Bio <span className="text-dark-muted">({bio.length}/200)</span></Label>
-              <Textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 200))} className="bg-[az-black-elevated] border-dark-border text-dark-primary min-h-[80px]" />
+              <Textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 200))} className="bg-az-black-elevated border-dark-border text-dark-primary min-h-[80px]" />
             </div>
             <Button className="bg-cyan hover:bg-cyan-hover text-white">Save Changes</Button>
           </div>
@@ -93,21 +93,21 @@ export function AccountSection() {
         <div className="space-y-3 max-w-md">
           <div className="relative">
             <Label className="text-dark-secondary text-xs mb-1">Current Password</Label>
-            <Input type={showCurrent ? 'text' : 'password'} placeholder="••••••••" className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10" />
+            <Input type={showCurrent ? 'text' : 'password'} placeholder="••••••••" className="bg-az-black-elevated border-dark-border text-dark-primary pr-10" />
             <button onClick={() => setShowCurrent(!showCurrent)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
           <div className="relative">
             <Label className="text-dark-secondary text-xs mb-1">New Password</Label>
-            <Input type={showNew ? 'text' : 'password'} placeholder="••••••••" className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10" />
+            <Input type={showNew ? 'text' : 'password'} placeholder="••••••••" className="bg-az-black-elevated border-dark-border text-dark-primary pr-10" />
             <button onClick={() => setShowNew(!showNew)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
           <div className="relative">
             <Label className="text-dark-secondary text-xs mb-1">Confirm New Password</Label>
-            <Input type={showConfirm ? 'text' : 'password'} placeholder="••••••••" className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10" />
+            <Input type={showConfirm ? 'text' : 'password'} placeholder="••••••••" className="bg-az-black-elevated border-dark-border text-dark-primary pr-10" />
             <button onClick={() => setShowConfirm(!showConfirm)} className="absolute right-3 top-[26px] text-dark-muted hover:text-dark-secondary">
               {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -134,7 +134,7 @@ export function AccountSection() {
       <SectionCard title="Active Sessions" description="You're signed in on these devices.">
         <div className="space-y-3">
           {sessions.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-[az-black-elevated] border border-dark-border">
+            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-az-black-elevated border border-dark-border">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-dark-hover flex items-center justify-center">
                   <Smartphone size={16} className="text-dark-secondary" />
@@ -155,7 +155,7 @@ export function AccountSection() {
       </SectionCard>
 
       {/* Danger Zone */}
-      <div className="bg-[az-black-card] border border-[rgba(239,68,68,0.3)] rounded-xl p-6 mb-5">
+      <div className="bg-az-black-card border border-[rgba(239,68,68,0.3)] rounded-xl p-6 mb-5">
         <h3 className="text-danger text-base font-semibold mb-4 flex items-center gap-2">
           <Trash2 size={16} />
           Danger Zone
@@ -178,7 +178,7 @@ export function AccountSection() {
               <DialogTrigger asChild>
                 <Button className="bg-danger hover:bg-[danger] text-white">Delete Account</Button>
               </DialogTrigger>
-              <DialogContent className="bg-[az-black-card] border-dark-border text-dark-primary max-w-md">
+              <DialogContent className="bg-az-black-card border-dark-border text-dark-primary max-w-md">
                 <DialogHeader>
                   <DialogTitle className="text-danger">Delete Account</DialogTitle>
                   <DialogDescription className="text-dark-muted">
@@ -187,7 +187,7 @@ export function AccountSection() {
                 </DialogHeader>
                 <div className="py-4">
                   <Label className="text-dark-secondary text-sm mb-2">Type DELETE to confirm</Label>
-                  <Input placeholder="DELETE" className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
+                  <Input placeholder="DELETE" className="bg-az-black-elevated border-dark-border text-dark-primary" />
                 </div>
                 <DialogFooter>
                   <Button variant="ghost" className="text-dark-secondary">Cancel</Button>

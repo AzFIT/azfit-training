@@ -59,13 +59,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[az-black] flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-az-black flex items-center justify-center p-4">
       {/* Background image with dark overlay for contrast */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-30 pointer-events-none"
         style={{ backgroundImage: 'url(./AZFIT_BACKGROUND_2.png)' }}
       />
-      <div className="fixed inset-0 bg-[az-black]/60 pointer-events-none" />
+      <div className="fixed inset-0 bg-az-black/60 pointer-events-none" />
       {/* Noise texture */}
       <div className="fixed inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
       {/* Ambient glow */}
@@ -104,7 +104,7 @@ export default function LoginPage() {
         <motion.div
           {...motionEnter(reduceMotion, { opacity: 0, y: 20 }, { duration: 0.5, delay: 0.2, ease: easeOut })}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[az-black-card] border border-dark-border rounded-2xl p-6 sm:p-8"
+          className="bg-az-black-card border border-dark-border rounded-2xl p-6 sm:p-8"
         >
           <div className="space-y-4">
             {/* Email */}
@@ -115,7 +115,7 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[az-black-elevated] border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all"
+                className="w-full bg-az-black-elevated border border-dark-border rounded-xl px-4 py-3 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all"
               />
             </div>
 
@@ -128,7 +128,7 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[az-black-elevated] border border-dark-border rounded-xl px-4 py-3 pr-11 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all"
+                  className="w-full bg-az-black-elevated border border-dark-border rounded-xl px-4 py-3 pr-11 text-sm text-dark-primary placeholder:text-dark-muted focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan-glow transition-all"
                 />
                 <button
                   type="button"
@@ -149,7 +149,7 @@ export default function LoginPage() {
                   className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                     rememberMe
                       ? 'bg-cyan border-cyan'
-                      : 'border-[dark-subtle] group-hover:border-dark-muted'
+                      : 'border-dark-subtle group-hover:border-dark-muted'
                   }`}
                 >
                   {rememberMe && (
@@ -168,7 +168,7 @@ export default function LoginPage() {
               </label>
               <Link
                 to="/forgot-password"
-                className="text-cyan text-sm hover:text-[cyan-light] transition-colors"
+                className="text-cyan text-sm hover:text-cyan-light transition-colors"
               >
                 Forgot password?
               </Link>
@@ -199,7 +199,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-dark-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-[az-black-card] px-3 text-dark-muted">quick login</span>
+                <span className="bg-az-black-card px-3 text-dark-muted">quick login</span>
               </div>
             </div>
 
@@ -216,7 +216,7 @@ export default function LoginPage() {
               <button
                 onClick={() => handleQuickLogin('trainer@azfit.fit', 'azwar1988azfit')}
                 disabled={isLoading}
-                className="flex items-center justify-center gap-2 bg-[rgba(6,182,212,0.1)] border border-[rgba(6,182,212,0.3)] hover:border-[rgba(6,182,212,0.6)] text-cyan hover:text-[cyan-light] font-medium py-2.5 rounded-xl transition-all duration-200 text-sm disabled:opacity-50"
+                className="flex items-center justify-center gap-2 bg-[rgba(6,182,212,0.1)] border border-[rgba(6,182,212,0.3)] hover:border-[rgba(6,182,212,0.6)] text-cyan hover:text-cyan-light font-medium py-2.5 rounded-xl transition-all duration-200 text-sm disabled:opacity-50"
               >
                 <Dumbbell size={14} />
                 Trainer
@@ -229,7 +229,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-dark-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-[az-black-card] px-3 text-dark-muted">or</span>
+                <span className="bg-az-black-card px-3 text-dark-muted">or</span>
               </div>
             </div>
 
@@ -256,7 +256,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
-                className="text-cyan hover:text-[cyan-light] transition-colors font-medium"
+                className="text-cyan hover:text-cyan-light transition-colors font-medium"
               >
                 Sign Up
               </Link>

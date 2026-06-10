@@ -60,7 +60,7 @@ export default function BodyStatsTab() {
           >
             <Plus size={14} /> Log Measurement
           </button>
-          <div className="flex gap-1 bg-[az-black-elevated] rounded-lg p-1">
+          <div className="flex gap-1 bg-az-black-elevated rounded-lg p-1">
             {(['30d', '90d'] as const).map((r) => (
               <button key={r} onClick={() => setRange(r)}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${range === r ? 'bg-dark-hover text-cyan' : 'text-dark-secondary hover:text-dark-primary'}`}>
@@ -147,7 +147,7 @@ export default function BodyStatsTab() {
                       <tr><td colSpan={4} className="py-6 text-center text-xs text-dark-muted">No measurements logged</td></tr>
                     ) : (
                       measurementRows.map((m) => (
-                        <tr key={m.name} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
+                        <tr key={m.name} className="border-b border-dark-divider hover:bg-az-black-elevated transition-colors">
                           <td className="py-2 px-2 text-sm text-dark-primary">{m.name}</td>
                           <td className="py-2 px-2 text-sm text-dark-primary font-mono">{m.current}</td>
                           <td className="py-2 px-2 text-sm text-dark-secondary font-mono">{m.prev30d}</td>

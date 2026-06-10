@@ -25,7 +25,7 @@ export function QuickStartStrip({ phases, className }: QuickStartStripProps) {
     <div className={cn('space-y-3', className)}>
       <div className="flex items-center gap-2">
         <Zap size={16} className="text-amber-500" />
-        <h2 className="text-sm font-semibold text-[light-primary]">Quick Start</h2>
+        <h2 className="text-sm font-semibold text-light-primary">Quick Start</h2>
         <span className="text-xs text-muted-foreground">— Most used phases</span>
       </div>
 

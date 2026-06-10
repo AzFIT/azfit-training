@@ -34,7 +34,7 @@ export default function SettingsPage() {
     >
       {/* Settings Sidebar */}
       <aside className="lg:w-[200px] flex-shrink-0">
-        <div className="lg:sticky lg:top-4 bg-[az-black-card] border border-dark-border rounded-xl overflow-hidden">
+        <div className="lg:sticky lg:top-4 bg-az-black-card border border-dark-border rounded-xl overflow-hidden">
           <nav className="py-2">
             {sections.map((s) => {
               const Icon = s.icon

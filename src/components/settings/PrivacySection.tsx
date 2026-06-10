@@ -14,7 +14,7 @@ export function PrivacySection() {
       <SectionCard title="Profile Visibility" description="Who can see your profile and credentials.">
         <div className="space-y-2">
           {(['Trainers only', 'All authenticated', 'Public'] as const).map((opt) => (
-            <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[az-black-elevated] cursor-pointer hover:border-dark-subtle transition-colors">
+            <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-az-black-elevated cursor-pointer hover:border-dark-subtle transition-colors">
               <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${profileVisibility === opt ? 'border-cyan' : 'border-dark-muted'}`}>
                 {profileVisibility === opt && <div className="w-2 h-2 rounded-full bg-cyan" />}
               </div>

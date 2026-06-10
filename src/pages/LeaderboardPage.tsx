@@ -77,7 +77,7 @@ export default function LeaderboardPage() {
   return (
     <div className="min-h-[calc(100dvh-64px)] bg-black pb-24">
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-[az-black-card]/80 backdrop-blur-md border-b border-dark-border">
+      <div className="sticky top-0 z-30 bg-az-black-card/80 backdrop-blur-md border-b border-dark-border">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center gap-3">
             <button
@@ -98,17 +98,17 @@ export default function LeaderboardPage() {
       <div className="max-w-3xl mx-auto px-4 py-5 space-y-4">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-4 text-center">
+          <div className="bg-az-black-card border border-dark-border rounded-2xl p-4 text-center">
             <Users size={18} className="mx-auto text-cyan mb-1" />
             <p className="text-xl font-bold text-dark-primary">{filtered.length}</p>
             <p className="text-[10px] text-dark-muted uppercase tracking-wide">Athletes</p>
           </div>
-          <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-4 text-center">
+          <div className="bg-az-black-card border border-dark-border rounded-2xl p-4 text-center">
             <Dumbbell size={18} className="mx-auto text-success mb-1" />
             <p className="text-xl font-bold text-dark-primary">{rxCount}</p>
             <p className="text-[10px] text-dark-muted uppercase tracking-wide">Rx</p>
           </div>
-          <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-4 text-center">
+          <div className="bg-az-black-card border border-dark-border rounded-2xl p-4 text-center">
             <Dumbbell size={18} className="mx-auto text-amber-500 mb-1" />
             <p className="text-xl font-bold text-dark-primary">{scaledCount}</p>
             <p className="text-[10px] text-dark-muted uppercase tracking-wide">Scaled</p>
@@ -128,7 +128,7 @@ export default function LeaderboardPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="text-center py-12 bg-[az-black-card] border border-dark-border rounded-2xl">
+            <div className="text-center py-12 bg-az-black-card border border-dark-border rounded-2xl">
               <p className="text-dark-secondary text-sm">No results match your filters.</p>
               <p className="text-dark-muted text-xs mt-1">Try adjusting filters to see more athletes.</p>
             </div>

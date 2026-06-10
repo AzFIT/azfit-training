@@ -57,7 +57,7 @@ export default function ProgramBuilderReviewPage() {
         <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
           <Rocket size={28} className="text-green-600 dark:text-green-400" />
         </div>
-        <h2 className="text-xl font-bold text-[light-primary]">Program Assigned!</h2>
+        <h2 className="text-xl font-bold text-light-primary">Program Assigned!</h2>
         <p className="text-sm text-muted-foreground">
           {phaseName} has been assigned to {clientContext.clientName || 'the client'}.
         </p>
@@ -81,7 +81,7 @@ export default function ProgramBuilderReviewPage() {
               <ArrowLeft size={16} />
             </Button>
             <div>
-              <h1 className="text-lg font-bold text-[light-primary]">Review &amp; Assign</h1>
+              <h1 className="text-lg font-bold text-light-primary">Review &amp; Assign</h1>
               <p className="text-xs text-muted-foreground">
                 Final check before assigning to client
               </p>

@@ -62,7 +62,7 @@ export default function Step3Context({ context, onChange }: Step3ContextProps) {
               placeholder="Search client..."
               value={context.clientId}
               onChange={(e) => onChange({ ...context, clientId: e.target.value })}
-              className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-4 py-2.5 rounded-xl outline-none transition-colors"
+              className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-4 py-2.5 rounded-xl outline-none transition-colors"
             />
           </motion.div>
         )}
@@ -78,7 +78,7 @@ export default function Step3Context({ context, onChange }: Step3ContextProps) {
               'text-xs font-semibold px-3 py-2.5 rounded-xl border transition-all duration-200',
               context.experience === exp
                 ? 'border-cyan bg-[rgba(0,174,239,0.1)] text-cyan'
-                : 'border-dark-border bg-[az-black-card] text-dark-secondary hover:border-dark-subtle'
+                : 'border-dark-border bg-az-black-card text-dark-secondary hover:border-dark-subtle'
             )}
           >
             {exp}
@@ -97,7 +97,7 @@ export default function Step3Context({ context, onChange }: Step3ContextProps) {
                 'text-xs font-semibold px-3 py-2 rounded-xl border transition-all duration-200 min-w-[72px]',
                 context.availableDays.includes(day)
                   ? 'border-cyan bg-cyan text-white'
-                  : 'border-dark-border bg-[az-black-card] text-dark-muted hover:border-dark-subtle'
+                  : 'border-dark-border bg-az-black-card text-dark-muted hover:border-dark-subtle'
               )}
             >
               {day.slice(0, 3)}
@@ -122,7 +122,7 @@ export default function Step3Context({ context, onChange }: Step3ContextProps) {
               'text-xs font-semibold px-4 py-2.5 rounded-xl border transition-all duration-200',
               context.sessionDuration === dur
                 ? 'border-cyan bg-[rgba(0,174,239,0.1)] text-cyan'
-                : 'border-dark-border bg-[az-black-card] text-dark-secondary hover:border-dark-subtle'
+                : 'border-dark-border bg-az-black-card text-dark-secondary hover:border-dark-subtle'
             )}
           >
             {dur}
@@ -142,7 +142,7 @@ export default function Step3Context({ context, onChange }: Step3ContextProps) {
                 ? lim === 'None'
                   ? 'border-success bg-[rgba(34,197,94,0.1)] text-success'
                   : 'border-warning bg-[rgba(234,179,8,0.1)] text-warning'
-                : 'border-dark-border bg-[az-black-card] text-dark-muted hover:border-dark-subtle'
+                : 'border-dark-border bg-az-black-card text-dark-muted hover:border-dark-subtle'
             )}
           >
             {lim}
@@ -160,7 +160,7 @@ export default function Step3Context({ context, onChange }: Step3ContextProps) {
               'text-xs font-semibold px-3 py-2 rounded-xl border transition-all duration-200',
               context.equipment.includes(eq)
                 ? 'border-cyan bg-[rgba(0,174,239,0.1)] text-cyan'
-                : 'border-dark-border bg-[az-black-card] text-dark-muted hover:border-dark-subtle'
+                : 'border-dark-border bg-az-black-card text-dark-muted hover:border-dark-subtle'
             )}
           >
             {eq}

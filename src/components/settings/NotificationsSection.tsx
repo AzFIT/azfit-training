@@ -27,7 +27,7 @@ export function NotificationsSection() {
   return (
     <div>
       {/* Channel tabs */}
-      <div className="inline-flex bg-[az-black-elevated] rounded-lg p-0.5 border border-dark-border mb-5">
+      <div className="inline-flex bg-az-black-elevated rounded-lg p-0.5 border border-dark-border mb-5">
         {(['email', 'push', 'inapp'] as const).map((c) => (
           <button
             key={c}
@@ -66,7 +66,7 @@ export function NotificationsSection() {
             <SectionCard title="In-App Notifications" description="Control which notifications appear inside the app.">
               <div className="space-y-3">
                 {(['All', 'Mentions only', 'None'] as const).map((opt) => (
-                  <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-[az-black-elevated] cursor-pointer hover:border-dark-subtle transition-colors">
+                  <label key={opt} className="flex items-center gap-3 p-3 rounded-lg border border-dark-border bg-az-black-elevated cursor-pointer hover:border-dark-subtle transition-colors">
                     <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${inApp === opt ? 'border-cyan' : 'border-dark-muted'}`}>
                       {inApp === opt && <div className="w-2 h-2 rounded-full bg-cyan" />}
                     </div>

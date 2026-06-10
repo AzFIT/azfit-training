@@ -52,7 +52,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
     'Superset': 'bg-[warning]/10 text-[warning] border-[warning]/30',
     'Triset': 'bg-danger/10 text-danger border-danger/30',
     'Circuit': 'bg-violet/10 text-violet border-violet/30',
-    'Giant Set': 'bg-[trainer-accent]/10 text-[trainer-accent] border-[trainer-accent]/30',
+    'Giant Set': 'bg-trainer-accent/10 text-trainer-accent border-trainer-accent/30',
     'Drop Set': 'bg-[teal]/10 text-[teal] border-[teal]/30',
     'Complex': 'bg-warning/10 text-warning border-warning/30',
   }
@@ -82,7 +82,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
       className={`rounded-xl border transition-all duration-300 overflow-hidden ${
         isExpanded
           ? 'pb-card-gradient border-cyan/25 shadow-[0_0_20px_rgba(0,174,239,0.06)]'
-          : 'bg-[az-black-card] border-dark-border/30 hover:border-[gray-750]/50'
+          : 'bg-az-black-card border-dark-border/30 hover:border-gray-750/50'
       }`}
     >
       {/* ── Card Header ─────────────────────────────────────────── */}
@@ -102,7 +102,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
 
         {/* Method badge (only when not Straight Set) */}
         {displayType !== 'Straight Set' && (
-          <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium border shrink-0 ${methodColors[displayType] || 'bg-[gray-550]/10 text-[gray-550] border-[gray-550]/30'}`}>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium border shrink-0 ${methodColors[displayType] || 'bg-gray-550/10 text-gray-550 border-gray-550/30'}`}>
             {displayType}
           </span>
         )}
@@ -123,14 +123,14 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
               max={50}
               value={editSets}
               onChange={(e) => setEditSets(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-12 h-7 px-1 text-center text-[13px] font-semibold bg-[az-black] border border-dark-border rounded text-dark-primary focus:border-cyan outline-none tabular-nums"
+              className="w-12 h-7 px-1 text-center text-[13px] font-semibold bg-az-black border border-dark-border rounded text-dark-primary focus:border-cyan outline-none tabular-nums"
             />
             <span className="text-dark-muted text-sm">×</span>
             <input
               type="text"
               value={editReps}
               onChange={(e) => setEditReps(e.target.value)}
-              className="w-14 h-7 px-1 text-center text-[13px] font-semibold bg-[az-black] border border-dark-border rounded text-dark-primary focus:border-cyan outline-none"
+              className="w-14 h-7 px-1 text-center text-[13px] font-semibold bg-az-black border border-dark-border rounded text-dark-primary focus:border-cyan outline-none"
             />
           </div>
         ) : (
@@ -181,7 +181,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
               <select
                 value={editType}
                 onChange={(e) => setEditType(e.target.value)}
-                className="h-8 px-2 text-[13px] bg-[az-black] border border-dark-border rounded text-dark-primary focus:border-cyan outline-none cursor-pointer"
+                className="h-8 px-2 text-[13px] bg-az-black border border-dark-border rounded text-dark-primary focus:border-cyan outline-none cursor-pointer"
               >
                 {TYPE_OPTIONS.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -197,7 +197,7 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
                 </button>
                 <button
                   onClick={handleSave}
-                  className="h-8 px-3 rounded-lg text-[12px] font-semibold bg-cyan text-white hover:bg-[cyan-light] transition-colors flex items-center gap-1"
+                  className="h-8 px-3 rounded-lg text-[12px] font-semibold bg-cyan text-white hover:bg-cyan-light transition-colors flex items-center gap-1"
                 >
                   <Check size={14} />
                   Save
@@ -251,13 +251,13 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
                         {exercise.rpe_target}
                       </span>
                     ) : (
-                      <span className="text-[gray-650]">—</span>
+                      <span className="text-gray-650">—</span>
                     )}
                   </td>
 
                   {/* Type */}
                   <td className="py-2 px-2">
-                    <span className={`text-[11px] px-2 py-0.5 rounded font-medium border ${methodColors[displayType] || 'bg-[gray-550]/10 text-[gray-550] border-[gray-550]/30'}`}>
+                    <span className={`text-[11px] px-2 py-0.5 rounded font-medium border ${methodColors[displayType] || 'bg-gray-550/10 text-gray-550 border-gray-550/30'}`}>
                       {displayType}
                     </span>
                   </td>
@@ -296,12 +296,12 @@ export default function ExerciseCard({ exercise, notation, index, onUpdate }: Pr
 
           {/* ── Coach Notes ─────────────────────────────────────── */}
           {exercise.notes && (
-            <div className="mt-3 p-3 rounded-lg bg-[az-black-elevated] border border-dark-border/50">
+            <div className="mt-3 p-3 rounded-lg bg-az-black-elevated border border-dark-border/50">
               <div className="flex items-center gap-1.5 mb-1">
                 <StickyNote size={12} className="text-warning" />
                 <span className="text-[11px] font-semibold text-warning uppercase tracking-wider">Coach Note</span>
               </div>
-              <p className="text-[13px] text-[gray-300] leading-relaxed">
+              <p className="text-[13px] text-gray-300 leading-relaxed">
                 {exercise.notes}
               </p>
             </div>

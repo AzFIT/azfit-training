@@ -61,7 +61,7 @@ function StarRating({ score }: { score: number }) {
 
 function StatCard({ label, value, icon: Icon, color }: { label: string; value: string; icon: React.ElementType; color: string }) {
   return (
-    <div className="bg-white dark:bg-[az-black-card] rounded-xl p-4 border border-gray-100 dark:border-white/5">
+    <div className="bg-white dark:bg-az-black-card rounded-xl p-4 border border-gray-100 dark:border-white/5">
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
           <Icon className="w-5 h-5" />
@@ -117,9 +117,9 @@ export default function ProgramLibraryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[az-black] pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-az-black pb-12">
       {/* Header */}
-      <div className="bg-white dark:bg-[az-black-card] border-b border-gray-200 dark:border-white/5">
+      <div className="bg-white dark:bg-az-black-card border-b border-gray-200 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
@@ -131,7 +131,7 @@ export default function ProgramLibraryPage() {
             </div>
             <button
               onClick={() => navigate('/programs/design')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[cyan] to-[cyan-light] text-white text-sm font-medium shadow-lg shadow-[cyan]/25 hover:shadow-xl transition-shadow"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan to-cyan-light text-white text-sm font-medium shadow-lg shadow-cyan/25 hover:shadow-xl transition-shadow"
             >
               <Plus className="w-4 h-4" /> New Program
             </button>
@@ -154,7 +154,7 @@ export default function ProgramLibraryPage() {
                 placeholder="Search programs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[az-black-elevated] text-sm focus:border-cyan outline-none"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-az-black-elevated text-sm focus:border-cyan outline-none"
               />
               {search && (
                 <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -162,15 +162,15 @@ export default function ProgramLibraryPage() {
                 </button>
               )}
             </div>
-            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="text-sm border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 bg-white dark:bg-[az-black-elevated]">
+            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="text-sm border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 bg-white dark:bg-az-black-elevated">
               <option value="">All Categories</option>
               {PROGRAM_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
-            <select value={goalFilter} onChange={(e) => setGoalFilter(e.target.value)} className="text-sm border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 bg-white dark:bg-[az-black-elevated] max-w-[200px]">
+            <select value={goalFilter} onChange={(e) => setGoalFilter(e.target.value)} className="text-sm border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 bg-white dark:bg-az-black-elevated max-w-[200px]">
               <option value="">All Goals</option>
               {GOAL_OPTIONS.slice(0, 30).map((g) => <option key={g} value={g}>{g}</option>)}
             </select>
-            <select value={difficultyFilter} onChange={(e) => setDifficultyFilter(e.target.value)} className="text-sm border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 bg-white dark:bg-[az-black-elevated]">
+            <select value={difficultyFilter} onChange={(e) => setDifficultyFilter(e.target.value)} className="text-sm border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 bg-white dark:bg-az-black-elevated">
               <option value="">All Levels</option>
               {DIFFICULTY_OPTIONS.map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
@@ -199,7 +199,7 @@ export default function ProgramLibraryPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: Math.min(i * 0.015, 0.4) }}
-                className="bg-white dark:bg-[az-black-card] rounded-2xl border border-gray-100 dark:border-white/5 p-5 hover:shadow-lg transition-shadow"
+                className="bg-white dark:bg-az-black-card rounded-2xl border border-gray-100 dark:border-white/5 p-5 hover:shadow-lg transition-shadow"
               >
                 {/* Goal + Category badges */}
                 <div className="flex flex-wrap gap-1.5 mb-3">
@@ -243,7 +243,7 @@ export default function ProgramLibraryPage() {
                     <button className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5">
                       View
                     </button>
-                    <button className="text-xs px-3 py-1.5 rounded-lg bg-cyan text-white hover:bg-[cyan-dark]">
+                    <button className="text-xs px-3 py-1.5 rounded-lg bg-cyan text-white hover:bg-cyan-dark">
                       Use
                     </button>
                   </div>

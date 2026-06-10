@@ -160,7 +160,7 @@ export function AddExerciseModal({
                 className="flex items-center justify-between p-3 rounded-lg border bg-card hover:border-primary/30 transition-colors"
               >
                 <div className="min-w-0">
-                  <div className="text-sm font-medium text-[light-primary]">{ex.name}</div>
+                  <div className="text-sm font-medium text-light-primary">{ex.name}</div>
                   <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                     <MotionCategoryBadge category={ex.motionCategory} />
                     <span>{ex.muscleGroup}</span>

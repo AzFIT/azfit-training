@@ -194,7 +194,7 @@ export default function CalendarPage() {
     <motion.div
       {...motionEnter(reduceMotion, { opacity: 0 }, { duration: 0.3 })}
       animate={{ opacity: 1 }}
-      className="flex flex-col h-[calc(100dvh-64px)] bg-[light-surface]"
+      className="flex flex-col h-[calc(100dvh-64px)] bg-light-surface"
     >
       <CalendarToolbar
         view={view}

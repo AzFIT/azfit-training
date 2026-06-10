@@ -18,7 +18,7 @@ export function CustomProgramList({ programs, className }: CustomProgramListProp
         <div className="mx-auto w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-3">
           <ClipboardList size={18} className="text-muted-foreground" />
         </div>
-        <h3 className="text-sm font-medium text-[light-primary] mb-1">No Custom Programs Yet</h3>
+        <h3 className="text-sm font-medium text-light-primary mb-1">No Custom Programs Yet</h3>
         <p className="text-xs text-muted-foreground mb-3 max-w-xs mx-auto">
           Select a phase template above and customize it to create your first custom program.
         </p>
@@ -47,7 +47,7 @@ export function CustomProgramList({ programs, className }: CustomProgramListProp
         >
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-sm text-[light-primary] truncate">
+              <span className="font-medium text-sm text-light-primary truncate">
                 {program.name}
               </span>
               {program.clientName && (

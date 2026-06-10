@@ -109,7 +109,7 @@ export default function WaterTrackerTab() {
           <button
             key={ml}
             onClick={() => setGlasses((g) => Math.min(g + ml / 250, 20))}
-            className="px-3 py-1.5 bg-[az-black-elevated] border border-dark-border rounded-lg text-xs text-cyan hover:bg-dark-hover transition-colors"
+            className="px-3 py-1.5 bg-az-black-elevated border border-dark-border rounded-lg text-xs text-cyan hover:bg-dark-hover transition-colors"
           >
             +{ml}ml
           </button>
@@ -123,7 +123,7 @@ export default function WaterTrackerTab() {
       </div>
 
       {/* Weekly chart */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
+      <div className="bg-az-black-card border border-dark-border rounded-xl p-5">
         <h4 className="text-dark-primary font-semibold text-sm mb-4">This Week</h4>
         <div className="h-40">
           <ResponsiveContainer width="100%" height="100%">

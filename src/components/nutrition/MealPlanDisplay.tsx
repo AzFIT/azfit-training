@@ -1,20 +1,39 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Calendar, Flame, Dumbbell, Wheat as WheatIcon, Droplets, Clock, RefreshCw, Check } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Calendar, Flame, Dumbbell, Wheat as WheatIcon, Droplets, Clock, RefreshCw, Check, Plus } from 'lucide-react'
 import { format, addDays, subDays } from 'date-fns'
 import type { DailyMealPlan, MealPlanItem } from './mealPlanGenerator'
 import { calculatePlanTotals, swapMealOption } from './mealPlanGenerator'
+import AddMealDialog from './AddMealDialog'
+import type { FoodItem, MealType } from './types'
 
 interface MealPlanDisplayProps {
   plan: DailyMealPlan
   onPlanChange: (plan: DailyMealPlan) => void
   onDateChange: (date: Date) => void
+  foodDb: FoodItem[]
 }
 
-export default function MealPlanDisplay({ plan, onPlanChange, onDateChange }: MealPlanDisplayProps) {
+export default function MealPlanDisplay({ plan, onPlanChange, onDateChange, foodDb }: MealPlanDisplayProps) {
   const [swappingMeal, setSwappingMeal] = useState<string | null>(null)
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const [addDialogMealType, setAddDialogMealType] = useState<MealType>('Breakfast')
   const date = new Date(plan.date)
   const totals = calculatePlanTotals(plan)
+
+  const handleOpenAddDialog = useCallback((mealType: MealType) => {
+    setAddDialogMealType(mealType)
+    setAddDialogOpen(true)
+  }, [])
+
+  const handleAddFood = useCallback((foodId: number, quantity: number) => {
+    // For now, just log it — in Phase 6 we'll persist to the plan
+    const food = foodDb.find((f) => f.id === foodId)
+    if (food) {
+      // eslint-disable-next-line no-console
+      console.log(`Added ${quantity}g of ${food.name} to ${addDialogMealType}`)
+    }
+  }, [foodDb, addDialogMealType])
 
   const handleSwap = useCallback((mealType: string, altId: string) => {
     const updated = swapMealOption(plan, mealType, altId)
@@ -25,7 +44,7 @@ export default function MealPlanDisplay({ plan, onPlanChange, onDateChange }: Me
   return (
     <div className="space-y-4">
       {/* Date + Target Header */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-4">
+      <div className="bg-az-black-card border border-dark-border rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <button
@@ -92,8 +111,18 @@ export default function MealPlanDisplay({ plan, onPlanChange, onDateChange }: Me
           isSwapping={swappingMeal === meal.type}
           onToggleSwap={() => setSwappingMeal(swappingMeal === meal.type ? null : meal.type)}
           onSelectAlternative={(altId) => handleSwap(meal.type, altId)}
+          onAddFood={handleOpenAddDialog}
         />
       ))}
+
+      {/* Add Meal Dialog */}
+      <AddMealDialog
+        open={addDialogOpen}
+        onOpenChange={setAddDialogOpen}
+        mealType={addDialogMealType}
+        foodDb={foodDb}
+        onAdd={handleAddFood}
+      />
     </div>
   )
 }
@@ -105,12 +134,14 @@ function MealCard({
   isSwapping,
   onToggleSwap,
   onSelectAlternative,
+  onAddFood,
 }: {
   meal: MealPlanItem
   index: number
   isSwapping: boolean
   onToggleSwap: () => void
   onSelectAlternative: (altId: string) => void
+  onAddFood?: (mealType: MealType) => void
 }) {
   const p = meal.primary
 
@@ -126,7 +157,7 @@ function MealCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08 }}
-      className="bg-[az-black-card] border border-dark-border rounded-2xl overflow-hidden"
+      className="bg-az-black-card border border-dark-border rounded-2xl overflow-hidden"
     >
       {/* Header */}
       <div className="p-4 pb-3">
@@ -148,7 +179,7 @@ function MealCard({
       </div>
 
       {/* Primary Option */}
-      <div className="mx-4 mb-3 bg-[az-black-elevated] border border-cyan/30 rounded-xl p-3">
+      <div className="mx-4 mb-3 bg-az-black-elevated border border-cyan/30 rounded-xl p-3">
         <div className="flex items-center gap-2 mb-2">
           <Check size={14} className="text-cyan" />
           <span className="text-cyan text-xs font-medium">Selected</span>
@@ -189,7 +220,7 @@ function MealCard({
                 <button
                   key={alt.id}
                   onClick={() => onSelectAlternative(alt.id)}
-                  className="w-full text-left bg-[az-black-elevated] border border-dark-border hover:border-cyan/50 rounded-lg p-3 transition-all"
+                  className="w-full text-left bg-az-black-elevated border border-dark-border hover:border-cyan/50 rounded-lg p-3 transition-all"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-dark-primary text-xs font-medium">{alt.name}</span>
@@ -203,6 +234,15 @@ function MealCard({
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Add custom food */}
+        <button
+          onClick={() => onAddFood?.(meal.type)}
+          className="flex items-center gap-1.5 text-cyan hover:text-cyan-light text-xs font-medium transition-colors mt-2"
+        >
+          <Plus size={14} />
+          Add Custom Food
+        </button>
       </div>
     </motion.div>
   )

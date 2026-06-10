@@ -139,7 +139,7 @@ export default function SmartProgramFinderPage() {
   const selectedLevel = referenceData?.levels.find(l => l.level_id === answers.levelId)
 
   return (
-    <div className="min-h-[100dvh] bg-[off-white] dark:bg-[az-black]">
+    <div className="min-h-[100dvh] bg-off-white dark:bg-az-black">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">

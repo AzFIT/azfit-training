@@ -48,7 +48,7 @@ export function ProgramSummaryCard({
             📋
           </div>
           <div>
-            <h2 className="text-base font-bold text-[light-primary]">{phaseName}</h2>
+            <h2 className="text-base font-bold text-light-primary">{phaseName}</h2>
             <p className="text-xs text-muted-foreground">
               {method} · {durationWeeks} weeks · {sessionCount} sessions
             </p>
@@ -66,7 +66,7 @@ export function ProgramSummaryCard({
               <s.icon size={12} />
               <span className="text-[10px] uppercase tracking-wide">{s.label}</span>
             </div>
-            <div className="text-sm font-semibold text-[light-primary]">{s.value}</div>
+            <div className="text-sm font-semibold text-light-primary">{s.value}</div>
           </div>
         ))}
       </div>
@@ -75,7 +75,7 @@ export function ProgramSummaryCard({
         <div className="flex items-center gap-2 text-sm">
           <User size={14} className="text-primary" />
           <span className="text-muted-foreground">Assigned to</span>
-          <span className="font-semibold text-[light-primary]">{clientName}</span>
+          <span className="font-semibold text-light-primary">{clientName}</span>
         </div>
       )}
     </div>

@@ -41,7 +41,7 @@ export default function ProgressTrackingPage() {
   }))
 
   return (
-    <div className="min-h-[100dvh] bg-[az-black]">
+    <div className="min-h-[100dvh] bg-az-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -72,7 +72,7 @@ export default function ProgressTrackingPage() {
         {/* Charts */}
         {entries.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+            <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
               <h2 className="text-sm font-semibold text-dark-primary mb-4 flex items-center gap-2">
                 <Scale size={16} className="text-cyan" /> Weight
               </h2>
@@ -95,7 +95,7 @@ export default function ProgressTrackingPage() {
               </div>
             </div>
 
-            <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+            <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
               <h2 className="text-sm font-semibold text-dark-primary mb-4 flex items-center gap-2">
                 <TrendingDown size={16} className="text-success" /> Body Fat %
               </h2>
@@ -121,7 +121,7 @@ export default function ProgressTrackingPage() {
         )}
 
         {/* History Table */}
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-4">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-4">
           <h2 className="text-sm font-semibold text-dark-primary mb-4">History</h2>
           {entries.length === 0 ? (
             <div className="text-center py-12">
@@ -146,7 +146,7 @@ export default function ProgressTrackingPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.03 }}
-                      className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors"
+                      className="border-b border-dark-divider hover:bg-az-black-elevated transition-colors"
                     >
                       <td className="py-2.5 px-3 text-sm text-dark-secondary font-mono whitespace-nowrap">
                         <Calendar size={12} className="inline mr-1" />
@@ -207,7 +207,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[az-black-card] border border-dark-border rounded-xl p-5 space-y-4"
+      className="bg-az-black-card border border-dark-border rounded-xl p-5 space-y-4"
     >
       <h3 className="text-sm font-semibold text-dark-primary">Log New Entry</h3>
 
@@ -218,7 +218,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+            className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
           />
         </div>
         <div>
@@ -229,7 +229,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             placeholder="e.g. 70.5"
-            className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+            className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
           />
         </div>
         <div>
@@ -240,7 +240,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
             value={bodyFat}
             onChange={(e) => setBodyFat(e.target.value)}
             placeholder="e.g. 18.5"
-            className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+            className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
           />
         </div>
       </div>
@@ -259,7 +259,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
                 value={val}
                 onChange={(e) => setMeasurements((m) => ({ ...m, [key]: e.target.value }))}
                 placeholder="cm"
-                className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
+                className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan"
               />
             </div>
           ))}
@@ -273,7 +273,7 @@ function ProgressEntryForm({ clientId, onSaved }: { clientId: string; onSaved: (
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Optional notes..."
           rows={2}
-          className="w-full bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan resize-none"
+          className="w-full bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 text-sm text-dark-primary outline-none focus:border-cyan resize-none"
         />
       </div>
 

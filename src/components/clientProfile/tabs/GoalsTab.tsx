@@ -38,7 +38,7 @@ export default function GoalsTab() {
             <Plus size={16} /> New Goal
           </button>
         </div>
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-10 text-center">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-10 text-center">
           <Target size={40} className="text-dark-muted mx-auto mb-4" />
           <p className="text-dark-secondary mb-2">No goals set for this client yet.</p>
           <p className="text-sm text-dark-muted mb-4">Set measurable goals to track progress and keep clients motivated.</p>
@@ -64,7 +64,7 @@ export default function GoalsTab() {
           <motion.div
             key={goal.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
-            className="bg-[az-black-card] border border-dark-border rounded-xl p-5 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,174,239,0.1)] transition-all duration-200"
+            className="bg-az-black-card border border-dark-border rounded-xl p-5 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,174,239,0.1)] transition-all duration-200"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs px-2 py-0.5 rounded-full bg-[rgba(0,174,239,0.1)] text-cyan">{goal.category}</span>
@@ -81,9 +81,9 @@ export default function GoalsTab() {
                 <span className="text-dark-secondary">Progress</span>
                 <span className="text-dark-primary font-semibold">{goal.progress}%</span>
               </div>
-              <div className="h-1.5 bg-[az-black-elevated] rounded-full overflow-hidden">
+              <div className="h-1.5 bg-az-black-elevated rounded-full overflow-hidden">
                 <motion.div initial={{ width: 0 }} animate={{ width: `${goal.progress}%` }} transition={{ duration: 1, ease: 'easeOut' }}
-                  className="h-full bg-gradient-to-r from-[cyan] to-[success] rounded-full" />
+                  className="h-full bg-gradient-to-r from-cyan to-[success] rounded-full" />
               </div>
             </div>
             <div className="flex items-center justify-between text-xs text-dark-muted">
@@ -108,7 +108,7 @@ export default function GoalsTab() {
               </thead>
               <tbody>
                 {completedGoals.map((g) => (
-                  <tr key={g.id} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
+                  <tr key={g.id} className="border-b border-dark-divider hover:bg-az-black-elevated transition-colors">
                     <td className="py-2.5 px-3 text-sm text-dark-primary font-medium flex items-center gap-2">
                       <CheckCircle2 size={14} className="text-success" /> {g.title}
                     </td>

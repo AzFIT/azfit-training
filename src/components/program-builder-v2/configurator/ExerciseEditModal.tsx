@@ -71,7 +71,7 @@ export function ExerciseEditModal({
         <div className="space-y-4 pt-2">
           {/* Exercise info */}
           <div className="p-3 rounded-lg bg-muted">
-            <div className="text-sm font-semibold text-[light-primary]">{exercise.exerciseName}</div>
+            <div className="text-sm font-semibold text-light-primary">{exercise.exerciseName}</div>
             {exercise.motionCategory && (
               <div className="mt-1">
                 <MotionCategoryBadge category={exercise.motionCategory} />

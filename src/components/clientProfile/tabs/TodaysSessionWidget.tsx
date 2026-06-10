@@ -51,7 +51,7 @@ export default function TodaysSessionWidget({ client }: TodaysSessionWidgetProps
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-dark-border bg-[az-black-card] p-5"
+        className="rounded-2xl border border-dark-border bg-az-black-card p-5"
       >
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-dark-surface flex items-center justify-center">
@@ -82,7 +82,7 @@ export default function TodaysSessionWidget({ client }: TodaysSessionWidgetProps
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-dark-border bg-gradient-to-br from-cyan-900/30 to-[az-black-card] p-5"
+      className="rounded-2xl border border-dark-border bg-gradient-to-br from-cyan-900/30 to-az-black-card p-5"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">

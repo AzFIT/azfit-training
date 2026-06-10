@@ -108,7 +108,7 @@ export function SecurityTab() {
       <SectionCard title="Active Sessions" description="You're signed in on these devices.">
         <div className="space-y-3">
           {sessions.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-[az-black-elevated] border border-dark-border">
+            <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-az-black-elevated border border-dark-border">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-dark-hover flex items-center justify-center">
                   <Smartphone size={16} className="text-dark-secondary" />
@@ -154,7 +154,7 @@ function PasswordField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="••••••••"
-        className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-10"
+        className="bg-az-black-elevated border-dark-border text-dark-primary pr-10"
       />
       <button
         type="button"

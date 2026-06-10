@@ -43,7 +43,7 @@ export function DataSection() {
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleImportDrop}
-          className="border-2 border-dashed border-dark-border hover:border-cyan rounded-xl bg-[az-black-elevated] p-8 text-center transition-colors cursor-pointer"
+          className="border-2 border-dashed border-dark-border hover:border-cyan rounded-xl bg-az-black-elevated p-8 text-center transition-colors cursor-pointer"
           onClick={() => document.getElementById('import-file')?.click()}
         >
           <Upload size={32} className="mx-auto text-dark-muted mb-3" />
@@ -61,7 +61,7 @@ export function DataSection() {
         {importFiles.length > 0 && (
           <div className="mt-3 space-y-2">
             {importFiles.map((f, i) => (
-              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-[az-black-elevated] border border-dark-border">
+              <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-az-black-elevated border border-dark-border">
                 <span className="text-dark-primary text-sm">{f.name}</span>
                 <span className="text-dark-muted text-xs">{(f.size / 1024).toFixed(0)} KB</span>
               </div>
@@ -93,7 +93,7 @@ export function DataSection() {
             <span className="text-dark-secondary">1.2 GB / 5 GB used</span>
             <span className="text-cyan font-medium">{storageUsed}%</span>
           </div>
-          <Progress value={storageUsed} className="h-2 bg-[az-black-elevated] [&>div]:bg-cyan" />
+          <Progress value={storageUsed} className="h-2 bg-az-black-elevated [&>div]:bg-cyan" />
           <div className="flex gap-4 text-xs text-dark-muted pt-2">
             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-cyan" /> Photos (60%)</span>
             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-violet" /> Documents (25%)</span>

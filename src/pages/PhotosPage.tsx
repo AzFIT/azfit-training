@@ -176,10 +176,10 @@ export default function PhotosPage() {
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-dark-muted" />
             <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as PhotoCategory | 'All')}>
-              <SelectTrigger className="bg-[az-black-elevated] border-dark-border text-dark-primary h-8 text-xs w-[120px]">
+              <SelectTrigger className="bg-az-black-elevated border-dark-border text-dark-primary h-8 text-xs w-[120px]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[az-black-card] border-dark-border">
+              <SelectContent className="bg-az-black-card border-dark-border">
                 <SelectItem value="All">All Categories</SelectItem>
                 {(['Front', 'Back', 'Side', 'Other'] as const).map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
@@ -189,7 +189,7 @@ export default function PhotosPage() {
 
             <button
               onClick={() => setSortOrder((o) => (o === 'newest' ? 'oldest' : 'newest'))}
-              className="flex items-center gap-1 h-8 px-3 bg-[az-black-elevated] border border-dark-border rounded-md text-xs text-dark-secondary hover:text-dark-primary transition-colors"
+              className="flex items-center gap-1 h-8 px-3 bg-az-black-elevated border border-dark-border rounded-md text-xs text-dark-secondary hover:text-dark-primary transition-colors"
             >
               <ArrowUpDown size={12} />
               {sortOrder === 'newest' ? 'Newest' : 'Oldest'}

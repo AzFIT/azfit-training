@@ -123,7 +123,7 @@ function NotificationItem({
       animate="show"
       exit="exit"
       layout
-      className={`flex items-start gap-4 p-4 border-b border-gray-100 dark:border-white/[0.04] transition-colors hover:bg-gray-50 dark:hover:bg-[az-black-elevated] ${
+      className={`flex items-start gap-4 p-4 border-b border-gray-100 dark:border-white/[0.04] transition-colors hover:bg-gray-50 dark:hover:bg-az-black-elevated ${
         !notification.read ? 'bg-cyan-glow/30 dark:bg-cyan-glow/20' : ''
       }`}
     >
@@ -304,7 +304,7 @@ export default function NotificationsPage() {
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeFilter === filter
                   ? 'bg-cyan text-white shadow-cyan'
-                  : 'bg-gray-100 dark:bg-[az-black-elevated] text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
+                  : 'bg-gray-100 dark:bg-az-black-elevated text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
               }`}
             >
               <cfg.icon size={14} />
@@ -326,7 +326,7 @@ export default function NotificationsPage() {
         initial={reduceMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 0.35 }}
-        className="bg-white dark:bg-[az-black-card] rounded-2xl border border-gray-200 dark:border-white/[0.06] shadow-card overflow-hidden"
+        className="bg-white dark:bg-az-black-card rounded-2xl border border-gray-200 dark:border-white/[0.06] shadow-card overflow-hidden"
       >
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-14 text-center">

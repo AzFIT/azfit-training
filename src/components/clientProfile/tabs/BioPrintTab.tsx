@@ -64,7 +64,7 @@ export default function BioPrintTab() {
             <p className="text-sm text-dark-muted">No assessments recorded yet</p>
           </div>
         </div>
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-10 text-center">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-10 text-center">
           <p className="text-dark-secondary mb-4">No BioPrint data available for this client.</p>
           <button
             onClick={() => navigate(`/clients/${clientId}/bioprint`)}
@@ -110,7 +110,7 @@ export default function BioPrintTab() {
                   const change = prev ? +(current - prev).toFixed(1) : 0;
                   const goal = +(current * 0.85).toFixed(1);
                   return (
-                    <tr key={label} className="border-b border-dark-divider hover:bg-[az-black-elevated] transition-colors">
+                    <tr key={label} className="border-b border-dark-divider hover:bg-az-black-elevated transition-colors">
                       <td className="py-2.5 px-3 text-sm text-dark-primary">{label}</td>
                       <td className="py-2.5 px-3 text-sm text-dark-primary font-mono">{current.toFixed(1)}</td>
                       <td className="py-2.5 px-3 text-sm text-dark-secondary font-mono">{prev ? prev.toFixed(1) : '—'}</td>

@@ -34,7 +34,7 @@ export function IntegrationsSection() {
       <SectionCard title="Connected Apps">
         <div className="space-y-3">
           {/* Google Sheets */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[az-black-elevated] border border-dark-border">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-az-black-elevated border border-dark-border">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
                 <Globe size={20} className="text-success" />
@@ -55,7 +55,7 @@ export function IntegrationsSection() {
           </div>
 
           {/* Calendar Sync */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[az-black-elevated] border border-dark-border">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-az-black-elevated border border-dark-border">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
                 <CalendarDays size={20} className="text-violet" />
@@ -66,7 +66,7 @@ export function IntegrationsSection() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <code className="text-xs text-dark-secondary bg-[az-black] px-2 py-1 rounded border border-dark-border hidden sm:block max-w-[200px] truncate">{icalUrl}</code>
+              <code className="text-xs text-dark-secondary bg-az-black px-2 py-1 rounded border border-dark-border hidden sm:block max-w-[200px] truncate">{icalUrl}</code>
               <Button variant="ghost" size="sm" className="text-cyan hover:text-cyan-hover" onClick={() => handleCopy(icalUrl)}>
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </Button>
@@ -74,7 +74,7 @@ export function IntegrationsSection() {
           </div>
 
           {/* WhatsApp */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-[az-black-elevated] border border-dark-border">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-az-black-elevated border border-dark-border">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-dark-hover flex items-center justify-center">
                 <Smartphone size={20} className="text-success" />
@@ -98,7 +98,7 @@ export function IntegrationsSection() {
                 type={showKey ? 'text' : 'password'}
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary pr-20"
+                className="bg-az-black-elevated border-dark-border text-dark-primary pr-20"
               />
               <button
                 onClick={() => setShowKey(!showKey)}
@@ -122,11 +122,11 @@ export function IntegrationsSection() {
         <div className="space-y-3">
           <div>
             <Label className="text-dark-secondary text-xs mb-1">Webhook URL</Label>
-            <Input value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://your-app.com/webhook" className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
+            <Input value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://your-app.com/webhook" className="bg-az-black-elevated border-dark-border text-dark-primary" />
           </div>
           <div>
             <Label className="text-dark-secondary text-xs mb-1">Secret Key</Label>
-            <Input value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} placeholder="whsec_..." className="bg-[az-black-elevated] border-dark-border text-dark-primary" />
+            <Input value={webhookSecret} onChange={(e) => setWebhookSecret(e.target.value)} placeholder="whsec_..." className="bg-az-black-elevated border-dark-border text-dark-primary" />
           </div>
           <div className="flex gap-2">
             <Button className="bg-cyan hover:bg-cyan-hover text-white">Add Webhook</Button>

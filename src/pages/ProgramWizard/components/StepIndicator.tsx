@@ -10,7 +10,7 @@ interface StepIndicatorProps {
 
 export default function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
   return (
-    <div className="bg-[az-black-card] border-b border-dark-border px-4 md:px-8 py-5 overflow-x-auto">
+    <div className="bg-az-black-card border-b border-dark-border px-4 md:px-8 py-5 overflow-x-auto">
       <div className="flex items-center justify-between min-w-[600px] max-w-[900px] mx-auto">
         {STEP_NAMES.map((name, i) => {
           const stepNum = i + 1
@@ -38,7 +38,7 @@ export default function StepIndicator({ currentStep, onStepClick }: StepIndicato
                       ? 'bg-cyan border-cyan text-white'
                       : current
                         ? 'bg-cyan border-cyan text-white shadow-[0_0_12px_rgba(0,174,239,0.3)]'
-                        : 'bg-[az-black-elevated] border-dark-border text-dark-muted'
+                        : 'bg-az-black-elevated border-dark-border text-dark-muted'
                   )}
                 >
                   {completed ? <Check size={16} /> : stepNum}

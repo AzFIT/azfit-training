@@ -30,7 +30,7 @@ export function SessionTabs({ sessions, activeIndex, onChange, className }: Sess
             <span
               className={cn(
                 'text-xs font-semibold',
-                isActive ? 'text-primary' : 'text-[light-primary]'
+                isActive ? 'text-primary' : 'text-light-primary'
               )}
             >
               S{session.sessionNumber}

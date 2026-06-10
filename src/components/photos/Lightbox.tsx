@@ -39,10 +39,10 @@ export default function Lightbox({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-[az-black] border-dark-border text-dark-primary max-w-5xl max-h-[95vh] overflow-hidden p-0">
+      <DialogContent className="bg-az-black border-dark-border text-dark-primary max-w-5xl max-h-[95vh] overflow-hidden p-0">
         <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
           {/* Image Area */}
-          <div className="flex-1 bg-[az-black] flex items-center justify-center relative min-h-[300px] lg:min-h-0">
+          <div className="flex-1 bg-az-black flex items-center justify-center relative min-h-[300px] lg:min-h-0">
             <img src={photo.url} alt="" className="max-w-full max-h-[60vh] lg:max-h-[85vh] object-contain" />
 
             {/* Nav buttons */}
@@ -73,7 +73,7 @@ export default function Lightbox({
           </div>
 
           {/* Sidebar Info */}
-          <div className="w-full lg:w-[300px] border-t lg:border-t-0 lg:border-l border-dark-border bg-[az-black-card] p-5 overflow-y-auto max-h-[40vh] lg:max-h-[85vh]">
+          <div className="w-full lg:w-[300px] border-t lg:border-t-0 lg:border-l border-dark-border bg-az-black-card p-5 overflow-y-auto max-h-[40vh] lg:max-h-[85vh]">
             <div className="space-y-4">
               <div>
                 <p className="text-dark-muted text-xs mb-1">Date</p>
@@ -97,11 +97,11 @@ export default function Lightbox({
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-[az-black-elevated] rounded-lg p-3">
+                <div className="bg-az-black-elevated rounded-lg p-3">
                   <p className="text-dark-muted text-[10px]">Weight</p>
                   <p className="text-dark-primary font-semibold font-mono text-lg">{photo.weight ? `${photo.weight} kg` : '-'}</p>
                 </div>
-                <div className="bg-[az-black-elevated] rounded-lg p-3">
+                <div className="bg-az-black-elevated rounded-lg p-3">
                   <p className="text-dark-muted text-[10px]">Body Fat</p>
                   <p className="text-dark-primary font-semibold font-mono text-lg">{photo.bodyFatPercentage ? `${photo.bodyFatPercentage}%` : '-'}</p>
                 </div>
@@ -130,7 +130,7 @@ export default function Lightbox({
                       value={trainerNotes}
                       onChange={(e) => setTrainerNotes(e.target.value)}
                       placeholder="Add your observations..."
-                      className="bg-[az-black-elevated] border-dark-border text-dark-primary min-h-[80px] text-xs mt-1"
+                      className="bg-az-black-elevated border-dark-border text-dark-primary min-h-[80px] text-xs mt-1"
                     />
                   </div>
 

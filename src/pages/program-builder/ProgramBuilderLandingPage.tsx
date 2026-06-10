@@ -71,7 +71,7 @@ export default function ProgramBuilderLandingPage() {
               <ArrowLeft size={16} />
             </Button>
             <div>
-              <h1 className="text-lg font-bold text-[light-primary]">Program Builder</h1>
+              <h1 className="text-lg font-bold text-light-primary">Program Builder</h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
                 Select a phase template to customize and assign
               </p>
@@ -112,7 +112,7 @@ export default function ProgramBuilderLandingPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-[light-primary]">All Phase Templates</h2>
+              <h2 className="text-sm font-semibold text-light-primary">All Phase Templates</h2>
               <p className="text-xs text-muted-foreground">
                 12 AzFIT phases — select one to customize
               </p>
@@ -155,7 +155,7 @@ export default function ProgramBuilderLandingPage() {
         {/* My Custom Programs */}
         <div className="space-y-4">
           <div>
-            <h2 className="text-sm font-semibold text-[light-primary]">My Custom Programs</h2>
+            <h2 className="text-sm font-semibold text-light-primary">My Custom Programs</h2>
             <p className="text-xs text-muted-foreground">
               Programs you&apos;ve customized and saved
             </p>

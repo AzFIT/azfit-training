@@ -47,7 +47,7 @@ export default function PhotosTab() {
         <h2 className="text-lg font-semibold text-dark-primary">Progress Photos</h2>
         <div className="flex items-center gap-2">
           <button onClick={() => { setCompareMode(!compareMode); setSelectedForCompare([]); }}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${compareMode ? 'bg-cyan text-white' : 'bg-[az-black-elevated] text-dark-secondary hover:text-dark-primary'}`}>
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${compareMode ? 'bg-cyan text-white' : 'bg-az-black-elevated text-dark-secondary hover:text-dark-primary'}`}>
             <Eye size={14} /> Compare Mode
           </button>
           <button className="flex items-center gap-2 bg-cyan hover:bg-cyan-hover text-white font-medium px-4 py-2 rounded-lg text-sm transition-all hover:scale-[1.02]">
@@ -70,12 +70,12 @@ export default function PhotosTab() {
 
       {/* Compare View */}
       {compareMode && selectedForCompare.length === 2 && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-az-black-card border border-dark-border rounded-xl p-5">
           <h3 className="text-sm font-semibold text-dark-primary mb-4">Side-by-Side Comparison</h3>
           <div className="grid grid-cols-2 gap-4">
             {comparePhotos.map((p) => (
               <div key={p.id} className="text-center">
-                <div className="aspect-[3/4] bg-[az-black-elevated] rounded-lg overflow-hidden mb-3">
+                <div className="aspect-[3/4] bg-az-black-elevated rounded-lg overflow-hidden mb-3">
                   <img src={p.thumbnailUrl || p.url} alt={p.category} className="w-full h-full object-cover" />
                 </div>
                 <p className="text-sm text-dark-primary font-medium">{p.date}</p>
@@ -84,7 +84,7 @@ export default function PhotosTab() {
               </div>
             ))}
           </div>
-          <div className="mt-4 p-3 bg-[az-black-elevated] rounded-lg text-center">
+          <div className="mt-4 p-3 bg-az-black-elevated rounded-lg text-center">
             <p className="text-sm text-dark-primary">
               Weight change: <span className="text-success font-semibold">{(comparePhotos[1]?.weight ?? 0) - (comparePhotos[0]?.weight ?? 0)} kg</span>
               <span className="mx-3 text-dark-border">|</span>
@@ -109,13 +109,13 @@ export default function PhotosTab() {
               <motion.div
                 key={photo.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.05 }}
-                className={`group relative bg-[az-black-card] border rounded-xl overflow-hidden cursor-pointer transition-all ${isSelected ? 'border-cyan ring-2 ring-[cyan]/30' : 'border-dark-border hover:border-dark-subtle'}`}
+                className={`group relative bg-az-black-card border rounded-xl overflow-hidden cursor-pointer transition-all ${isSelected ? 'border-cyan ring-2 ring-cyan/30' : 'border-dark-border hover:border-dark-subtle'}`}
                 onClick={() => {
                   if (compareMode) toggleCompare(photo.id);
                   else setViewingPhoto(photo);
                 }}
               >
-                <div className="aspect-[3/4] bg-[az-black-elevated] relative">
+                <div className="aspect-[3/4] bg-az-black-elevated relative">
                   <img src={photo.thumbnailUrl || photo.url} alt={photo.category} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   {compareMode && (
                     <div className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'bg-cyan border-cyan' : 'bg-black/50 border-white/50'}`}>
@@ -155,19 +155,19 @@ export default function PhotosTab() {
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
           onClick={() => setViewingPhoto(null)}>
           <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}
-            className="bg-[az-black-card] border border-dark-border rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-az-black-card border border-dark-border rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between p-4 border-b border-dark-border">
                 <div>
                   <h3 className="text-base font-semibold text-dark-primary">{viewingPhoto.category} — {viewingPhoto.date}</h3>
                   <p className="text-xs text-dark-muted font-mono">{viewingPhoto.weight ?? '--'}kg · {viewingPhoto.bodyFatPercentage ?? '--'}% BF</p>
                 </div>
-                <button onClick={() => setViewingPhoto(null)} className="w-8 h-8 rounded-lg bg-[az-black-elevated] hover:bg-dark-hover flex items-center justify-center text-dark-secondary transition-colors">
+                <button onClick={() => setViewingPhoto(null)} className="w-8 h-8 rounded-lg bg-az-black-elevated hover:bg-dark-hover flex items-center justify-center text-dark-secondary transition-colors">
                   <X size={16} />
                 </button>
               </div>
               <div className="p-4">
-                <div className="aspect-[3/4] bg-[az-black-elevated] rounded-lg overflow-hidden mb-4">
+                <div className="aspect-[3/4] bg-az-black-elevated rounded-lg overflow-hidden mb-4">
                   <img src={viewingPhoto.url} alt={viewingPhoto.category} className="w-full h-full object-contain" />
                 </div>
                 {viewingPhoto.notes && (

@@ -32,7 +32,7 @@ export default function LeaderboardFilter({ filters, onChange }: LeaderboardFilt
   }
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-[az-black-card] border border-dark-border rounded-2xl">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-az-black-card border border-dark-border rounded-2xl">
       <div className="flex items-center gap-2 text-dark-secondary">
         <Filter size={16} />
         <span className="text-sm font-medium">Filters</span>

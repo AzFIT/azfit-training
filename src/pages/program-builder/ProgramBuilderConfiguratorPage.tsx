@@ -262,7 +262,7 @@ export default function ProgramBuilderConfiguratorPage() {
               <ArrowLeft size={16} />
             </Button>
             <div className="min-w-0">
-              <h1 className="text-base sm:text-lg font-bold text-[light-primary] truncate">
+              <h1 className="text-base sm:text-lg font-bold text-light-primary truncate">
                 {phase.phaseName}
               </h1>
               <p className="text-xs text-muted-foreground truncate">
@@ -309,7 +309,7 @@ export default function ProgramBuilderConfiguratorPage() {
             {/* Session header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h2 className="text-sm font-semibold text-[light-primary]">
+                <h2 className="text-sm font-semibold text-light-primary">
                   {activeSession.sessionName}
                 </h2>
                 <p className="text-xs text-muted-foreground">{activeSession.focus}</p>

@@ -128,7 +128,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[az-black-card] border border-dark-border rounded-xl p-4"
+          className="bg-az-black-card border border-dark-border rounded-xl p-4"
         >
           <div className="flex items-center gap-2 mb-3">
             <Trophy size={16} className="text-warning" />
@@ -138,7 +138,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
             {prs.slice(0, 8).map((pr) => (
               <div
                 key={pr.exerciseId}
-                className="bg-[az-black-elevated] rounded-lg p-3 border border-dark-border"
+                className="bg-az-black-elevated rounded-lg p-3 border border-dark-border"
               >
                 <p className="text-xs text-dark-muted truncate">{pr.exerciseName}</p>
                 <p className="text-lg font-bold text-dark-primary font-mono">{pr.load}kg</p>
@@ -162,7 +162,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-[az-black-card] border border-dark-border rounded-xl p-4"
+          className="bg-az-black-card border border-dark-border rounded-xl p-4"
         >
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={16} className="text-cyan" />
@@ -211,7 +211,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-[az-black-card] border border-dark-border rounded-xl p-4"
+            className="bg-az-black-card border border-dark-border rounded-xl p-4"
           >
             <div className="flex items-center gap-2 mb-3">
               <Activity size={16} className="text-success" />
@@ -243,7 +243,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-[az-black-card] border border-dark-border rounded-xl p-4"
+          className="bg-az-black-card border border-dark-border rounded-xl p-4"
         >
           <div className="flex items-center gap-2 mb-3">
             <Calendar size={16} className="text-violet" />
@@ -276,7 +276,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[az-black-card] border border-dark-border rounded-xl p-4"
+          className="bg-az-black-card border border-dark-border rounded-xl p-4"
         >
           <div className="flex items-center gap-2 mb-3">
             <Dumbbell size={16} className="text-orange" />
@@ -291,7 +291,7 @@ export default function WorkoutAnalytics({ sessions, clientId }: WorkoutAnalytic
                     <span className="text-sm text-dark-primary">{ex.name}</span>
                     <span className="text-xs text-dark-muted">{ex.count} sessions</span>
                   </div>
-                  <div className="h-1.5 bg-[az-black-elevated] rounded-full overflow-hidden mt-1">
+                  <div className="h-1.5 bg-az-black-elevated rounded-full overflow-hidden mt-1">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${(ex.count / exerciseFreq[0].count) * 100}%` }}

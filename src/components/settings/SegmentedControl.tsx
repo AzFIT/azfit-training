@@ -10,7 +10,7 @@ export function SegmentedControl({
   disabled?: boolean
 }) {
   return (
-    <div className={`inline-flex bg-[az-black-elevated] rounded-lg p-0.5 border border-dark-border ${disabled ? 'opacity-50' : ''}`}>
+    <div className={`inline-flex bg-az-black-elevated rounded-lg p-0.5 border border-dark-border ${disabled ? 'opacity-50' : ''}`}>
       {options.map((opt) => (
         <button
           key={opt}

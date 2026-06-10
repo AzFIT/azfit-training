@@ -2,10 +2,12 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Utensils, Search, Droplets, Pill, Info, Save, User, Sparkles,
+  Utensils, Search, Droplets, Pill, Info, Save, User, Sparkles, ClipboardList, BarChart3, Brain,
 } from 'lucide-react'
 import { useAppDataStore } from '../stores/useAppDataStore'
 import { useClientById, useLatestBodyStats, useLatestProgressEntry, useClientProgramGoal } from '../stores/useAppDataStore.selectors'
+import { useNutritionPlan, useSaveNutritionPlan } from '../hooks/useNutritionPlan'
+import { useMealLogs, useSaveMealLog } from '../hooks/useMealLog'
 import type { NutritionEntry } from '../types/entities'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
@@ -13,11 +15,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
-  MacroRing, MealPlannerTab, MealPlanDisplay, FoodDatabaseTab, WaterTrackerTab, SupplementsTab,
+  MacroRing, MealPlannerTab, MealPlanDisplay, DailyNutritionLog, WeeklyNutritionSummary,
+  AiMealAnalysis,
+  FoodDatabaseTab, WaterTrackerTab, SupplementsTab,
   type Gender, type ActivityLevel, type Goal, type DietPreset, type MealType, type MealEntry,
   ACTIVITY_MULTIPLIERS, GOAL_LABELS, MACRO_TARGETS, calcMacros, FOOD_DB,
   generateMealPlan, type DailyMealPlan,
 } from '@/components/nutrition'
+import type { DailyLog } from '@/components/nutrition/DailyNutritionLog'
 
 /* ═══════════════════════════════════════════
    MAIN NUTRITION PAGE
@@ -73,6 +78,28 @@ export default function NutritionPage() {
   const [mealPlan, setMealPlan] = useState<DailyMealPlan | null>(null)
   const [mealPlanDate, setMealPlanDate] = useState(new Date())
 
+  // ── Supabase hooks (when clientId present) ──
+  const planDateStr = mealPlanDate.toISOString().split('T')[0]
+  const { data: savedPlan } = useNutritionPlan(clientId, planDateStr)
+  const savePlanMutation = useSaveNutritionPlan()
+
+  // Load saved plan from Supabase when available
+  useEffect(() => {
+    if (savedPlan && clientId) {
+      setMealPlan(savedPlan)
+    }
+  }, [savedPlan, clientId])
+
+  // Auto-save plan to Supabase when it changes
+  useEffect(() => {
+    if (mealPlan && clientId) {
+      const timeout = setTimeout(() => {
+        savePlanMutation.mutate({ plan: mealPlan, clientId })
+      }, 2000)
+      return () => clearTimeout(timeout)
+    }
+  }, [mealPlan, clientId])
+
   const [mealDate, setMealDate] = useState(new Date())
   const [meals, setMeals] = useState<MealEntry[]>([
     { id: 'm1', foodId: 1, quantity: 80, mealType: 'Breakfast' },
@@ -120,6 +147,54 @@ export default function NutritionPage() {
     const plan = generateMealPlan(targetCalories, proteinGrams, carbGrams, fatGrams, FOOD_DB, mealPlanDate)
     setMealPlan(plan)
   }, [targetCalories, weight, dietPreset, mealPlanDate])
+
+  // ── Daily Nutrition Log State ──
+  const [dailyLogs, setDailyLogs] = useState<DailyLog[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('azfit_nutrition_logs') || '[]')
+    } catch { return [] }
+  })
+
+  // Load weekly logs from Supabase
+  const weekAgo = new Date()
+  weekAgo.setDate(weekAgo.getDate() - 7)
+  const weekAgoStr = weekAgo.toISOString().split('T')[0]
+  const todayStr = new Date().toISOString().split('T')[0]
+  const { data: weeklyLogsFromDb } = useMealLogs(clientId, weekAgoStr, todayStr)
+
+  // Merge Supabase logs with local logs
+  const mergedLogs = useMemo(() => {
+    if (!weeklyLogsFromDb || weeklyLogsFromDb.length === 0) return dailyLogs
+    const dbDates = new Set(weeklyLogsFromDb.map((l) => l.date))
+    const localOnly = dailyLogs.filter((l) => !dbDates.has(l.date))
+    return [...weeklyLogsFromDb, ...localOnly]
+  }, [weeklyLogsFromDb, dailyLogs])
+
+  const todayLog = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0]
+    return dailyLogs.find((l) => l.date === today) ?? {
+      date: today,
+      planned: mealPlan,
+      logged: [],
+      waterGlasses: 0,
+      waterTarget: 8,
+    }
+  }, [dailyLogs, mealPlan])
+
+  const saveLogMutation = useSaveMealLog()
+
+  const updateTodayLog = useCallback((log: DailyLog) => {
+    setDailyLogs((prev) => {
+      const filtered = prev.filter((l) => l.date !== log.date)
+      const updated = [...filtered, log]
+      localStorage.setItem('azfit_nutrition_logs', JSON.stringify(updated))
+      return updated
+    })
+    // Also save to Supabase if clientId is present
+    if (clientId) {
+      saveLogMutation.mutate({ log, clientId })
+    }
+  }, [clientId, saveLogMutation])
 
   // Calculate current macros from meals
   const currentMacros = useMemo(() => {
@@ -182,7 +257,7 @@ export default function NutritionPage() {
     >
       {/* ═══ Client Header (when viewing specific client) ═══ */}
       {client && (
-        <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-4 flex items-center gap-3">
+        <div className="bg-az-black-card border border-dark-border rounded-2xl p-4 flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-cyan/20 flex items-center justify-center">
             <User size={16} className="text-cyan" />
           </div>
@@ -197,7 +272,7 @@ export default function NutritionPage() {
       )}
 
       {/* ═══ TDEE Summary + Macro Rings ═══ */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-6">
+      <div className="bg-az-black-card border border-dark-border rounded-2xl p-6">
         <div className="flex flex-col xl:flex-row gap-8">
           {/* TDEE Calculation Card */}
           <motion.div
@@ -211,7 +286,7 @@ export default function NutritionPage() {
             {/* Inputs */}
             <div className="grid grid-cols-2 gap-3">
               {/* Gender */}
-              <div className="flex items-center gap-1 bg-[az-black-elevated] rounded-lg p-1 border border-dark-border">
+              <div className="flex items-center gap-1 bg-az-black-elevated rounded-lg p-1 border border-dark-border">
                 <button
                   onClick={() => setGender('male')}
                   className={`flex-1 py-1.5 rounded-md text-xs font-medium transition-all ${
@@ -223,14 +298,14 @@ export default function NutritionPage() {
                 <button
                   onClick={() => setGender('female')}
                   className={`flex-1 py-1.5 rounded-md text-xs font-medium transition-all ${
-                    gender === 'female' ? 'bg-[trainer-accent] text-white' : 'text-dark-muted hover:text-dark-secondary'
+                    gender === 'female' ? 'bg-trainer-accent text-white' : 'text-dark-muted hover:text-dark-secondary'
                   }`}
                 >
                   Female
                 </button>
               </div>
               {/* Age */}
-              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
+              <div className="flex items-center bg-az-black-elevated rounded-lg border border-dark-border px-3">
                 <span className="text-dark-muted text-[10px] mr-2">Age</span>
                 <input
                   type="number"
@@ -242,7 +317,7 @@ export default function NutritionPage() {
                 />
               </div>
               {/* Weight */}
-              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
+              <div className="flex items-center bg-az-black-elevated rounded-lg border border-dark-border px-3">
                 <span className="text-dark-muted text-[10px] mr-2">Weight (kg)</span>
                 <input
                   type="number"
@@ -255,7 +330,7 @@ export default function NutritionPage() {
                 />
               </div>
               {/* Height */}
-              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3">
+              <div className="flex items-center bg-az-black-elevated rounded-lg border border-dark-border px-3">
                 <span className="text-dark-muted text-[10px] mr-2">Height (cm)</span>
                 <input
                   type="number"
@@ -267,7 +342,7 @@ export default function NutritionPage() {
                 />
               </div>
               {/* Body Fat % */}
-              <div className="flex items-center bg-[az-black-elevated] rounded-lg border border-dark-border px-3 col-span-2">
+              <div className="flex items-center bg-az-black-elevated rounded-lg border border-dark-border px-3 col-span-2">
                 <span className="text-dark-muted text-[10px] mr-2">Body Fat %</span>
                 <input
                   type="number"
@@ -288,10 +363,10 @@ export default function NutritionPage() {
 
             {/* Activity Level */}
             <Select value={activity} onValueChange={(v) => setActivity(v as ActivityLevel)}>
-              <SelectTrigger className="bg-[az-black-elevated] border-dark-border text-dark-primary text-xs h-9">
+              <SelectTrigger className="bg-az-black-elevated border-dark-border text-dark-primary text-xs h-9">
                 <SelectValue placeholder="Activity Level" />
               </SelectTrigger>
-              <SelectContent className="bg-[az-black-elevated] border-dark-border">
+              <SelectContent className="bg-az-black-elevated border-dark-border">
                 {(Object.entries(ACTIVITY_MULTIPLIERS) as [ActivityLevel, { label: string; value: number }][]).map(
                   ([key, { label }]) => (
                     <SelectItem key={key} value={key} className="text-dark-primary">
@@ -303,7 +378,7 @@ export default function NutritionPage() {
             </Select>
 
             {/* Goal Toggle */}
-            <div className="flex items-center gap-1 bg-[az-black-elevated] rounded-lg p-1 border border-dark-border">
+            <div className="flex items-center gap-1 bg-az-black-elevated rounded-lg p-1 border border-dark-border">
               {(Object.entries(GOAL_LABELS) as [Goal, { label: string; adjustment: number }][]).map(
                 ([key, { label }]) => (
                   <button
@@ -337,7 +412,7 @@ export default function NutritionPage() {
                       className={`text-left px-3 py-2 rounded-lg border text-xs transition-all ${
                         dietPreset === key
                           ? 'border-cyan bg-[rgba(0,174,239,0.1)] text-dark-primary'
-                          : 'border-dark-border bg-[az-black-elevated] text-dark-muted hover:text-dark-secondary'
+                          : 'border-dark-border bg-az-black-elevated text-dark-muted hover:text-dark-secondary'
                       }`}
                     >
                       <span className="font-medium block">{label}</span>
@@ -349,7 +424,7 @@ export default function NutritionPage() {
             </div>
 
             {/* TDEE Display */}
-            <div className="bg-[az-black-elevated] rounded-xl p-4 border border-dark-border space-y-2">
+            <div className="bg-az-black-elevated rounded-xl p-4 border border-dark-border space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-cyan text-3xl font-bold font-mono">{targetCalories.toLocaleString()} kcal</span>
               </div>
@@ -479,26 +554,38 @@ export default function NutritionPage() {
 
       {/* ═══ Tabs ═══ */}
       <Tabs defaultValue="plan" className="w-full">
-        <TabsList className="bg-[az-black-card] border border-dark-border p-1 rounded-xl w-full justify-start gap-1">
-          <TabsTrigger value="plan" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+        <TabsList className="bg-az-black-card border border-dark-border p-1 rounded-xl w-full justify-start gap-1">
+          <TabsTrigger value="plan" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Sparkles size={14} className="mr-1.5" />
             Meal Plan
           </TabsTrigger>
-          <TabsTrigger value="planner" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+          <TabsTrigger value="planner" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Utensils size={14} className="mr-1.5" />
             Manual
           </TabsTrigger>
-          <TabsTrigger value="database" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+          <TabsTrigger value="database" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Search size={14} className="mr-1.5" />
             Food DB
           </TabsTrigger>
-          <TabsTrigger value="water" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+          <TabsTrigger value="water" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Droplets size={14} className="mr-1.5" />
             Water
           </TabsTrigger>
-          <TabsTrigger value="supplements" className="data-[state=active]:bg-[az-black-elevated] data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+          <TabsTrigger value="supplements" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
             <Pill size={14} className="mr-1.5" />
             Supplements
+          </TabsTrigger>
+          <TabsTrigger value="log" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+            <ClipboardList size={14} className="mr-1.5" />
+            Log
+          </TabsTrigger>
+          <TabsTrigger value="weekly" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+            <BarChart3 size={14} className="mr-1.5" />
+            Weekly
+          </TabsTrigger>
+          <TabsTrigger value="ai" className="data-[state=active]:bg-az-black-elevated data-[state=active]:text-dark-primary data-[state=active]:border-dark-border data-[state=active]:border text-dark-muted text-xs rounded-lg px-4 py-2 transition-all">
+            <Brain size={14} className="mr-1.5" />
+            AI
           </TabsTrigger>
         </TabsList>
 
@@ -506,9 +593,9 @@ export default function NutritionPage() {
           <TabsContent value="plan" className="mt-4">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               {mealPlan ? (
-                <MealPlanDisplay plan={mealPlan} onPlanChange={setMealPlan} onDateChange={setMealPlanDate} />
+                <MealPlanDisplay plan={mealPlan} onPlanChange={setMealPlan} onDateChange={setMealPlanDate} foodDb={FOOD_DB} />
               ) : (
-                <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-8 text-center">
+                <div className="bg-az-black-card border border-dark-border rounded-2xl p-8 text-center">
                   <Sparkles size={32} className="text-cyan mx-auto mb-3" />
                   <p className="text-dark-primary text-sm font-medium">Generate a meal plan</p>
                   <p className="text-dark-muted text-xs mt-1">Set your TDEE targets above to auto-generate</p>
@@ -536,11 +623,35 @@ export default function NutritionPage() {
               <SupplementsTab />
             </motion.div>
           </TabsContent>
+          <TabsContent value="log" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+              <DailyNutritionLog
+                log={{ ...todayLog, planned: mealPlan }}
+                onUpdateLog={(log) => updateTodayLog({ ...log, planned: mealPlan })}
+              />
+            </motion.div>
+          </TabsContent>
+          <TabsContent value="weekly" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+              <WeeklyNutritionSummary logs={mergedLogs} targetCalories={targetCalories} />
+            </motion.div>
+          </TabsContent>
+          <TabsContent value="ai" className="mt-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
+              <AiMealAnalysis
+                foodDb={FOOD_DB}
+                onAddToLog={(items) => {
+                  // eslint-disable-next-line no-console
+                  console.log('AI analyzed items:', items)
+                }}
+              />
+            </motion.div>
+          </TabsContent>
         </AnimatePresence>
       </Tabs>
 
       {/* ═══ Weekly Adherence Section ═══ */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-2xl p-6">
+      <div className="bg-az-black-card border border-dark-border rounded-2xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <Info size={16} className="text-cyan" />
           <h3 className="text-dark-primary font-semibold text-base">This Week&apos;s Adherence</h3>

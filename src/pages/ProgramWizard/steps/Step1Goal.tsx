@@ -29,7 +29,7 @@ export default function Step1Goal({ selectedGoal, onSelect }: Step1GoalProps) {
         <select
           value={selectedGoal}
           onChange={(e) => onSelect(e.target.value)}
-          className="bg-[az-black-elevated] border border-dark-border text-dark-primary text-sm px-4 py-2 rounded-lg focus:border-cyan outline-none"
+          className="bg-az-black-elevated border border-dark-border text-dark-primary text-sm px-4 py-2 rounded-lg focus:border-cyan outline-none"
         >
           <option value="">Choose a goal...</option>
           {GOAL_CARDS.map((g) => (
@@ -51,7 +51,7 @@ export default function Step1Goal({ selectedGoal, onSelect }: Step1GoalProps) {
               transition={{ duration: 0.4, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
               onClick={() => onSelect(goal.id)}
               className={cn(
-                'relative text-left bg-[az-black-card] border-2 rounded-2xl p-8 min-h-[180px] transition-all duration-200',
+                'relative text-left bg-az-black-card border-2 rounded-2xl p-8 min-h-[180px] transition-all duration-200',
                 selected
                   ? 'border-cyan bg-cyan-glow shadow-[0_0_20px_rgba(0,174,239,0.15)]'
                   : 'border-dark-border hover:border-[rgba(0,174,239,0.3)] hover:-translate-y-0.5'
@@ -77,7 +77,7 @@ export default function Step1Goal({ selectedGoal, onSelect }: Step1GoalProps) {
               <p className="text-dark-secondary text-xs mb-3">{goal.description}</p>
               <div className="flex flex-wrap gap-1">
                 {goal.methods.slice(0, 3).map((m) => (
-                  <span key={m} className="text-[10px] text-dark-muted bg-[az-black-elevated] px-2 py-0.5 rounded-full">{m}</span>
+                  <span key={m} className="text-[10px] text-dark-muted bg-az-black-elevated px-2 py-0.5 rounded-full">{m}</span>
                 ))}
               </div>
             </motion.button>

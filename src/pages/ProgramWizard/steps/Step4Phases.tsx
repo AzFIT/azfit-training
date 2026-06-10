@@ -82,7 +82,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3, ease: [0.175, 0.885, 0.32, 1.275] as [number, number, number, number] }}
-              className="bg-[az-black-card] border border-dark-border rounded-xl p-5 relative"
+              className="bg-az-black-card border border-dark-border rounded-xl p-5 relative"
               style={{ borderLeftWidth: 4, borderLeftColor: colors[i % colors.length] }}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -91,7 +91,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                   <input
                     value={phase.name}
                     onChange={(e) => updatePhase(phase.id, { name: e.target.value })}
-                    className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                    className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                   />
                 </div>
                 <div>
@@ -102,7 +102,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                     max={16}
                     value={phase.durationWeeks}
                     onChange={(e) => updatePhase(phase.id, { durationWeeks: Math.max(1, parseInt(e.target.value) || 1) })}
-                    className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                    className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                   />
                 </div>
                 <div>
@@ -110,7 +110,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                   <select
                     value={phase.focus}
                     onChange={(e) => updatePhase(phase.id, { focus: e.target.value })}
-                    className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                    className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                   >
                     {PHASE_FOCUSES.map(f => <option key={f} value={f}>{f}</option>)}
                   </select>
@@ -124,7 +124,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                       max={100}
                       value={phase.intensityMin}
                       onChange={(e) => updatePhase(phase.id, { intensityMin: parseInt(e.target.value) || 0 })}
-                      className="w-16 bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-2 py-2 rounded-lg outline-none text-center"
+                      className="w-16 bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-2 py-2 rounded-lg outline-none text-center"
                     />
                     <span className="text-dark-muted">—</span>
                     <input
@@ -133,7 +133,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                       max={100}
                       value={phase.intensityMax}
                       onChange={(e) => updatePhase(phase.id, { intensityMax: parseInt(e.target.value) || 0 })}
-                      className="w-16 bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-2 py-2 rounded-lg outline-none text-center"
+                      className="w-16 bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-2 py-2 rounded-lg outline-none text-center"
                     />
                   </div>
                 </div>
@@ -142,7 +142,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                   <select
                     value={phase.volume}
                     onChange={(e) => updatePhase(phase.id, { volume: e.target.value })}
-                    className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                    className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                   >
                     {VOLUME_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
                   </select>
@@ -152,7 +152,7 @@ export default function Step4Phases({ phases, onChange }: Step4PhasesProps) {
                   <input
                     value={phase.repRange}
                     onChange={(e) => updatePhase(phase.id, { repRange: e.target.value })}
-                    className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
+                    className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm px-3 py-2 rounded-lg outline-none"
                   />
                 </div>
               </div>

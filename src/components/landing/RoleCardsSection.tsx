@@ -6,7 +6,7 @@ const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
 export default function RoleCardsSection() {
   return (
-    <section id="pricing" className="bg-az-black py-20 lg:py-24">
+    <section id="pricing" className="bg-az-black py-20 md:py-28">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE }} className="font-mono text-xs text-cyan uppercase tracking-[0.1em] mb-4">
@@ -40,7 +40,7 @@ export default function RoleCardsSection() {
               <span className="inline-block self-start px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider text-cyan bg-cyan/15 mb-4">For Clients</span>
               <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-white mb-3">Achieve Your Fitness Goals</h3>
               <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-6 max-w-[400px]">Get personalized programs, track your nutrition, monitor progress with photos and metrics, and stay connected with your trainer.</p>
-              <Link to="/signup" className="inline-flex items-center gap-2 self-start bg-white hover:bg-[dark-primary] text-[gray-950] font-semibold px-6 py-3 rounded-xl transition-all hover:scale-[1.02] text-sm">
+              <Link to="/signup" className="inline-flex items-center gap-2 self-start bg-white hover:bg-dark-primary text-gray-950 font-semibold px-6 py-3 rounded-xl transition-all hover:scale-[1.02] text-sm">
                 Join as Client <ArrowRight size={16} />
               </Link>
             </div>

@@ -46,7 +46,7 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
           value={state.programName}
           onChange={(e) => onNameChange(e.target.value)}
           placeholder="e.g., Hypertrophy Phase 1"
-          className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-lg px-4 py-3 rounded-xl outline-none transition-colors"
+          className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-lg px-4 py-3 rounded-xl outline-none transition-colors"
         />
       </div>
 
@@ -63,7 +63,7 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
-            className="bg-[az-black-card] border border-dark-border rounded-xl p-5"
+            className="bg-az-black-card border border-dark-border rounded-xl p-5"
           >
             <div className="flex items-center gap-2 mb-2">
               <card.icon size={16} className="text-cyan" />
@@ -76,7 +76,7 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
       </div>
 
       {/* Weekly Schedule Preview */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-6 mb-8">
+      <div className="bg-az-black-card border border-dark-border rounded-xl p-6 mb-8">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-dark-primary font-semibold text-base">Weekly Schedule</h3>
           <button
@@ -94,8 +94,8 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
               className={cn(
                 'rounded-lg p-2 min-h-[80px] border',
                 day.isRest
-                  ? 'bg-[az-black] border-dashed border-dark-divider'
-                  : 'bg-[az-black-elevated] border-dark-border'
+                  ? 'bg-az-black border-dashed border-dark-divider'
+                  : 'bg-az-black-elevated border-dark-border'
               )}
             >
               <p className={cn('text-[10px] font-semibold mb-1', day.isRest ? 'text-dark-muted' : 'text-cyan')}>
@@ -120,7 +120,7 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
       </div>
 
       {/* Phase Timeline */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-6 mb-8">
+      <div className="bg-az-black-card border border-dark-border rounded-xl p-6 mb-8">
         <h3 className="text-dark-primary font-semibold text-base mb-4">Phase Timeline</h3>
         <div className="h-12 flex rounded-xl overflow-hidden">
           {state.phases.map((phase, i) => (
@@ -135,7 +135,7 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
               <span className="text-xs font-bold">{phase.name}</span>
               <span className="text-[9px] opacity-75">{phase.durationWeeks}w</span>
               {/* Tooltip */}
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[az-black-elevated] border border-dark-border rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10 whitespace-nowrap shadow-lg">
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-az-black-elevated border border-dark-border rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10 whitespace-nowrap shadow-lg">
                 <p className="text-dark-primary text-xs font-semibold">{phase.name}</p>
                 <p className="text-dark-secondary text-[10px]">{phase.focus} — {phase.intensityMin}-{phase.intensityMax}% 1RM</p>
                 <p className="text-dark-muted text-[10px]">{phase.repRange} reps — {phase.volume} volume</p>
@@ -147,7 +147,7 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
 
       {/* Muscle Distribution */}
       {muscleDist.length > 0 && (
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-6 mb-8">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-6 mb-8">
           <h3 className="text-dark-primary font-semibold text-base mb-4">Muscle Group Distribution</h3>
           <div className="flex flex-wrap gap-3">
             {muscleDist.map(([muscle, sets], i) => (
@@ -169,14 +169,14 @@ export default function Step7Preview({ state, onNameChange, onDescChange }: Step
       )}
 
       {/* Notes */}
-      <div className="bg-[az-black-card] border border-dark-border rounded-xl p-6">
+      <div className="bg-az-black-card border border-dark-border rounded-xl p-6">
         <label className="block text-dark-muted text-xs mb-2 font-semibold uppercase tracking-wider">Notes / Description</label>
         <textarea
           value={state.description}
           onChange={(e) => onDescChange(e.target.value)}
           placeholder="Add any notes about this program..."
           rows={4}
-          className="w-full bg-[az-black-elevated] border border-dark-border focus:border-cyan text-dark-primary text-sm placeholder-[dark-muted] px-4 py-3 rounded-xl outline-none resize-none transition-colors"
+          className="w-full bg-az-black-elevated border border-dark-border focus:border-cyan text-dark-primary text-sm placeholder:text-dark-muted px-4 py-3 rounded-xl outline-none resize-none transition-colors"
         />
       </div>
     </div>

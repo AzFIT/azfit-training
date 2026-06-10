@@ -31,10 +31,10 @@ export function DisplaySection() {
           <div className="flex items-center justify-between">
             <Label className="text-dark-secondary text-sm">Timezone</Label>
             <Select defaultValue="Asia/Hong_Kong" disabled>
-              <SelectTrigger className="w-[220px] bg-[az-black-elevated] border-dark-border text-dark-primary opacity-60">
+              <SelectTrigger className="w-[220px] bg-az-black-elevated border-dark-border text-dark-primary opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[az-black-elevated] border-dark-border">
+              <SelectContent className="bg-az-black-elevated border-dark-border">
                 <SelectItem value="Asia/Hong_Kong">Asia/Hong Kong (GMT+8)</SelectItem>
               </SelectContent>
             </Select>
@@ -62,10 +62,10 @@ export function DisplaySection() {
           <div className="flex items-center gap-3">
             <span className="text-dark-muted text-sm">HKD (locked)</span>
             <Select defaultValue="HKD" disabled>
-              <SelectTrigger className="w-[160px] bg-[az-black-elevated] border-dark-border text-dark-primary opacity-60">
+              <SelectTrigger className="w-[160px] bg-az-black-elevated border-dark-border text-dark-primary opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[az-black-elevated] border-dark-border">
+              <SelectContent className="bg-az-black-elevated border-dark-border">
                 <SelectItem value="HKD">HKD</SelectItem>
               </SelectContent>
             </Select>
@@ -77,10 +77,10 @@ export function DisplaySection() {
         <div className="flex items-center justify-between">
           <Label className="text-dark-secondary text-sm">Language</Label>
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-[200px] bg-[az-black-elevated] border-dark-border text-dark-primary">
+            <SelectTrigger className="w-[200px] bg-az-black-elevated border-dark-border text-dark-primary">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[az-black-elevated] border-dark-border">
+            <SelectContent className="bg-az-black-elevated border-dark-border">
               <SelectItem value="English">English</SelectItem>
               <SelectItem value="zh-HK">繁體中文</SelectItem>
               <SelectItem value="zh-CN">简体中文</SelectItem>

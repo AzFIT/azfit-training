@@ -49,7 +49,7 @@ export function MonthView({
         <div className="grid grid-cols-7 mb-2">
           {weekDays.map((d) => (
             <div key={d} className="text-center py-2">
-              <span className="text-[11px] text-[light-muted] uppercase font-semibold">{d}</span>
+              <span className="text-[11px] text-light-muted uppercase font-semibold">{d}</span>
             </div>
           ))}
         </div>
@@ -68,14 +68,14 @@ export function MonthView({
                 animate={{ opacity: 1 }}
                 transition={{ delay: idx * 0.005 }}
                 className={`min-h-[110px] rounded-lg p-2 cursor-pointer transition-colors border ${
-                  inMonth ? 'bg-[white]' : 'bg-[light-surface] opacity-50'
-                } ${today ? 'border-cyan bg-[rgba(0,174,239,0.05)]' : 'border-[light-border]'}`}
+                  inMonth ? 'bg-white' : 'bg-light-surface opacity-50'
+                } ${today ? 'border-cyan bg-[rgba(0,174,239,0.05)]' : 'border-light-border'}`}
                 onClick={() => onDayClick(day)}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span
                     className={`text-sm font-medium ${
-                      today ? 'text-cyan' : inMonth ? 'text-[light-primary]' : 'text-[light-border]'
+                      today ? 'text-cyan' : inMonth ? 'text-light-primary' : 'text-light-border'
                     }`}
                   >
                     {format(day, 'd')}
@@ -96,7 +96,7 @@ export function MonthView({
                     />
                   ))}
                   {daySessions.length > 4 && (
-                    <span className="text-[9px] text-[light-muted]">+{daySessions.length - 4}</span>
+                    <span className="text-[9px] text-light-muted">+{daySessions.length - 4}</span>
                   )}
                 </div>
 

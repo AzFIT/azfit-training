@@ -111,7 +111,7 @@ export default function UploadModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) { setFiles([]); onClose() } }}>
-      <DialogContent className="bg-[az-black-card] border-dark-border text-dark-primary max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-az-black-card border-dark-border text-dark-primary max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Upload Progress Photos</DialogTitle>
         </DialogHeader>
@@ -126,7 +126,7 @@ export default function UploadModal({
             className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-200 ${
               dragOver
                 ? 'border-cyan bg-cyan-glow scale-[1.02]'
-                : 'border-dark-border bg-[az-black-elevated] hover:border-dark-subtle'
+                : 'border-dark-border bg-az-black-elevated hover:border-dark-subtle'
             }`}
           >
             <Upload size={40} className="mx-auto text-dark-muted mb-3" />
@@ -151,7 +151,7 @@ export default function UploadModal({
                 key={f.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`bg-[az-black-elevated] border rounded-xl p-3 space-y-3 ${
+                className={`bg-az-black-elevated border rounded-xl p-3 space-y-3 ${
                   f.status === 'error' ? 'border-danger' : 'border-dark-border'
                 }`}
               >
@@ -173,10 +173,10 @@ export default function UploadModal({
                   <div>
                     <Label className="text-dark-muted text-[10px]">Category</Label>
                     <Select value={f.category} onValueChange={(v) => updateFile(f.id, { category: v as PhotoCategory })}>
-                      <SelectTrigger className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs">
+                      <SelectTrigger className="bg-az-black-card border-dark-border text-dark-primary h-8 text-xs">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[az-black-card] border-dark-border">
+                      <SelectContent className="bg-az-black-card border-dark-border">
                         {(['Front', 'Back', 'Side', 'Other'] as const).map((c) => (
                           <SelectItem key={c} value={c}>{c}</SelectItem>
                         ))}
@@ -189,7 +189,7 @@ export default function UploadModal({
                       type="date"
                       value={f.date}
                       onChange={(e) => updateFile(f.id, { date: e.target.value })}
-                      className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs"
+                      className="bg-az-black-card border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                   <div>
@@ -199,7 +199,7 @@ export default function UploadModal({
                       value={f.weight}
                       onChange={(e) => updateFile(f.id, { weight: e.target.value })}
                       placeholder="78.0"
-                      className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs"
+                      className="bg-az-black-card border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                   <div>
@@ -209,7 +209,7 @@ export default function UploadModal({
                       value={f.bodyFat}
                       onChange={(e) => updateFile(f.id, { bodyFat: e.target.value })}
                       placeholder="22.0"
-                      className="bg-[az-black-card] border-dark-border text-dark-primary h-8 text-xs"
+                      className="bg-az-black-card border-dark-border text-dark-primary h-8 text-xs"
                     />
                   </div>
                 </div>
@@ -219,12 +219,12 @@ export default function UploadModal({
                     value={f.notes}
                     onChange={(e) => updateFile(f.id, { notes: e.target.value })}
                     placeholder="Optional notes..."
-                    className="bg-[az-black-card] border-dark-border text-dark-primary min-h-[50px] text-xs"
+                    className="bg-az-black-card border-dark-border text-dark-primary min-h-[50px] text-xs"
                   />
                 </div>
 
                 {f.status === 'uploading' && (
-                  <Progress value={f.progress} className="h-1 bg-[az-black] [&>div]:bg-cyan" />
+                  <Progress value={f.progress} className="h-1 bg-az-black [&>div]:bg-cyan" />
                 )}
               </motion.div>
             ))}

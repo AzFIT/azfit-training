@@ -71,7 +71,7 @@ export default function AssignClientModal({ program, isOpen, onClose, onAssigned
                     : 'bg-white dark:bg-slate-800 border-2 border-transparent hover:bg-slate-50 dark:hover:bg-slate-700/50'
                 )}
               >
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[cyan] to-[indigo] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan to-[indigo] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                   {client.name.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -95,7 +95,7 @@ export default function AssignClientModal({ program, isOpen, onClose, onAssigned
             disabled={!selectedClientId || assignMutation.isPending}
             className={cn(
               'w-full py-3 rounded-xl font-semibold text-white transition-all',
-              'bg-gradient-to-r from-[cyan] to-[indigo]',
+              'bg-gradient-to-r from-cyan to-[indigo]',
               'hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed',
               'flex items-center justify-center gap-2'
             )}

@@ -36,7 +36,7 @@ export default function StatsBar({ photos }: { photos: ProgressPhoto[] }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.06, duration: 0.4, ease }}
-          className="bg-[az-black-card] border border-dark-border rounded-xl px-5 py-4"
+          className="bg-az-black-card border border-dark-border rounded-xl px-5 py-4"
         >
           <div className="flex items-center gap-2 mb-2">
             <s.icon size={16} className="text-cyan" />

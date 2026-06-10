@@ -45,17 +45,17 @@ export function AssignConfirmationModal({
             <div className="flex items-center gap-2 text-sm">
               <User size={14} className="text-primary" />
               <span className="text-muted-foreground">Client:</span>
-              <span className="font-semibold text-[light-primary]">{clientName || 'Not selected'}</span>
+              <span className="font-semibold text-light-primary">{clientName || 'Not selected'}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <CheckCircle size={14} className="text-primary" />
               <span className="text-muted-foreground">Program:</span>
-              <span className="font-semibold text-[light-primary]">{phaseName}</span>
+              <span className="font-semibold text-light-primary">{phaseName}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Calendar size={14} className="text-primary" />
               <span className="text-muted-foreground">Duration:</span>
-              <span className="font-semibold text-[light-primary]">
+              <span className="font-semibold text-light-primary">
                 {durationWeeks} weeks · {sessionCount} sessions
               </span>
             </div>

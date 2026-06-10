@@ -126,7 +126,7 @@ export default function BioPrintWizardPage() {
     return (
       <div className="flex items-center justify-center h-[60vh]">
         <div className="text-center">
-          <p className="text-[light-muted] mb-4">Client not found</p>
+          <p className="text-light-muted mb-4">Client not found</p>
           <button
             onClick={() => navigate('/clients')}
             className="bg-cyan text-white px-4 py-2 rounded-lg text-sm"
@@ -144,7 +144,7 @@ export default function BioPrintWizardPage() {
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-lg hover:bg-[az-black-elevated] text-[light-muted] transition-colors"
+          className="p-2 rounded-lg hover:bg-az-black-elevated text-light-muted transition-colors"
         >
           <ChevronLeft size={20} />
         </button>
@@ -206,7 +206,7 @@ export default function BioPrintWizardPage() {
                   transition={{ delay: i * 0.03 }}
                   className="space-y-1"
                 >
-                  <label className="text-xs text-[light-muted] block">
+                  <label className="text-xs text-light-muted block">
                     {site.label}
                     <span className="text-dark-muted ml-1">({site.desc})</span>
                   </label>
@@ -248,7 +248,7 @@ export default function BioPrintWizardPage() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
-              className="text-[light-muted] hover:text-dark-primary text-sm px-4 py-2.5 rounded-lg hover:bg-[az-black-elevated] transition-colors"
+              className="text-light-muted hover:text-dark-primary text-sm px-4 py-2.5 rounded-lg hover:bg-az-black-elevated transition-colors"
             >
               Cancel
             </button>
@@ -299,7 +299,7 @@ export default function BioPrintWizardPage() {
                   key={site.key}
                   className="flex items-center justify-between bg-navy-input rounded-lg px-3 py-2"
                 >
-                  <span className="text-xs text-[light-muted]">{site.label}</span>
+                  <span className="text-xs text-light-muted">{site.label}</span>
                   <span className="text-sm text-dark-primary font-mono">
                     {values[site.key]} mm
                   </span>
@@ -312,7 +312,7 @@ export default function BioPrintWizardPage() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setStep(1)}
-              className="text-[light-muted] hover:text-dark-primary text-sm px-4 py-2.5 rounded-lg hover:bg-[az-black-elevated] transition-colors"
+              className="text-light-muted hover:text-dark-primary text-sm px-4 py-2.5 rounded-lg hover:bg-az-black-elevated transition-colors"
             >
               Back to Measurements
             </button>

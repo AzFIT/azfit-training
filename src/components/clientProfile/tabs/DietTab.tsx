@@ -56,7 +56,7 @@ export default function DietTab() {
             <Plus size={16} /> Log Nutrition
           </button>
         </div>
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-10 text-center">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-10 text-center">
           <p className="text-dark-secondary mb-4">No nutrition plan recorded for this client yet.</p>
           <button
             onClick={() => navigate('/nutrition')}
@@ -78,7 +78,7 @@ export default function DietTab() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Calorie Summary */}
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-5">
           <p className="text-xs text-dark-secondary mb-1">Calorie Target</p>
           <p className="text-2xl font-bold text-dark-primary font-mono">{targetCalories.toLocaleString()} <span className="text-sm text-dark-secondary">kcal</span></p>
           <div className="mt-4 space-y-2">
@@ -90,7 +90,7 @@ export default function DietTab() {
               <span className="text-dark-secondary">Remaining</span>
               <span className="text-success font-mono font-semibold">{(targetCalories - currentCalories).toLocaleString()}</span>
             </div>
-            <div className="h-2 bg-[az-black-elevated] rounded-full overflow-hidden mt-2">
+            <div className="h-2 bg-az-black-elevated rounded-full overflow-hidden mt-2">
               <div className="h-full bg-cyan rounded-full transition-all" style={{ width: `${Math.min(adherence, 100)}%` }} />
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function DietTab() {
         </div>
 
         {/* Macro Rings */}
-        <div className="bg-[az-black-card] border border-dark-border rounded-xl p-5 lg:col-span-2">
+        <div className="bg-az-black-card border border-dark-border rounded-xl p-5 lg:col-span-2">
           <h3 className="text-sm font-semibold text-dark-primary mb-4">Macro Breakdown</h3>
           <div className="grid grid-cols-3 gap-4">
             {([
@@ -154,7 +154,7 @@ export default function DietTab() {
 
       {/* Meal Log */}
       <SectionCard title="Today's Meals">
-        <div className="bg-[az-black-elevated] rounded-lg p-6 border border-dark-border text-center">
+        <div className="bg-az-black-elevated rounded-lg p-6 border border-dark-border text-center">
           <p className="text-sm text-dark-secondary mb-3">
             Log meals in the Nutrition page to see detailed meal breakdowns.
           </p>
@@ -171,7 +171,7 @@ export default function DietTab() {
       <SectionCard title="Water Intake (2,000ml target)">
         <div className="flex items-center gap-3 flex-wrap">
           {waterFilled.map((filled, i) => (
-            <button key={i} className={`w-10 h-12 rounded-lg flex items-center justify-center transition-all hover:scale-110 ${filled ? 'bg-[rgba(0,174,239,0.2)] border border-cyan' : 'bg-[az-black-elevated] border border-dark-border'}`}>
+            <button key={i} className={`w-10 h-12 rounded-lg flex items-center justify-center transition-all hover:scale-110 ${filled ? 'bg-[rgba(0,174,239,0.2)] border border-cyan' : 'bg-az-black-elevated border border-dark-border'}`}>
               <GlassWater size={18} className={filled ? 'text-cyan' : 'text-dark-muted'} />
             </button>
           ))}

@@ -57,7 +57,7 @@ export function DayView({
                 return (
                   <div
                     key={hour}
-                    className="h-16 border-b border-[light-border] hover:bg-cyan-glow transition-colors cursor-pointer"
+                    className="h-16 border-b border-light-border hover:bg-cyan-glow transition-colors cursor-pointer"
                     onClick={() => onSlotClick(date, hour, 0)}
                   />
                 )

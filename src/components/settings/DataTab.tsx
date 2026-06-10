@@ -123,7 +123,7 @@ export function DataTab() {
               Clear All Data
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-[az-black-card] border-dark-border text-dark-primary max-w-md">
+          <DialogContent className="bg-az-black-card border-dark-border text-dark-primary max-w-md">
             <DialogHeader>
               <DialogTitle className="text-danger flex items-center gap-2">
                 <AlertTriangle size={18} /> Clear All Data
@@ -138,7 +138,7 @@ export function DataTab() {
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
                 placeholder="DELETE"
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary"
+                className="bg-az-black-elevated border-dark-border text-dark-primary"
               />
             </div>
             <DialogFooter>
@@ -163,7 +163,7 @@ export function DataTab() {
               Reset App
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-[az-black-card] border-dark-border text-dark-primary max-w-md">
+          <DialogContent className="bg-az-black-card border-dark-border text-dark-primary max-w-md">
             <DialogHeader>
               <DialogTitle className="text-danger flex items-center gap-2">
                 <AlertTriangle size={18} /> Reset App
@@ -178,7 +178,7 @@ export function DataTab() {
                 value={resetText}
                 onChange={(e) => setResetText(e.target.value)}
                 placeholder="RESET"
-                className="bg-[az-black-elevated] border-dark-border text-dark-primary"
+                className="bg-az-black-elevated border-dark-border text-dark-primary"
               />
             </div>
             <DialogFooter>

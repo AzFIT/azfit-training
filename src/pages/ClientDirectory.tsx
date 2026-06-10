@@ -323,7 +323,7 @@ export default function ClientDirectory() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-[1440px] mx-auto bg-[light-surface] min-h-[calc(100dvh-64px)]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-[1440px] mx-auto bg-light-surface min-h-[calc(100dvh-64px)]">
       {/* Page title */}
       <motion.div
         {...motionEnter(reduceMotion, { opacity: 0, y: 10 }, { duration: 0.35 })}
