@@ -1,19 +1,27 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Search, Plus, X, Check, AlertCircle, Flame, Dumbbell, Wheat as WheatIcon, Droplets } from 'lucide-react'
+import { Sparkles, Search, Plus, X, Check, AlertCircle, Flame, Dumbbell, Wheat as WheatIcon, Droplets, Utensils } from 'lucide-react'
 import { parseMealDescription } from './mealParser'
 import { matchAndScale } from './foodMatcher'
-import type { FoodItem } from './types'
+import type { FoodItem, MealType } from './types'
 
 interface AiMealAnalysisProps {
   foodDb: FoodItem[]
-  onAddToLog: (items: { food: FoodItem; quantity: number; grams: number; calories: number; protein: number; carbs: number; fats: number }[]) => void
+  onAddToLog: (mealType: MealType, items: { food: FoodItem; quantity: number; grams: number; calories: number; protein: number; carbs: number; fats: number }[]) => void
 }
 
 export default function AiMealAnalysis({ foodDb, onAddToLog }: AiMealAnalysisProps) {
   const [input, setInput] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [results, setResults] = useState<ReturnType<typeof analyzeMeal> | null>(null)
+  const [selectedMealType, setSelectedMealType] = useState<MealType>('Breakfast')
+
+  const mealTypes: { type: MealType; icon: string }[] = [
+    { type: 'Breakfast', icon: '🍳' },
+    { type: 'Lunch', icon: '🍱' },
+    { type: 'Dinner', icon: '🍽️' },
+    { type: 'Snacks', icon: '🍎' },
+  ]
 
   interface MatchResult {
     parsed: ReturnType<typeof parseMealDescription>[0]
@@ -67,10 +75,10 @@ export default function AiMealAnalysis({ foodDb, onAddToLog }: AiMealAnalysisPro
       carbs: m.matched.scaledCarbs,
       fats: m.matched.scaledFats,
     }))
-    onAddToLog(items)
+    onAddToLog(selectedMealType, items)
     setInput('')
     setResults(null)
-  }, [results, onAddToLog])
+  }, [results, onAddToLog, selectedMealType])
 
   const confidenceColor = (type: string) => {
     switch (type) {
@@ -224,6 +232,27 @@ export default function AiMealAnalysis({ foodDb, onAddToLog }: AiMealAnalysisPro
               </div>
             </div>
 
+            {/* Meal type selector */}
+            <div className="flex items-center gap-2">
+              <Utensils size={14} className="text-dark-muted" />
+              <span className="text-dark-muted text-xs">Add to:</span>
+              <div className="flex gap-1">
+                {mealTypes.map((mt) => (
+                  <button
+                    key={mt.type}
+                    onClick={() => setSelectedMealType(mt.type)}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
+                      selectedMealType === mt.type
+                        ? 'bg-cyan/20 text-cyan border border-cyan/30'
+                        : 'bg-dark-hover text-dark-muted border border-transparent hover:text-dark-secondary'
+                    }`}
+                  >
+                    {mt.icon} {mt.type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Actions */}
             <div className="flex gap-2">
               <button
@@ -231,7 +260,7 @@ export default function AiMealAnalysis({ foodDb, onAddToLog }: AiMealAnalysisPro
                 className="flex-1 flex items-center justify-center gap-2 bg-cyan hover:bg-cyan-hover text-white font-medium py-2.5 rounded-lg text-sm transition-all hover:scale-[1.02]"
               >
                 <Plus size={14} />
-                Add to My Meals
+                Add to {selectedMealType}
               </button>
               <button
                 onClick={() => setResults(null)}

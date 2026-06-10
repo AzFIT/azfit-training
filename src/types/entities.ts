@@ -107,6 +107,9 @@ export interface Exercise {
   difficultyIntermediate?: boolean
   difficultyAdvanced?: boolean
   difficultyElite?: boolean
+
+  // Program builder motion category
+  motionCategory?: string
 }
 
 // ── Calendar Session ───────────────────────────────────────────────

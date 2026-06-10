@@ -191,6 +191,93 @@ export async function getExerciseById(exerciseId: number): Promise<WorkoutExerci
   return match ? toWorkoutExercise(match) : null
 }
 
+/** Query raw exercises table by motion_category (for swap/add modals) */
+export interface MotionExercise {
+  exercise_id: number
+  exercise_name: string
+  motion_category: string
+  muscle_group: string
+  equipment_primary: string
+  video_url: string | null
+}
+
+export async function searchExercisesByMotion(
+  motionCategory: string,
+  searchTerm?: string
+): Promise<MotionExercise[]> {
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase
+      .rpc('search_exercises_by_motion', {
+        p_motion_category: motionCategory,
+        p_search_term: searchTerm || null,
+      })
+    if (error) throw error
+    return (data as MotionExercise[]) || []
+  }
+
+  // Offline fallback: filter from store exercises
+  const store = getStore()
+  const q = (searchTerm || '').toLowerCase()
+  return Object.values(store.exercises)
+    .filter((e) => {
+      if (e.motionCategory !== motionCategory) return false
+      if (q && !e.name.toLowerCase().includes(q)) return false
+      return true
+    })
+    .map((e) => ({
+      exercise_id: Number(e.id.replace(/\D/g, '')) || nextExerciseId(),
+      exercise_name: e.name,
+      motion_category: e.motionCategory || 'OTHER',
+      muscle_group: e.muscleGroup || '',
+      equipment_primary: e.equipmentPrimary || e.equipment || '',
+      video_url: e.videoUrl || null,
+    }))
+}
+
+/** Query all exercises (for add modal) */
+export async function searchAllExercises(
+  searchTerm?: string,
+  motionCategory?: string
+): Promise<MotionExercise[]> {
+  if (isSupabaseConfigured) {
+    let dbQuery = supabase
+      .from('exercises')
+      .select('exercise_id, exercise_name, motion_category, muscle_group, equipment_primary, video_url')
+      .eq('is_active', true)
+      .order('exercise_name')
+      .limit(50)
+
+    if (motionCategory) {
+      dbQuery = dbQuery.eq('motion_category', motionCategory)
+    }
+    if (searchTerm) {
+      dbQuery = dbQuery.ilike('exercise_name', `%${searchTerm}%`)
+    }
+
+    const { data, error } = await dbQuery
+    if (error) throw error
+    return (data as MotionExercise[]) || []
+  }
+
+  // Offline fallback
+  const store = getStore()
+  const q = (searchTerm || '').toLowerCase()
+  return Object.values(store.exercises)
+    .filter((e) => {
+      if (motionCategory && e.motionCategory !== motionCategory) return false
+      if (q && !e.name.toLowerCase().includes(q) && !(e.muscleGroup || '').toLowerCase().includes(q)) return false
+      return true
+    })
+    .map((e) => ({
+      exercise_id: Number(e.id.replace(/\D/g, '')) || nextExerciseId(),
+      exercise_name: e.name,
+      motion_category: e.motionCategory || 'OTHER',
+      muscle_group: e.muscleGroup || '',
+      equipment_primary: e.equipmentPrimary || e.equipment || '',
+      video_url: e.videoUrl || null,
+    }))
+}
+
 // ── Reference Data ─────────────────────────────────────────────────
 
 export interface ReferenceData {

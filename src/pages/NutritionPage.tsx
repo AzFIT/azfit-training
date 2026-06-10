@@ -48,10 +48,9 @@ export default function NutritionPage() {
     return 'maintain'
   }
 
-  // Helper: derive gender from client data (fallback to male)
-  // Note: Client entity doesn't have sex field; use goal context or default
-  function deriveGender(_client?: typeof client): Gender {
-    // Default to male; could be enhanced when sex field is added to Client
+  // Helper: derive gender from client.sex field (fallback to male)
+  function deriveGender(c?: typeof client): Gender {
+    if (c?.sex === 'female') return 'female'
     return 'male'
   }
 
@@ -632,9 +631,36 @@ export default function NutritionPage() {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <AiMealAnalysis
                 foodDb={FOOD_DB}
-                onAddToLog={(items) => {
-                  // eslint-disable-next-line no-console
-                  console.log('AI analyzed items:', items)
+                onAddToLog={(mealType, items) => {
+                  // Build a custom logged meal from AI-parsed items
+                  const today = new Date().toISOString().split('T')[0]
+                  const customOption = {
+                    id: `ai_${Date.now()}`,
+                    name: items.map((i) => i.food.name).join(' + '),
+                    foods: items.map((i) => ({ food: i.food, quantity: i.grams })),
+                    calories: items.reduce((s, i) => s + i.calories, 0),
+                    protein: Math.round(items.reduce((s, i) => s + i.protein, 0)),
+                    carbs: Math.round(items.reduce((s, i) => s + i.carbs, 0)),
+                    fats: Math.round(items.reduce((s, i) => s + i.fats, 0)),
+                    prepTime: 0,
+                  }
+                  const existingLog = dailyLogs.find((l) => l.date === today)
+                  const updatedLogged = existingLog ? [...existingLog.logged] : []
+                  // Remove any existing entry for this meal type
+                  const filtered = updatedLogged.filter((l) => l.mealType !== mealType)
+                  filtered.push({
+                    mealType,
+                    status: 'custom',
+                    option: customOption,
+                  })
+                  const newLog = {
+                    date: today,
+                    planned: mealPlan,
+                    logged: filtered,
+                    waterGlasses: existingLog?.waterGlasses ?? 0,
+                    waterTarget: 8,
+                  }
+                  updateTodayLog(newLog)
                 }}
               />
             </motion.div>
