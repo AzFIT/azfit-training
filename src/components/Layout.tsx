@@ -23,7 +23,9 @@ import {
   Shield,
 } from 'lucide-react'
 import AiChat from './AiChat'
+import ToastContainer from './ToastContainer'
 import { useAuthStore } from '../stores/authStore'
+import { useNotifications } from '../hooks/useNotifications'
 
 const allNavItems = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -46,6 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
+  const { toasts, dismissToast, permission, requestPermission } = useNotifications()
 
   /* Theme management */
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -111,6 +114,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className={`min-h-[100dvh] ${appBg} transition-colors duration-300`}>
+      {/* Toast notifications */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+
       {/* Desktop Sidebar */}
       <aside
         className={`fixed left-0 top-0 bottom-0 ${sidebarBg} ${sidebarBorder} border-r z-50 transition-all duration-300 hidden lg:flex flex-col`}
@@ -323,11 +329,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             {/* Notification */}
             <button
+              onClick={() => {
+                if (permission === 'default') requestPermission()
+              }}
               className={`relative w-10 h-10 rounded-lg flex items-center justify-center ${textSecondary} ${navInactiveHoverText} ${navInactiveHoverBg} transition-colors`}
               aria-label="Notifications"
+              title={permission === 'granted' ? 'Notifications enabled' : permission === 'denied' ? 'Notifications blocked' : 'Click to enable notifications'}
             >
               <Bell size={18} />
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-danger" />
+              {permission === 'granted' && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-success" />}
+              {permission === 'default' && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-warning" />}
+              {permission === 'denied' && <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-dark-subtle" />}
             </button>
 
             {/* Avatar */}

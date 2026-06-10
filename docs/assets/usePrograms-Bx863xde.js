@@ -1,1 +1,0 @@
-import{u as e}from"./useQuery-CajHpSsl.js";import{d as s,e as u}from"./workoutApi-B3EnXZo_.js";function t(r){return e({queryKey:["programs",r],queryFn:()=>s(r)})}function n(r){return e({queryKey:["program-details",r],queryFn:()=>u(r),enabled:!!r})}export{n as a,t as u};

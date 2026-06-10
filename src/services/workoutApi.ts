@@ -533,3 +533,107 @@ export async function getWorkoutHistory(clientId: string, programId?: number): P
     .filter((s) => s.clientId === clientId && (programId === undefined || Number(s.programId) === programId))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
+
+// ── Workout Results (Leaderboard) ──────────────────────────────────
+
+export interface WorkoutResult {
+  result_id: string
+  session_id?: number
+  client_id: string
+  program_id: number
+  day_number: number
+  week_number: number
+  result_value: number
+  result_type: 'load' | 'reps' | 'time' | 'rounds'
+  result_label: string
+  is_rx: boolean
+  duration_seconds?: number
+  completed_sets?: number
+  total_sets?: number
+  pr_badges?: string[]
+  likes: number
+  liked_by?: string[]
+  date: string
+  created_at?: string
+}
+
+export async function saveWorkoutResult(result: Omit<WorkoutResult, 'result_id' | 'created_at'>): Promise<WorkoutResult> {
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.from('workout_results').insert(result).select().single()
+    if (error) throw error
+    return data as WorkoutResult
+  }
+  // Offline: store in memory (not persisted — leaderboard is online-only feature)
+  return { ...result, result_id: `wr_${Date.now()}`, created_at: new Date().toISOString() }
+}
+
+export interface LeaderboardQueryFilters {
+  programId?: number
+  rxOnly?: 'all' | 'rx' | 'scaled'
+  dateRange?: 'all' | 'week' | 'month' | 'year'
+  limit?: number
+}
+
+export async function getLeaderboard(filters: LeaderboardQueryFilters = {}): Promise<WorkoutResult[]> {
+  if (isSupabaseConfigured) {
+    let query = supabase.from('workout_results').select('*').order('result_value', { ascending: false })
+
+    if (filters.programId) {
+      query = query.eq('program_id', filters.programId)
+    }
+    if (filters.rxOnly === 'rx') {
+      query = query.eq('is_rx', true)
+    } else if (filters.rxOnly === 'scaled') {
+      query = query.eq('is_rx', false)
+    }
+    if (filters.dateRange && filters.dateRange !== 'all') {
+      const now = new Date()
+      let startDate: Date
+      if (filters.dateRange === 'week') {
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+      } else if (filters.dateRange === 'month') {
+        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+      } else {
+        startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)
+      }
+      query = query.gte('date', startDate.toISOString().split('T')[0])
+    }
+
+    const limit = filters.limit || 50
+    query = query.limit(limit)
+
+    const { data, error } = await query
+    if (error) throw error
+    return (data as WorkoutResult[]) || []
+  }
+
+  // Offline fallback: return empty (leaderboard needs real data)
+  return []
+}
+
+export async function toggleLikeResult(resultId: string, clientId: string): Promise<{ likes: number; likedByMe: boolean }> {
+  if (isSupabaseConfigured) {
+    // Fetch current
+    const { data: current } = await supabase.from('workout_results').select('likes, liked_by').eq('result_id', resultId).single()
+    if (!current) return { likes: 0, likedByMe: false }
+
+    const likedBy = (current.liked_by as string[]) || []
+    const alreadyLiked = likedBy.includes(clientId)
+
+    const newLikedBy = alreadyLiked
+      ? likedBy.filter((id) => id !== clientId)
+      : [...likedBy, clientId]
+    const newLikes = newLikedBy.length
+
+    const { data, error } = await supabase
+      .from('workout_results')
+      .update({ likes: newLikes, liked_by: newLikedBy })
+      .eq('result_id', resultId)
+      .select()
+      .single()
+
+    if (error) throw error
+    return { likes: data.likes, likedByMe: !alreadyLiked }
+  }
+  return { likes: 0, likedByMe: false }
+}

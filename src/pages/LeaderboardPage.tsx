@@ -1,12 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ChevronLeft, Dumbbell, Users } from 'lucide-react'
+import { ChevronLeft, Dumbbell, Users, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import LeaderboardFilter from '../components/leaderboard/LeaderboardFilter'
 import LeaderboardRow from '../components/leaderboard/LeaderboardRow'
 import { mockLeaderboardEntries, MOCK_WORKOUT_NAME, MOCK_PROGRAM_ID } from '../components/leaderboard/mockData'
 import type { LeaderboardFilterState, LeaderboardEntry } from '../components/leaderboard/types'
+import { getLeaderboard, toggleLikeResult, type WorkoutResult } from '../services/workoutApi'
 
 const CURRENT_CLIENT_ID = 'c-current'
 
@@ -23,12 +24,29 @@ function isWithinDateRange(date: string, range: LeaderboardFilterState['dateRang
 }
 
 function sortEntries(entries: LeaderboardEntry[]): LeaderboardEntry[] {
-  // For load/reps/rounds: higher is better
-  // For time: lower is better (mock data uses load for now)
   return [...entries].sort((a, b) => {
     if (a.resultType === 'time') return a.resultValue - b.resultValue
     return b.resultValue - a.resultValue
   })
+}
+
+function resultToEntry(r: WorkoutResult, idx: number): LeaderboardEntry {
+  return {
+    id: r.result_id,
+    rank: idx + 1,
+    clientId: r.client_id,
+    clientName: r.client_id === CURRENT_CLIENT_ID ? 'You' : `Athlete ${r.client_id.slice(0, 6)}`,
+    clientInitials: r.client_id === CURRENT_CLIENT_ID ? 'YU' : r.client_id.slice(0, 2).toUpperCase(),
+    gender: 'other',
+    resultValue: Number(r.result_value),
+    resultType: r.result_type,
+    resultLabel: r.result_label,
+    isRx: r.is_rx,
+    date: r.date,
+    likes: r.likes || 0,
+    likedByMe: (r.liked_by || []).includes(CURRENT_CLIENT_ID),
+    prBadges: r.pr_badges || [],
+  }
 }
 
 export default function LeaderboardPage() {
@@ -42,10 +60,48 @@ export default function LeaderboardPage() {
     dateRange: 'week',
   })
 
-  const [entries, setEntries] = useState<LeaderboardEntry[]>(mockLeaderboardEntries)
+  const [dbResults, setDbResults] = useState<WorkoutResult[]>([])
+  const [loading, setLoading] = useState(false)
+  const [useMock, setUseMock] = useState(false)
+
+  // Fetch from Supabase
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+
+    getLeaderboard({
+      programId: Number(programId) || undefined,
+      rxOnly: filters.rxOnly,
+      dateRange: filters.dateRange,
+      limit: 50,
+    })
+      .then((data) => {
+        if (!cancelled) {
+          if (data.length === 0) {
+            setUseMock(true)
+          } else {
+            setUseMock(false)
+            setDbResults(data)
+          }
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setUseMock(true)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => { cancelled = true }
+  }, [programId, filters.rxOnly, filters.dateRange])
+
+  const sourceEntries = useMemo(() => {
+    if (useMock) return mockLeaderboardEntries
+    return dbResults.map((r, i) => resultToEntry(r, i))
+  }, [useMock, dbResults])
 
   const filtered = useMemo(() => {
-    let result = entries.filter((e) => {
+    let result = sourceEntries.filter((e) => {
       if (filters.rxOnly === 'rx' && !e.isRx) return false
       if (filters.rxOnly === 'scaled' && e.isRx) return false
       if (filters.gender !== 'all' && e.gender !== filters.gender) return false
@@ -53,22 +109,24 @@ export default function LeaderboardPage() {
       return true
     })
     result = sortEntries(result)
-    // Re-rank after filtering/sorting
     return result.map((e, idx) => ({ ...e, rank: idx + 1 }))
-  }, [entries, filters])
+  }, [sourceEntries, filters])
 
-  const handleLike = (id: string) => {
-    setEntries((prev) =>
-      prev.map((e) =>
-        e.id === id
-          ? {
-              ...e,
-              likedByMe: !e.likedByMe,
-              likes: e.likedByMe ? e.likes - 1 : e.likes + 1,
-            }
-          : e
+  const handleLike = async (id: string) => {
+    if (useMock) {
+      setDbResults((prev) => prev) // no-op, mock likes handled locally
+      return
+    }
+    try {
+      const { likes, likedByMe } = await toggleLikeResult(id, CURRENT_CLIENT_ID)
+      setDbResults((prev) =>
+        prev.map((r) =>
+          r.result_id === id ? { ...r, likes, liked_by: likedByMe ? [...(r.liked_by || []), CURRENT_CLIENT_ID] : (r.liked_by || []).filter((x) => x !== CURRENT_CLIENT_ID) } : r
+        )
       )
-    )
+    } catch {
+      // silent fail
+    }
   }
 
   const rxCount = filtered.filter((e) => e.isRx).length
@@ -118,31 +176,47 @@ export default function LeaderboardPage() {
         {/* Filters */}
         <LeaderboardFilter filters={filters} onChange={setFilters} />
 
-        {/* List */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-semibold text-dark-primary">Results</h2>
-            <span className="text-xs text-dark-muted">
-              Sorted by {filtered[0]?.resultType === 'time' ? 'fastest' : 'best'} result
-            </span>
+        {/* Loading */}
+        {loading && (
+          <div className="flex items-center justify-center py-8 text-sm text-dark-muted">
+            <Loader2 size={16} className="animate-spin mr-2" />
+            Loading leaderboard...
           </div>
+        )}
 
-          {filtered.length === 0 ? (
-            <div className="text-center py-12 bg-az-black-card border border-dark-border rounded-2xl">
-              <p className="text-dark-secondary text-sm">No results match your filters.</p>
-              <p className="text-dark-muted text-xs mt-1">Try adjusting filters to see more athletes.</p>
+        {/* List */}
+        {!loading && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-sm font-semibold text-dark-primary">Results</h2>
+              <span className="text-xs text-dark-muted">
+                Sorted by {filtered[0]?.resultType === 'time' ? 'fastest' : 'best'} result
+              </span>
             </div>
-          ) : (
-            filtered.map((entry) => (
-              <LeaderboardRow
-                key={entry.id}
-                entry={entry}
-                isCurrentClient={entry.clientId === CURRENT_CLIENT_ID}
-                onLike={handleLike}
-              />
-            ))
-          )}
-        </div>
+
+            {useMock && (
+              <div className="text-center py-2">
+                <span className="text-[10px] text-dark-muted bg-dark-surface px-2 py-1 rounded">Showing demo data — complete a workout to see real results</span>
+              </div>
+            )}
+
+            {filtered.length === 0 ? (
+              <div className="text-center py-12 bg-az-black-card border border-dark-border rounded-2xl">
+                <p className="text-dark-secondary text-sm">No results match your filters.</p>
+                <p className="text-dark-muted text-xs mt-1">Try adjusting filters to see more athletes.</p>
+              </div>
+            ) : (
+              filtered.map((entry) => (
+                <LeaderboardRow
+                  key={entry.id}
+                  entry={entry}
+                  isCurrentClient={entry.clientId === CURRENT_CLIENT_ID}
+                  onLike={handleLike}
+                />
+              ))
+            )}
+          </div>
+        )}
 
         {/* Current client callout */}
         {filtered.some((e) => e.clientId === CURRENT_CLIENT_ID) && (

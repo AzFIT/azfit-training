@@ -46,6 +46,7 @@ import type { SetData } from '../components/workout/SetRow'
 import { PRCelebrationModal } from '../components/workout/pr/PRCelebrationModal'
 import { detectPersonalRecords, type PersonalRecord } from '../components/workout/pr/prDetection'
 import WorkoutShareCard, { type WorkoutShareCardData } from '../components/workout/WorkoutShareCard'
+import { saveWorkoutSessionLog, saveWorkoutResult } from '../services/workoutApi'
 
 // ── Main Page ─────────────────────────────────────────────────────
 
@@ -200,6 +201,12 @@ export default function WorkoutSessionPage() {
 
     addWorkoutSession(sessionLog)
 
+    // Persist to Supabase (fire-and-forget, don't block UI)
+    saveWorkoutSessionLog(sessionLog).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('Failed to save workout session to DB:', err)
+    })
+
     // Build share card data
     const topSet = sessionLog.exercises
       .flatMap((ex) => ex.sets.map((s) => ({ ...s, exerciseName: ex.exerciseName })))
@@ -234,6 +241,31 @@ export default function WorkoutSessionPage() {
     } else {
       setShowShareCard(true)
     }
+
+    // Save leaderboard result (fire-and-forget)
+    const resultPayload = {
+      client_id: sessionLog.clientId,
+      program_id: Number(sessionLog.programId) || 0,
+      day_number: sessionLog.dayNumber,
+      week_number: sessionLog.weekNumber,
+      result_value: topSet ? (topSet.actualLoad || 0) : completedSets,
+      result_type: (topSet ? 'load' : 'reps') as 'load' | 'reps' | 'time' | 'rounds',
+      result_label: topSet
+        ? `${topSet.actualLoad} kg × ${topSet.actualReps}`
+        : `${completedSets}/${totalSets} sets`,
+      is_rx: !isScaled,
+      duration_seconds: sessionLog.durationSeconds,
+      completed_sets: completedSets,
+      total_sets: totalSets,
+      pr_badges: records.map((r) => `${r.exerciseName} ${r.metric === 'load' ? 'Load' : 'Volume'} PR`),
+      likes: 0,
+      liked_by: [] as string[],
+      date: new Date().toISOString().split('T')[0],
+    }
+    saveWorkoutResult(resultPayload).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('Failed to save workout result to DB:', err)
+    })
   }
 
   if (isLoading) {
