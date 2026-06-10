@@ -15,18 +15,20 @@ import {
   Menu,
   X,
   ChevronLeft,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/stores/authStore';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', to: '/trainer/dashboard' },
-  { icon: Users, label: 'Clients', to: '/trainer/clients' },
-  { icon: CalendarDays, label: 'Calendar', to: '/trainer/calendar' },
-  { icon: Dumbbell, label: 'Programs', to: '/programs/library' },
-  { icon: BookOpen, label: 'Exercises', to: '/exercises' },
-  { icon: Apple, label: 'Nutrition', to: '/trainer/nutrition' },
-  { icon: Settings, label: 'Settings', to: '/trainer/settings' },
+  { icon: LayoutDashboard, label: 'Dashboard', to: '/dashboard' },
+  { icon: Users, label: 'Clients', to: '/clients' },
+  { icon: CalendarDays, label: 'Calendar', to: '/calendar' },
+  { icon: Dumbbell, label: 'Programs', to: '/programs' },
+  { icon: BookOpen, label: 'Exercises', to: '/exercise-library' },
+  { icon: Apple, label: 'Nutrition', to: '/nutrition' },
+  { icon: FileSpreadsheet, label: 'Sheets', to: '/sheets' },
+  { icon: Settings, label: 'Settings', to: '/settings' },
 ];
 
 export default function AppSidebar() {
