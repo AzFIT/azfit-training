@@ -26,6 +26,7 @@ export interface Client {
 
   // Body metrics
   age: number
+  sex?: 'male' | 'female'
   weight: number // kg
   height: number // cm
   bodyFat: number // percentage

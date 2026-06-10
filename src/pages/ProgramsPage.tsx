@@ -72,14 +72,15 @@ export default function ProgramsPage() {
   // Derive filter options from data
   const methodOptions = useMemo(() => {
     const methods = new Set<string>()
-    programs.forEach((p) => methods.add(p.method))
+    ;(programs || []).forEach((p) => methods.add(p.method || 'Other'))
     return Array.from(methods).sort()
   }, [programs])
 
   const equipmentOptions = useMemo(() => {
     const eq = new Set<string>()
-    programs.forEach((p) => {
-      p.equipment.split(',').forEach((e) => {
+    ;(programs || []).forEach((p) => {
+      const equipmentStr = p.equipment || 'Various'
+      equipmentStr.split(',').forEach((e) => {
         const trimmed = e.trim()
         if (trimmed) eq.add(trimmed)
       })
@@ -92,7 +93,9 @@ export default function ProgramsPage() {
     const total = programs.length
     const active = programs.filter(p => !p.archived).length
     const archived = programs.filter(p => p.archived).length
-    const mostUsed = programs.reduce((a, b) => (a.timesAssigned > b.timesAssigned ? a : b), programs[0])
+    const mostUsed = total > 0
+      ? programs.reduce((a, b) => (a.timesAssigned > b.timesAssigned ? a : b))
+      : null
     return { total, active, archived, mostUsedName: mostUsed?.name || '—' }
   }, [programs])
 
@@ -109,7 +112,7 @@ export default function ProgramsPage() {
 
   // Filtered & sorted programs
   const filtered = useMemo(() => {
-    let result = programs
+    let result = programs || []
 
     // Archive filter
     if (!showArchived) {
@@ -120,10 +123,10 @@ export default function ProgramsPage() {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       result = result.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.goal.toLowerCase().includes(q) ||
-        p.method.toLowerCase().includes(q) ||
-        p.equipment.toLowerCase().includes(q) ||
+        (p.name || '').toLowerCase().includes(q) ||
+        (p.goal || '').toLowerCase().includes(q) ||
+        (p.method || '').toLowerCase().includes(q) ||
+        (p.equipment || '').toLowerCase().includes(q) ||
         (p.template || '').toLowerCase().includes(q)
       )
     }
@@ -131,25 +134,25 @@ export default function ProgramsPage() {
     // Goal filter
     if (selectedGoals.length > 0) {
       result = result.filter(p => {
-        const pg = normalizeGoal(p.goal)
+        const pg = normalizeGoal(p.goal || '')
         return selectedGoals.some(sg => pg.includes(sg))
       })
     }
 
     // Method filter
     if (selectedMethod) {
-      result = result.filter(p => p.method === selectedMethod)
+      result = result.filter(p => (p.method || 'Other') === selectedMethod)
     }
 
     // Difficulty filter
     if (selectedDifficulties.length > 0) {
-      result = result.filter(p => selectedDifficulties.includes(p.difficulty))
+      result = result.filter(p => selectedDifficulties.includes(p.difficulty || 'Intermediate'))
     }
 
     // Equipment filter
     if (selectedEquipment.length > 0) {
       result = result.filter(p => {
-        const progEq = p.equipment.split(',').map(e => e.trim().toLowerCase())
+        const progEq = (p.equipment || '').split(',').map(e => e.trim().toLowerCase())
         return selectedEquipment.some(se => progEq.includes(se.toLowerCase()))
       })
     }
@@ -246,7 +249,7 @@ export default function ProgramsPage() {
             Active Programs
           </h1>
           <p className="text-light-muted text-sm mt-0.5">
-            {programs.filter(p => !p.archived).length} active program{programs.filter(p => !p.archived).length !== 1 ? 's' : ''}
+            {(programs || []).filter(p => !p.archived).length} active program{(programs || []).filter(p => !p.archived).length !== 1 ? 's' : ''}
             {stats.archived > 0 && ` · ${stats.archived} archived`}
           </p>
         </div>

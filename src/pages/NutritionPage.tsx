@@ -196,23 +196,6 @@ export default function NutritionPage() {
     }
   }, [clientId, saveLogMutation])
 
-  // Calculate current macros from meals
-  const currentMacros = useMemo(() => {
-    return meals.reduce(
-      (acc, m) => {
-        const food = FOOD_DB.find((f) => f.id === m.foodId)
-        if (!food) return acc
-        const ratio = m.quantity / 100
-        return {
-          protein: acc.protein + food.protein * ratio,
-          carbs: acc.carbs + food.carbs * ratio,
-          fats: acc.fats + food.fats * ratio,
-        }
-      },
-      { protein: 0, carbs: 0, fats: 0 }
-    )
-  }, [meals])
-
   const handleAddFood = useCallback((mealType: MealType, foodId: number, qty: number) => {
     setMeals((prev) => [
       ...prev,
@@ -224,10 +207,19 @@ export default function NutritionPage() {
     setMeals((prev) => prev.filter((m) => m.id !== entryId))
   }, [])
 
-  // Percentage display (calculated from actual grams)
-  const proteinPct = Math.round((proteinTarget * 4 / targetCalories) * 100)
-  const carbPct = Math.round((carbTarget * 4 / targetCalories) * 100)
-  const fatPct = Math.round((fatTarget * 9 / targetCalories) * 100)
+  // Macro calorie distribution percentages (must sum to ~100%)
+  // Protein and fat grams are fixed (g/kg), carbs fill the remainder
+  // When calories change (goal switch), percentages adjust:
+  // - Lose Weight (lower cals): protein% ↑, fat% ↑, carb% ↓
+  // - Gain Muscle (higher cals): protein% ↓, fat% ↓, carb% ↑
+  const proteinCalories = proteinTarget * 4
+  const fatCalories = fatTarget * 9
+  const carbCalories = Math.max(0, targetCalories - proteinCalories - fatCalories)
+  const adjustedCarbTarget = Math.round(carbCalories / 4)
+
+  const proteinPct = Math.round((proteinCalories / targetCalories) * 100)
+  const fatPct = Math.round((fatCalories / targetCalories) * 100)
+  const carbPct = Math.round((carbCalories / targetCalories) * 100)
 
   // Adherence data
   const adherenceData = [
@@ -507,24 +499,24 @@ export default function NutritionPage() {
               <div className="flex items-center gap-8 sm:gap-12">
                 <MacroRing
                   label="Protein"
-                  value={currentMacros.protein}
-                  target={proteinTarget}
+                  grams={proteinTarget}
+                  percentage={proteinPct}
                   color="cyan"
                   unit="g"
                   delay={0}
                 />
                 <MacroRing
                   label="Carbs"
-                  value={currentMacros.carbs}
-                  target={carbTarget}
+                  grams={adjustedCarbTarget}
+                  percentage={carbPct}
                   color="violet"
                   unit="g"
                   delay={150}
                 />
                 <MacroRing
                   label="Fats"
-                  value={currentMacros.fats}
-                  target={fatTarget}
+                  grams={fatTarget}
+                  percentage={fatPct}
                   color="orange"
                   unit="g"
                   delay={300}
@@ -534,17 +526,17 @@ export default function NutritionPage() {
                 <div>
                   <p className="text-cyan text-xs font-bold">{proteinPct}%</p>
                   <p className="text-dark-muted text-[10px]">Protein</p>
-                  <p className="text-dark-subtle text-[10px] font-mono">{proteinTarget * 4} kcal</p>
+                  <p className="text-dark-subtle text-[10px] font-mono">{proteinCalories} kcal</p>
                 </div>
                 <div>
                   <p className="text-violet text-xs font-bold">{carbPct}%</p>
                   <p className="text-dark-muted text-[10px]">Carbs</p>
-                  <p className="text-dark-subtle text-[10px] font-mono">{carbTarget * 4} kcal</p>
+                  <p className="text-dark-subtle text-[10px] font-mono">{carbCalories} kcal</p>
                 </div>
                 <div>
                   <p className="text-orange text-xs font-bold">{fatPct}%</p>
                   <p className="text-dark-muted text-[10px]">Fats</p>
-                  <p className="text-dark-subtle text-[10px] font-mono">{fatTarget * 9} kcal</p>
+                  <p className="text-dark-subtle text-[10px] font-mono">{fatCalories} kcal</p>
                 </div>
               </div>
             </div>

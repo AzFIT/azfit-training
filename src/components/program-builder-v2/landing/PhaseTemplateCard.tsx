@@ -85,10 +85,10 @@ export function PhaseTemplateCard({ phase, className }: PhaseTemplateCardProps) 
         {/* Header */}
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="min-w-0">
-            <h3 className="font-semibold text-sm leading-tight text-light-primary truncate">
+            <h3 className="font-semibold text-sm leading-tight text-white truncate">
               {phase.phaseName}
             </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">{phase.method}</p>
+            <p className="text-xs text-gray-300 mt-0.5">{phase.method}</p>
           </div>
           <span
             className={cn(
@@ -101,7 +101,7 @@ export function PhaseTemplateCard({ phase, className }: PhaseTemplateCardProps) 
         </div>
 
         {/* Focus area */}
-        <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
+        <p className="text-xs text-gray-300 mb-3 line-clamp-2">
           {phase.focusArea}
         </p>
 
@@ -118,7 +118,7 @@ export function PhaseTemplateCard({ phase, className }: PhaseTemplateCardProps) 
             <MotionCategoryBadge key={cat} category={cat} />
           ))}
           {motionCategories.length === 4 && (
-            <span className="text-[10px] text-muted-foreground self-center">+more</span>
+            <span className="text-[10px] text-gray-300 self-center">+more</span>
           )}
         </div>
 

@@ -2,21 +2,21 @@ import { useState, useEffect } from 'react'
 
 export default function MacroRing({
   label,
-  value,
-  target,
+  grams,
+  percentage,
   color,
   unit,
   delay = 0,
 }: {
   label: string
-  value: number
-  target: number
+  grams: number
+  percentage: number
   color: string
   unit: string
   delay?: number
 }) {
   const [animated, setAnimated] = useState(false)
-  const percentage = target > 0 ? Math.min((value / target) * 100, 100) : 0
+  const clampedPct = Math.min(Math.max(percentage, 0), 100)
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimated(true), delay)
@@ -24,7 +24,7 @@ export default function MacroRing({
   }, [delay])
 
   const circumference = 2 * Math.PI * 45
-  const offset = circumference - (animated ? percentage / 100 : 0) * circumference
+  const offset = circumference - (animated ? clampedPct / 100 : 0) * circumference
 
   return (
     <div className="flex flex-col items-center">
@@ -43,13 +43,13 @@ export default function MacroRing({
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-dark-primary text-base font-bold font-mono">{Math.round(value)}</span>
-          <span className="text-dark-muted text-[10px]">{unit}</span>
+          <span className="text-dark-primary text-base font-bold font-mono">{Math.round(clampedPct)}%</span>
+          <span className="text-dark-muted text-[10px]">{Math.round(grams)}{unit}</span>
         </div>
       </div>
       <p className="text-dark-secondary text-xs mt-2 font-medium">{label}</p>
       <p className="text-dark-muted text-[10px] font-mono">
-        {Math.round(percentage)}% of {Math.round(target)}g
+        {Math.round(grams * (unit === 'g' ? 4 : 1))} kcal
       </p>
     </div>
   )
