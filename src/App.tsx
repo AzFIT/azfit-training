@@ -51,6 +51,7 @@ const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'))
 const CheckInPage = lazy(() => import('./pages/CheckIn'))
 const SheetsView = lazy(() => import('./pages/SheetsView'))
 const SheetsPage = lazy(() => import('./pages/SheetsPage'))
+const OnboardingPage = lazy(() => import('./pages/OnboardingPage'))
 
 /* ── Admin pages ── */
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'))
@@ -142,6 +143,7 @@ export default function App() {
       <Route path="/nutrition" element={<Protected><NutritionPage /></Protected>} />
       <Route path="/nutrition/:clientId" element={<Protected><NutritionPage /></Protected>} />
       <Route path="/check-in" element={<Protected><CheckInPage /></Protected>} />
+      <Route path="/onboarding" element={<Protected><OnboardingPage /></Protected>} />
       <Route path="/sheets" element={<Protected><SheetsView /></Protected>} />
       <Route path="/workout/:programId/:sessionId" element={<Protected><SheetsPage /></Protected>} />
       <Route path="/settings" element={<Protected><SettingsPage /></Protected>} />
