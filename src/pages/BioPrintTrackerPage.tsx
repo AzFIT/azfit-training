@@ -18,7 +18,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   TrendingDown,
   TrendingUp,
-  Calendar,
   Camera,
   Plus,
   Trash2,
@@ -29,7 +28,6 @@ import {
   Ruler,
   Target,
   Clock,
-  Droplets,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -37,7 +35,8 @@ import {
   BarChart, Bar, Legend,
 } from 'recharts'
 
-import { getProfile, getBioHistory, saveBioEntry, type BioPrintEntry } from '@/components/onboarding/calculations'
+import { getProfile, getBioHistory, saveBioEntry } from '@/components/onboarding/calculations'
+import type { BioPrintEntry } from '@/components/onboarding/types'
 
 /* ── Types ─────────────────────────────────────────────── */
 
@@ -170,7 +169,7 @@ export default function BioPrintTrackerPage() {
     })
     setShowAddModal(false)
     setEditingId(null)
-    toast.success(exists ? 'Entry updated' : 'Entry saved')
+    toast.success(editingId ? 'Entry updated' : 'Entry saved')
   }, [])
 
   const handleDelete = useCallback((id: string) => {

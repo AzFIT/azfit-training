@@ -733,7 +733,7 @@ function Step3FitnessBackground({
           {FREQUENCY_OPTIONS.map((opt) => (
             <button
               key={opt.key}
-              onClick={() => updateData({ trainingFrequency: opt.key })}
+              onClick={() => updateData({ trainingFrequency: opt.key as 2 | 3 | 4 | 5 | 6 })}
               className={`px-3 py-2.5 rounded-lg border-2 text-sm font-medium transition-all ${
                 data.trainingFrequency === opt.key
                   ? 'border-cyan bg-cyan/10 text-cyan'
@@ -1051,7 +1051,7 @@ function Step4Nutrition({
           {MEAL_COUNT_OPTIONS.map((opt) => (
             <button
               key={opt.key}
-              onClick={() => updateData({ mealCount: opt.key })}
+              onClick={() => updateData({ mealCount: opt.key as 3 | 4 | 5 | 6 })}
               className={`p-3 rounded-lg border-2 text-center transition-all ${
                 data.mealCount === opt.key
                   ? 'border-cyan bg-cyan/10 text-cyan'

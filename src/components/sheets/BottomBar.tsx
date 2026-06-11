@@ -17,7 +17,6 @@ export default function BottomBar({
   elapsedSeconds,
   totalLoad,
   progressionPercent,
-  setsCompleted,
   onFinish,
   canFinish,
 }: BottomBarProps) {

@@ -33,7 +33,7 @@ import {
   createDemoSessionInfo,
   type SessionInfo,
 } from '@/components/workout/sessionData'
-import type { ExerciseBlockData } from '@/components/workout/ExerciseBlock'
+// import type { ExerciseBlockData } from '@/components/workout/ExerciseBlock'
 import type { SetData } from '@/components/workout/SetRow'
 import { PRCelebrationModal } from '@/components/workout/pr/PRCelebrationModal'
 import { detectPersonalRecords, type PersonalRecord } from '@/components/workout/pr/prDetection'
@@ -159,15 +159,6 @@ export default function SheetsPage() {
     const timer = setTimeout(() => setShowLauncher(true), 500)
     return () => clearTimeout(timer)
   }, [])
-
-  // Rest timer trigger
-  const handleRestStart = useCallback(
-    (seconds: number, nextEx: string, nextSet: number) => {
-      setRestTimerConfig({ duration: seconds, nextExercise: nextEx, nextSetNumber: nextSet })
-      setShowRestTimer(true)
-    },
-    []
-  )
 
   // Handle exercise set updates
   const handleExerciseUpdate = useCallback(
@@ -323,7 +314,7 @@ export default function SheetsPage() {
       {/* Sticky Header */}
       <StickyHeader
         programName={sessionInfo.programName}
-        phaseName={sessionInfo.phaseName}
+        phaseName={sessionInfo.phase}
         clientName={client?.name || sessionInfo.clientName}
         elapsedSeconds={elapsedSeconds}
         onPause={() => setIsPaused(!isPaused)}
@@ -351,9 +342,9 @@ export default function SheetsPage() {
               transition={{ duration: 0.3 }}
             >
               <ExerciseBlock
-                data={ex}
-                onUpdate={(sets) => handleExerciseUpdate(ex.id, sets)}
-                onRestStart={handleRestStart}
+                exercise={ex}
+                onUpdateSets={(sets) => handleExerciseUpdate(ex.id, sets)}
+                restTimerDuration={ex.sets[0]?.targetRpe ? 60 : 90}
               />
             </motion.div>
           ))}
@@ -376,12 +367,12 @@ export default function SheetsPage() {
         onClose={() => setShowLauncher(false)}
         onStart={() => setShowLauncher(false)}
         programName={sessionInfo.programName}
-        phaseName={sessionInfo.phaseName || 'Current Phase'}
-        sessionName={sessionInfo.sessionName || 'Workout'}
-        focus={sessionInfo.focus}
-        method={sessionInfo.method}
+        phaseName={sessionInfo.phase || 'Current Phase'}
+        sessionName={`Day ${sessionInfo.dayNumber}`}
+        focus={sessionInfo.programName}
+        method="Straight Sets"
         exercises={launcherExercises}
-        estimatedDuration={sessionInfo.estimatedDuration}
+        estimatedDuration={45}
       />
 
       {/* Rest Timer Overlay */}
@@ -413,7 +404,7 @@ export default function SheetsPage() {
       {/* PR Celebration */}
       <PRCelebrationModal
         records={prRecords}
-        isOpen={showPrModal}
+        open={showPrModal}
         onClose={handlePrModalClose}
       />
 
@@ -421,7 +412,7 @@ export default function SheetsPage() {
       {shareCardData && (
         <WorkoutShareCard
           data={shareCardData}
-          isOpen={showShareCard}
+          open={showShareCard}
           onClose={() => setShowShareCard(false)}
         />
       )}

@@ -9,10 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
   Apple,
-  Beef,
-  Wheat,
-  Droplets,
-  GlassWater,
   ChevronRight,
   Flame,
   Target,
@@ -20,13 +16,8 @@ import {
   TrendingUp,
   Scale,
   Calendar,
-  Plus,
-  Minus,
-  X,
-  Check,
   Utensils,
   Calculator,
-  ClipboardList,
 } from 'lucide-react';
 import Layout from '@/components/Layout';
 import {
@@ -37,7 +28,6 @@ import {
   type FoodItem,
   type FoodCategory,
   searchFoods,
-  getFoodsByCategory,
 } from '@/data/foodDatabase';
 
 /* ------------------------------------------------------------------ */
